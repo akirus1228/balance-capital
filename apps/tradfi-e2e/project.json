@@ -1,0 +1,28 @@
+{
+  "root": "apps/tradfi-e2e",
+  "sourceRoot": "apps/tradfi-e2e/src",
+  "projectType": "application",
+  "targets": {
+    "e2e": {
+      "executor": "@nrwl/cypress:cypress",
+      "options": {
+        "cypressConfig": "apps/tradfi-e2e/cypress.json",
+        "devServerTarget": "tradfi:serve"
+      },
+      "configurations": {
+        "production": {
+          "devServerTarget": "tradfi:serve:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/tradfi-e2e/**/*.{js,ts}"]
+      }
+    }
+  },
+  "tags": [],
+  "implicitDependencies": ["tradfi"]
+}

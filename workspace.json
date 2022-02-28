@@ -1,7 +1,8 @@
 {
   "version": 2,
   "projects": {
-    "fantohm-frontend-mr": "apps/fantohm-frontend-mr",
-    "fantohm-frontend-mr-e2e": "apps/fantohm-frontend-mr-e2e"
+    "tradfi": "apps/tradfi",
+    "tradfi-e2e": "apps/tradfi-e2e",
+    "web3-context": "libs/web3-context"
   }
 }

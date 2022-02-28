@@ -1,6 +1,6 @@
 {
-  "root": "apps/fantohm-frontend-mr",
-  "sourceRoot": "apps/fantohm-frontend-mr/src",
+  "root": "apps/tradfi",
+  "sourceRoot": "apps/tradfi/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,17 +9,14 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "dist/apps/fantohm-frontend-mr",
-        "index": "apps/fantohm-frontend-mr/src/index.html",
+        "outputPath": "dist/apps/tradfi",
+        "index": "apps/tradfi/src/index.html",
         "baseHref": "/",
-        "main": "apps/fantohm-frontend-mr/src/main.tsx",
-        "polyfills": "apps/fantohm-frontend-mr/src/polyfills.ts",
-        "tsConfig": "apps/fantohm-frontend-mr/tsconfig.app.json",
-        "assets": [
-          "apps/fantohm-frontend-mr/src/favicon.ico",
-          "apps/fantohm-frontend-mr/src/assets"
-        ],
-        "styles": ["apps/fantohm-frontend-mr/src/styles.scss"],
+        "main": "apps/tradfi/src/main.tsx",
+        "polyfills": "apps/tradfi/src/polyfills.ts",
+        "tsConfig": "apps/tradfi/tsconfig.app.json",
+        "assets": ["apps/tradfi/src/favicon.ico", "apps/tradfi/src/assets"],
+        "styles": ["apps/tradfi/src/styles.scss"],
         "scripts": [],
         "webpackConfig": "@nrwl/react/plugins/webpack"
       },
@@ -27,8 +24,8 @@
         "production": {
           "fileReplacements": [
             {
-              "replace": "apps/fantohm-frontend-mr/src/environments/environment.ts",
-              "with": "apps/fantohm-frontend-mr/src/environments/environment.prod.ts"
+              "replace": "apps/tradfi/src/environments/environment.ts",
+              "with": "apps/tradfi/src/environments/environment.prod.ts"
             }
           ],
           "optimization": true,
@@ -43,12 +40,12 @@
     "serve": {
       "executor": "@nrwl/web:dev-server",
       "options": {
-        "buildTarget": "fantohm-frontend-mr:build",
+        "buildTarget": "tradfi:build",
         "hmr": true
       },
       "configurations": {
         "production": {
-          "buildTarget": "fantohm-frontend-mr:build:production",
+          "buildTarget": "tradfi:build:production",
           "hmr": false
         }
       }
@@ -57,14 +54,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/fantohm-frontend-mr/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/tradfi/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/fantohm-frontend-mr"],
+      "outputs": ["coverage/apps/tradfi"],
       "options": {
-        "jestConfig": "apps/fantohm-frontend-mr/jest.config.js",
+        "jestConfig": "apps/tradfi/jest.config.js",
         "passWithNoTests": true
       }
     }
