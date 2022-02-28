@@ -1,0 +1,73 @@
+{
+  "root": "apps/fantohm-frontend-mr",
+  "sourceRoot": "apps/fantohm-frontend-mr/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/web:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "compiler": "babel",
+        "outputPath": "dist/apps/fantohm-frontend-mr",
+        "index": "apps/fantohm-frontend-mr/src/index.html",
+        "baseHref": "/",
+        "main": "apps/fantohm-frontend-mr/src/main.tsx",
+        "polyfills": "apps/fantohm-frontend-mr/src/polyfills.ts",
+        "tsConfig": "apps/fantohm-frontend-mr/tsconfig.app.json",
+        "assets": [
+          "apps/fantohm-frontend-mr/src/favicon.ico",
+          "apps/fantohm-frontend-mr/src/assets"
+        ],
+        "styles": ["apps/fantohm-frontend-mr/src/styles.scss"],
+        "scripts": [],
+        "webpackConfig": "@nrwl/react/plugins/webpack"
+      },
+      "configurations": {
+        "production": {
+          "fileReplacements": [
+            {
+              "replace": "apps/fantohm-frontend-mr/src/environments/environment.ts",
+              "with": "apps/fantohm-frontend-mr/src/environments/environment.prod.ts"
+            }
+          ],
+          "optimization": true,
+          "outputHashing": "all",
+          "sourceMap": false,
+          "namedChunks": false,
+          "extractLicenses": true,
+          "vendorChunk": false
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/web:dev-server",
+      "options": {
+        "buildTarget": "fantohm-frontend-mr:build",
+        "hmr": true
+      },
+      "configurations": {
+        "production": {
+          "buildTarget": "fantohm-frontend-mr:build:production",
+          "hmr": false
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/fantohm-frontend-mr/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/fantohm-frontend-mr"],
+      "options": {
+        "jestConfig": "apps/fantohm-frontend-mr/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
