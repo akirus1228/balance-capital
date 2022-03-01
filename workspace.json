@@ -1,8 +1,10 @@
 {
   "version": 2,
   "projects": {
+    "helpers": "libs/helpers",
     "tradfi": "apps/tradfi",
     "tradfi-e2e": "apps/tradfi-e2e",
-    "web3-context": "libs/web3-context"
+    "ui-themes": "libs/ui-themes",
+    "web3": "libs/web3"
   }
 }

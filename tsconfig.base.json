@@ -8,14 +8,18 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "importHelpers": true,
-    "target": "es2015",
+    "target": "es2021",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": ["ESNext", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
+    "resolveJsonModule": true,
+    "allowSyntheticDefaultImports": true,
     "paths": {
-      "@fantohm/web3-context": ["libs/web3-context/src/index.ts"]
+      "@fantohm/helpers": ["libs/helpers/src/index.ts"],
+      "@fantohm/ui-themes": ["libs/ui-themes/src/index.ts"],
+      "@fantohm/web3": ["libs/web3/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

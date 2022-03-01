@@ -18,7 +18,7 @@
         "assets": ["apps/tradfi/src/favicon.ico", "apps/tradfi/src/assets"],
         "styles": ["apps/tradfi/src/styles.scss"],
         "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/tradfi/webpack.config.js"
       },
       "configurations": {
         "production": {

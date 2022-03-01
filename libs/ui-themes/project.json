@@ -1,0 +1,23 @@
+{
+  "root": "libs/ui-themes",
+  "sourceRoot": "libs/ui-themes/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/ui-themes/**/*.{ts,tsx,js,jsx}"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/libs/ui-themes"],
+      "options": {
+        "jestConfig": "libs/ui-themes/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  }
+}
