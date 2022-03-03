@@ -1,26 +1,17 @@
 import React, { useState, ReactElement, useContext, useMemo, useCallback } from "react";
 import Web3Modal from "web3modal";
-import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import WalletConnectProvider from "@walletconnect/web3-provider";
+import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
+import { isIframe } from "@fantohm/helpers";
 import { Web3ContextData } from "./types";
 import { NetworkID, NetworkIDs, enabledNetworkIDs } from "./networks";
 import { chains } from "./providers";
-import { collapseTextChangeRangesAcrossMultipleVersions } from "typescript";
 
-
-/**
- * determine if in IFrame for Ledger Live
- */
-const isIframe = () => {
-  return window.location !== window.parent.location;
-}
-
-const getURI =(networkID: NetworkID): string => {
+export const getURI =(networkID: NetworkID): string => {
   console.log(chains[networkID].rpcUrls[0]);
   return chains[networkID].rpcUrls[0];
 }
-
 
 const Web3Context = React.createContext<Web3ContextData>(null);
 
@@ -67,7 +58,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
   const [address, setAddress] = useState("");
   const [provider, setProvider] = useState<JsonRpcProvider | null>(null);
 
-  const rpcUris = enabledNetworkIDs.reduce((rpcUris: { [key: string]: string }, networkID) => (rpcUris[networkID] = getURI(networkID), rpcUris), {});
+  const rpcUris = enabledNetworkIDs.reduce(
+    (rpcUris: {[key: string]: string }, networkID) => (rpcUris[networkID] = getURI(networkID), rpcUris), {});
 
   const [web3Modal, setWeb3Modal] = useState<Web3Modal>(
     new Web3Modal({

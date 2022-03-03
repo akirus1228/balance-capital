@@ -1,7 +1,7 @@
 import { Provider, StaticJsonRpcProvider } from "@ethersproject/providers";
 import { NetworkIDs } from "./networks";
 import { NodeHelper } from "@fantohm/helpers";
-import { MulticallProvider } from "./MulticallProvider";
+import { MulticallProvider } from "./multicall-provider";
 
 interface ChainDetailsOpts {
   networkName: string,
@@ -90,7 +90,7 @@ export const chains: AllChainDetails = {
   [NetworkIDs.Moonriver]: new ChainDetails({
     networkName: 'Moonriver',
     rpcUrls: [
-      '	https://rpc.api.moonbeam.network',
+      'https://rpc.api.moonbeam.network',
     ],
     symbol: 'MOVR',
     decimals: 18,

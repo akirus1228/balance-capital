@@ -1,5 +1,5 @@
-import { minutesAgo } from "./";
-import { EnvHelper } from "./Environment";
+import { minutesAgo } from "./date-time";
+import { EnvHelper } from "./environment";
 
 interface ICurrentStats {
   failedConnectionCount: number;
