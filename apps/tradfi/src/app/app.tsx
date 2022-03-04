@@ -1,12 +1,22 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
-import NxWelcome from './nx-welcome';
+import { Routes, Route, Link } from "react-router-dom";
+import HomePage from './home-page';
+import BondsPage from './pages/bonds';
+import { Header } from './components/header';
 
 export function App() {
   return (
     <>
-      <NxWelcome title="fantohm-frontend-mr" />
-      <div />
+      <div>
+        <Header />
+        <Link to="/bonds">Bonds</Link>
+        <div>Footer</div>
+      </div>
+      <Routes>
+        <Route path="/" element={<HomePage title="Home"/>} />
+        <Route path="/bonds" element={<BondsPage />} />
+      </Routes>
     </>
   );
 }

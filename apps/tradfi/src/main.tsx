@@ -1,18 +1,9 @@
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
-import { Provider } from "react-redux";
-import { Web3ContextProvider } from '@fantohm/web3';
+import { render } from "react-dom";
 
-import store from './app/store';
-import App from './app/app';
+import Root from './app/root';
 
-ReactDOM.render(
-  <StrictMode>
-      <Web3ContextProvider>
-        <Provider store={store}>
-          <App />
-        </Provider>
-      </Web3ContextProvider>
-  </StrictMode>,
-  document.getElementById('root')
+const rootElement = document.getElementById('root')
+
+render(
+  <Root />, rootElement
 );
