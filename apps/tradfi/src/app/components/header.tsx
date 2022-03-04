@@ -10,11 +10,25 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { SvgIcon } from '@mui/material';
+import { SvgIcon, SxProps, Theme } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useWeb3Context } from '@fantohm/web3';
 
-const pages = ['Products', 'Pricing', 'Blog'];
+type PageParams = {
+    sx?: SxProps<Theme> | undefined,
+    comingSoon?: boolean
+}
+
+type pages = {
+    title: string,
+    params?: PageParams
+}
+
+const pages = [
+    {title: 'Fixed Deposits'}, 
+    {title: 'Indexes', params: {comingSoon: true}},
+    {title: 'Single Stocks', params: {comingSoon: true}}
+];
 
 export const Header = (): JSX.Element => {
     const {connect} = useWeb3Context();
@@ -38,7 +52,7 @@ export const Header = (): JSX.Element => {
                         component="div"
                         sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
                         >
-                        LOGO
+                        Axcapital Logo
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -70,9 +84,9 @@ export const Header = (): JSX.Element => {
                             display: { xs: 'block', md: 'none' },
                             }}
                         >
-                        {pages.map((page) => (
-                            <MenuItem key={page} onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">{page}</Typography>
+                        {pages.map(({title, params}) => (
+                            <MenuItem key={title} onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">{title}</Typography>
                             </MenuItem>
                         ))}
                         </Menu>
@@ -83,16 +97,16 @@ export const Header = (): JSX.Element => {
                         component="div"
                         sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
                     >
-                    LOGO
+                    Axcapital Logo
                     </Typography>
-                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                        {pages.map((page) => (
+                    <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, 'justify-content': 'right' }}>
+                        {pages.map(({title, params}) => (
                             <Button
-                                key={page}
+                                key={title}
                                 onClick={handleCloseNavMenu}
-                                sx={{ my: 2, color: 'white', display: 'block' }}
+                                sx={{...(params && params.sx), my: 2, color: 'white', display: 'block' }}
                             >
-                                {page}
+                                {title}
                             </Button>
                         ))}
                     </Box>

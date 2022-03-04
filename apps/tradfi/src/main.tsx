@@ -1,4 +1,5 @@
 import { render } from "react-dom";
+import "./styles.scss";
 
 import Root from './app/root';
 

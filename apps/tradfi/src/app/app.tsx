@@ -1,13 +1,19 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import styles from './app.module.scss';
 import { Routes, Route, Link } from "react-router-dom";
-import HomePage from './home-page';
+import HomePage from './pages/home-page';
 import BondsPage from './pages/bonds';
 import { Header } from './components/header';
+import { Box } from '@mui/material';
 
 export function App() {
   return (
-    <>
+    <Box sx={{
+      bgcolor: 'background.default',
+      width: '100%',
+      color: 'text.primary',
+      height: '100vh'
+    }}>
       <div>
         <Header />
         <Link to="/bonds">Bonds</Link>
@@ -17,7 +23,7 @@ export function App() {
         <Route path="/" element={<HomePage title="Home"/>} />
         <Route path="/bonds" element={<BondsPage />} />
       </Routes>
-    </>
+    </Box>
   );
 }
 
