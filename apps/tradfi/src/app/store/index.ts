@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 import accountReducer from "./reducers/account-slice";
+import { web3SliceReducer } from "@fantohm/web3";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
 
 const store = configureStore({
   reducer: {
-    accountReducer
+    accountReducer,
+    web3SliceReducer
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });

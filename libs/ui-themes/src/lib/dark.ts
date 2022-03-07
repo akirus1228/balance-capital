@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/styles';
+import fonts from "./fonts";
 
 const darkTheme = {
   color: "#FCFCFC",
@@ -35,9 +36,84 @@ export const dark = createTheme({
     mode: "dark",
     primary: {
       main: darkTheme.color,
+      contrastText: darkTheme.color,
     },
     secondary: {
       main: darkTheme.color,
     },
+    background: {
+      default: darkTheme.backgroundColor,
+      paper: darkTheme.paperBg,
+    },
+    text: {
+      primary: darkTheme.color,
+      secondary: darkTheme.gray,
+    }
   },
+  typography: {
+    fontFamily: "Montserrat",
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          backgroundColor: darkTheme.paperBg,
+          "&.ohm-card": {
+            backgroundColor: darkTheme.paperBg,
+          },
+          "&.ohm-card-secondary": {
+            backgroundColor: darkTheme.paperBg,
+          },
+          "&.dapp-sidebar": {
+            backgroundColor: darkTheme.paperBg,
+          },
+          "&.ohm-modal": {
+            backgroundColor: darkTheme.modalBg,
+          },
+          "&.ohm-menu": {
+            backgroundColor: darkTheme.menuBg,
+            backdropFilter: "blur(33px)",
+          },
+          "&.ohm-popover": {
+            backgroundColor: darkTheme.popoverBg,
+            color: darkTheme.color,
+            backdropFilter: "blur(15px)",
+          },
+        }
+      }
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        "@global": {
+          "@font-face": fonts,
+          body: {
+            background: darkTheme.background,
+          },
+        },
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        containedPrimary: {
+          color: darkTheme.primaryButtonColor,
+          backgroundColor: darkTheme.gold,
+          "&:hover": {
+            backgroundColor: darkTheme.primaryButtonHoverBG,
+            color: darkTheme.outlinedPrimaryButtonHoverColor,
+          },
+          "&:active": {
+            backgroundColor: darkTheme.primaryButtonHoverBG,
+            color: darkTheme.outlinedPrimaryButtonHoverColor,
+          },
+          "@media (hover:none)": {
+            color: darkTheme.primaryButtonColor,
+            backgroundColor: darkTheme.gold,
+            "&:hover": {
+              backgroundColor: darkTheme.primaryButtonHoverBG,
+            },
+          },
+        },
+      }
+    }
+  }
 });

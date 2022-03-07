@@ -1,4 +1,3 @@
-import * as React from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -13,6 +12,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { SvgIcon, SxProps, Theme } from '@mui/material';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { useWeb3Context } from '@fantohm/web3';
+import { MouseEvent, useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { setWalletConnected } from '@fantohm/web3';
 
 type PageParams = {
     sx?: SxProps<Theme> | undefined,
@@ -31,16 +33,21 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-    const {connect} = useWeb3Context();
-    const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
+    const { connect, disconnect, connected } = useWeb3Context();
+    const dispatch = useDispatch()
+    const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
-    const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
+    const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
         setAnchorElNav(event.currentTarget);
     };
 
     const handleCloseNavMenu = () => {
     setAnchorElNav(null);
     };
+
+    useEffect(() =>{
+        dispatch(setWalletConnected(connected))
+    },[connected])
 
     return (
         <AppBar position="static" color="transparent" elevation={0}>

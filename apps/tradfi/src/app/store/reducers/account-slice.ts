@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 
+
 const initialState = {};
 
 export function setAll(state: any, properties: any) {
@@ -13,10 +14,13 @@ const accountSlice = createSlice({
     name: "account",
     initialState,
     reducers: {
-      fetchAccountSuccess(state, action) {
+      fetchAccountSuccess: (state, action) => {
         setAll(state, action.payload);
-      },
+      }
     },
   });
   
+
+export const {fetchAccountSuccess} = accountSlice.actions;
+
 export default accountSlice.reducer;
