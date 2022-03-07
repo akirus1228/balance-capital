@@ -19,12 +19,12 @@ type PageParams = {
     comingSoon?: boolean
 }
 
-type pages = {
+type Pages = {
     title: string,
     params?: PageParams
 }
 
-const pages = [
+const pages: Pages[] = [
     {title: 'Fixed Deposits'}, 
     {title: 'Indexes', params: {comingSoon: true}},
     {title: 'Single Stocks', params: {comingSoon: true}}
@@ -84,9 +84,9 @@ export const Header = (): JSX.Element => {
                             display: { xs: 'block', md: 'none' },
                             }}
                         >
-                        {pages.map(({title, params}) => (
-                            <MenuItem key={title} onClick={handleCloseNavMenu}>
-                                <Typography textAlign="center">{title}</Typography>
+                        {pages.map((page: Pages) => (
+                            <MenuItem key={page.title} onClick={handleCloseNavMenu}>
+                                <Typography textAlign="center">{page.title}</Typography>
                             </MenuItem>
                         ))}
                         </Menu>
@@ -100,20 +100,21 @@ export const Header = (): JSX.Element => {
                     Axcapital Logo
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' }, 'justify-content': 'right' }}>
-                        {pages.map(({title, params}) => (
+                        {pages.map((page: Pages) => (
                             <Button
-                                key={title}
+                                disabled={page.params?.comingSoon}
+                                key={page.title}
                                 onClick={handleCloseNavMenu}
-                                sx={{...(params && params.sx), my: 2, color: 'white', display: 'block' }}
+                                sx={{...(page.params && page.params.sx), my: 2, color: 'white', display: 'block' }}
                             >
-                                {title}
+                                {page.title}
                             </Button>
                         ))}
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
                         <Tooltip title="Connect Wallet">
-                            <IconButton onClick={connect} sx={{ p: 0 }}>
+                            <IconButton onClick={connect} sx={{ p: 0 }} color="primary">
                                 <SvgIcon component={AccountBalanceWalletIcon} />
                             </IconButton>
                         </Tooltip>
