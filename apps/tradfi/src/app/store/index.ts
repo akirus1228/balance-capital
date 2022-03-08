@@ -1,4 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
+import appSliceReducer from "./reducers/app-slice";
 import accountReducer from "./reducers/account-slice";
 import { web3SliceReducer } from "@fantohm/web3";
 
@@ -8,6 +9,7 @@ import { web3SliceReducer } from "@fantohm/web3";
 const store = configureStore({
   reducer: {
     accountReducer,
+    appSliceReducer,
     web3SliceReducer
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),

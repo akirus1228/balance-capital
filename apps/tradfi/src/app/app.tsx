@@ -2,7 +2,7 @@
 import styles from './app.module.scss';
 import { Routes, Route, Link } from "react-router-dom";
 import HomePage from './pages/home-page';
-import BondsPage from './pages/bonds';
+import BondsPage from './pages/bonds/bonds';
 import { Header } from './components/header';
 import { Box } from '@mui/material';
 

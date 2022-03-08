@@ -1,6 +1,8 @@
 import { createTheme } from '@mui/material/styles';
 import fonts from "./fonts";
 
+console.log(fonts);
+
 const darkTheme = {
   color: "#FCFCFC",
   gold: "#F7C775",
@@ -51,7 +53,7 @@ export const dark = createTheme({
     }
   },
   typography: {
-    fontFamily: "Montserrat",
+    fontFamily: ['Montserrat','Roboto'].join(','),
   },
   components: {
     MuiPaper: {
@@ -84,11 +86,9 @@ export const dark = createTheme({
     },
     MuiCssBaseline: {
       styleOverrides: {
-        "@global": {
-          "@font-face": fonts,
-          body: {
-            background: darkTheme.background,
-          },
+        "@font-face": fonts,
+        body: {
+          background: darkTheme.background,
         },
       }
     },

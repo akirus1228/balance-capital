@@ -1,3 +1,5 @@
+//import MontserratWOFF from './montserrat-regular.woff';
+
 const Montserrat = {
     fontFamily: "Montserrat",
     fontStyle: "normal",

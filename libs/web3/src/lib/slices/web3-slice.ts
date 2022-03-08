@@ -15,7 +15,6 @@ const web3Slice = createSlice({
     initialState,
     reducers: {
       setWalletConnected: (state, action) =>{
-        console.log(`connected: ${action.payload}`);
         state.walletConnected = action.payload;
       }
     },

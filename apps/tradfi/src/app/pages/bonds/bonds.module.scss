@@ -1,0 +1,38 @@
+.gridParent{
+    Box {
+        justify-content: center;
+    }
+}
+
+.bondCard {
+    border: 3px solid #FFF;
+    padding: 30px;
+    justify-content: center;
+
+    h1, h3 {
+        margin: 4px 0;
+    }
+}
+
+.lowerStats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    span {
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .bondCard {
+        margin: 0px 10px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .bondCard {
+        margin: 0px 10px;
+        max-width: 500px;
+    }
+}

@@ -16534,6 +16534,9 @@
   "resolved" "https://registry.npmjs.org/signal-exit/-/signal-exit-3.0.7.tgz"
   "version" "3.0.7"
 
+"signal-exit@^3.0.7":
+  "version" "3.0.6"
+
 "sisteransi@^1.0.5":
   "integrity" "sha512-bLGGlR1QxBcynn2d5YmDX4MGjlZvy2MRBDRNHLJ8VI6l6+9FUiyTFNJ0IveOSP0bcXgVDPRcfGqA0pjaqUpfVg=="
   "resolved" "https://registry.npmjs.org/sisteransi/-/sisteransi-1.0.5.tgz"
@@ -17789,9 +17792,6 @@
   dependencies:
     "is-typedarray" "^1.0.0"
 
-"typedarray-to-buffer@^4.0.0":
-  "version" "4.0.0"
-
 "typedarray@^0.0.6":
   "integrity" "sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c="
   "resolved" "https://registry.npmjs.org/typedarray/-/typedarray-0.0.6.tgz"
@@ -18703,12 +18703,10 @@
   "version" "1.0.2"
 
 "write-file-atomic@*", "write-file-atomic@^4.0.0":
-  "version" "4.0.0"
+  "version" "4.0.1"
   dependencies:
     "imurmurhash" "^0.1.4"
-    "is-typedarray" "^1.0.0"
-    "signal-exit" "^3.0.2"
-    "typedarray-to-buffer" "^4.0.0"
+    "signal-exit" "^3.0.7"
 
 "write-file-atomic@^3.0.0":
   "integrity" "sha512-AvHcyZ5JnSfq3ioSyjrBkH9yW4m7Ayk8/9My/DD9onKeu/94fwrMocemO2QAJFAlnnDN+ZDS+ZjAR5ua1/PV/Q=="

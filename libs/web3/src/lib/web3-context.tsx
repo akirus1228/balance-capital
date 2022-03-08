@@ -96,6 +96,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({ chil
         } else {
           chainId = parseInt(chain, 16);
         }
+        setChainID(chainID);
         if (!_checkNetwork(chainId)) {
           disconnect();
         }
