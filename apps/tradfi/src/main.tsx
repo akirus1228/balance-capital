@@ -1,5 +1,6 @@
 import { render } from "react-dom";
 import "./styles.scss";
+import './app/styles/fonts.scss';
 
 import Root from './app/root';
 

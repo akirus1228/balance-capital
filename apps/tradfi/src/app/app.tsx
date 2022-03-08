@@ -1,5 +1,4 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import styles from './app.module.scss';
 import { Routes, Route, Link } from "react-router-dom";
 import HomePage from './pages/home-page';
 import BondsPage from './pages/bonds/bonds';

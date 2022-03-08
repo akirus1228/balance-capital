@@ -53,7 +53,7 @@ export const dark = createTheme({
     },
   },
   typography: {
-    fontFamily: ['Montserrat', 'Roboto'].join(','),
+    fontFamily: ['Montserrat', 'sans-serif'].join(','),
   },
   components: {
     MuiPaper: {
@@ -84,14 +84,14 @@ export const dark = createTheme({
         },
       },
     },
-    MuiCssBaseline: {
-      styleOverrides: {
-        '@font-face': fonts,
-        body: {
-          background: darkTheme.background,
-        },
-      },
-    },
+    // MuiCssBaseline: {
+    //   styleOverrides: {
+    //     '@font-face': fonts,
+    //     body: {
+    //       background: darkTheme.background,
+    //     },
+    //   },
+    // },
     MuiButton: {
       styleOverrides: {
         containedPrimary: {

@@ -6,7 +6,7 @@ const Montserrat = {
   src: `
           local('montserrat-regular'),
           local('montserrat-regular'),
-          url('@fantohm/shared/assets/fonts/Montserrat/montserrat-regular.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2')
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -20,7 +20,7 @@ const MontserratLight = {
   src: `
           local('montserrat-light'),
           local('montserrat-light'),
-          url('/assets/fonts/montserrat-light.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2');
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -34,7 +34,7 @@ const MontserratMedium = {
   src: `
           local('montserrat-regular'),
           local('montserrat-regular'),
-          url('/assets/fonts/montserrat-regular.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2')
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -48,7 +48,7 @@ const MontserratSemiBold = {
   src: `
           local('montserrat-black'),
           local('montserrat-black'),
-          url('/assets/fonts/montserrat-black.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2')
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -62,7 +62,7 @@ const MontserratBold = {
   src: `
           local('montserrat-black'),
           local('montserrat-black'),
-          url('/assets/fonts/montserrat-black.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2')
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
@@ -76,7 +76,7 @@ const MontserratItalic = {
   src: `
           local('montserrat-regular'),
           local('montserrat-regular'),
-          url('/assets/fonts/montserrat-regular.woff') format('woff')
+          url(https://fonts.gstatic.com/s/montserrat/v23/JTUSjIg1_i6t8kCHKm459WRhyzbi.woff2) format('woff2')
       `,
   unicodeRange:
     'U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF',
