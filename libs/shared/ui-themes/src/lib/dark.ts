@@ -1,8 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 import fonts from './fonts';
 
-console.log(fonts);
-
 const darkTheme = {
   color: '#FCFCFC',
   gold: '#F7C775',
@@ -60,7 +58,7 @@ export const dark = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: darkTheme.paperBg,
-          '&.ohm-card': {
+          '.ohm-card': {
             backgroundColor: darkTheme.paperBg,
           },
           '&.ohm-card-secondary': {

@@ -1,17 +1,17 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { BrowserRouter } from 'react-router-dom';
-import App from './app';
-import { Web3ContextProvider } from '@fantohm/shared-web3';
-import { ThemeProvider } from '@mui/styles';
-import { dark as darkTheme } from '@fantohm/shared-ui-themes';
-import store from './store';
 import { Provider } from 'react-redux';
+import { BrowserRouter } from 'react-router-dom';
+import { ThemeProvider } from '@mui/styles';
+import { Web3ContextProvider } from '@fantohm/shared-web3';
+import { dark as darkTheme } from '@fantohm/shared-ui-themes';
+import App from './app';
+import store from './store';
 
 const Root = (): JSX.Element => {
   return (
     <Web3ContextProvider>
       <Provider store={store}>
-        <BrowserRouter>
+        <BrowserRouter> 
           <ThemeProvider theme={darkTheme}>
             <App />
           </ThemeProvider>

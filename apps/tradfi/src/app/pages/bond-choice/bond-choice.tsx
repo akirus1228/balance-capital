@@ -5,6 +5,7 @@ import {
   Zoom,
 } from '@mui/material';
 import { BondCard } from './bond-card';
+import { Outlet } from 'react-router-dom';
 
 export const BondChoicePage = (): JSX.Element => {
   return (
@@ -25,6 +26,7 @@ export const BondChoicePage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Zoom>
+      <Outlet />
     </Box>
   );
 };

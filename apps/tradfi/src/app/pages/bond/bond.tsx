@@ -1,4 +1,4 @@
-import { Backdrop, Fade, Grid } from '@mui/material';
+import { Backdrop, Fade, Grid, Paper } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import './bond.module.scss';
 
@@ -11,8 +11,12 @@ export const Bond = (props: BondProps): JSX.Element => {
     <Fade in={true} mountOnEnter unmountOnExit>
       <Grid container id="bond-view">
         <Backdrop open={true}>
-          <h1>Hello Bond</h1>
-          <p>{bondType}</p>
+          <Fade in={true}>
+            <Paper>
+              <h1>Hello Bond</h1>
+              <p>{bondType}</p>
+            </Paper>
+          </Fade>
         </Backdrop>
       </Grid>
     </Fade>
