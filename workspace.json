@@ -1,10 +1,11 @@
 {
   "version": 2,
   "projects": {
-    "helpers": "libs/helpers",
+    "shared-assets": "libs/shared/assets",
+    "shared-helpers": "libs/shared/helpers",
+    "shared-ui-themes": "libs/shared/ui-themes",
+    "shared-web3": "libs/shared/web3",
     "tradfi": "apps/tradfi",
-    "tradfi-e2e": "apps/tradfi-e2e",
-    "ui-themes": "libs/ui-themes",
-    "web3": "libs/web3"
+    "tradfi-e2e": "apps/tradfi-e2e"
   }
 }

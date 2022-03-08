@@ -17,9 +17,10 @@
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
     "paths": {
-      "@fantohm/helpers": ["libs/helpers/src/index.ts"],
-      "@fantohm/ui-themes": ["libs/ui-themes/src/index.ts"],
-      "@fantohm/web3": ["libs/web3/src/index.ts"]
+      "@fantohm/shared-helpers": ["libs/shared/helpers/src/index.ts"],
+      "@fantohm/shared-ui-themes": ["libs/shared/ui-themes/src/index.ts"],
+      "@fantohm/shared-web3": ["libs/shared/web3/src/index.ts"],
+      "@fantohm/shared/assets/*": ["libs/shared/assets/*"]
     }
   },
   "exclude": ["node_modules", "tmp"]

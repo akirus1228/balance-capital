@@ -15,8 +15,16 @@
         "main": "apps/tradfi/src/main.tsx",
         "polyfills": "apps/tradfi/src/polyfills.ts",
         "tsConfig": "apps/tradfi/tsconfig.app.json",
-        "assets": ["apps/tradfi/src/favicon.ico", "apps/tradfi/src/assets"],
-        "styles": ["apps/tradfi/src/styles.scss"],
+        "assets": [
+          "apps/tradfi/src/favicon.ico",
+          "apps/tradfi/src/assets",
+          {
+            "input": "libs/shared/assets/images",
+            "glob": "**/*",
+            "output": "assets/images"
+          }
+        ],
+        "styles": ["apps/tradfi/src/styles.scss","libs/shared/assets/styles/fonts.scss"],
         "scripts": [],
         "webpackConfig": "apps/tradfi/webpack.config.js"
       },
