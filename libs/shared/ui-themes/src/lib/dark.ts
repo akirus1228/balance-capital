@@ -84,14 +84,14 @@ export const dark = createTheme({
         },
       },
     },
-    // MuiCssBaseline: {
-    //   styleOverrides: {
-    //     '@font-face': fonts,
-    //     body: {
-    //       background: darkTheme.background,
-    //     },
-    //   },
-    // },
+    MuiCssBaseline: {
+      styleOverrides: {
+        '@font-face': fonts,
+        body: {
+          background: darkTheme.background,
+        },
+      },
+    },
     MuiButton: {
       styleOverrides: {
         containedPrimary: {
@@ -113,7 +113,88 @@ export const dark = createTheme({
             },
           },
         },
+        containedSecondary: {
+          backgroundColor: darkTheme.paperBg,
+          color: darkTheme.color,
+          "&:hover": {
+            backgroundColor: `${darkTheme.containedSecondaryButtonHoverBG} !important`,
+          },
+          "&:active": {
+            backgroundColor: darkTheme.containedSecondaryButtonHoverBG,
+          },
+          "&:focus": {
+            backgroundColor: darkTheme.paperBg,
+          },
+          "@media (hover:none)": {
+            color: darkTheme.color,
+            backgroundColor: darkTheme.paperBg,
+            "&:hover": {
+              backgroundColor: `${darkTheme.containedSecondaryButtonHoverBG} !important`,
+            },
+          },
+        },
+        outlinedPrimary: {
+          color: darkTheme.gold,
+          borderColor: darkTheme.gold,
+          "&:hover": {
+            color: darkTheme.outlinedPrimaryButtonHoverColor,
+            backgroundColor: darkTheme.primaryButtonHoverBG,
+          },
+          "@media (hover:none)": {
+            color: darkTheme.gold,
+            borderColor: darkTheme.gold,
+            "&:hover": {
+              color: darkTheme.outlinedPrimaryButtonHoverColor,
+              backgroundColor: `${darkTheme.primaryButtonHoverBG} !important`,
+              textDecoration: "none !important",
+            },
+          },
+        },
+        outlinedSecondary: {
+          color: darkTheme.color,
+          borderColor: darkTheme.color,
+          "&:hover": {
+            color: darkTheme.outlinedSecondaryButtonHoverColor,
+            backgroundColor: darkTheme.outlinedSecondaryButtonHoverBG,
+            borderColor: darkTheme.gold,
+          },
+        },
+        textPrimary: {
+          color: "#A3A3A3",
+          "&:hover": {
+            color: darkTheme.gold,
+            backgroundColor: "#00000000",
+          },
+          "&:active": {
+            color: darkTheme.gold,
+            borderBottom: "#F7C775",
+          },
+        },
+        textSecondary: {
+          color: darkTheme.color,
+          "&:hover": {
+            color: darkTheme.textHighlightColor,
+          },
+        },
       },
     },
+    MuiBackdrop: {
+      styleOverrides: {
+        root: {
+          color: darkTheme.color,
+          "&:hover": {
+            color: darkTheme.textHighlightColor,
+            textDecoration: "none",
+            "&.active": {
+              color: darkTheme.color,
+            },
+          },
+          "&.active": {
+            color: darkTheme.color,
+            textDecoration: "underline",
+          },
+        }
+      }
+    }
   },
 });

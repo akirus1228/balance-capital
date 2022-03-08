@@ -1,24 +1,12 @@
-import { useDispatch, useSelector } from 'react-redux';
 import css from './bonds.module.scss';
 import {
   Box,
   Grid,
-  Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-  Typography,
   Zoom,
 } from '@mui/material';
-import { useMediaQuery } from '@mui/material';
-import { useWeb3Context } from '@fantohm/shared-web3';
-import { useState } from 'react';
 import { BondCard } from './bond-card';
 
-const BondsPage = (): JSX.Element => {
+export const BondChoicePage = (): JSX.Element => {
   return (
     <Box>
       <Zoom in={true}>
@@ -27,10 +15,10 @@ const BondsPage = (): JSX.Element => {
             &nbsp;
           </Grid>
           <Grid item xs={12} md={4}>
-            <BondCard term={3} roi={5} apy={21.55} />
+            <BondCard bondType="3month" term={3} roi={5} apy={21.55} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <BondCard term={6} roi={15} apy={32.55} />
+            <BondCard bondType="6month" term={6} roi={15} apy={32.55} />
           </Grid>
           <Grid item xs={0} md={2}>
             &nbsp;
@@ -41,4 +29,4 @@ const BondsPage = (): JSX.Element => {
   );
 };
 
-export default BondsPage;
+export default BondChoicePage;

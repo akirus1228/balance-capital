@@ -2,6 +2,7 @@ import { Box, Button, Grid } from "@mui/material";
 import css from "./bonds.module.scss";
 
 interface IBondCardParams {
+    bondType: string;
     term: number;
     roi: number;
     apy: number;
@@ -30,7 +31,7 @@ export const BondCard = (params: IBondCardParams): JSX.Element => {
                 </Grid>
                 <Grid item xs={12}>
                     <Box sx={{display: 'flex', justifyContent:'center'}}>
-                        <Button>Deposit</Button>
+                        <Button href={`/bonds/${params.bondType}`}>Deposit</Button>
                     </Box>
                 </Grid>
             </Grid>
