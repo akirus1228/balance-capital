@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import css from "./bonds.module.scss";
 
 interface IBondCardParams {
@@ -26,6 +26,11 @@ export const BondCard = (params: IBondCardParams): JSX.Element => {
                     <Box className={css['lowerStats']}>
                         <span>APY</span>
                         <span>{params.apy}%</span>
+                    </Box>
+                </Grid>
+                <Grid item xs={12}>
+                    <Box sx={{display: 'flex', justifyContent:'center'}}>
+                        <Button>Deposit</Button>
                     </Box>
                 </Grid>
             </Grid>
