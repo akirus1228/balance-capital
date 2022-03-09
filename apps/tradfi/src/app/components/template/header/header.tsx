@@ -24,10 +24,11 @@ type PageParams = {
 type Pages = {
   title: string;
   params?: PageParams;
+  href?: string;
 };
 
 const pages: Pages[] = [
-  { title: 'Fixed Deposits' },
+  { title: 'Fixed Deposits', href: '/bonds' },
   { title: 'Indexes', params: { comingSoon: true } },
   { title: 'Single Stocks', params: { comingSoon: true } },
 ];
@@ -93,7 +94,7 @@ export const Header = (): JSX.Element => {
             >
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page.title}</Typography>
+                  <Typography textAlign="center"><Button href={page.href}>{page.title}</Button></Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -118,6 +119,7 @@ export const Header = (): JSX.Element => {
                 disabled={page.params?.comingSoon}
                 key={page.title}
                 onClick={handleCloseNavMenu}
+                href={page.href}
                 sx={{
                   ...(page.params && page.params.sx),
                   my: 2,

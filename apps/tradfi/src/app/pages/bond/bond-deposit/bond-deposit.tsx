@@ -1,4 +1,4 @@
-import { Box, Grid, Icon, SvgIcon } from "@mui/material";
+import { Box, Button, Grid, Icon, SvgIcon } from "@mui/material";
 import rootStyle from "../bond.module.scss";
 import style from "./bond-deposit.module.scss";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -54,6 +54,9 @@ export const BondDeposit = (props: IBondDepositProps): JSX.Element => {
                             <div className={rootStyle['flexCenterRow']}>Reward amount <Icon component={InfoOutlinedIcon} /></div>
                             <div>20.00 FHM</div>
                         </Box>
+                    </Grid>
+                    <Grid xs={12} item>
+                        <Button>Deposit</Button>
                     </Grid>
                 </Grid>
             ) : (

@@ -39,3 +39,19 @@
 h2 {
   margin: 0.25em 1em;
 }
+
+.MuiButton-root {
+  width: 100%;
+  color: #000;
+  background-color: #FFF;
+  font-size: 125%;
+  padding: 1.5em;
+  border-radius: 1.75em;
+  font-weight: 700;
+  
+}
+
+.MuiButton-root:hover {
+  background-color: rgb(219, 219, 219);
+  color: #000;
+}

@@ -4,7 +4,7 @@ import Bond from './bond';
 
 describe('Bond', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<Bond bondType="string" />);
+    const { baseElement } = render(<Bond />);
     expect(baseElement).toBeTruthy();
   });
 });

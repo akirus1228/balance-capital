@@ -17,22 +17,21 @@ export function App() {
     }}>
       <div>
         <Header />
-        <Link to="/bonds">Bonds</Link>
-        <div>Footer</div>
+        <Routes>
+          <Route path="/" element={<HomePage title="Home"/>} />
+          <Route path="/bonds" element={<BondChoicePage />} />
+          <Route path="/bonds/:bondType" element={<Bond />} />
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Routes>
       </div>
-      <Routes>
-        <Route path="/" element={<HomePage title="Home"/>} />
-        <Route path="/bonds" element={<BondChoicePage />} />
-        <Route path="/bonds/:bondType" element={<Bond />} />
-        <Route
-          path="*"
-          element={
-            <main style={{ padding: "1rem" }}>
-              <p>There's nothing here!</p>
-            </main>
-          }
-        />
-      </Routes>
+      
       
     </Box>
   );

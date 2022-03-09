@@ -1,5 +1,5 @@
-import { Backdrop, Fade, FormControl, FormControlLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
-import { useMemo, useState } from 'react';
+import { Backdrop, Fade, FormControl, Grid, Paper, RadioGroup } from '@mui/material';
+import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BondDeposit from './bond-deposit/bond-deposit';
 import BondRedeem from './bond-redeem/bond-redeem';
@@ -35,7 +35,7 @@ export const Bond = (props: BondProps): JSX.Element => {
                 </Grid>
                 <Grid item xs={12}>
                   <Box className={style['flexCenterRow']}>
-                    {isDeposit ? (<BondDeposit bondType={bondType}/>) : (<BondRedeem/>)}
+                    {isDeposit ? (<BondDeposit bondType={bondType}/>) : (<BondRedeem bondType={bondType}/>)}
                   </Box>
                 </Grid>
               </Grid>
