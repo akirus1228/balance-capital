@@ -1,0 +1,14 @@
+{
+    "bonds": {
+        "3month" : {
+            "title": "3 Month",
+            "APY": 21.55,
+            "ROI": 5
+        },
+        "6month" : {
+            "title": "6 Month",
+            "APY": 32.55,
+            "ROI": 15
+        }
+    }
+}

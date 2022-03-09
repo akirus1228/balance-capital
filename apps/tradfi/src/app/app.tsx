@@ -31,8 +31,6 @@ export function App() {
           />
         </Routes>
       </div>
-      
-      
     </Box>
   );
 }
