@@ -26,7 +26,6 @@ export const BondChoicePage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Zoom>
-      <Outlet />
     </Box>
   );
 };

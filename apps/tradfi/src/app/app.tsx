@@ -22,9 +22,8 @@ export function App() {
       </div>
       <Routes>
         <Route path="/" element={<HomePage title="Home"/>} />
-        <Route path="/bonds" element={<BondChoicePage />} >
-          <Route path=":bondType" element={<Bond />} />
-        </Route>
+        <Route path="/bonds" element={<BondChoicePage />} />
+        <Route path="/bonds/:bondType" element={<Bond />} />
         <Route
           path="*"
           element={

@@ -1,20 +1,44 @@
-import { Backdrop, Fade, Grid, Paper } from '@mui/material';
+import { Backdrop, Fade, FormControl, FormControlLabel, Grid, Paper, Radio, RadioGroup } from '@mui/material';
+import { useMemo, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import './bond.module.scss';
+import BondDeposit from './bond-deposit/bond-deposit';
+import BondRedeem from './bond-redeem/bond-redeem';
+import './bond.scss';
+import style from './bond.module.scss';
+import { Box } from '@mui/system';
+import { BondRadioButton } from './bond-radio-button/bond-radio-button';
 
 /* eslint-disable-next-line */
 export interface BondProps {}
 
 export const Bond = (props: BondProps): JSX.Element => {
   const { bondType } = useParams();
+  const [isDeposit, setIsDeposit] = useState(true);
+
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
       <Grid container id="bond-view">
         <Backdrop open={true}>
           <Fade in={true}>
-            <Paper>
-              <h1>Hello Bond</h1>
-              <p>{bondType}</p>
+            <Paper className={`${style['flexCenterCol']} ${style['paperContainer']}`}>
+              <h2>{bondType}</h2>
+              <Grid container sx={{maxWidth: '500px'}}>
+                <Grid item xs={12}>
+                  <Box className={style['flexCenterRow']}>
+                    <FormControl>
+                      <RadioGroup row name="bond-options" defaultValue="deposit">
+                          <BondRadioButton onClick={() => setIsDeposit(true)} active={isDeposit} label="Deposit"/>
+                          <BondRadioButton onClick={() => setIsDeposit(false)} active={!isDeposit} label="Redeem"/>
+                      </RadioGroup>
+                    </FormControl>
+                  </Box>
+                </Grid>
+                <Grid item xs={12}>
+                  <Box className={style['flexCenterRow']}>
+                    {isDeposit ? (<BondDeposit bondType={bondType}/>) : (<BondRedeem/>)}
+                  </Box>
+                </Grid>
+              </Grid>
             </Paper>
           </Fade>
         </Backdrop>

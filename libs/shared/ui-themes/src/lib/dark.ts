@@ -58,7 +58,7 @@ export const dark = createTheme({
       styleOverrides: {
         root: {
           backgroundColor: darkTheme.paperBg,
-          '.ohm-card': {
+          '&.ohm-card': {
             backgroundColor: darkTheme.paperBg,
           },
           '&.ohm-card-secondary': {
