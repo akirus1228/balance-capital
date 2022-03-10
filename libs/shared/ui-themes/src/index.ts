@@ -2,3 +2,4 @@ export * from './lib/light';
 export * from './lib/dark';
 export * from './lib/river';
 export * from './lib/images/networks';
+export { USDBLight, USDBDark } from './lib/usdb-dual-mode'

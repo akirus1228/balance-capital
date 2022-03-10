@@ -1,9 +1,9 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Routes, Route, Link } from "react-router-dom";
-import HomePage from './pages/home-page';
 import { BondChoicePage } from './pages/bond-choice/bond-choice';
 import { Header } from './components/template';
 import { Box } from '@mui/material';
+import HomePage from './pages/home/home-page';
 import Bond from "./pages/bond/bond";
 
 export function App() {
@@ -13,7 +13,9 @@ export function App() {
       bgcolor: 'background.default',
       width: '100%',
       color: 'text.primary',
-      height: '100vh'
+      height: '100vh',
+      paddingTop: '57px',
+      maxWidth: '1663px'
     }}>
       <div>
         <Header />

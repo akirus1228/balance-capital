@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import BondDeposit from './bond-deposit/bond-deposit';
 import BondRedeem from './bond-redeem/bond-redeem';
-import './bond.scss';
 import style from './bond.module.scss';
 import { Box } from '@mui/system';
 import { BondRadioButton } from './bond-radio-button/bond-radio-button';
@@ -17,7 +16,7 @@ export const Bond = (props: BondProps): JSX.Element => {
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
-      <Grid container id="bond-view">
+      <Grid container id="bond-view" className={style['bondView']}>
         <Backdrop open={true}>
           <Fade in={true}>
             <Paper className={`${style['flexCenterCol']} ${style['paperContainer']}`}>

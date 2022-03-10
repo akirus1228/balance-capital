@@ -1,3 +1,4 @@
+import { MouseEvent, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -10,11 +11,10 @@ import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { SvgIcon, SxProps, Theme } from '@mui/material';
-import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
-import { useWeb3Context } from '@fantohm/shared-web3';
-import { MouseEvent, useEffect, useState } from 'react';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
+import { useWeb3Context,setWalletConnected } from '@fantohm/shared-web3';
 import { useDispatch } from 'react-redux';
-import { setWalletConnected } from '@fantohm/shared-web3';
+import USDBLogo from '../../../../assets/images/USDB-logo.svg';
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -58,9 +58,9 @@ export const Header = (): JSX.Element => {
             variant="h6"
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}
+            sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
           >
-            Axcapital Logo
+            <img src={USDBLogo} />
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -105,13 +105,15 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            Axcapital Logo
+            <img src={USDBLogo} />
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
-              'justify-content': 'right',
+              justifyContent: 'flex-end',
+              alignItems: 'end',
+              flexDirection: 'row'
             }}
           >
             {pages.map((page: Pages) => (
@@ -135,7 +137,7 @@ export const Header = (): JSX.Element => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Connect Wallet">
               <IconButton onClick={connect} sx={{ p: 0 }} color="primary">
-                <SvgIcon component={AccountBalanceWalletIcon} />
+                <SvgIcon component={WbSunnyOutlinedIcon} />
               </IconButton>
             </Tooltip>
           </Box>
