@@ -15,6 +15,7 @@ import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import { useWeb3Context,setWalletConnected } from '@fantohm/shared-web3';
 import { useDispatch } from 'react-redux';
 import USDBLogo from '../../../../assets/images/USDB-logo.svg';
+import { Link } from 'react-router-dom';
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -55,12 +56,11 @@ export const Header = (): JSX.Element => {
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
-            variant="h6"
             noWrap
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
           >
-            <img src={USDBLogo} />
+            <Link to="/"><img src={USDBLogo} alt="USDB logo"/></Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -100,8 +100,6 @@ export const Header = (): JSX.Element => {
             </Menu>
           </Box>
           <Typography
-            variant="h6"
-            noWrap
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
@@ -120,13 +118,9 @@ export const Header = (): JSX.Element => {
               <Button
                 disabled={page.params?.comingSoon}
                 key={page.title}
-                onClick={handleCloseNavMenu}
                 href={page.href}
                 sx={{
                   ...(page.params && page.params.sx),
-                  my: 2,
-                  color: 'white',
-                  display: 'block',
                 }}
               >
                 {page.title}

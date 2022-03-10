@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
-import { borderRadius } from '@mui/system';
+import { ThemeOptions} from '@mui/material';
 
+// light color pallet for use in themes
 const usdbLightColors = {
   color: '#OOO',
   backgroundColor: '#ECECF4',
@@ -8,6 +9,7 @@ const usdbLightColors = {
   gray: '#696C80',
 };
 
+// dark color pallet for use in themes
 const usdbDarkColors = {
   color: '#FFF',
   backgroundColor: '#000',
@@ -15,7 +17,8 @@ const usdbDarkColors = {
   gray: '#929BA0',
 };
 
-const globalTheme = {
+// global theme options that apply to both light and dark
+const globalTheme: ThemeOptions = {
   typography: {
     fontFamily: ['Sora', 'sans-serif'].join(','),
   },
@@ -43,12 +46,21 @@ const globalTheme = {
           '-webkit-backdrop-filter': 'blur(33px)',
         }
       }
+    },
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          borderRadius: '30px',
+          padding: '27px',
+          fontSize: '20px',
+        }
+      }
     }
   }
 }
 
-export const USDBLight = createTheme({
-  ...globalTheme,
+// light theme
+const USDBLightBase: ThemeOptions = {
   palette: {
     mode: 'light',
     primary: {
@@ -75,10 +87,18 @@ export const USDBLight = createTheme({
         }
       }
     },
+    MuiButton: {
+      styleOverrides: {
+        outlined: {
+          border: '3px solid #000',
+        }
+      }
+    }
   }
-});
+};
 
-export const USDBDark = createTheme({
+// dark theme
+const USDBDarkBase: ThemeOptions = {
   ...globalTheme,
   palette: {
     mode: 'dark',
@@ -98,4 +118,8 @@ export const USDBDark = createTheme({
       secondary: usdbDarkColors.gray,
     },
   },
-});
+};
+
+
+export const USDBLight = createTheme(USDBLightBase, globalTheme);
+export const USDBDark = createTheme(USDBDarkBase , globalTheme);
