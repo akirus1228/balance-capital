@@ -21,6 +21,12 @@
 
     span {
         text-align: center;
+        color:#929BA0;
+        font-size: 20px;
+    }
+
+    h1 {
+        margin-bottom: 0em;
     }
 }
 
@@ -34,5 +40,25 @@
     .bondCard {
         margin: 0px 10px;
         max-width: 500px;
+    }
+}
+
+.iconWrapper {
+    position: absolute;
+}
+
+.daiIcon {
+    position: relative;
+    height: 95px;
+}
+
+.titleWrapper {
+    background-color: #FFF;
+    padding: 0em 2em;
+    border-radius: 3em;
+    color: #000;
+
+    h3 {
+        margin: 0.5em;
     }
 }

@@ -116,20 +116,25 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Button
-                disabled={page.params?.comingSoon}
+              autoCapitalize='none'  
+              disabled={page.params?.comingSoon}
                 key={page.title}
                 href={page.href}
-                sx={{
-                  ...(page.params && page.params.sx),
-                }}
+                sx={{...(page.params && page.params.sx)}}
               >
                 {page.title}
               </Button>
             ))}
           </Box>
-
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em', mx: 2 }}>
             <Tooltip title="Connect Wallet">
+              <Button onClick={connect} sx={{ p: 0 }} color="primary">
+                {connected ? 'Disconnect' : 'Connect Wallet'}
+              </Button>
+            </Tooltip>
+          </Box>
+          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em' }}>
+            <Tooltip title="Toggle Light/Dark Mode">
               <IconButton onClick={connect} sx={{ p: 0 }} color="primary">
                 <SvgIcon component={WbSunnyOutlinedIcon} />
               </IconButton>

@@ -23,7 +23,7 @@ const globalTheme: ThemeOptions = {
     fontFamily: ['Sora', 'sans-serif'].join(','),
   },
   components: {
-    MuiToolbar: {
+    MuiAppBar: {
       styleOverrides: {
         root: {
           fontSize: '22px',
@@ -49,11 +49,24 @@ const globalTheme: ThemeOptions = {
     },
     MuiButton: {
       styleOverrides: {
+        root: {
+          borderRadius: '30px',
+          padding: '27px',
+          fontSize: '20px',
+        },
         outlined: {
           borderRadius: '30px',
           padding: '27px',
           fontSize: '20px',
         }
+      },
+      defaultProps: {
+        autoCapitalize: 'none',
+      }
+    },
+    MuiButtonBase: {
+      defaultProps: {
+        autoCapitalize: 'none',
       }
     }
   }

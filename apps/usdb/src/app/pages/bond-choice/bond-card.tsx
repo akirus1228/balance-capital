@@ -1,5 +1,6 @@
-import { Box, Button, Grid } from "@mui/material";
-import css from "./bonds.module.scss";
+import { Box, Button, Grid, Paper } from "@mui/material";
+import css from "./bond-choice.module.scss";
+import DAIIcon from "../../../assets/tokens/DAI.svg";
 
 interface IBondCardParams {
     bondType: string;
@@ -11,30 +12,39 @@ interface IBondCardParams {
 export const BondCard = (params: IBondCardParams): JSX.Element => {
 
     return(
-        <Box className={css['bondCard']}>
+        <Paper sx={{marginTop: '47px'}}>
             <Grid container>
-                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center'}}>
-                    <h3>FIXED DEPOSIT</h3>
+                <Grid item xs={12}>
+                    <Box className={`flexCenterCol`}>
+                        <div className={`${css['iconWrapper']}`}>
+                            <img src={DAIIcon} alt="DAI token" className={css['daiIcon']}/>
+                        </div>
+                    </Box>
+                </Grid>
+                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingTop: '60px'}}>
+                    <Box className={css['titleWrapper']}>
+                        <h3>FIXED DEPOSIT</h3>
+                    </Box>
                     <h1>{params.term} MONTHS</h1>
                 </Grid>
-                <Grid item xs={6}>
+                <Grid item xs={6} className={css['lowerStats']}>
                     <Box className={css['lowerStats']}>
+                        <h1>{params.roi}%</h1>
                         <span>ROI</span>
-                        <span>{params.roi}%</span>
                     </Box>
                 </Grid>
                 <Grid item xs={6} className={css['lowerStats']}>
                     <Box className={css['lowerStats']}>
+                        <h1>{params.apy}%</h1>
                         <span>APY</span>
-                        <span>{params.apy}%</span>
                     </Box>
                 </Grid>
                 <Grid item xs={12}>
                     <Box sx={{display: 'flex', justifyContent:'center'}}>
-                        <Button href={`/bonds/${params.bondType}`}>Deposit</Button>
+                        <Button href={`/bonds/${params.bondType}`} className="paperButton">Deposit</Button>
                     </Box>
                 </Grid>
             </Grid>
-        </Box>
+        </Paper>
     );
 }

@@ -1,15 +1,14 @@
-import css from './bonds.module.scss';
+import css from './bond-choice.module.scss';
 import {
   Box,
   Grid,
   Zoom,
 } from '@mui/material';
 import { BondCard } from './bond-card';
-import { Outlet } from 'react-router-dom';
 
 export const BondChoicePage = (): JSX.Element => {
   return (
-    <Box>
+    <Box sx={{marginTop: '3em'}}>
       <Zoom in={true}>
         <Grid container item xs={12} spacing={4} className={css['gridParent']}>
           <Grid item xs={0} md={2}>

@@ -15,7 +15,6 @@ export function App() {
       color: 'text.primary',
       height: '100vh',
       paddingTop: '57px',
-      maxWidth: '1663px'
     }}>
       <div>
         <Header />
