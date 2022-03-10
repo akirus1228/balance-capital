@@ -15,10 +15,18 @@
         "main": "apps/usdb/src/main.tsx",
         "polyfills": "apps/usdb/src/polyfills.ts",
         "tsConfig": "apps/usdb/tsconfig.app.json",
-        "assets": ["apps/usdb/src/favicon.ico", "apps/usdb/src/assets"],
-        "styles": ["apps/usdb/src/styles.scss"],
+        "assets": [
+          "apps/usdb/src/favicon.ico", 
+          "apps/usdb/src/assets",
+          {
+            "input": "libs/shared/assets/images",
+            "glob": "**/*",
+            "output": "assets/images"
+          }
+        ],
+        "styles": ["apps/usdb/src/styles.scss","libs/shared/assets/styles/fonts.scss"],
         "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/usdb/webpack.config.js"
       },
       "configurations": {
         "production": {

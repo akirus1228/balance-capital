@@ -1,14 +1,11 @@
-import { StrictMode } from 'react';
-import * as ReactDOM from 'react-dom';
-import { BrowserRouter } from 'react-router-dom';
+import { render } from "react-dom";
+import "./styles.scss";
+import './app/styles/fonts.scss';
 
-import App from './app/app';
+import Root from './app/root';
 
-ReactDOM.render(
-  <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
-  </StrictMode>,
-  document.getElementById('root')
+const rootElement = document.getElementById('root')
+
+render(
+  <Root />, rootElement
 );
