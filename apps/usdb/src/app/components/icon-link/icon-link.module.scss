@@ -1,0 +1,47 @@
+.iconLinkContainer {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .imageBox {
+        background: rgb(78,138,134);
+        background: linear-gradient(45deg, rgba(78,138,134,1) 0%, rgba(14,15,16,1) 50%, rgba(59,28,142,1) 100%);
+        border: 1px rgba(255,255,255, 0.18);
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        align-items: center;
+        flex-grow: 0;
+        padding: 32px;
+        border-radius: 3em;
+        aspect-ratio: 1;
+        -moz-box-shadow:    15px 30px 60px #515167, rgba(255, 255, 255, 0.40) 0 0 20px inset;
+        -webkit-box-shadow: 15px 30px 60px #515167, rgba(255, 255, 255, 0.40) 0 0 20px inset;
+        box-shadow:         15px 30px 60px #515167, rgba(255, 255, 255, 0.40) 0 0 20px inset;
+        min-height: 114px;
+    }
+
+    .title {
+        font-size: 28px;
+        font-weight: 400;
+        margin-bottom: 10px;
+    }
+
+    .link {
+        font-size: 17px;
+        font-weight: 400;
+        color: #6DC1B9;
+        margin-top: 0;
+    }
+
+    .disabled {
+        color: rgba(105, 108, 128, 0.43);
+    }
+
+    .linkArrow{
+        transform: rotate(45deg);
+        font-size: 16px;
+    }
+
+}

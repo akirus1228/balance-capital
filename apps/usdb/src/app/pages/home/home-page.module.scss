@@ -1,13 +1,35 @@
-.hero {
-    h1 {
-        font-size: 60px;
-        font-weight: normal;
-        margin-bottom: 25.6px;
-    }
-    h2 {
-        font-size: 34px;
-        font-weight: 300;
-        color: #696C80;
+.heroRight {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    
+    .heroLogo {
+        height: 180px;
     }
 
+    .heroTitle {
+        font-size: 58px;
+        font-weight: 400;
+        text-align: center;
+    }
+
+    .heroSubtitle {
+        font-size: 21px;
+        font-weight: 300;
+        text-align: center;
+    }
+
+    .heroLink {
+        font-size: 29px;
+        font-weight: 400;
+        color: #6DC1B9;
+
+        .linkArrow{
+            transform: rotate(45deg);
+            font-size: 29px;
+        }
+    }
 }
+
+
