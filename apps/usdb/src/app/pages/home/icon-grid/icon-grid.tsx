@@ -17,19 +17,19 @@ export const IconGrid = (props: IconGridProps): JSX.Element  => {
         <IconLink title="Staking" icon={walletIcon} linkText="Learn More" link="/staking"/>
       </Grid>
       <Grid item md={4} xs={6}>
-        <IconLink title="NFTs" icon={windowsIcon} />
-      </Grid>
-      <Grid item md={4} xs={6}>
-        <IconLink title="TradFi" icon={creditCardsIcon} />
+        <IconLink title="TradFi" icon={creditCardsIcon} linkText="Learn More" link="/trad-fi"/>
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="USDBank" icon={bankIcon}/>
       </Grid>
       <Grid item md={4} xs={6}>
-        <IconLink title="Label" icon={doughnutGraphIcon} />
+        <IconLink title="TBA" icon={windowsIcon} />
       </Grid>
       <Grid item md={4} xs={6}>
-        <IconLink title="Label" icon={shieldIcon} />
+        <IconLink title="TBA" icon={doughnutGraphIcon} />
+      </Grid>
+      <Grid item md={4} xs={6}>
+        <IconLink title="TBA" icon={shieldIcon} />
       </Grid>
     </Grid>
   );

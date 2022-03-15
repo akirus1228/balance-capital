@@ -32,9 +32,9 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Fixed Deposits', href: '/staking' },
-  { title: 'NFTs', params: { comingSoon: true } },
-  { title: 'Traditional Finance', params: { comingSoon: true } },
+  { title: 'Staking', href: '/staking' },
+  { title: 'Traditional Finance', href: '/tradfi' },
+  { title: 'USDBank', params: { comingSoon: true } },
 ];
 
 export const Header = (): JSX.Element => {
