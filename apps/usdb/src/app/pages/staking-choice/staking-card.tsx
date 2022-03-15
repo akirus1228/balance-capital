@@ -13,7 +13,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
     return(
         <Paper sx={{marginTop: '47px'}}>
-            <Grid container>
+            <Grid container rowSpacing={3}>
                 <Grid item xs={12}>
                     <Box className={`flexCenterCol`}>
                         <div className={`${css['iconWrapper']}`}>
@@ -21,7 +21,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
                         </div>
                     </Box>
                 </Grid>
-                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingTop: '60px'}}>
+                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingTop: '50px'}}>
                     <Box className={css['titleWrapper']}>
                         <h3>FIXED DEPOSIT</h3>
                     </Box>

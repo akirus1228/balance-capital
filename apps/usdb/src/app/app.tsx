@@ -24,7 +24,6 @@ export function App() {
       <Box sx={{
         color: 'text.primary',
         height: '100vh',
-        paddingTop: '57px',
       }}>
         <Header />
         <Routes>

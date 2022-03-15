@@ -15,7 +15,8 @@ import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import { useWeb3Context, setWalletConnected } from '@fantohm/shared-web3';
 import { setTheme } from '../../../store/reducers/app-slice';
 import { useDispatch, useSelector } from 'react-redux';
-import USDBLogo from '../../../../assets/images/USDB-logo.svg';
+import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
+import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import { Link } from 'react-router-dom';
 import style from './header.module.scss';
 import { RootState } from '../../../store';
@@ -69,7 +70,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
           >
-            <Link to="/"><img src={USDBLogo} alt="USDB logo"/></Link>
+            <Link to="/"><img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/></Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -127,7 +128,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img src={USDBLogo} />
+            <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} />
           </Typography>
           <Box
             sx={{
