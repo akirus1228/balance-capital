@@ -53,12 +53,13 @@ const globalTheme: ThemeOptions = {
           borderRadius: '30px',
           padding: '27px',
           fontSize: '20px',
+          textTransform: 'capitalize'
         },
         outlined: {
           borderRadius: '30px',
           padding: '27px',
           fontSize: '20px',
-        }
+        },
       },
       defaultProps: {
         autoCapitalize: 'none',
