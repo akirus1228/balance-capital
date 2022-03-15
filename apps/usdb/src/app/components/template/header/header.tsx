@@ -108,6 +108,19 @@ export const Header = (): JSX.Element => {
                   </Typography>
                 </MenuItem>
               ))}
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button onClick={connect}>{connected ? 'Disconnect' : 'Connect Wallet'}</Button>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button onClick={toggleTheme}>
+                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
+                  </Button>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Typography
