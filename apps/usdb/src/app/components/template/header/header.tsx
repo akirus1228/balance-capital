@@ -33,7 +33,7 @@ type Pages = {
 
 const pages: Pages[] = [
   { title: 'Staking', href: '/staking' },
-  { title: 'Traditional Finance', href: '/tradfi' },
+  { title: 'Traditional Finance', href: '/trad-fi' },
   { title: 'USDBank', params: { comingSoon: true } },
 ];
 
