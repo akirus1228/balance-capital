@@ -1,6 +1,6 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Routes, Route, Link } from "react-router-dom";
-import { BondChoicePage } from './pages/bond-choice/bond-choice';
+import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
 import { Box } from '@mui/material';
 import { HomePage } from './pages/home/home-page';
@@ -18,7 +18,7 @@ export function App() {
       <Header />
       <Routes>
         <Route path="/" element={<HomePage title="Home"/>} />
-        <Route path="/bonds" element={<BondChoicePage />} />
+        <Route path="/staking" element={<StakingChoicePage />} />
         <Route path="/bonds/:bondType" element={<Bond />} />
         <Route path="/trad-fi" element={<TradFi />} />
         <Route

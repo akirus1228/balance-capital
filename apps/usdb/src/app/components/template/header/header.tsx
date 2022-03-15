@@ -30,7 +30,7 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Fixed Deposits', href: '/bonds' },
+  { title: 'Fixed Deposits', href: '/staking' },
   { title: 'NFTs', params: { comingSoon: true } },
   { title: 'Traditional Finance', params: { comingSoon: true } },
 ];

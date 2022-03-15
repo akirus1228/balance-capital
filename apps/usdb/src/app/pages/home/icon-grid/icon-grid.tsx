@@ -14,7 +14,7 @@ export const IconGrid = (props: IconGridProps): JSX.Element  => {
   return (
     <Grid container rowSpacing={3}>
       <Grid item md={4} xs={6}>
-        <IconLink title="Staking" icon={walletIcon} linkText="Learn More" link="/bonds"/>
+        <IconLink title="Staking" icon={walletIcon} linkText="Learn More" link="/staking"/>
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="NFTs" icon={windowsIcon} />

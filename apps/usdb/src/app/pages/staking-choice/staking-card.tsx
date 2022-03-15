@@ -1,15 +1,15 @@
 import { Box, Button, Grid, Paper } from "@mui/material";
-import css from "./bond-choice.module.scss";
+import css from "./staking-choice.module.scss";
 import DAIIcon from "../../../assets/tokens/DAI.svg";
 
-interface IBondCardParams {
+interface IStakingCardParams {
     bondType: string;
     term: number;
     roi: number;
     apy: number;
 }
 
-export const BondCard = (params: IBondCardParams): JSX.Element => {
+export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
     return(
         <Paper sx={{marginTop: '47px'}}>
@@ -48,3 +48,5 @@ export const BondCard = (params: IBondCardParams): JSX.Element => {
         </Paper>
     );
 }
+
+export default StakingCard;
