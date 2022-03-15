@@ -13,7 +13,7 @@ export const HomePage = ({ title }: { title: string }): JSX.Element => {
           justifyContent: 'center',
           flexDirection: 'column',
           alignItems: 'center',
-          paddingTop: '56px'
+          paddingTop: '112px'
         }}
         className={style['hero']}
       >

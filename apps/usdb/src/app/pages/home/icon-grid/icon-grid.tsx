@@ -12,7 +12,7 @@ export interface IconGridProps {}
 
 export const IconGrid = (props: IconGridProps): JSX.Element  => {
   return (
-    <Grid container rowSpacing={3}>
+    <Grid container rowSpacing={3} sx={{maxWidth: '645px'}}>
       <Grid item md={4} xs={6}>
         <IconLink title="Staking" icon={walletIcon} linkText="Learn More" link="/staking"/>
       </Grid>
