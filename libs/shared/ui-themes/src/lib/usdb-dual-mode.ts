@@ -1,5 +1,5 @@
 import { createTheme } from '@mui/material/styles';
-import { ThemeOptions} from '@mui/material';
+import { ThemeOptions } from '@mui/material';
 
 // light color pallet for use in themes
 const usdbLightColors = {

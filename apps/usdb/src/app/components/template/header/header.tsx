@@ -12,11 +12,13 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { SvgIcon, SxProps, Theme } from '@mui/material';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import { useWeb3Context,setWalletConnected } from '@fantohm/shared-web3';
-import { useDispatch } from 'react-redux';
+import { useWeb3Context, setWalletConnected } from '@fantohm/shared-web3';
+import { setTheme } from '../../../store/reducers/app-slice';
+import { useDispatch, useSelector } from 'react-redux';
 import USDBLogo from '../../../../assets/images/USDB-logo.svg';
 import { Link } from 'react-router-dom';
 import style from './header.module.scss';
+import { RootState } from '../../../store';
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -40,6 +42,8 @@ export const Header = (): JSX.Element => {
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
+  const themeType = useSelector((state: RootState) => state.app.theme);
+
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -51,6 +55,10 @@ export const Header = (): JSX.Element => {
   useEffect(() => {
     dispatch(setWalletConnected(connected));
   }, [connected]);
+
+  const toggleTheme = () => {
+    dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
+  }
 
   return (
     <AppBar position="static" color="transparent" elevation={0}>
@@ -95,7 +103,9 @@ export const Header = (): JSX.Element => {
             >
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center"><Button href={page.href}>{page.title}</Button></Typography>
+                  <Typography textAlign="center">
+                    <Button href={page.href}>{page.title}</Button>
+                  </Typography>
                 </MenuItem>
               ))}
             </Menu>
@@ -116,7 +126,7 @@ export const Header = (): JSX.Element => {
             }}
           >
             {pages.map((page: Pages) => (
-              <Box sx={{display: 'flex'}}>
+              <Box sx={{display: 'flex'}} key={page.title}>
                 {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon == true ? 
                   (
                     <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
@@ -131,7 +141,6 @@ export const Header = (): JSX.Element => {
                     <Button
                       autoCapitalize='none'  
                       disabled={page.params?.comingSoon}
-                      key={page.title}
                       href={page.href}
                       sx={{...(page.params && page.params.sx)}}
                     >
@@ -147,7 +156,7 @@ export const Header = (): JSX.Element => {
             </Button>
           </Tooltip>
           <Tooltip title="Toggle Light/Dark Mode">
-            <Button onClick={connect} sx={{ display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
+            <Button onClick={toggleTheme} sx={{ display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
               <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
             </Button>
           </Tooltip>
