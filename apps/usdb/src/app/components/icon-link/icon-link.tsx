@@ -14,7 +14,7 @@ export interface IconLinkProps {
 export function IconLink(props: IconLinkProps) {
   return (
     <Box className={style['iconLinkContainer']}>
-      <Box className={style['imageBox']} sx={{height: {xs: '64px', md: '114px'}, width: {xs: '64px', md: '114px'}}}>
+      <Box className={style['imageBox']} sx={{height: {xs: '64px', md: '190px'}, width: {xs: '64px', md: '190px'}}}>
         <img src={props.icon} alt={props.title} className={style['iconImage']}/>
       </Box>
       <h1 className={style['title']}>{props.title}</h1>

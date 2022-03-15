@@ -127,7 +127,7 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Box sx={{display: 'flex'}} key={page.title}>
-                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon == true ? 
+                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ? 
                   (
                     <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                       <span className={style['comingSoonTitle']}>

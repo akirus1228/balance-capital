@@ -2,7 +2,7 @@
 import { Routes, Route } from "react-router-dom";
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
-import { Box } from '@mui/material';
+import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider } from "@mui/material/styles";
 import { HomePage } from './pages/home/home-page';
 import { Bond } from "./pages/bond/bond";
@@ -20,6 +20,7 @@ export function App() {
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Box sx={{
         color: 'text.primary',
         height: '100vh',

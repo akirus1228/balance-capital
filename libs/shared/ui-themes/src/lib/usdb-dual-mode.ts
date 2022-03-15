@@ -113,7 +113,6 @@ const USDBLightBase: ThemeOptions = {
 
 // dark theme
 const USDBDarkBase: ThemeOptions = {
-  ...globalTheme,
   palette: {
     mode: 'dark',
     primary: {
