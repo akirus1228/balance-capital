@@ -6,7 +6,6 @@ import creditCardsIcon from '../../../../assets/icons/credit-cards.svg';
 import bankIcon from '../../../../assets/icons/bank.svg';
 import doughnutGraphIcon from '../../../../assets/icons/doughnut-graph.svg';
 import shieldIcon from '../../../../assets/icons/shield.svg'; 
-import style from './icon-grid.module.scss';
 
 /* eslint-disable-next-line */
 export interface IconGridProps {}

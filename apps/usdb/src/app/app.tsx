@@ -11,28 +11,25 @@ export function App() {
   
   return (
     <Box sx={{
-      width: '100%',
       color: 'text.primary',
       height: '100vh',
       paddingTop: '57px',
     }}>
-      <div>
-        <Header />
-        <Routes>
-          <Route path="/" element={<HomePage title="Home"/>} />
-          <Route path="/bonds" element={<BondChoicePage />} />
-          <Route path="/bonds/:bondType" element={<Bond />} />
-          <Route path="/trad-fi" element={<TradFi />} />
-          <Route
-            path="*"
-            element={
-              <main style={{ padding: "1rem" }}>
-                <p>There's nothing here!</p>
-              </main>
-            }
-          />
-        </Routes>
-      </div>
+      <Header />
+      <Routes>
+        <Route path="/" element={<HomePage title="Home"/>} />
+        <Route path="/bonds" element={<BondChoicePage />} />
+        <Route path="/bonds/:bondType" element={<Bond />} />
+        <Route path="/trad-fi" element={<TradFi />} />
+        <Route
+          path="*"
+          element={
+            <main style={{ padding: "1rem" }}>
+              <p>There's nothing here!</p>
+            </main>
+          }
+        />
+      </Routes>
     </Box>
   );
 }

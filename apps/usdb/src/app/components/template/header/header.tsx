@@ -126,14 +126,14 @@ export const Header = (): JSX.Element => {
               </Button>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em', mx: 2 }}>
+          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em', mx: 2, display: { xs: 'none', md: 'flex' } }}>
             <Tooltip title="Connect Wallet">
               <Button onClick={connect} sx={{ p: 0 }} color="primary">
                 {connected ? 'Disconnect' : 'Connect Wallet'}
               </Button>
             </Tooltip>
           </Box>
-          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em' }}>
+          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em', display: { xs: 'none', md: 'flex' }}}>
             <Tooltip title="Toggle Light/Dark Mode">
               <IconButton onClick={connect} sx={{ p: 0 }} color="primary">
                 <SvgIcon component={WbSunnyOutlinedIcon} />
