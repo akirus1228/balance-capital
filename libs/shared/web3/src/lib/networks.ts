@@ -282,6 +282,27 @@ export const networks: INetworks = {
       // twap oracle: 0xc9ca91fe0667bafd4289e082088e41ed86471d79
     },
   },
+  [NetworkIDs.Ethereum]: {
+    name: 'Ethereum Mainnet',
+    logo: RinkebyIcon,
+    theme: darkTheme,
+    isEnabled: true,
+    isTestNet: false,
+    blocktime: 15.01,
+    epochBlock: 10112184,
+    epochInterval: 687,
+    blockCountdownUrl: (block) =>
+      `https://etherscan.io/block/countdown/${block}`,
+    getEtherscanUrl: (txnHash) => 'https://etherscan.io/tx/' + txnHash,
+    getPoolTogetherUrls: (contractAddress) => [],
+    poolGraphUrl:
+      '',
+    liquidityPoolReserveDecimals: {
+      token0Decimals: 9,
+      token1Decimals: 18,
+    },
+    addresses: {},
+  },
 };
 
 export const enabledNetworkIDs: NetworkID[] = Object.keys(networks)
