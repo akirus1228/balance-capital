@@ -10,7 +10,7 @@
   },
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.8.1",
+    "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",
     "@ethersproject/providers": "^5.6.0",
     "@ledgerhq/iframe-provider": "^0.4.2",

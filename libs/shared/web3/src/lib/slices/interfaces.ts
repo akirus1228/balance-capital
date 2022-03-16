@@ -1,5 +1,4 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { BondDetails } from "../types";
 import { NetworkID } from "../networks";
 import {Bond} from "../types/Bond";
 
@@ -58,7 +57,7 @@ export interface ICalcBondDetailsAsyncThunk extends IBaseBondAsyncThunk {
 }
 
 export interface ICalcGlobalBondDetailsAsyncThunk {
-  readonly allBonds: BondDetails[];
+  readonly allBonds: Bond[];
 }
 
 export interface IBondAssetAsyncThunk extends IBaseBondAsyncThunk, IValueAsyncThunk, IInteractiveAsyncThunk {

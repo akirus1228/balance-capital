@@ -25,22 +25,22 @@ export type SoldBonds = {
 //   lastTimestamp: number; // Last interaction
 // };
 
-export interface BondDetails {
-  FHM: string; // token given as payment for bond
-  FHUD: string; // FHUD
-  principle: string; // token used to create bond
-  treasury: string; // mints FHM when receives principle
-  DAO: string; // receives profit share from bond
-  fhudMinter: string; // receives profit share from bond
-  terms: Terms; // stores terms for new bonds
-  totalDebt: number; // total value of outstanding bonds; used for pricing
-  lastDecay: number; // reference block for debt decay
-  useWhitelist: boolean;
-  useCircuitBreaker: boolean;
-  whitelist: string[];
-  soldBondsInHour: SoldBonds[];
-  _bondInfo: Bond;
-  usersCount: number;
-
-  getTreasuryBalance(networkID: number): PromiseLike<any> | any | Promise<any> | any | Promise<{ valuation: number; bondQuote: any }>;
-}
+// export interface BondDetails {
+//   FHM: string; // token given as payment for bond
+//   FHUD: string; // FHUD
+//   principle: string; // token used to create bond
+//   treasury: string; // mints FHM when receives principle
+//   DAO: string; // receives profit share from bond
+//   fhudMinter: string; // receives profit share from bond
+//   terms: Terms; // stores terms for new bonds
+//   totalDebt: number; // total value of outstanding bonds; used for pricing
+//   lastDecay: number; // reference block for debt decay
+//   useWhitelist: boolean;
+//   useCircuitBreaker: boolean;
+//   whitelist: string[];
+//   soldBondsInHour: SoldBonds[];
+//   _bondInfo: Bond;
+//   usersCount: number;
+//
+//   getTreasuryBalance(networkID: number): PromiseLike<any> | any | Promise<any> | any | Promise<{ valuation: number; bondQuote: any }>;
+// }
