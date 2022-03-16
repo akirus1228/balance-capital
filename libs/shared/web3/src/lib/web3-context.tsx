@@ -37,13 +37,13 @@ export const useWeb3Context = () => {
 
 const saveNetworkID = (networkID: NetworkID) => {
   if (window.localStorage) {
-    window.localStorage.setItem('defaultNetworkId', networkID.toString());
+    window.localStorage.setItem('defaultNetworkID', networkID.toString());
   }
 };
 
 const getSavedNetworkID = () => {
   const savedNetworkID =
-    window.localStorage && window.localStorage.getItem('defaultNetworkId');
+    window.localStorage && window.localStorage.getItem('defaultNetworkID');
   if (savedNetworkID) {
     const parsedNetworkID = parseInt(savedNetworkID);
     if (enabledNetworkIDs.includes(parsedNetworkID)) {
@@ -103,15 +103,15 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       });
 
       rawProvider.on('chainChanged', async (chain: string) => {
-        let chainId;
+        let chainID;
         // On mobile chain comes in as a number but on web it comes in as a hex string
         if (typeof chain === 'number') {
-          chainId = chain;
+          chainID = chain;
         } else {
-          chainId = parseInt(chain, 16);
+          chainID = parseInt(chain, 16);
         }
         setChainID(chainID);
-        if (!_checkNetwork(chainId)) {
+        if (!_checkNetwork(chainID)) {
           disconnect();
         }
         setTimeout(() => window.location.reload(), 1);
@@ -145,7 +145,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     networkID: NetworkID,
     forceSwitch = false
   ) => {
-    const chainId = `0x${networkID.toString(16)}`;
+    const chainID = `0x${networkID.toString(16)}`;
     if (connected || forceSwitch) {
       try {
         await window.ethereum.request({
@@ -157,7 +157,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         if (e.code === 4902) {
           if (!(networkID in chains)) {
             console.warn(
-              `Details of network with chainId: ${chainId} not known`
+              `Details of network with chainID: ${chainID} not known`
             );
             return false;
           }
@@ -167,7 +167,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId,
+                  chainID,
                   chainName: chainDetails.networkName,
                   nativeCurrency: {
                     symbol: chainDetails.symbol,
@@ -210,11 +210,11 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
     _initListeners(rawProvider);
     const connectedProvider = new Web3Provider(rawProvider, 'any');
-    const chainId = await connectedProvider
+    const chainID = await connectedProvider
       .getNetwork()
       .then((network) => network.chainId);
     const connectedAddress = await connectedProvider.getSigner().getAddress();
-    const validNetwork = _checkNetwork(chainId);
+    const validNetwork = _checkNetwork(chainID);
     if (!validNetwork) {
       const switched = await switchEthereumChain(defaultNetworkID, true);
       if (!switched) {
