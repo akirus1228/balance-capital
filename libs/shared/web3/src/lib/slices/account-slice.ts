@@ -55,51 +55,49 @@ export const calculateUserBondDetails = createAsyncThunk(
         pendingPayout: "",
       };
     }
-    return {};
-    // dispatch(fetchBondInProgress());
-    //
-    // const provider = await chains[networkID].provider;
-    //
-    // // Contracts
-    // const bondContract = await bond.getContractForBond(networkID);
-    // const reserveContract = await bond.getContractForReserve(networkID);
-    //
-    // let interestDue, bondMaturationBlock;
-    //
-    // const paymentTokenDecimals = 18;
-    //
-    // // Contract Interactions
-    // const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
-    //   bondContract.bondInfo(address),
-    //   bondContract.pendingPayoutFor(address),
-    //   reserveContract.allowance(address, bond.getAddressForBond(networkID)),
-    //   reserveContract.balanceOf(address),
-    // ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
-    //   bondDetails,
-    //   ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-    //   Number(allowance),
-    //   // balance should NOT be converted to a number. it loses decimal precision
-    //   ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
-    // ]);
-    //
-    // // eslint-disable-next-line prefer-const
-    // interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-    // // eslint-disable-next-line prefer-const
-    // bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-    //
-    // return {
-    //   bond: bond.name,
-    //   displayName: bond.displayName,
-    //   bondIconSvg: bond.bondIconSvg,
-    //   isLP: bond.isLP,
-    //   allowance,
-    //   balance,
-    //   interestDue,
-    //   bondMaturationBlock,
-    //   pendingPayout,
-    //   paymentToken: bond.paymentToken,
-    //   bondAction: bond.bondAction,
-    // };
+
+    const provider = await chains[networkID].provider;
+
+    // Contracts
+    const bondContract = await bond.getContractForBond(networkID);
+    const reserveContract = await bond.getContractForReserve(networkID);
+
+    let interestDue, bondMaturationBlock;
+
+    const paymentTokenDecimals = 18;
+
+    // Contract Interactions
+    const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
+      bondContract["bondInfo"](address),
+      bondContract["pendingPayoutFor"](address),
+      reserveContract["allowance"](address, bond.getAddressForBond(networkID)),
+      reserveContract["balanceOf"](address),
+    ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
+      bondDetails,
+      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+      Number(allowance),
+      // balance should NOT be converted to a number. it loses decimal precision
+      ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
+    ]);
+
+    // eslint-disable-next-line prefer-const
+    interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+    // eslint-disable-next-line prefer-const
+    bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+
+    return {
+      bond: bond.name,
+      displayName: bond.displayName,
+      bondIconSvg: bond.bondIconSvg,
+      isLP: bond.isLP,
+      allowance,
+      balance,
+      interestDue,
+      bondMaturationBlock,
+      pendingPayout,
+      paymentToken: bond.paymentToken,
+      bondAction: bond.bondAction,
+    };
   },
 );
 

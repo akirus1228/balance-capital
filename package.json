@@ -15,7 +15,6 @@
     "@ethersproject/providers": "^5.6.0",
     "@ledgerhq/iframe-provider": "^0.4.2",
     "@mui/icons-material": "^5.4.4",
-    "@mui/material": "^5.4.4",
     "@mui/styles": "^5.4.4",
     "@reduxjs/toolkit": "^1.8.0",
     "@walletconnect/web3-provider": "^1.7.1",
@@ -42,6 +41,7 @@
   "devDependencies": {
     "@babel/core": "^7.17.5",
     "@babel/preset-typescript": "7.12.13",
+    "@mui/material": "^5.5.1",
     "@nrwl/cli": "13.8.3",
     "@nrwl/cypress": "13.8.3",
     "@nrwl/eslint-plugin-nx": "13.8.3",
@@ -66,6 +66,7 @@
     "@types/react-router-dom": "5.3.1",
     "@typescript-eslint/eslint-plugin": "~5.10.0",
     "@typescript-eslint/parser": "~5.10.0",
+    "axios": "^0.26.1",
     "babel-jest": "27.2.3",
     "babel-loader": "8.1.0",
     "cypress": "^9.1.0",
