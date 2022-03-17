@@ -16,6 +16,7 @@ import { useWeb3Context,setWalletConnected } from '@fantohm/shared-web3';
 import { useDispatch } from 'react-redux';
 import USDBLogo from '../../../../assets/images/USDB-logo.svg';
 import { Link } from 'react-router-dom';
+import {getBalances} from "../../../../../../../libs/shared/web3/src/lib/slices/account-slice";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -35,7 +36,7 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected } = useWeb3Context();
+  const { connect, disconnect, connected, address } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
@@ -49,6 +50,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
+    dispatch(getBalances({ address: address, networkID: 250 }));
   }, [connected]);
 
   return (
@@ -116,7 +118,7 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Button
-              autoCapitalize='none'  
+              autoCapitalize='none'
               disabled={page.params?.comingSoon}
                 key={page.title}
                 href={page.href}

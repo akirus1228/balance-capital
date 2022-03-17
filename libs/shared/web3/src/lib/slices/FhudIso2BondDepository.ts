@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { Terms, SoldBonds, Bond, BondDetails } from '../types';
+import { Terms, BondDetails } from '../types';
+import {Bond} from "../types/Bond";
 
-const initialState: BondDetails = {
+const initialState: { principle: string; useWhitelist: boolean; soldBondsInHour: any[]; totalDebt: number; fhudMinter: string; FHM: string; usersCount: number; whitelist: any[]; FHUD: string; useCircuitBreaker: boolean; DAO: string; terms: Terms; _bondInfo: any; treasury: string; lastDecay: number } = {
   FHM: '', // token given as payment for bond
   FHUD: '', // FHUD
   principle: '', // token used to create bond
