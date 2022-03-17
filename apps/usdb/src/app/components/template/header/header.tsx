@@ -20,6 +20,8 @@ import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import { Link } from 'react-router-dom';
 import style from './header.module.scss';
 import { RootState } from '../../../store';
+import {getBalances} from "../../../../../../../libs/shared/web3/src/lib/slices/account-slice";
+
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -39,7 +41,7 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected } = useWeb3Context();
+  const { connect, disconnect, connected, address } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
@@ -55,6 +57,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
+    dispatch(getBalances({ address: address, networkID: 250 }));
   }, [connected]);
 
   const toggleTheme = () => {

@@ -1,0 +1,13 @@
+import { networks, enabledNetworkIDs } from "./networks";
+
+export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/colonelssecretspices/kfc-graph";
+
+export const TOKEN_DECIMALS = 9;
+
+export const MISSING_ADDRESS = '0x0000000000000000000000000000000000000000';
+
+interface IAddresses {
+  [key: number]: { [key: string]: string };
+};
+
+export const addresses: IAddresses = enabledNetworkIDs.reduce((addresses: { [key: number]: { [key: string]: string } }, networkID) => (addresses[networkID] = networks[networkID].addresses, addresses), {});

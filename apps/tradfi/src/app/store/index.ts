@@ -1,6 +1,6 @@
 import { configureStore } from '@reduxjs/toolkit';
 import appSliceReducer from './reducers/app-slice';
-import accountReducer from './reducers/account-slice';
+import accountReducer from '../../../../../libs/shared/web3/src/lib/slices/account-slice';
 import { web3SliceReducer } from '@fantohm/shared-web3';
 
 // reducers are named automatically based on the name field in the slice
