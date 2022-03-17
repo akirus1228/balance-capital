@@ -11,6 +11,7 @@ import { RootState } from './store';
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { useEffect, useState } from "react";
+import MyAccount from './pages/my-account/my-account';
 
 export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);
@@ -31,6 +32,7 @@ export function App() {
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
           <Route path="/trad-fi" element={<TradFi />} />
+          <Route path="/my-account" element={<MyAccount />} />
           <Route
             path="*"
             element={
