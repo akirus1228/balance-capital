@@ -5,7 +5,7 @@ import { ThemeOptions } from '@mui/material';
 const usdbLightColors = {
   color: '#OOO',
   backgroundColor: '#ECECF4',
-  paperBg: '#0E0F10',
+  paperBg: '#FFF',
   gray: '#696C80',
 };
 
@@ -13,7 +13,7 @@ const usdbLightColors = {
 const usdbDarkColors = {
   color: '#FFF',
   backgroundColor: '#000',
-  paperBg: '#000',
+  paperBg: '#0E0F10',
   gray: '#929BA0',
 };
 
@@ -33,7 +33,6 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          color: usdbDarkColors.color,
           borderRadius: '53px',
           padding: '3em',
           '&.MuiAppBar-root': {
@@ -128,7 +127,14 @@ const USDBLightBase: ThemeOptions = {
           border: '3px solid #000',
         }
       }
-    }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: usdbLightColors.color,
+        }
+      }
+    },
   }
 };
 
@@ -177,7 +183,14 @@ const USDBDarkBase: ThemeOptions = {
           border: '3px solid #FFF',
         }
       }
-    }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: usdbDarkColors.color,
+        }
+      }
+    },
   }
 };
 

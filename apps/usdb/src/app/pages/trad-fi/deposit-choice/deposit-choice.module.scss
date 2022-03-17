@@ -1,0 +1,64 @@
+.gridParent{
+    Box {
+        justify-content: center;
+    }
+}
+
+.bondCard {
+    border: 3px solid #FFF;
+    padding: 30px;
+    justify-content: center;
+
+    h1, h3 {
+        margin: 4px 0;
+    }
+}
+
+.lowerStats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    span {
+        text-align: center;
+        color:#929BA0;
+        font-size: 20px;
+    }
+
+    h1 {
+        margin-bottom: 0em;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .bondCard {
+        margin: 0px 10px;
+    }
+}
+
+@media screen and (max-width: 900px) {
+    .bondCard {
+        margin: 0px 10px;
+        max-width: 500px;
+    }
+}
+
+.iconWrapper {
+    position: absolute;
+}
+
+.daiIcon {
+    position: relative;
+    height: 95px;
+}
+
+.titleWrapper {
+    background-color: #FFF;
+    padding: 0em 2em;
+    border-radius: 3em;
+    color: #000;
+
+    h3 {
+        margin: 0.5em;
+    }
+}
