@@ -4,6 +4,10 @@ html, body {
     font-family: 'Sora', sans-serif;
 }
 
+a {
+    text-decoration: none;
+}
+
 .flexCenterRow {
     display: flex;
     flex-direction: row;
@@ -16,12 +20,4 @@ html, body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-}
-
-.MuiButton-root.paperButton {
-    color: #000;
-    background-color: #FFF;
-    width: 100%;
-    margin: 2em;
-    padding: 1em;
 }

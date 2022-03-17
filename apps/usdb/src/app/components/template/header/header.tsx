@@ -12,11 +12,16 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { SvgIcon, SxProps, Theme } from '@mui/material';
 import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import { useWeb3Context,setWalletConnected } from '@fantohm/shared-web3';
-import { useDispatch } from 'react-redux';
-import USDBLogo from '../../../../assets/images/USDB-logo.svg';
+import { useWeb3Context, setWalletConnected } from '@fantohm/shared-web3';
+import { setTheme } from '../../../store/reducers/app-slice';
+import { useDispatch, useSelector } from 'react-redux';
+import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
+import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import { Link } from 'react-router-dom';
+import style from './header.module.scss';
+import { RootState } from '../../../store';
 import {getBalances} from "../../../../../../../libs/shared/web3/src/lib/slices/account-slice";
+
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -30,15 +35,17 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Fixed Deposits', href: '/bonds' },
-  { title: 'Indexes', params: { comingSoon: true } },
-  { title: 'Single Stocks', params: { comingSoon: true } },
+  { title: 'Staking', href: '/staking' },
+  { title: 'Traditional Finance', href: '/trad-fi' },
+  { title: 'USDBank', params: { comingSoon: true } },
 ];
 
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+
+  const themeType = useSelector((state: RootState) => state.app.theme);
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -53,6 +60,10 @@ export const Header = (): JSX.Element => {
     dispatch(getBalances({ address: address, networkID: 250 }));
   }, [connected]);
 
+  const toggleTheme = () => {
+    dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
+  }
+
   return (
     <AppBar position="static" color="transparent" elevation={0}>
       <Container maxWidth="xl">
@@ -62,7 +73,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ mr: 2, display: { xs: 'none', md: 'flex' }, alignItems: 'center' }}
           >
-            <Link to="/"><img src={USDBLogo} alt="USDB logo"/></Link>
+            <Link to="/"><img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/></Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -96,52 +107,76 @@ export const Header = (): JSX.Element => {
             >
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center"><Button href={page.href}>{page.title}</Button></Typography>
+                  <Typography textAlign="center">
+                    <Button href={page.href}>{page.title}</Button>
+                  </Typography>
                 </MenuItem>
               ))}
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button onClick={connect}>{connected ? 'Disconnect' : 'Connect Wallet'}</Button>
+                </Typography>
+              </MenuItem>
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Button onClick={toggleTheme}>
+                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
+                  </Button>
+                </Typography>
+              </MenuItem>
             </Menu>
           </Box>
           <Typography
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img src={USDBLogo} />
+            <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} />
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'flex-end',
-              alignItems: 'end',
+              alignItems: 'center',
               flexDirection: 'row'
             }}
           >
             {pages.map((page: Pages) => (
-              <Button
-              autoCapitalize='none'
-              disabled={page.params?.comingSoon}
-                key={page.title}
-                href={page.href}
-                sx={{...(page.params && page.params.sx)}}
-              >
-                {page.title}
-              </Button>
+              <Box sx={{display: 'flex'}} key={page.title}>
+                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ? 
+                  (
+                    <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
+                      <span className={style['comingSoonTitle']}>
+                        {page.title}
+                      </span>
+                      <span className={style['comingSoonSubtitle']}>
+                        Coming Soon
+                      </span>
+                    </Box>
+                  ) : (
+                    <Button
+                      autoCapitalize='none'  
+                      disabled={page.params?.comingSoon}
+                      href={page.href}
+                      sx={{...(page.params && page.params.sx)}}
+                    >
+                      {page.title}
+                    </Button>
+                  )}
+              </Box>
             ))}
           </Box>
-          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em', mx: 2 }}>
-            <Tooltip title="Connect Wallet">
-              <Button onClick={connect} sx={{ p: 0 }} color="primary">
-                {connected ? 'Disconnect' : 'Connect Wallet'}
-              </Button>
-            </Tooltip>
-          </Box>
-          <Box sx={{ flexGrow: 0, border: '1px solid #000', padding: '0.5em', borderRadius: '0.75em' }}>
-            <Tooltip title="Toggle Light/Dark Mode">
-              <IconButton onClick={connect} sx={{ p: 0 }} color="primary">
-                <SvgIcon component={WbSunnyOutlinedIcon} />
-              </IconButton>
-            </Tooltip>
-          </Box>
+          <Tooltip title="Connect Wallet">
+            <Button onClick={connect} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
+              {connected ? 'Disconnect' : 'Connect Wallet'}
+            </Button>
+          </Tooltip>
+          <Tooltip title="Toggle Light/Dark Mode">
+            <Button onClick={toggleTheme} sx={{ display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
+              <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
+            </Button>
+          </Tooltip>
         </Toolbar>
       </Container>
     </AppBar>

@@ -1,34 +1,29 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction  } from "@reduxjs/toolkit"
 
 interface IAppState {
   bondType: string | null;
+  theme: 'light' | 'dark';
 }
 
 const initialState: IAppState = {
-  bondType: null
+  bondType: null,
+  theme: 'light'
 };
-
-export function setAll(state: any, properties: any) {
-	const props = Object.keys(properties);
-	props.forEach(key => {
-		state[key] = properties[key];
-	});
-}
 
 const appSlice = createSlice({
     name: "app",
     initialState,
     reducers: {
-      fetchAccountSuccess: (state, action) => {
-        setAll(state, action.payload);
-      },
       selectBondType: (state, action) => {
         state.bondType = action.payload;
+      },
+      setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+        state.theme = action.payload;
       }
     },
   });
   
 
-export const {fetchAccountSuccess} = appSlice.actions;
+export const {selectBondType, setTheme} = appSlice.actions;
 
 export default appSlice.reducer;
