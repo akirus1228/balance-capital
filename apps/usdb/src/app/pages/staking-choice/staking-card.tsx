@@ -1,19 +1,19 @@
 import { Box, Button, Grid, Paper } from "@mui/material";
-import css from "./bond-choice.module.scss";
+import css from "./staking-choice.module.scss";
 import DAIIcon from "../../../assets/tokens/DAI.svg";
 
-interface IBondCardParams {
+interface IStakingCardParams {
     bondType: string;
     term: number;
     roi: number;
     apy: number;
 }
 
-export const BondCard = (params: IBondCardParams): JSX.Element => {
+export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
     return(
         <Paper sx={{marginTop: '47px'}}>
-            <Grid container>
+            <Grid container rowSpacing={3}>
                 <Grid item xs={12}>
                     <Box className={`flexCenterCol`}>
                         <div className={`${css['iconWrapper']}`}>
@@ -21,7 +21,7 @@ export const BondCard = (params: IBondCardParams): JSX.Element => {
                         </div>
                     </Box>
                 </Grid>
-                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingTop: '60px'}}>
+                <Grid item xs={12} sx={{display: 'flex', flexDirection: 'column', justifyContent:'center', alignItems:'center', paddingTop: '50px'}}>
                     <Box className={css['titleWrapper']}>
                         <h3>FIXED DEPOSIT</h3>
                     </Box>
@@ -48,3 +48,5 @@ export const BondCard = (params: IBondCardParams): JSX.Element => {
         </Paper>
     );
 }
+
+export default StakingCard;

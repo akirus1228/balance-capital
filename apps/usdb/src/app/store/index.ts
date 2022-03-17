@@ -6,11 +6,11 @@ import { web3SliceReducer } from '@fantohm/shared-web3';
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
-    accountReducer,
-    appSliceReducer,
-    web3SliceReducer,
+    account: accountReducer,
+    app: appSliceReducer,
+    web3: web3SliceReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),

@@ -150,7 +150,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainID }],
+          params: [{ chainId: chainID }],
         });
         return true;
       } catch (e: any) {

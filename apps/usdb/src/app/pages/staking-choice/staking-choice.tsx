@@ -1,12 +1,12 @@
-import css from './bond-choice.module.scss';
+import css from './staking-choice.module.scss';
 import {
   Box,
   Grid,
   Zoom,
 } from '@mui/material';
-import { BondCard } from './bond-card';
+import { StakingCard } from './staking-card';
 
-export const BondChoicePage = (): JSX.Element => {
+export const StakingChoicePage = (): JSX.Element => {
   return (
     <Box sx={{marginTop: '3em'}}>
       <Zoom in={true}>
@@ -15,10 +15,10 @@ export const BondChoicePage = (): JSX.Element => {
             &nbsp;
           </Grid>
           <Grid item xs={12} md={4}>
-            <BondCard bondType="3month" term={3} roi={5} apy={21.55} />
+            <StakingCard bondType="3month" term={3} roi={5} apy={21.55} />
           </Grid>
           <Grid item xs={12} md={4}>
-            <BondCard bondType="6month" term={6} roi={15} apy={32.55} />
+            <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
           </Grid>
           <Grid item xs={0} md={2}>
             &nbsp;
@@ -29,4 +29,4 @@ export const BondChoicePage = (): JSX.Element => {
   );
 };
 
-export default BondChoicePage;
+export default StakingChoicePage;

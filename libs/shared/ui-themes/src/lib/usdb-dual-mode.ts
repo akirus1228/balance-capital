@@ -1,11 +1,11 @@
 import { createTheme } from '@mui/material/styles';
-import { ThemeOptions} from '@mui/material';
+import { ThemeOptions } from '@mui/material';
 
 // light color pallet for use in themes
 const usdbLightColors = {
   color: '#OOO',
   backgroundColor: '#ECECF4',
-  paperBg: '#0E0F10',
+  paperBg: '#FFF',
   gray: '#696C80',
 };
 
@@ -13,7 +13,7 @@ const usdbLightColors = {
 const usdbDarkColors = {
   color: '#FFF',
   backgroundColor: '#000',
-  paperBg: '#000',
+  paperBg: '#0E0F10',
   gray: '#929BA0',
 };
 
@@ -33,8 +33,12 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          color: usdbDarkColors.color,
           borderRadius: '53px',
+          padding: '3em',
+          '&.MuiAppBar-root': {
+            padding: '0',
+            marginTop: '2em'
+          }
         }
       }
     },
@@ -53,22 +57,30 @@ const globalTheme: ThemeOptions = {
           borderRadius: '30px',
           padding: '27px',
           fontSize: '20px',
+          textTransform: 'capitalize',
+          "&.paperButton": {
+            width: '100%',
+            padding: '1em',
+            margins: '1em'
+          },
+          "&.menuButton": {
+            height: '1em',
+            paddingTop: '1.8em',
+            paddingBottom: '1.8em',
+            borderRadius: '1.5em',
+            margin: 'auto 1em'
+          }
         },
         outlined: {
           borderRadius: '30px',
           padding: '27px',
           fontSize: '20px',
-        }
+        },
       },
       defaultProps: {
         autoCapitalize: 'none',
       }
     },
-    MuiButtonBase: {
-      defaultProps: {
-        autoCapitalize: 'none',
-      }
-    }
   }
 }
 
@@ -102,17 +114,34 @@ const USDBLightBase: ThemeOptions = {
     },
     MuiButton: {
       styleOverrides: {
+        root: {
+          "&.paperButton": {
+            color: '#000',
+            backgroundColor: '#FFF',
+          },
+          "&.menuButton": {
+            border: '1px solid #000',
+          }
+        },
         outlined: {
           border: '3px solid #000',
         }
       }
-    }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: usdbLightColors.color,
+        }
+      }
+    },
   }
 };
 
+
+
 // dark theme
 const USDBDarkBase: ThemeOptions = {
-  ...globalTheme,
   palette: {
     mode: 'dark',
     primary: {
@@ -131,6 +160,38 @@ const USDBDarkBase: ThemeOptions = {
       secondary: usdbDarkColors.gray,
     },
   },
+  components: {
+    MuiToolbar: {
+      styleOverrides: {
+        root: {
+          color: usdbLightColors.color
+        }
+      }
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          "&.paperButton": {
+            color: '#FFF',
+            backgroundColor: '#000',
+          },
+          "&.menuButton": {
+            border: '1px solid #FFF',
+          }
+        },
+        outlined: {
+          border: '3px solid #FFF',
+        }
+      }
+    },
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          color: usdbDarkColors.color,
+        }
+      }
+    },
+  }
 };
 
 
