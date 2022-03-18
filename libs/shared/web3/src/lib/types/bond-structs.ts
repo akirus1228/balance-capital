@@ -1,4 +1,4 @@
-import {Bond} from "./Bond";
+import {Bond} from "./bond";
 
 export type Terms = {
   vestingTermSeconds: number; // in seconds
