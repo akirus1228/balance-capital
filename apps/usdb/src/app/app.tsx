@@ -7,6 +7,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import { HomePage } from './pages/home/home-page';
 import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
 import { TradFi } from "./pages/trad-fi/trad-fi";
+import { XfhmPage } from './pages/xfhm/xfhm';
 import { RootState } from './store';
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
@@ -31,6 +32,7 @@ export function App() {
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
           <Route path="/trad-fi" element={<TradFi />} />
+          <Route path="/xfhm" element={<XfhmPage />} />
           <Route
             path="*"
             element={

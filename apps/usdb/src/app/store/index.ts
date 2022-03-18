@@ -1,7 +1,7 @@
 import { configureStore } from '@reduxjs/toolkit';
 import appSliceReducer from './reducers/app-slice';
 import accountReducer from './reducers/account-slice';
-import { web3SliceReducer } from '@fantohm/shared-web3';
+import { web3SliceReducer, xfhmSliceReducer } from '@fantohm/shared-web3';
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -11,6 +11,7 @@ export const store = configureStore({
     account: accountReducer,
     app: appSliceReducer,
     web3: web3SliceReducer,
+    xfhm: xfhmSliceReducer
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
