@@ -70,7 +70,7 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
         className={style['hero']}>
         <Box>
           <Typography variant="subtitle1">My Account ({shorten(accountDetails.address)})</Typography>
-          <Paper elevation={0}>
+          <Paper elevation={0} sx={{ marginTop: '10px' }}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={3}>
                 <Typography variant="subtitle2">Portfolio value</Typography>
@@ -92,7 +92,7 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
         </Box>
         <Box my={4}>
           <Typography variant="subtitle1">Active Investments ({activeInvestments.length})</Typography>
-          <Paper elevation={0}>
+          <Paper elevation={0} sx={{ marginTop: '10px' }}>
             {activeInvestments.map(investment => (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4} md={2}>
@@ -116,7 +116,7 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
                   <Typography variant="h6">{formatDistanceToNow(new Date(investment.vestDate * 1000))}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
-                  <Button variant="contained" disableElevation>Manage</Button>
+                  <Button variant="contained" disableElevation sx={{padding: '10px 30px'}}>Manage</Button>
                 </Grid>
               </Grid>
             ))}
