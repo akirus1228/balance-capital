@@ -2,7 +2,7 @@ import {JsonRpcSigner} from "@ethersproject/providers";
 import {ethers} from "ethers";
 
 import {abi as ierc20Abi} from "../abi/IERC20.json";
-import {getBondCalculator} from "../helpers/BondCalculator";
+import {getBondCalculator} from "../helpers/bond-calculator";
 import {addresses} from "../constants";
 import {NetworkID} from "../networks";
 import React from "react";
@@ -50,7 +50,7 @@ interface BondOpts {
   name: string; // Internal name used for references
   displayName: string; // Displayname on UI
   isAvailable: Available; // set false to display "Sold Out"
-  isPurchaseable: boolean; // set false to hide "Bond" button
+  isPurchasable: boolean; // set false to hide "Bond" button
   bondIconSvg: React.ReactNode; //  SVG path for icons
   bondContractABI: ethers.ContractInterface; // ABI for contract
   networkAddrs: NetworkAddresses; // Mapping of network --> Addresses
@@ -70,7 +70,7 @@ export abstract class Bond {
   readonly type: BondType;
   readonly assetType: BondAssetType;
   readonly isAvailable: Available;
-  readonly isPurchaseable: boolean;
+  readonly isPurchasable: boolean;
   readonly bondIconSvg: React.ReactNode;
   readonly bondContractABI: ethers.ContractInterface; // Bond ABI
   readonly networkAddrs: NetworkAddresses;
@@ -95,7 +95,7 @@ export abstract class Bond {
     this.assetType = assetType;
     this.type = bondOpts.type;
     this.isAvailable = bondOpts.isAvailable;
-    this.isPurchaseable = bondOpts.isPurchaseable;
+    this.isPurchasable = bondOpts.isPurchasable;
     this.bondIconSvg = bondOpts.bondIconSvg;
     this.bondContractABI = bondOpts.bondContractABI;
     this.networkAddrs = bondOpts.networkAddrs;

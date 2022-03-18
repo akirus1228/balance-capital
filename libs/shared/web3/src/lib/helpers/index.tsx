@@ -11,7 +11,7 @@ import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 import {JsonRpcSigner} from "@ethersproject/providers";
 
 import {NetworkID, networks} from "../networks";
-import {LocalStorage} from "./LocalStorage";
+import {LocalStorage} from "./local-storage";
 import {chains} from "../providers";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)

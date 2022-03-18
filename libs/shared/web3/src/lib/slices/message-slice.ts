@@ -30,7 +30,7 @@ const createMessage = function (state: MessagesState, severity: string, title: s
 const initialState: MessagesState = {
   items: [],
 };
-const messagesSlice = createSlice({
+const messageSlice = createSlice({
   name: "messages",
   initialState,
   reducers: {
@@ -60,6 +60,6 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { error, info, close, handle_obsolete } = messagesSlice.actions;
+export const { error, info, close, handle_obsolete } = messageSlice.actions;
 
-export default messagesSlice.reducer;
+export default messageSlice.reducer;
