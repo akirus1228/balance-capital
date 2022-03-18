@@ -3,7 +3,8 @@ import { ThemeOptions } from '@mui/material';
 
 // light color pallet for use in themes
 const usdbLightColors = {
-  color: '#OOO',
+  color: '#000',
+  invertedColor: '#FFF',
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
@@ -12,6 +13,7 @@ const usdbLightColors = {
 // dark color pallet for use in themes
 const usdbDarkColors = {
   color: '#FFF',
+  invertedColor: '#000',
   backgroundColor: '#000',
   paperBg: '#0E0F10',
   gray: '#929BA0',
@@ -90,7 +92,7 @@ const USDBLightBase: ThemeOptions = {
     mode: 'light',
     primary: {
       main: usdbLightColors.color,
-      contrastText: usdbLightColors.color,
+      contrastText: usdbLightColors.invertedColor,
     },
     secondary: {
       main: usdbLightColors.color,
@@ -146,7 +148,7 @@ const USDBDarkBase: ThemeOptions = {
     mode: 'dark',
     primary: {
       main: usdbDarkColors.color,
-      contrastText: usdbDarkColors.color,
+      contrastText: usdbDarkColors.invertedColor,
     },
     secondary: {
       main: usdbDarkColors.color,
@@ -164,7 +166,7 @@ const USDBDarkBase: ThemeOptions = {
     MuiToolbar: {
       styleOverrides: {
         root: {
-          color: usdbLightColors.color
+          color: usdbDarkColors.color
         }
       }
     },

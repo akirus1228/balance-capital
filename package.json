@@ -21,6 +21,7 @@
     "assert": "^2.0.0",
     "buffer": "^6.0.3",
     "core-js": "^3.6.5",
+    "date-fns": "^2.28.0",
     "ethers": "^5.6.0",
     "http-browserify": "^1.7.0",
     "https-browserify": "^1.0.0",
