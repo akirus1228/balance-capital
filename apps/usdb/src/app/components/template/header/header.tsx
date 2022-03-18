@@ -57,7 +57,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({networkId: 250, address: address }));
+    dispatch(getBalances({networkId: 4002, address: address }));
   }, [connected]);
 
   const toggleTheme = () => {

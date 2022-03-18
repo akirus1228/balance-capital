@@ -107,7 +107,7 @@ export const networks: INetworks = {
   [NetworkIds.FantomTestnet]: {
     name: 'Fantom Testnet',
     logo: null,
-    isEnabled: DebugHelper.isActive('enable-testnet'),
+    isEnabled: true,
     isTestNet: true,
     blocktime: 3.589,
     epochBlock: 6617987,

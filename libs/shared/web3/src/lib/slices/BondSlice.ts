@@ -122,7 +122,7 @@ export const calcBondDetails = createAsyncThunk(
       dispatch(findOrLoadMarketPrice({ networkId: networkId })).unwrap(),
       bondContract["terms"](),
       bondContract["maxPayout"](),
-      bondContract["standardizedDebtRatio"]().catch((reason: any) => (console.log("error getting standardizedDebtRatio", reason), 0)),
+      0,//bondContract["standardizedDebtRatio"]().catch((reason: any) => (console.log("error getting standardizedDebtRatio", reason), 0)),
       bondContract["bondPriceInUSD"]().catch((reason: any) => (console.log("error getting bondPriceInUSD", reason), 0)),
       bond.getTreasuryBalance(networkId),
       getBondQuoteAndValuation(),
@@ -223,7 +223,7 @@ export const bondAsset = createAsyncThunk(
       const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
 
       // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if ((userBondDetails.bondMaturationBlock - minedBlock) === 1) {
+      if (userBondDetails && userBondDetails.bondMaturationBlock && (userBondDetails.bondMaturationBlock - minedBlock) === 1) {
         waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
       }
     } catch (e: unknown) {

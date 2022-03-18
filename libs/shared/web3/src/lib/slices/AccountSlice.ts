@@ -15,41 +15,28 @@ import { RootState } from "../store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
 import { chains } from "../providers";
 import { BondAction, BondType, PaymentToken } from "../lib/Bond";
+import allBonds from "../helpers/AllBonds";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkId }: IBaseAddressAsyncThunk) => {
     const provider = await chains[networkId].provider;
 
-    async function getBridgeTokenBalance() {
-      if (addresses[networkId]["BRIDGE_TOKEN_ADDRESS"]) {
-        const bridgeTokenContract = new ethers.Contract(
-          addresses[networkId]["BRIDGE_TOKEN_ADDRESS"] as string,
-          ierc20Abi,
-          provider,
-        );
-        return await bridgeTokenContract["balanceOf"](address);
-      } else {
-        return 0;
-      }
-    }
-
     // Contracts
-    const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
-    const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, provider);
-    const wsohmContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, wsOHM, provider);
-    let usdbBalance = 0;
-    if (networkId === 250) {
-      const usdbContract = new ethers.Contract(addresses[networkId]["USDB_ADDRESS"] as string, usdbAbi, provider);
-      usdbBalance = await usdbContract["balanceOf"](address);
-    }
+    // const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
+    // const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, provider);
+    // const wsohmContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, wsOHM, provider);
+    //let usdbBalance = 0;
+    // if (networkId === 250 || networkId === 4002) {
+    //   const usdbContract = new ethers.Contract(addresses[networkId]["USDB_ADDRESS"] as string, usdbAbi, provider);
+    //   usdbBalance = await usdbContract["balanceOf"](address);
+    //}
     // Contract interactions
-    const [ohmBalance, sohmBalance, wsohmBalance, bridgeTokenBalance] = await Promise.all([
-      ohmContract["balanceOf"](address),
-      sohmContract["balanceOf"](address),
-      wsohmContract["balanceOf"](address),
-      getBridgeTokenBalance(),
-    ]);
+    // const [ohmBalance, sohmBalance, wsohmBalance] = await Promise.all([
+    //   ohmContract["balanceOf"](address),
+    //   sohmContract["balanceOf"](address),
+    //   wsohmContract["balanceOf"](address),
+    // ]);
 
     const poolBalance = 0;
     // const poolTokenContract = new ethers.Contract(addresses[networkId].PT_TOKEN_ADDRESS as string, ierc20Abi, provider);
@@ -57,12 +44,10 @@ export const getBalances = createAsyncThunk(
 
     return {
       balances: {
-        ohm: ethers.utils.formatUnits(ohmBalance, "gwei"),
-        sohm: ethers.utils.formatUnits(sohmBalance, "gwei"),
-        wsohm: ethers.utils.formatUnits(wsohmBalance, 18),
-        usdb: ethers.utils.formatUnits(usdbBalance, 18),
-        pool: ethers.utils.formatUnits(poolBalance, "gwei"),
-        bridge: ethers.utils.formatUnits(bridgeTokenBalance, "gwei"),
+        ohm: ethers.utils.formatUnits(0, "gwei"),
+        sohm: ethers.utils.formatUnits(0, "gwei"),
+        wsohm: ethers.utils.formatUnits(0, 18),
+        usdb: ethers.utils.formatUnits(0, 18),
       },
     };
   },
@@ -244,23 +229,40 @@ export const calculateUserBondDetails = createAsyncThunk(
     // Contracts
     const bondContract = await bond.getContractForBond(networkId);
     const reserveContract = await bond.getContractForReserve(networkId);
-
     let interestDue, bondMaturationBlock;
 
     const paymentTokenDecimals = bond.paymentToken === PaymentToken.USDB ? 18 : 9;
+    const bondLength = await bondContract["bondlength"](address)
 
-    // Contract Interactions
-    const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
-      bondContract["bondInfo"](address),
-      bondContract["pendingPayoutFor"](address),
+    const [allowance, balance] = await Promise.all([
       reserveContract["allowance"](address, bond.getAddressForBond(networkId)),
-      reserveContract["balanceOf"](address),
-    ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
-      bondDetails,
-      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-      Number(allowance),
+      reserveContract["balanceOf"](address)
+    ]).then(([allowance, balance]) => [
+      allowance,
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
+    ]);
+
+    if (Number(bondLength) === 0) return{
+      bond: "",
+      displayName: "",
+      bondIconSvg: "",
+      isLP: false,
+      allowance,
+      balance,
+      interestDue: 0,
+      bondMaturationBlock: 0,
+      pendingPayout: "",
+      paymentToken: bond.paymentToken,
+      bondAction: bond.bondAction,
+    };
+    //Contract Interactions
+    const [bondDetails, pendingPayout] = await Promise.all([
+      bondContract["bondInfo"](address, bondLength),
+      bondContract["pendingPayoutFor"](address),
+    ]).then(([bondDetails, pendingPayout]) => [
+      bondDetails,
+      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
     ]);
 
     // eslint-disable-next-line prefer-const
@@ -338,7 +340,7 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
         const bond = action.payload.bond;
-        state.bonds[bond] = action.payload;
+        if(bond) state.bonds[bond] = action.payload;
         state.loading = false;
       })
       .addCase(calculateUserBondDetails.rejected, (state, { error }) => {

@@ -5,6 +5,7 @@ import { NetworkIds } from "../networks";
 import { abi as BondOhmDaiContract } from "../abi/bonds/OhmDaiContract.json";
 import { abi as BondOhmLusdContract } from "../abi/bonds/OhmLusdContract.json";
 import { abi as BondOhmEthContract } from "../abi/bonds/OhmEthContract.json";
+import { abi as TradFiBondDepository } from "../abi/bonds/TradFiBondDepository.json";
 
 import { abi as DaiBondContract } from "../abi/bonds/DaiContract.json";
 import { abi as ReserveOhmLusdContract } from "../abi/reserves/OhmLusd.json";
@@ -18,8 +19,6 @@ import { abi as BondDepositoryContract } from "../abi/bonds/BondDepository.json"
 import { abi as BondStakingDepositoryContract } from "../abi/bonds/BondStakingDepository.json";
 import { abi as FhudABondDepositoryContract } from "../abi/bonds/FhudABondDepository.json";
 import { abi as FhudBBondDepositoryContract } from "../abi/bonds/FhudBBondDepository.json";
-import { abi as NonStableCoinBondDepositoryContract } from "../abi/bonds/NonStableCoinBondDepository.json";
-import { abi as NonStableCoinBondStakingDepositoryContract } from "../abi/bonds/NonStableCoinBondStakingDepository.json";
 
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { getBondCalculator } from "./BondCalculator";
@@ -145,41 +144,6 @@ export const usdtm_44 = new StableBond({
       bondAddress: "0x0B75299da2065998Ec9C3139b22036a7e2CFe13E",
       reserveAddress: "0xE936CAA7f6d9F5C9e907111FCAf7c351c184CDA7",
     },
-  },
-});
-
-export const wftm_44 = new CustomBond({
-  name: "wftm44",
-  type: BondType.Bond_44,
-  displayName: "wFTM",
-  lpUrl: "",
-  assetType: BondAssetType.StableAsset,
-  bondToken: "wFTM",
-  isAvailable: { [NetworkIds.FantomOpera]: true },
-  isPurchasable: true,
-  decimals: 18,
-  isRiskFree: false,
-  bondIconSvg: null,
-  paymentToken: PaymentToken.sFHM,
-  bondContractABI: NonStableCoinBondStakingDepositoryContract,
-  reserveContract: ierc20Abi, // The Standard ierc20Abi since they're normal tokens
-  networkAddrs: {
-    [NetworkIds.FantomOpera]: {
-      bondAddress: "0xE6C2056eaA2Dd82eBF2Fa8191734d0e15753D5D2",
-      reserveAddress: "0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83",
-    },
-  },
-  customTreasuryBalanceFunc: async function (this: CustomBond, networkId) {
-    const ethBondContract = await this.getContractForBond(networkId);
-    const token = await this.getContractForReserve(networkId);
-    const [ethPrice, ethAmount] = await Promise.all([
-      ethBondContract["assetPrice"](),
-      token["balanceOf"](addresses[networkId]["TREASURY_ADDRESS"]),
-    ]).then(([ethPrice, ethAmount]) => [
-      ethPrice / Math.pow(10, 8),
-      ethAmount / Math.pow(10, 18),
-    ]);
-    return ethAmount * ethPrice;
   },
 });
 
@@ -335,6 +299,25 @@ export const usdbSell = new StableBond({
   },
 });
 
+export const tradfi3month = new StableBond({
+  name: "tradfi3month",
+  type: BondType.TRADFI,
+  displayName: "tradfi3month",
+  bondToken: "tradfi3month",
+  decimals: 6,
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.FantomTestnet]: true },
+  isPurchasable: true,
+  bondIconSvg: null,
+  bondContractABI: TradFiBondDepository,
+  paymentToken: PaymentToken.USDB,
+  networkAddrs: {
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "0x38F0e4B286127AEbA6eC76B8466628030301Fb84",
+      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+    },
+  },
+});
+
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
@@ -342,29 +325,7 @@ export const usdbSell = new StableBond({
 export const allBonds = [
   /// 1,1 stablecoin bonds
   // FTM
-  mim_DO_NOT_DELETE,
-  dai_v2,
-  // MOVR
-  usdcm,
-  usdtm,
-  // 4,4 stablecoin bonds
-  // FTM
-  dai44,
-  // MOVR
-  usdcm_44,
-  usdtm_44,
-  // 4,4 nonstablecoin bonds
-  wftm_44,
-  // 4,4 stablecoin LP bonds
-  // FTM
-  fhm_dai_lp_44,
-  // MOVR
-  fhm_usdcm_lp_44,
-  // USDB bonds
-  usdb,
-  usdb_dai_lp,
-  usdbBuy,
-  usdbSell
+  tradfi3month
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };

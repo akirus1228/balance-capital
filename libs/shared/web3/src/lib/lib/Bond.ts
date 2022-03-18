@@ -12,6 +12,7 @@ export enum PaymentToken {
   FHM = 'FHM',
   sFHM = 'sFHM',
   USDB = 'USDB',
+  DAI = 'DAI',
 }
 
 export enum BondAssetType {

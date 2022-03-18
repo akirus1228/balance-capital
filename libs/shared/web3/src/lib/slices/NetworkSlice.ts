@@ -119,7 +119,6 @@ export const loadNetworkDetails = createAsyncThunk(
 			fhmCircSupply / Math.pow(10, 9),
 			ethers.utils.formatUnits(BigNumber.from(String(stakingIndex)).div(indexDivider), "gwei")
 		]);
-
 		// Calculations
 		const distribute = epoch.distribute / Math.pow(10, 9);
 		const marketCap = marketPrice * circSupply;

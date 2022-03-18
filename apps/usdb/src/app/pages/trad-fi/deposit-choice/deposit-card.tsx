@@ -2,17 +2,104 @@ import { Box, Button, Grid, Paper } from "@mui/material";
 import css from "./deposit-choice.module.scss";
 import DAIIcon from "../../../../assets/tokens/DAI.svg";
 import { Link } from 'react-router-dom';
+import {useDispatch, useSelector} from "react-redux";
+import {useWeb3Context} from "@fantohm/shared-web3";
+import {useCallback, useEffect, useState} from "react";
+import {RootState} from "../../../store";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/BondSlice";
+import {
+  IApproveBondAsyncThunk,
+  IBondAssetAsyncThunk
+} from "../../../../../../../libs/shared/web3/src/lib/slices/interfaces";
+import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/PendingTxnsSlice";
+import { JsonRpcSigner } from "@ethersproject/providers";
 
 interface IDepositCardParams {
-    bondType: string;
-    term: number;
-    roi: number;
-    apy: number;
+  bondType: string;
+  term: number;
+  roi: number;
+  apy: number;
+  bond: any;
 }
 
 export const DepositCard = (params: IDepositCardParams): JSX.Element => {
+  const SECONDS_TO_REFRESH = 60;
+  const dispatch = useDispatch();
+  const {provider, address, chainID} = useWeb3Context();
 
-    return(
+  const bondAddr = params.bond.getAddressForBond(chainID);
+
+  let approveTx;
+
+  const [quantity, setQuantity] = useState("");
+  const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const hasAllowance = useCallback(() => {
+    console.log(params.bond.allowance)
+    return (params.bond.allowance > 0) ?? false;
+  }, [params.bond.allowance]);
+
+  // const currentBlock = useSelector((state: RootState) => {
+  //   console.log(state)
+  //   return state.app.currentBlock;
+  // });
+  const isBondLoading = useSelector((state: RootState) => state?.bonding["loading"] ?? true);
+  async function useBond() {
+
+    if (quantity === "") {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dispatch(error("Please enter a value!"));
+    } else if (isNaN(Number(quantity))) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      dispatch(error("Please enter a valid value!"));
+    } else if (params.bond.interestDue > 0 || params.bond.pendingPayout > 0) {
+      const shouldProceed = window.confirm(
+        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
+      );
+      const slippage = 0;
+      if (shouldProceed) {
+        dispatch(
+          bondAsset({
+            value: quantity,
+            slippage,
+            bond: params.bond,
+            networkId: chainID || 250,
+            provider,
+            address: address,
+          } as IBondAssetAsyncThunk)
+        );
+      }
+    } else {
+      const slippage = 0;
+      dispatch(
+        bondAsset({
+          value: quantity,
+          slippage,
+          bond: params.bond,
+          networkId: chainID || 250,
+          provider,
+          address: address,
+        } as IBondAssetAsyncThunk)
+      );
+      clearInput();
+    }
+  }
+
+  const onSeekApproval = async () => {
+    dispatch(changeApproval({address, provider, bond: params.bond, networkId: chainID} as IApproveBondAsyncThunk));
+  };
+
+  const clearInput = () => {
+    setQuantity("");
+  };
+  return(
         <Paper sx={{marginTop: '47px'}}>
             <Grid container rowSpacing={3}>
                 <Grid item xs={12}>
@@ -43,7 +130,33 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                 <Grid item xs={12}>
                     <Box sx={{display: 'flex', justifyContent:'center'}}>
                         <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
-                            <Button className="paperButton">Deposit</Button>
+                          {!params.bond.isAvailable[chainID ?? 250] ? (
+                            <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
+                              Sold Out
+                            </Button>
+                          ) : hasAllowance() ? (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              id="bond-btn"
+                              className="transaction-button"
+                              disabled={isPendingTxn(pendingTransactions, "bond_" + params.bond.name)}
+                              onClick={useBond}
+                            >
+                              {txnButtonText(pendingTransactions, "bond_" + params.bond.name, params.bond.bondAction)}
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="contained"
+                              color="primary"
+                              id="bond-approve-btn"
+                              className="transaction-button"
+                              disabled={isPendingTxn(pendingTransactions, "approve_" + params.bond.name)}
+                              onClick={onSeekApproval}
+                            >
+                              {txnButtonText(pendingTransactions, "approve_" + params.bond.name, "Approve")}
+                            </Button>
+                          )}
                         </Link>
                     </Box>
                 </Grid>

@@ -1,5 +1,5 @@
 import { setAll } from "../helpers";
-import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import {createSlice, createSelector, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IBaseAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIDs, enabledNetworkIdsExceptBscAndEth } from "../networks";
@@ -8,6 +8,7 @@ import { loadNetworkDetails } from "./NetworkSlice";
 const initialState = {
 	loading: false,
 	loadingMarketPrice: false,
+  theme: 'light'
 };
 
 export const loadAppDetails = createAsyncThunk(
@@ -91,6 +92,7 @@ interface IAppData {
 	readonly globalStakingCircSupply: number;
 	readonly endBlock: number;
 	readonly epochNumber: number;
+  readonly theme: string;
 }
 
 const appSlice = createSlice({
@@ -100,6 +102,9 @@ const appSlice = createSlice({
 		fetchAppSuccess(state, action) {
 			setAll(state, action.payload);
 		},
+    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+      state.theme = action.payload;
+    }
 	},
 	extraReducers: builder => {
 		builder

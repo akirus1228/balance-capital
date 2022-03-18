@@ -28,7 +28,6 @@ interface IAllBondData extends Bond, IBondDetails, IUserBondDetails {}
 function useBonds(networkId: NetworkId) {
   // Filter out non supported bonds
   const filteredBonds = allBonds.filter(bond => networkId in bond.networkAddrs);
-
   const bondLoading = useSelector((state: IBondingStateView) => !state.bonding.loading);
   const bondState = useSelector((state: IBondingStateView) => state.bonding);
   const accountBondsState = useSelector((state: IBondingStateView) => state.account.bonds);

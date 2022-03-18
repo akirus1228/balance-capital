@@ -5,8 +5,17 @@ import {
   Zoom,
 } from '@mui/material';
 import { StakingCard } from './staking-card';
-
+import bond from "../bond/bond";
+import {useBonds} from "../../../../../../libs/shared/web3/src/lib/hooks";
+interface IDepositCardParams {
+  bondType: string;
+  term: number;
+  roi: number;
+  apy: number;
+  bond: any;
+}
 export const StakingChoicePage = (): JSX.Element => {
+  const { bonds } = useBonds(250)
   return (
     <Box sx={{marginTop: '3em'}}>
       <Zoom in={true}>
