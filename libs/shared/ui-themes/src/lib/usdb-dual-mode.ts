@@ -35,8 +35,8 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: '53px',
-          padding: '3em',
+          borderRadius: '20px',
+          padding: '2em',
           '&.MuiAppBar-root': {
             padding: '0',
             marginTop: '2em'
@@ -56,10 +56,10 @@ const globalTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '30px',
-          padding: '27px',
-          fontSize: '20px',
-          textTransform: 'capitalize',
+          borderRadius: '20px',
+          padding: '10px 50px',
+          fontSize: '18px',
+          textTransform: 'none',
           "&.paperButton": {
             width: '100%',
             padding: '1em',

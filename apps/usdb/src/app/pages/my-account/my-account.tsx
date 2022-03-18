@@ -57,95 +57,101 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
     <Box sx={{
       display: 'flex',
       justifyContent: 'center',
-      flexDirection: 'column',
-      paddingTop: '100px',
-      paddingLeft: '50px',
-      paddingRight: '50px',
-      maxWidth: '1500px'}}
-      className={style['hero']}>
-      <Box>
-        <Typography variant="h5">My Account ({shorten(accountDetails.address)})</Typography>
-        <Paper elevation={2}>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6} md={3}>
-              <Typography variant="h6">Portfolio value</Typography>
-              <Typography variant="h5">{currencyFormat.format(accountDetails.balance)}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Typography variant="h6">Total rewards claimed</Typography>
-              <Typography variant="h5">{currencyFormat.format(accountDetails.rewardsClaimed)}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Typography variant="h6">Claimable rewards</Typography>
-              <Typography variant="h5">+{currencyFormat.format(accountDetails.claimableRewards)}</Typography>
-            </Grid>
-            <Grid item xs={12} sm={6} md={3}>
-              <Button variant="contained" disableElevation>Claim all rewards</Button>
-            </Grid>
-          </Grid>
-        </Paper>
-      </Box>
-      <Box>
-        <Typography variant="h5">Active Investments ({activeInvestments.length})</Typography>
-        <Paper elevation={2}>
-          {activeInvestments.map(investment => (
+      width: '100%'}}>
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        flexDirection: 'column',
+        paddingTop: '100px',
+        paddingLeft: '50px',
+        paddingRight: '50px',
+        width: '100%',
+        maxWidth: '1200px'}}
+        className={style['hero']}>
+        <Box>
+          <Typography variant="subtitle1">My Account ({shorten(accountDetails.address)})</Typography>
+          <Paper elevation={0}>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={4} md={2}>
-                <Typography variant="h6">Amount</Typography>
-                <Typography variant="h5">{currencyFormat.format(investment.amount)}</Typography>
+              <Grid item xs={12} sm={6} md={3}>
+                <Typography variant="subtitle2">Portfolio value</Typography>
+                <Typography variant="h5">{currencyFormat.format(accountDetails.balance)}</Typography>
               </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <Typography variant="h6">Rewards</Typography>
-                <Typography variant="h5">{currencyFormat.format(investment.rewards)} {investment.rewardToken}</Typography>
+              <Grid item xs={12} sm={6} md={3}>
+                <Typography variant="subtitle2">Total rewards claimed</Typography>
+                <Typography variant="h5">{currencyFormat.format(accountDetails.rewardsClaimed)}</Typography>
               </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <Typography variant="h6">Fixed deposit</Typography>
-                <Typography variant="h5">{investment.term} {investment.termType}</Typography>
+              <Grid item xs={12} sm={6} md={3}>
+                <Typography variant="subtitle2">Claimable rewards</Typography>
+                <Typography variant="h5">+{currencyFormat.format(accountDetails.claimableRewards)}</Typography>
               </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <Typography variant="h6">ROI</Typography>
-                <Typography variant="h5">{investment.roi}%</Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <Typography variant="h6">Time remaining</Typography>
-                <Typography variant="h5">{formatDistanceToNow(new Date(investment.vestDate * 1000))}</Typography>
-              </Grid>
-              <Grid item xs={12} sm={4} md={2}>
-                <Button variant="contained" disableElevation>Manage</Button>
+              <Grid item xs={12} sm={6} md={3}>
+                <Button variant="contained" disableElevation>Claim all rewards</Button>
               </Grid>
             </Grid>
-          ))}
-        </Paper>
-      </Box>
-      <Box>
-        <Typography variant="h5">Previous Investments ({inactiveInvestments.length})</Typography>
-        <TableContainer component={Paper}>
-          <Table sx={{ minWidth: 650 }} aria-label="simple table">
-            <TableHead>
-              <TableRow>
-                <TableCell>Amount</TableCell>
-                <TableCell>Rewards</TableCell>
-                <TableCell>Fixed deposit</TableCell>
-                <TableCell>ROI</TableCell>
-                <TableCell>Lock up period</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {inactiveInvestments.map(investment => (
-                <TableRow
-                  key={investment.id}
-                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                >
-                  <TableCell component="th" scope="row">{currencyFormat.format(investment.amount)}</TableCell>
-                  <TableCell>{currencyFormat.format(investment.rewards)} {investment.rewardToken}</TableCell>
-                  <TableCell>{investment.term} {investment.termType}</TableCell>
-                  <TableCell>{investment.roi}%</TableCell>
-                  <TableCell>Completed {format(new Date(investment.vestDate * 1000), "MM/dd/yyyy")}</TableCell>
+          </Paper>
+        </Box>
+        <Box my={4}>
+          <Typography variant="subtitle1">Active Investments ({activeInvestments.length})</Typography>
+          <Paper elevation={0}>
+            {activeInvestments.map(investment => (
+              <Grid container spacing={2}>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Typography variant="subtitle2">Amount</Typography>
+                  <Typography variant="h6">{currencyFormat.format(investment.amount)}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Typography variant="subtitle2">Rewards</Typography>
+                  <Typography variant="h6">{currencyFormat.format(investment.rewards)} {investment.rewardToken}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Typography variant="subtitle2">Fixed deposit</Typography>
+                  <Typography variant="h6">{investment.term} {investment.termType}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Typography variant="subtitle2">ROI</Typography>
+                  <Typography variant="h6">{investment.roi}%</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Typography variant="subtitle2">Time remaining</Typography>
+                  <Typography variant="h6">{formatDistanceToNow(new Date(investment.vestDate * 1000))}</Typography>
+                </Grid>
+                <Grid item xs={12} sm={4} md={2}>
+                  <Button variant="contained" disableElevation>Manage</Button>
+                </Grid>
+              </Grid>
+            ))}
+          </Paper>
+        </Box>
+        <Box my={4}>
+          <Typography variant="subtitle1">Previous Investments ({inactiveInvestments.length})</Typography>
+          <TableContainer>
+            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+              <TableHead>
+                <TableRow>
+                  <TableCell>Amount</TableCell>
+                  <TableCell>Rewards</TableCell>
+                  <TableCell>Fixed deposit</TableCell>
+                  <TableCell>ROI</TableCell>
+                  <TableCell>Lock up period</TableCell>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              </TableHead>
+              <TableBody>
+                {inactiveInvestments.map(investment => (
+                  <TableRow
+                    key={investment.id}
+                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                  >
+                    <TableCell component="th" scope="row">{currencyFormat.format(investment.amount)}</TableCell>
+                    <TableCell>{currencyFormat.format(investment.rewards)} {investment.rewardToken}</TableCell>
+                    <TableCell>{investment.term} {investment.termType}</TableCell>
+                    <TableCell>{investment.roi}%</TableCell>
+                    <TableCell>Completed {format(new Date(investment.vestDate * 1000), "MM/dd/yyyy")}</TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </Box>
       </Box>
     </Box>
   );
