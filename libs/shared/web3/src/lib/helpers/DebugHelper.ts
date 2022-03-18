@@ -1,5 +1,5 @@
 export class DebugHelper {
-  private static permissions = ['enable-testnet', 'disable-multicall', 'enable-debug'];
+  private static permissions = ['enable-testnet', 'disable-multicall', 'enable-debug', 'swap'];
   private static active = DebugHelper.permissions.reduce((active: { [key: string] : boolean }, permission: string) => {
     // Check if enabled via url
     const enabled = !!~location.href.indexOf(permission) ? (!!~location.href.indexOf(permission + '=false') ? false : true) : null;

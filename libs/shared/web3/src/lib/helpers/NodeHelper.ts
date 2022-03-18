@@ -1,5 +1,5 @@
-import { minutesAgo } from "./index";
-import { EnvHelper } from "./Environment";
+import {minutesAgo} from "./index";
+import {EnvHelper} from "./Environment";
 
 interface ICurrentStats {
   failedConnectionCount: number;
@@ -127,8 +127,7 @@ export class NodeHelper {
   static checkAllNodesStatus = async () => {
     return await Promise.all(
       NodeHelper.getNodesUris().map(async URI => {
-        const workingUrl = await NodeHelper.checkNodeStatus(URI);
-        return workingUrl;
+        return await NodeHelper.checkNodeStatus(URI);
       }),
     );
   };

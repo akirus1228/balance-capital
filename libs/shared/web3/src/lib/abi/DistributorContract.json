@@ -38,23 +38,11 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_nextEpochBlock",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_blocksInEpoch",
-          "type": "uint256"
-        },
+        { "internalType": "uint256", "name": "_nextEpochBlock", "type": "uint256" },
+        { "internalType": "uint256", "name": "_blocksInEpoch", "type": "uint256" },
         { "internalType": "uint256", "name": "_rewardRate", "type": "uint256" },
         { "internalType": "address", "name": "_vault", "type": "address" },
-        {
-          "internalType": "address",
-          "name": "_stakingContract",
-          "type": "address"
-        },
+        { "internalType": "address", "name": "_stakingContract", "type": "address" },
         { "internalType": "address", "name": "_OHM", "type": "address" },
         { "internalType": "address", "name": "_DAI", "type": "address" }
       ],
@@ -99,22 +87,14 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_blocksInEpoch",
-          "type": "uint256"
-        }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "_blocksInEpoch", "type": "uint256" }],
       "name": "setBlocksInEpoch",
       "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
       "stateMutability": "nonpayable",
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "uint256", "name": "_rewardRate", "type": "uint256" }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "_rewardRate", "type": "uint256" }],
       "name": "setRewardRate",
       "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
       "stateMutability": "nonpayable",
@@ -128,9 +108,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "_owner", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "_owner", "type": "address" }],
       "name": "transferOwnership",
       "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
       "stateMutability": "nonpayable",

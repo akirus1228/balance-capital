@@ -1,12 +1,12 @@
-import {JsonRpcSigner} from "@ethersproject/providers";
-import {ethers} from "ethers";
+import { JsonRpcSigner } from "@ethersproject/providers";
+import React  from "react";
+import { ethers } from "ethers";
 
-import {abi as ierc20Abi} from "../abi/IERC20.json";
-import {getBondCalculator} from "../helpers/BondCalculator";
-import {addresses} from "../constants";
-import {NetworkID} from "../networks";
-import React from "react";
-import {chains} from "../providers";
+import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { getBondCalculator } from "../helpers/BondCalculator";
+import { addresses } from "../constants";
+import { NetworkId } from "../networks";
+import { chains } from "../providers";
 
 export enum PaymentToken {
   FHM = 'FHM',
@@ -20,6 +20,9 @@ export enum BondAssetType {
 }
 
 export enum BondType {
+  Bond_11,
+  Bond_44,
+  Bond_USDB,
   TRADFI
 }
 
@@ -50,7 +53,7 @@ interface BondOpts {
   name: string; // Internal name used for references
   displayName: string; // Displayname on UI
   isAvailable: Available; // set false to display "Sold Out"
-  isPurchaseable: boolean; // set false to hide "Bond" button
+  isPurchasable: boolean; // set false to hide "Bond" button
   bondIconSvg: React.ReactNode; //  SVG path for icons
   bondContractABI: ethers.ContractInterface; // ABI for contract
   networkAddrs: NetworkAddresses; // Mapping of network --> Addresses
@@ -70,7 +73,7 @@ export abstract class Bond {
   readonly type: BondType;
   readonly assetType: BondAssetType;
   readonly isAvailable: Available;
-  readonly isPurchaseable: boolean;
+  readonly isPurchasable: boolean;
   readonly bondIconSvg: React.ReactNode;
   readonly bondContractABI: ethers.ContractInterface; // Bond ABI
   readonly networkAddrs: NetworkAddresses;
@@ -87,15 +90,15 @@ export abstract class Bond {
   abstract isRiskFree: boolean;
 
   // Async method that returns a Promise
-  abstract getTreasuryBalance(networkID: NetworkID): Promise<number>;
+  abstract getTreasuryBalance(networkId: NetworkId): Promise<number>;
 
-  protected constructor(assetType: BondAssetType, bondOpts: BondOpts) {
+  constructor(assetType: BondAssetType, bondOpts: BondOpts) {
     this.name = bondOpts.name;
     this.displayName = bondOpts.displayName;
     this.assetType = assetType;
     this.type = bondOpts.type;
     this.isAvailable = bondOpts.isAvailable;
-    this.isPurchaseable = bondOpts.isPurchaseable;
+    this.isPurchasable = bondOpts.isPurchasable;
     this.bondIconSvg = bondOpts.bondIconSvg;
     this.bondContractABI = bondOpts.bondContractABI;
     this.networkAddrs = bondOpts.networkAddrs;
@@ -106,42 +109,44 @@ export abstract class Bond {
     this.redeemAction = bondOpts.redeemAction || RedeemAction.Redeem;
   }
 
-  hasBond(networkID: NetworkID): boolean {
-    return this.networkAddrs[networkID] !== undefined;
+  hasBond(networkId: NetworkId): boolean {
+    return this.networkAddrs[networkId] !== undefined;
   }
 
-  getAddressForBond(networkID: NetworkID) {
-    return this.networkAddrs[networkID].bondAddress;
+  getAddressForBond(networkId: NetworkId) {
+    return this.networkAddrs[networkId].bondAddress;
   }
 
-  getContractForBondForWrite(networkID: NetworkID, rpcSigner: JsonRpcSigner) {
-    const bondAddress = this.getAddressForBond(networkID);
+  getContractForBondForWrite(networkId: NetworkId, rpcSigner: JsonRpcSigner) {
+    const bondAddress = this.getAddressForBond(networkId);
     return new ethers.Contract(bondAddress, this.bondContractABI, rpcSigner);
   }
 
-  async getContractForBond(networkID: NetworkID) {
-    const bondAddress = this.getAddressForBond(networkID);
-    return new ethers.Contract(bondAddress, this.bondContractABI, await chains[networkID].provider);
+  async getContractForBond(networkId: NetworkId) {
+    const bondAddress = this.getAddressForBond(networkId);
+    return new ethers.Contract(bondAddress, this.bondContractABI, await chains[networkId].provider);
   }
 
-  getAddressForReserve(networkID: NetworkID) {
-    return this.networkAddrs[networkID].reserveAddress;
+  getAddressForReserve(networkId: NetworkId) {
+    return this.networkAddrs[networkId].reserveAddress;
   }
 
-  getContractForReserveForWrite(networkID: NetworkID, rpcSigner: JsonRpcSigner) {
-    const bondAddress = this.getAddressForReserve(networkID);
+  getContractForReserveForWrite(networkId: NetworkId, rpcSigner: JsonRpcSigner) {
+    const bondAddress = this.getAddressForReserve(networkId);
     return new ethers.Contract(bondAddress, this.reserveContract, rpcSigner);
   }
 
-  async getContractForReserve(networkID: NetworkID) {
-    const bondAddress = this.getAddressForReserve(networkID);
-    return new ethers.Contract(bondAddress, this.reserveContract, await chains[networkID].provider);
+  async getContractForReserve(networkId: NetworkId) {
+    const bondAddress = this.getAddressForReserve(networkId);
+    return new ethers.Contract(bondAddress, this.reserveContract, await chains[networkId].provider);
   }
 
-  async getBondReservePrice(networkID: NetworkID) {
-    const pairContract = await this.getContractForReserve(networkID);
+  async getBondReservePrice(networkId: NetworkId) {
+    const pairContract = await this.getContractForReserve(networkId);
     const reserves = await pairContract["getReserves"]();
-    return reserves[1] / reserves[0] / Math.pow(10, 9);
+    const marketPrice = reserves[1] / reserves[0] / Math.pow(10, 9);
+
+    return marketPrice;
   }
 }
 
@@ -165,19 +170,20 @@ export class LPBond extends Bond {
     this.reserveContract = lpBondOpts.reserveContract;
     this.displayUnits = "LP";
   }
-  async getTreasuryBalance(networkID: NetworkID) {
-    const token = await this.getContractForReserve(networkID);
-    const tokenAddress = this.getAddressForReserve(networkID);
-    const bondCalculator = await getBondCalculator(networkID);
+  async getTreasuryBalance(networkId: NetworkId) {
+    const token = await this.getContractForReserve(networkId);
+    const tokenAddress = this.getAddressForReserve(networkId);
+    const bondCalculator = await getBondCalculator(networkId);
     const [tokenAmount, markdown] = await Promise.all([
-      token["balanceOf"](addresses[networkID]["TREASURY_ADDRESS"]),
+      token["balanceOf"](addresses[networkId]["TREASURY_ADDRESS"]),
       bondCalculator["markdown"](tokenAddress),
     ]).then(([tokenAmount, markdown]) => [
       tokenAmount,
       markdown / Math.pow(10, this.decimals),
     ]);
     const valuation = await bondCalculator["valuation"](tokenAddress, tokenAmount) / Math.pow(10, 9);
-    return valuation * markdown;
+    const tokenUSD = valuation * markdown;
+    return tokenUSD;
   }
 }
 
@@ -197,9 +203,9 @@ export class StableBond extends Bond {
     this.reserveContract = ierc20Abi; // The Standard ierc20Abi since they're normal tokens
   }
 
-  async getTreasuryBalance(networkID: NetworkID) {
-    const token = await this.getContractForReserve(networkID);
-    const tokenAmount = await token["balanceOf"](addresses[networkID]["TREASURY_ADDRESS"]);
+  async getTreasuryBalance(networkId: NetworkId) {
+    const token = await this.getContractForReserve(networkId);
+    const tokenAmount = await token["balanceOf"](addresses[networkId]["TREASURY_ADDRESS"]);
     return tokenAmount / Math.pow(10, this.decimals);
   }
 }
@@ -212,12 +218,12 @@ export interface CustomBondOpts extends BondOpts {
   isRiskFree: boolean;
   customTreasuryBalanceFunc: (
     this: CustomBond,
-    networkID: NetworkID,
+    networkId: NetworkId,
   ) => Promise<number>;
 }
 export class CustomBond extends Bond {
   readonly isLP: boolean;
-  getTreasuryBalance(networkID: NetworkID): Promise<number> {
+  getTreasuryBalance(networkId: NetworkId): Promise<number> {
     throw new Error("Method not implemented.");
   }
   readonly reserveContract: ethers.ContractInterface;
@@ -228,7 +234,11 @@ export class CustomBond extends Bond {
   constructor(customBondOpts: CustomBondOpts) {
     super(customBondOpts.assetType, customBondOpts);
 
-    this.isLP = customBondOpts.assetType === BondAssetType.LP;
+    if (customBondOpts.assetType === BondAssetType.LP) {
+      this.isLP = true;
+    } else {
+      this.isLP = false;
+    }
     this.isRiskFree = customBondOpts.isRiskFree;
     this.lpUrl = customBondOpts.lpUrl;
     // For stable bonds the display units are the same as the actual token

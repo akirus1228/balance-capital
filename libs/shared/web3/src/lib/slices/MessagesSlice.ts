@@ -10,12 +10,13 @@ interface Message {
   severity: string;
   created: number;
   open: boolean;
+  detail: any;
 }
 interface MessagesState {
   items: Array<Message>;
 }
 // Adds a message to the store
-const createMessage = function (state: MessagesState, severity: string, title: string, text: string) {
+const createMessage = function (state: MessagesState, severity: string, title: string, text: string, detail = null) {
   const message: Message = {
     id: nb_messages++,
     severity,
@@ -23,6 +24,7 @@ const createMessage = function (state: MessagesState, severity: string, title: s
     text,
     created: Date.now(),
     open: true,
+    detail,
   };
   state.items.push(message);
   state.items = state.items.slice(0);
@@ -42,11 +44,25 @@ const messagesSlice = createSlice({
     info(state, action: PayloadAction<string>) {
       createMessage(state, "info", "Information", action.payload);
     },
+    // Creates an swap message
+    multiChainSwap(state, action: PayloadAction<any>) {
+      if (state.items.length === 0) {
+        createMessage(state, "info", action.payload.title, '', action.payload);
+      } else {
+        const index = state.items.findIndex(item => item?.detail?.type === 'swap');
+        if (index >= 0) {
+          state.items[index].detail = action.payload;
+        }
+      }
+    },
     // Closes a message
     close(state, action: PayloadAction<Message>) {
       state.items = state.items.map(message => {
         return message.id == action.payload.id ? Object.assign({}, message, { open: false }) : message;
       });
+    },
+    closeAll(state) {
+      state.items = [];
     },
     // Finds and removes obsolete messages
     handle_obsolete(state) {
@@ -60,6 +76,6 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { error, info, close, handle_obsolete } = messagesSlice.actions;
+export const { error, info, close, handle_obsolete, multiChainSwap, closeAll } = messagesSlice.actions;
 
 export default messagesSlice.reducer;

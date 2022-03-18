@@ -5,17 +5,9 @@
         { "internalType": "address", "name": "DAI_", "type": "address" },
         { "internalType": "address", "name": "OHM_", "type": "address" },
         { "internalType": "address", "name": "treasury_", "type": "address" },
-        {
-          "internalType": "address",
-          "name": "stakingContract_",
-          "type": "address"
-        },
+        { "internalType": "address", "name": "stakingContract_", "type": "address" },
         { "internalType": "address", "name": "DAOWallet_", "type": "address" },
-        {
-          "internalType": "address",
-          "name": "circulatingOHMContract_",
-          "type": "address"
-        }
+        { "internalType": "address", "name": "circulatingOHMContract_", "type": "address" }
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -23,18 +15,8 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
+        { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+        { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
       ],
       "name": "OwnershipTransferred",
       "type": "event"
@@ -75,46 +57,30 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "uint256", "name": "value_", "type": "uint256" }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "value_", "type": "uint256" }],
       "name": "calculateBondInterest",
-      "outputs": [
-        { "internalType": "uint256", "name": "_interestDue", "type": "uint256" }
-      ],
+      "outputs": [{ "internalType": "uint256", "name": "_interestDue", "type": "uint256" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "depositor_", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "depositor_", "type": "address" }],
       "name": "calculatePendingPayout",
       "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "depositor_", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "depositor_", "type": "address" }],
       "name": "calculatePercentVested",
-      "outputs": [
-        {
-          "internalType": "uint256",
-          "name": "_percentVested",
-          "type": "uint256"
-        }
-      ],
+      "outputs": [{ "internalType": "uint256", "name": "_percentVested", "type": "uint256" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "calculatePremium",
-      "outputs": [
-        { "internalType": "uint256", "name": "_premium", "type": "uint256" }
-      ],
+      "outputs": [{ "internalType": "uint256", "name": "_premium", "type": "uint256" }],
       "stateMutability": "view",
       "type": "function"
     },
@@ -156,39 +122,21 @@
       "name": "depositorInfo",
       "outputs": [
         { "internalType": "uint256", "name": "value", "type": "uint256" },
-        {
-          "internalType": "uint256",
-          "name": "payoutRemaining",
-          "type": "uint256"
-        },
+        { "internalType": "uint256", "name": "payoutRemaining", "type": "uint256" },
         { "internalType": "uint256", "name": "lastBlock", "type": "uint256" },
-        {
-          "internalType": "uint256",
-          "name": "vestingPeriod",
-          "type": "uint256"
-        }
+        { "internalType": "uint256", "name": "vestingPeriod", "type": "uint256" }
       ],
       "stateMutability": "view",
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "address_", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "address_", "type": "address" }],
       "name": "getDepositorInfo",
       "outputs": [
         { "internalType": "uint256", "name": "_value", "type": "uint256" },
-        {
-          "internalType": "uint256",
-          "name": "_payoutRemaining",
-          "type": "uint256"
-        },
+        { "internalType": "uint256", "name": "_payoutRemaining", "type": "uint256" },
         { "internalType": "uint256", "name": "_lastBlock", "type": "uint256" },
-        {
-          "internalType": "uint256",
-          "name": "_vestingPeriod",
-          "type": "uint256"
-        }
+        { "internalType": "uint256", "name": "_vestingPeriod", "type": "uint256" }
       ],
       "stateMutability": "view",
       "type": "function"
@@ -228,25 +176,11 @@
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    {
-      "inputs": [],
-      "name": "renounceOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
+    { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
       "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "bondControlVariable_",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "vestingPeriodInBlocks_",
-          "type": "uint256"
-        },
+        { "internalType": "uint256", "name": "bondControlVariable_", "type": "uint256" },
+        { "internalType": "uint256", "name": "vestingPeriodInBlocks_", "type": "uint256" },
         { "internalType": "uint256", "name": "minPremium_", "type": "uint256" },
         { "internalType": "uint256", "name": "maxPayout_", "type": "uint256" },
         { "internalType": "uint256", "name": "DAOShare_", "type": "uint256" }
@@ -278,9 +212,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "newOwner_", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "newOwner_", "type": "address" }],
       "name": "transferOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",

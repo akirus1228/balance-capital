@@ -1,4 +1,4 @@
-import { networks, enabledNetworkIDs } from "./networks";
+import {enabledNetworkIds, networks,} from "./networks";
 
 export const THE_GRAPH_URL = "https://api.thegraph.com/subgraphs/name/colonelssecretspices/kfc-graph";
 
@@ -10,4 +10,4 @@ interface IAddresses {
   [key: number]: { [key: string]: string };
 };
 
-export const addresses: IAddresses = enabledNetworkIDs.reduce((addresses: { [key: number]: { [key: string]: string } }, networkID) => (addresses[networkID] = networks[networkID].addresses, addresses), {});
+export const addresses: IAddresses = enabledNetworkIds.reduce((addresses: { [key: number]: { [key: string]: string } }, networkID) => (addresses[networkID] = networks[networkID].addresses, addresses), {});

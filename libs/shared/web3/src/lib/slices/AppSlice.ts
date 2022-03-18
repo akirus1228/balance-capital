@@ -1,0 +1,128 @@
+import { setAll } from "../helpers";
+import { createSlice, createSelector, createAsyncThunk } from "@reduxjs/toolkit";
+import { RootState } from "../store";
+import { IBaseAsyncThunk } from "./interfaces";
+import { enabledMainNetworkIDs, enabledNetworkIdsExceptBscAndEth } from "../networks";
+import { loadNetworkDetails } from "./NetworkSlice";
+
+const initialState = {
+	loading: false,
+	loadingMarketPrice: false,
+};
+
+export const loadAppDetails = createAsyncThunk(
+	"app/loadAppDetails",
+	async ({ networkId }: IBaseAsyncThunk, {dispatch}) => {
+
+		const networkDetailsList = await Promise.all(enabledNetworkIdsExceptBscAndEth.map((enabledNetworkId: any) => dispatch(loadNetworkDetails({ networkId: enabledNetworkId })).unwrap()));
+		const localNetworkDetails = networkDetailsList.find((networkDetails: { networkId: any; }) => networkDetails.networkId === networkId);
+		if (localNetworkDetails === undefined) {
+			throw new Error(`Unable to load local network details. networkId: ${networkId}`);
+		}
+
+		const prodNetworkDetailsList = networkDetailsList.filter((networkDetails: { networkId: any; }) => enabledMainNetworkIDs.includes(networkDetails.networkId));
+
+		// Global network calculations
+		const globalMarketCap = prodNetworkDetailsList.map((networkDetails: { marketCap: any; }) => networkDetails.marketCap).reduce((sum: any, a: any) => sum + a, 0);
+		const globalCircSupply = prodNetworkDetailsList.map((networkDetails: { circSupply: any; }) => networkDetails.circSupply).reduce((sum: any, a: any) => sum + a, 0);
+		const globalTotalSupply = prodNetworkDetailsList.map((networkDetails: { totalSupply: any; }) => networkDetails.totalSupply).reduce((sum: any, a: any) => sum + a, 0);
+		const globalStakingTVL = prodNetworkDetailsList.map((networkDetails: { stakingTVL: any; }) => networkDetails.stakingTVL).reduce((sum: any, a: any) => sum + a, 0);
+		const globalStakingRewardFHM = prodNetworkDetailsList.map((networkDetails: { stakingRewardFHM: any; }) => networkDetails.stakingRewardFHM).reduce((sum: any, a: any) => sum + a, 0);
+		const globalStakingCircSupply = prodNetworkDetailsList.map((networkDetails: { stakingCircSupply: any; }) => networkDetails.stakingCircSupply).reduce((sum: any, a: any) => sum + a, 0);
+
+		const globalStakingRebase = globalStakingRewardFHM / globalStakingCircSupply;
+		const globalFiveDayRate = prodNetworkDetailsList.map((networkDetails: { fiveDayRate: any; }) => networkDetails.fiveDayRate).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIDs.length), 0);
+		const globalStakingAPY = prodNetworkDetailsList.map((networkDetails: { stakingAPY: any; }) => networkDetails.stakingAPY).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIDs.length), 0);
+
+		return {
+			currentIndex: localNetworkDetails.currentIndex,
+			currentBlock: localNetworkDetails.currentBlock,
+			fiveDayRate: localNetworkDetails.fiveDayRate,
+			stakingAPY: localNetworkDetails.stakingAPY,
+			stakingTVL: localNetworkDetails.stakingTVL,
+			stakingRebase: localNetworkDetails.stakingRebase,
+			marketCap: localNetworkDetails.marketCap,
+			marketPrice: localNetworkDetails.marketPrice,
+			circSupply: localNetworkDetails.circSupply,
+			totalSupply: localNetworkDetails.totalSupply,
+			treasuryMarketValue: localNetworkDetails.treasuryMarketValue,
+			stakingRewardFHM: localNetworkDetails.stakingRewardFHM,
+			stakingCircSupply: localNetworkDetails.stakingCircSupply,
+			secondsPerEpoch: localNetworkDetails.secondsPerEpoch,
+			globalMarketCap: globalMarketCap,
+			globalCircSupply: globalCircSupply,
+			globalTotalSupply: globalTotalSupply,
+			globalStakingTVL: globalStakingTVL,
+			globalFiveDayRate: globalFiveDayRate,
+			globalStakingAPY: globalStakingAPY,
+			globalStakingRebase: globalStakingRebase,
+			globalStakingRewardFHM: globalStakingRewardFHM,
+			globalStakingCircSupply: globalStakingCircSupply,
+			endBlock: localNetworkDetails.endBlock,
+			epochNumber: localNetworkDetails.epochNumber,
+		} as IAppData;
+	},
+);
+
+interface IAppData {
+	readonly circSupply: number;
+	readonly currentIndex: string;
+	readonly currentBlock: number;
+	readonly fiveDayRate: number;
+	readonly marketCap: number;
+	readonly marketPrice: number;
+	readonly stakingAPY: number;
+	readonly stakingRebase: number;
+	readonly stakingTVL: number;
+	readonly totalSupply: number;
+	readonly treasuryBalance: number;
+	readonly treasuryMarketValue: number;
+	readonly stakingRewardFHM: number;
+	readonly stakingCircSupply: number;
+	readonly secondsPerEpoch: number;
+	readonly globalMarketCap: number;
+	readonly globalCircSupply: number;
+	readonly globalTotalSupply: number;
+	readonly globalStakingTVL: number;
+	readonly globalFiveDayRate: number;
+	readonly globalStakingAPY: number;
+	readonly globalStakingRebase: number;
+	readonly globalStakingRewardFHM: number;
+	readonly globalStakingCircSupply: number;
+	readonly endBlock: number;
+	readonly epochNumber: number;
+}
+
+const appSlice = createSlice({
+	name: "app",
+	initialState,
+	reducers: {
+		fetchAppSuccess(state, action) {
+			setAll(state, action.payload);
+		},
+	},
+	extraReducers: builder => {
+		builder
+			.addCase(loadAppDetails.pending, state => {
+				state.loading = true;
+			})
+			.addCase(loadAppDetails.fulfilled, (state, action) => {
+				setAll(state, action.payload);
+				state.loading = false;
+			})
+			.addCase(loadAppDetails.rejected, (state, {error}) => {
+				state.loading = false;
+				console.error(error.name, error.message, error.stack);
+			});
+	},
+});
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+const baseInfo = (state: RootState) => state.app;
+
+export default appSlice.reducer;
+
+export const {fetchAppSuccess} = appSlice.actions;
+
+export const getAppState = createSelector(baseInfo, app => app);
