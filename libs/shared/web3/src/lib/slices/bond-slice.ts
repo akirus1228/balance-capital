@@ -1,8 +1,8 @@
 import { BigNumber, ethers } from "ethers";
 import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers";
 import { getBalances, calculateUserBondDetails } from "./account-slice";
-import { error, info } from "./message-slice";
-import { clearPendingTxn, fetchPendingTxns } from "./pending-txn-slice";
+import { error, info } from "./messages-slice";
+import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { getBondCalculator } from "../helpers/bond-calculator";
 

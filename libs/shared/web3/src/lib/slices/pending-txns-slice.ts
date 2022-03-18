@@ -9,7 +9,7 @@ interface IPendingTxn {
 
 const initialState: Array<IPendingTxn> = [];
 
-const pendingTxnSlice = createSlice({
+const pendingTxnsSlice = createSlice({
   name: "pendingTransactions",
   initialState,
   reducers: {
@@ -45,6 +45,6 @@ export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], 
   return pendingTransactions.length >= 1 ? "Pending..." : defaultText;
 };
 
-export const { fetchPendingTxns, clearPendingTxn } = pendingTxnSlice.actions;
+export const { fetchPendingTxns, clearPendingTxn } = pendingTxnsSlice.actions;
 
-export default pendingTxnSlice.reducer;
+export default pendingTxnsSlice.reducer;
