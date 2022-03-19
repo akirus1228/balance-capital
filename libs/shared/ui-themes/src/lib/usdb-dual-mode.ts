@@ -42,6 +42,11 @@ const globalTheme: ThemeOptions = {
           "&.MuiAppBar-root": {
             padding: "0",
             marginTop: "2em"
+          },
+          "&.dai": {
+            border: "1px solid #F3AC28",
+            borderRadius: "2em",
+            background: "transparent"
           }
         }
       }
