@@ -89,7 +89,8 @@ const globalTheme: ThemeOptions = {
         body: {
           backgroundPosition: "top",
           backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed"
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover"
         }
       }
     }
