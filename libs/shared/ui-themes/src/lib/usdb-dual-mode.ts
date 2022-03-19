@@ -36,7 +36,7 @@ const globalTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: '53px',
-          padding: '3em',
+          padding: '2.5em',
           '&.MuiAppBar-root': {
             padding: '0',
             marginTop: '2em'
@@ -63,7 +63,6 @@ const globalTheme: ThemeOptions = {
           "&.paperButton": {
             width: '100%',
             padding: '1em',
-            margins: '1em'
           },
           "&.menuButton": {
             height: '1em',
@@ -118,8 +117,8 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         root: {
           "&.paperButton": {
-            color: '#000',
-            backgroundColor: '#FFF',
+            color: '#FFF',
+            backgroundColor: '#000',
           },
           "&.menuButton": {
             border: '1px solid #000',
