@@ -73,10 +73,9 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
       <Typography variant="h1">Simple & safe returns</Typography>
       <Typography variant="h2" maxWidth="sm" sx={{textAlign: 'center'}}>USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises.</Typography>
     </Box>
-    <Box className={`${style['tradFiBlock']} flexCenterCol`}>
+    <Box className={`${style['tradFiBlock']} flexCenterCol`} sx={{paddingBottom: '4em'}}>
       <Logo />
     </Box>
-    <div id=""></div>
   </>
   );
 }
