@@ -18,7 +18,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
     return(
         <ThemeProvider theme={USDBLight}>
             <Box sx={{height: '100%', width: '100%'}} className={`${css['bondCard']} flexCenterCol`}>
-                <Paper sx={{marginTop: '47px', maxWidth: '470px'}}  >
+                <Paper sx={{marginTop: '47px', maxWidth: '470px'}}  elevation={0}>
                     <Box className={`flexCenterCol`}>
                         <div className={`${css['iconWrapper']}`}>
                             <img src={DAIIcon} alt="DAI token" className={css['daiIcon']}/>

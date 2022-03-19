@@ -36,24 +36,24 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
       <Box sx={{height: '20em'}}/>
       <Typography variant="h1">Simple & safe returns</Typography>
       <Typography variant="h2" maxWidth="sm" sx={{textAlign: 'center'}}>USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises.</Typography>
-      <Paper className={`${style['graphContainer']} ${style['lightBG']}`} sx={{my: '2em'}}>
+      <Paper className={`${style['graphContainer']} ${style['lightBG']}`} sx={{my: '2em'}} elevation={0}>
         <Graph />
       </Paper>
       <Grid container spacing={2} maxWidth="md">
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
             <img src={creditCards} alt="Credit Cards" />
             <span>no investment fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
             <img src={doughnutChart} alt="Doughnut chart with a quarter filled" />
             <span>no management fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
             <img src={shield} alt="Shield with lock" />
             <span>no risk of capital loss</span>
           </Paper>
