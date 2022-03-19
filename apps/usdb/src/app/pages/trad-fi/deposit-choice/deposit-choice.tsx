@@ -6,9 +6,13 @@ import {
 } from '@mui/material';
 import { DepositCard } from './deposit-card';
 
-export const DepositChoice = (): JSX.Element => {
+interface IDepositChoiceParams {
+  id?: string;
+}
+
+export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   return (
-    <Box sx={{marginTop: '3em'}}>
+    <Box sx={{marginTop: '3em'}} id={params.id}>
       <Zoom in={true}>
         <Grid container item xs={12} spacing={4} className={css['gridParent']}>
           <Grid item xs={0} md={2}>
