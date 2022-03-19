@@ -7,7 +7,7 @@ import style from './trad-fi.module.scss';
 import creditCards from '../../../assets/icons/credit-cards.svg';
 import doughnutChart from '../../../assets/icons/doughnut-chart.svg';
 import shield from '../../../assets/icons/shield.svg';
-import Faq from './faq/faq';
+import Faq from '../../components/faq/faq';
 import Logo from '../../components/logo/logo';
 import Graph from './graph/graph';
 

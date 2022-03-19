@@ -1,6 +1,6 @@
 import { Box, Grid } from '@mui/material';
 import style from './faq.module.scss';
-import dots from '../../../../assets/images/dots.svg';
+import dots from '../../../assets/images/dots.svg';
 
 /* eslint-disable-next-line */
 export interface FaqProps {}
