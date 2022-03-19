@@ -22,7 +22,7 @@ const usdbDarkColors = {
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
   typography: {
-    fontFamily: ['Sora', 'sans-serif'].join(','),
+    fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
   components: {
     MuiAppBar: {
@@ -197,5 +197,5 @@ const USDBDarkBase: ThemeOptions = {
 };
 
 
-export const USDBLight = createTheme(USDBLightBase, globalTheme);
-export const USDBDark = createTheme(USDBDarkBase , globalTheme);
+export const USDBLight = createTheme(globalTheme, USDBLightBase);
+export const USDBDark = createTheme(globalTheme, USDBDarkBase);
