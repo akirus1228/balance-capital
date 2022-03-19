@@ -28,8 +28,9 @@ export function App() {
         <Routes>
           <Route path="/" element={<HomePage title="Home"/>} />
           <Route path="/staking" element={<StakingChoicePage />} />
-          <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
-          <Route path="/trad-fi" element={<TradFi />} />
+          <Route path="/trad-fi" element={<TradFi />}>
+            <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
+          </Route>
           <Route path="/my-account" element={<MyAccount />} />
           <Route
             path="*"
