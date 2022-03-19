@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
+import lightBG from './images/USDB_gradient_light.png';
+import darkBG from './images/USDB_gradient_dark.png';
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -82,6 +84,15 @@ const globalTheme: ThemeOptions = {
         autoCapitalize: 'none',
       }
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundPosition: "top",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed"
+        }
+      }
+    }
   }
 }
 
@@ -136,6 +147,13 @@ const USDBLightBase: ThemeOptions = {
         }
       }
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage: `url(${lightBG})`,
+        }
+      }
+    }
   }
 };
 
@@ -192,6 +210,13 @@ const USDBDarkBase: ThemeOptions = {
         }
       }
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage: `url(${darkBG})`,
+        }
+      }
+    }
   }
 };
 
