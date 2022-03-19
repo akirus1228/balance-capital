@@ -1,10 +1,10 @@
 import { BigNumber, ethers } from "ethers";
 import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers";
 import { getBalances, calculateUserBondDetails } from "./account-slice";
-import { error, info } from "./MessagesSlice";
-import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
+import { error, info } from "./messages-slice";
+import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getBondCalculator } from "../helpers/BondCalculator";
+import { getBondCalculator } from "../helpers/bond-calculator";
 
 import {
   IApproveBondAsyncThunk,
@@ -15,8 +15,8 @@ import {
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
 } from "./interfaces";
-import { BondType, PaymentToken } from "../types/Bond";
-import {segmentUA} from "../helpers/userAnalyticHelpers";
+import { BondType, PaymentToken } from "../types/bond";
+import {segmentUA} from "../helpers/user-analytic-helpers";
 import {RootState} from "../store";
 
 /**

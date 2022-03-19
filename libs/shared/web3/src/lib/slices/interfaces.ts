@@ -1,7 +1,6 @@
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { NetworkID } from "../networks";
-import {Bond} from "../types/Bond";
-import { Xfhm } from '../helpers/Xfhm';
+import { JsonRpcProvider } from '@ethersproject/providers';
+import { NetworkID } from '../networks';
+import { Bond } from '../types/bond';
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -41,18 +40,13 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 
 // Account Slice
 
-export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
+export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {
+}
 
 // Bond Slice
 
 export interface IBaseBondAsyncThunk extends IBaseAsyncThunk {
   readonly bond: Bond;
-}
-
-// Xfhm Slice
-
-export interface IBaseXfhmAsyncThunk extends IBaseAddressAsyncThunk {
-  readonly xfhm: Xfhm;
 }
 
 export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
@@ -83,6 +77,6 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractive
 }
 
 export interface IWrapDetails extends IBaseAsyncThunk {
-    isWrap: boolean;
-    value: string;
+  isWrap: boolean;
+  value: string;
 }
