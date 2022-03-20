@@ -344,7 +344,8 @@ export const singleSided = new StableBond({
 export const allBonds = [
   /// 1,1 stablecoin bonds
   // FTM
-  tradfi3month
+  tradfi3month,
+  singleSided
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
