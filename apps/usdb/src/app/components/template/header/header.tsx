@@ -20,7 +20,7 @@ import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import { Link } from 'react-router-dom';
 import style from './header.module.scss';
 import { RootState } from '../../../store';
-import {getBalances} from "../../../../../../../libs/shared/web3/src/lib/slices/AccountSlice";
+import { getBalances } from '@fantohm/shared-web3';
 
 
 type PageParams = {

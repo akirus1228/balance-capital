@@ -41,7 +41,8 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 
 // Account Slice
 
-export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
+export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {
+}
 
 // Bond Slice
 
@@ -85,6 +86,6 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractive
 }
 
 export interface IWrapDetails extends IBaseAsyncThunk {
-    isWrap: boolean;
-    value: string;
+  isWrap: boolean;
+  value: string;
 }

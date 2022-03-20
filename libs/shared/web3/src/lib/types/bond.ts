@@ -1,11 +1,21 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import React  from "react";
 import { ethers } from "ethers";
+
+<<<<<<<< HEAD:libs/shared/web3/src/lib/lib/Bond.ts
+import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { getBondCalculator } from "../helpers/BondCalculator";
+import { addresses } from "../constants";
+import { NetworkId } from "../networks";
+import { chains } from "../providers";
+========
 import {abi as ierc20Abi} from "../abi/IERC20.json";
 import {getBondCalculator} from "../helpers/bond-calculator";
 import {addresses} from "../constants";
-import {NetworkId, NetworkID} from "../networks";
+import {NetworkID} from "../networks";
+import React from "react";
 import {chains} from "../providers";
+>>>>>>>> main:libs/shared/web3/src/lib/types/bond.ts
 
 export enum PaymentToken {
   FHM = 'FHM',

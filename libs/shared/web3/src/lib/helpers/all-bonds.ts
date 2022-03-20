@@ -1,3 +1,4 @@
+import { StableBond, LPBond, CustomBond, BondType, PaymentToken, BondAction, RedeemAction } from "../types/bond";
 import { StableBond, LPBond, CustomBond, BondAssetType, BondType, PaymentToken, BondAction, RedeemAction } from "../lib/Bond";
 import { addresses } from "../constants";
 import { NetworkIds } from "../networks";
@@ -22,6 +23,7 @@ import { abi as FhudBBondDepositoryContract } from "../abi/bonds/FhudBBondDeposi
 
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { getBondCalculator } from "./BondCalculator";
+import { getBondCalculator } from "./bond-calculator";
 import { getTokenPrice } from "./index";
 import { ethers } from "ethers";
 
@@ -285,6 +287,8 @@ export const usdbSell = new StableBond({
   bondToken: "USDB",
   decimals: 18,
   isAvailable: { [NetworkIds.FantomOpera]: true },
+  isPurchasable: true,
+  isAvailable: { [NetworkIDs.FantomTestnet]: true,[NetworkIDs.FantomOpera]: true, [NetworkIDs.Ethereum]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: FhudBBondDepositoryContract,
