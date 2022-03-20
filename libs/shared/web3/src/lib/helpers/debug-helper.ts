@@ -2,7 +2,8 @@ export class DebugHelper {
   private static permissions = ['enable-testnet', 'disable-multicall', 'enable-debug', 'swap'];
   private static active = DebugHelper.permissions.reduce((active: { [key: string] : boolean }, permission: string) => {
     // Check if enabled via url
-    const enabled = !!~location.href.indexOf(permission) ? (!!~location.href.indexOf(permission + '=false') ? false : true) : null;
+    // eslint-disable-next-line no-restricted-globals
+    const enabled = ~location.href.indexOf(permission) ? (!~location.href.indexOf(permission + '=false')) : null;
     // if declared, save config to session storage
     if (enabled !== null && window.sessionStorage) sessionStorage.setItem(permission, enabled ? 'true' : 'false');
     // Set active for permission if enabled or otherwise grab from session storage

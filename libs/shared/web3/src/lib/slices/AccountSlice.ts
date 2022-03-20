@@ -15,7 +15,7 @@ import { RootState } from "../store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
 import { chains } from "../providers";
 import { BondAction, BondType, PaymentToken } from "../lib/Bond";
-import allBonds from "../helpers/AllBonds";
+import allBonds from "../helpers/all-bonds";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -223,7 +223,7 @@ export const calculateUserBondDetails = createAsyncThunk(
         bondAction: bond.bondAction,
       };
     }
-
+console.log(address)
     const provider = await chains[networkId].provider;
 
     // Contracts
@@ -242,12 +242,13 @@ export const calculateUserBondDetails = createAsyncThunk(
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
+    console.log(allowance)
 
     if (Number(bondLength) === 0) return{
-      bond: "",
-      displayName: "",
-      bondIconSvg: "",
-      isLP: false,
+      bond: bond.name,
+      displayName: bond.displayName,
+      bondIconSvg: bond.bondIconSvg,
+      isLP: bond.isLP,
       allowance,
       balance,
       interestDue: 0,
@@ -256,6 +257,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       paymentToken: bond.paymentToken,
       bondAction: bond.bondAction,
     };
+
     //Contract Interactions
     const [bondDetails, pendingPayout] = await Promise.all([
       bondContract["bondInfo"](address, bondLength),
@@ -296,6 +298,7 @@ interface IAccountSlice {
   };
   loading: boolean;
 }
+
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},

@@ -1,7 +1,7 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import { Box, CssBaseline } from '@mui/material';
 import { ThemeProvider } from "@mui/material/styles";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
@@ -12,19 +12,20 @@ import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
 import { TradFi } from "./pages/trad-fi/trad-fi";
 import MyAccount from './pages/my-account/my-account';
 import { RootState } from './store';
-import {useDispatch, useSelector} from "react-redux";
-import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
-import { useEffect, useState } from "react";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {loadAppDetails} from "../../../../libs/shared/web3/src/lib/slices/AppSlice";
 import {useWeb3Context} from "@fantohm/shared-web3";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcBondDetails} from "../../../../libs/shared/web3/src/lib/slices/BondSlice";
+import {calcBondDetails} from "../../../../libs/shared/web3/src/lib/slices/bond-slice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {useAddress, useBonds} from "../../../../libs/shared/web3/src/lib/hooks";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {calcGlobalBondDetails} from "../../../../libs/shared/web3/src/lib/slices/GlobalBondSlice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {calcInvestmentDetails} from "../../../../libs/shared/web3/src/lib/slices/InvestmentSlice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import useInvestments from "../../../../libs/shared/web3/src/lib/hooks/Investments";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {fetchTokenPrice} from "../../../../libs/shared/web3/src/lib/slices/TokenPriceSlice";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {calculateUserBondDetails, loadAccountDetails} from 'libs/shared/web3/src/lib/slices/AccountSlice';
@@ -68,7 +69,7 @@ export function App() {
           <Route path="/" element={<HomePage title="Home"/>} />
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi" element={<TradFi />}>
-            <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
+            <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit  bond={allBonds[0]}/>} />
           </Route>
           <Route path="/my-account" element={<MyAccount />} />
           <Route

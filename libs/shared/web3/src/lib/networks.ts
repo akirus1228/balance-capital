@@ -1,6 +1,6 @@
 import React from "react";
 
-import { DebugHelper } from "./helpers/DebugHelper";
+import { DebugHelper } from "./helpers/debug-helper";
 export type NetworkId = number;
 
 export type NetworkID = number;

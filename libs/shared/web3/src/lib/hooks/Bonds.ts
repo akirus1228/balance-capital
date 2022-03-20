@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import allBonds from "../helpers/AllBonds";
+import allBonds from "../helpers/all-bonds";
 import { IUserBondDetails } from "../slices/AccountSlice";
 import { Bond, BondType } from "../lib/Bond";
-import { IBondDetails } from "../slices/BondSlice";
+import { IBondDetails } from "../slices/bond-slice";
 import { NetworkId, networks } from "../networks";
 
 interface IBondingStateView {

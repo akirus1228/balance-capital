@@ -5,13 +5,13 @@ import { abi as OlympusStaking } from "../abi/OlympusStakingv2.json";
 import { abi as StakingHelper } from "../abi/StakingHelper.json";
 import { abi as fhudAbi } from "../abi/FHUDContract.json";
 import { abi as usdbMinterAbi } from "../abi/USDBMinter.json";
-import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./PendingTxnsSlice";
+import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./AccountSlice";
-import { error, info } from "./MessagesSlice";
+import { error, info } from "./messages-slice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
-import { segmentUA } from "../helpers/userAnalyticHelpers";
-import { sleep } from "../helpers/Sleep";
+import { segmentUA } from "../helpers/user-analytic-helpers";
+import { sleep } from "../helpers/sleep";
 
 interface IUAData {
   address: string;

@@ -35,6 +35,7 @@ export const currencyFormat = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 });
 
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface MyAccountProps {}
 
 const activeInvestments: Investment[] = [

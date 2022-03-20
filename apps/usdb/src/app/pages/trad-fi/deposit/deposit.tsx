@@ -4,12 +4,16 @@ import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import style from './deposit.module.scss';
 import CloseIcon from '@mui/icons-material/Close';
-import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/PendingTxnsSlice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { error } from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
 import {useDispatch, useSelector} from "react-redux";
 import {useWeb3Context} from "@fantohm/shared-web3";
 import {RootState} from "../../../store";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/BondSlice";
+import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/bond-slice";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {
   IApproveBondAsyncThunk,
   IBondAssetAsyncThunk
@@ -43,7 +47,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainID } = useWeb3Context();
 
-  const [quantity, setQuantity] = useState("");
+  const [quantity, setQuantity] = useState(0);
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -51,9 +55,9 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   });
 
   const hasAllowance = useCallback(() => {
-    console.log(params.bond.reserveContract.allowance)
-    return params.bond.reserveContract.allowance > 0;
-  }, [params.bond.reserveContract.allowance]);
+    console.log(params.bond.allowance)
+    return params.bond.allowance > 0;
+  }, [params.bond.allowance]);
 
   // const currentBlock = useSelector((state: RootState) => {
   //   console.log(state)
@@ -62,7 +66,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   const isBondLoading = useSelector((state: RootState) => state?.bonding["loading"] ?? true);
   async function useBond() {
 
-    if (quantity === "") {
+    if (quantity === 0) {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a value!"));
@@ -78,7 +82,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
       if (shouldProceed) {
         dispatch(
           bondAsset({
-            value: quantity,
+            value: String(quantity),
             slippage,
             bond: params.bond,
             networkId: chainID || 250,
@@ -88,10 +92,10 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
         );
       }
     } else {
-      const slippage = 0;
+      const slippage = 0.005;
       dispatch(
         bondAsset({
-          value: quantity,
+          value: String(quantity),
           slippage,
           bond: params.bond,
           networkId: chainID || 250,
@@ -108,8 +112,9 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   };
 
   const clearInput = () => {
-    setQuantity("");
+    setQuantity(0);
   };
+
   const navigate = useNavigate();
   const goBack = () => {
     navigate('/trad-fi');
@@ -138,7 +143,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
               Wallet Balance
             </Grid>
             <Grid item xs={12} md={5}>
-              Amount <input type="number"/>
+              Amount <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
             </Grid>
             <Grid item xs={12} md={4}>
               {!params.bond.isAvailable[chainID ?? 250] ? (

@@ -5,7 +5,7 @@ import WalletConnectProvider from "@walletconnect/web3-provider";
 import {IFrameEthereumProvider} from "@ledgerhq/iframe-provider";
 import {NetworkId, NetworkIds, networks, enabledNetworkIds} from "../networks";
 import store from "../store";
-import {error} from "../slices/MessagesSlice";
+import {error} from "../slices/messages-slice";
 import {chains} from "../providers";
 
 /**

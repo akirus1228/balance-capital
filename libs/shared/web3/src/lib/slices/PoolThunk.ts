@@ -4,11 +4,11 @@ import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as PrizePool } from "../abi/33-together/PrizePoolAbi2.json";
 import { abi as AwardPool } from "../abi/33-together/AwardAbi2.json";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
+import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { fetchAccountSuccess, getBalances } from "./AccountSlice";
 import { getCreditMaturationDaysAndLimitPercentage } from "../helpers/33Together";
 import { setAll } from "../helpers";
-import { error, info } from "./MessagesSlice";
+import { error, info } from "./messages-slice";
 import { RootState } from "../store";
 import {
   IValueAsyncThunk,

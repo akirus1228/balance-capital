@@ -1,8 +1,8 @@
 import { configureStore } from "@reduxjs/toolkit";
 import accountReducer from "./slices/AccountSlice";
-import bondingReducer from "./slices/BondSlice";
-import pendingTransactionsReducer from "./slices/PendingTxnsSlice";
-import messagesReducer from "./slices/MessagesSlice";
+import bondingReducer from "./slices/bond-slice";
+import pendingTransactionsReducer from "./slices/pending-txns-slice";
+import messagesReducer from "./slices/messages-slice";
 import globalbondingReducer from "./slices/GlobalBondSlice";
 import investmentsReducer from "./slices/InvestmentSlice";
 import tokenPriceReducer from "./slices/TokenPriceSlice";

@@ -1,14 +1,8 @@
 import { BigNumber, ethers } from "ethers";
 import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers";
-import { getBalances, calculateUserBondDetails } from "./account-slice";
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
-import { contractForRedeemHelper } from "../helpers";
-import { getBalances, calculateUserBondDetails } from "./AccountSlice";
-import { error, info } from "./MessagesSlice";
-import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { getBondCalculator } from "../helpers/bond-calculator";
 
 import {
   IApproveBondAsyncThunk,
@@ -21,17 +15,21 @@ import {
 } from "./interfaces";
 import { BondType, PaymentToken } from "../types/bond";
 import {segmentUA} from "../helpers/user-analytic-helpers";
-import {RootState} from "../store";
 
+import { getBondCalculator } from "../helpers/bond-calculator";
+import { RootState } from "../store";
+import { networks } from "../networks";
+import { waitUntilBlock } from "../helpers/NetworkHelper";
+import {calculateUserBondDetails, getBalances} from "./AccountSlice";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
  * - updates the App.slice when it runs
  */
-const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ networkID }: IBaseAsyncThunk) => {
+const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ networkId }: IBaseAsyncThunk) => {
   let marketPrice: number;
   try {
-    marketPrice = await getMarketPrice(networkID);
+    marketPrice = await getMarketPrice(networkId);
   } catch (e) {
     marketPrice = await getTokenPrice("fantohm");
   }
@@ -53,18 +51,18 @@ const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ ne
  */
 export const findOrLoadMarketPrice = createAsyncThunk(
   "networks/findOrLoadMarketPrice",
-  async ({ networkID }: IBaseAsyncThunk, { dispatch, getState }) => {
+  async ({ networkId }: IBaseAsyncThunk, { dispatch, getState }) => {
     const state: any = getState();
     let marketPrice;
     // check if we already have loaded market price
-    if (networkID in state.networks && state.networks[networkID].marketPrice != null) {
+    if (networkId in state.networks && state.networks[networkId].marketPrice != null) {
       // go get marketPrice from networks.state
-      marketPrice = state.networks[networkID].marketPrice;
+      marketPrice = state.networks[networkId].marketPrice;
     } else {
       // we don't have marketPrice in networks.state, so go get it
       try {
         const originalPromiseResult = await dispatch(
-          loadMarketPrice({ networkID }),
+          loadMarketPrice({ networkId }),
         ).unwrap();
         marketPrice = originalPromiseResult?.marketPrice;
       } catch (rejectedValueOrSerializedError) {
@@ -77,14 +75,6 @@ export const findOrLoadMarketPrice = createAsyncThunk(
   },
 );
 
-import { getBondCalculator } from "../helpers/BondCalculator";
-import { RootState } from "../store";
-import { IApproveBondAsyncThunk, IBondAssetAsyncThunk, ICalcBondDetailsAsyncThunk, IJsonRPCError, IRedeemAllBondsAsyncThunk, IRedeemBondAsyncThunk, } from "./interfaces";
-import { segmentUA } from "../helpers/userAnalyticHelpers";
-import { BondType, PaymentToken } from "../lib/Bond";
-import { findOrLoadMarketPrice } from "./NetworkSlice";
-import { networks } from "../networks";
-import { waitUntilBlock } from "../helpers/NetworkHelper";
 
 export const changeApproval = createAsyncThunk(
   "bonding/changeApproval",

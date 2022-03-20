@@ -3,7 +3,7 @@ import { Block, BlockTag, EventType, Filter, Listener, Log, Network, Provider, T
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Deferrable } from "ethers/lib/utils";
 import { abi as MulticallContract } from "../abi/Multicall.json";
-import { DebugHelper } from "../helpers/DebugHelper";
+import { DebugHelper } from "../helpers/debug-helper";
 
 
 interface Request {

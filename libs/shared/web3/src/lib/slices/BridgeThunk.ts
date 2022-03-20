@@ -2,12 +2,12 @@ import { ethers, BigNumber } from "ethers";
 import { addresses } from "../constants";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as BridgeConverter } from "../abi/BridgeConverter.json";
-import { clearPendingTxn, fetchPendingTxns } from "./PendingTxnsSlice";
+import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances } from "./AccountSlice";
-import { error, info } from "./MessagesSlice";
+import { error, info } from "./messages-slice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
-import { segmentUA } from "../helpers/userAnalyticHelpers";
+import { segmentUA } from "../helpers/user-analytic-helpers";
 import { NetworkId } from "../networks"
 import { chains } from "../providers"
 
