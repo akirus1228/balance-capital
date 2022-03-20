@@ -243,7 +243,7 @@ export const networks: INetworks = {
   [NetworkIds.Rinkeby]: {
     name: 'Rinkeby Testnet',
     logo: null,
-    isEnabled: DebugHelper.isActive('enable-testnet'),
+    isEnabled: true,
     isTestNet: true,
     blocktime: 15.01,
     epochBlock: 10112184,

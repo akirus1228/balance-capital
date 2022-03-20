@@ -3,7 +3,7 @@ import {createSlice, createSelector, createAsyncThunk, PayloadAction} from "@red
 import { RootState } from "../store";
 import { IBaseAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIDs, enabledNetworkIdsExceptBscAndEth } from "../networks";
-import { loadNetworkDetails } from "./NetworkSlice";
+import { loadNetworkDetails } from "./network-slice";
 
 const initialState = {
 	loading: false,

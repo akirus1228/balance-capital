@@ -6,7 +6,7 @@ import {
 } from '@mui/material';
 import {DepositCard} from './deposit-card';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {BondType} from "../../../../../../../libs/shared/web3/src/lib/lib/Bond";
+import {BondType} from "../../../../../../../libs/shared/web3/src/lib/lib/bond";
 import Bond from "../../bond/bond";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {useBonds} from "../../../../../../../libs/shared/web3/src/lib/hooks";
@@ -21,6 +21,7 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const {bonds, allBonds} = useBonds(chainID || 250);
 
   const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
+  console.log(bonds)
   return (
     <Box sx={{marginTop: '3em'}} id={params.id}>
       <Zoom in={true}>

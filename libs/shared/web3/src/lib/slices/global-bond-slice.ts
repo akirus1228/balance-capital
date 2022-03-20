@@ -2,7 +2,7 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "../store";
 import { ICalcGlobalBondDetailsAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIDs, NetworkID } from "../networks";
-import { Bond } from "../lib/Bond";
+import { Bond } from "../lib/bond";
 
 export interface IGlobalBondDetails {
   globalTreasuryBalance: number;

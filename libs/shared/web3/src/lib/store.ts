@@ -3,12 +3,12 @@ import accountReducer from "./slices/AccountSlice";
 import bondingReducer from "./slices/bond-slice";
 import pendingTransactionsReducer from "./slices/pending-txns-slice";
 import messagesReducer from "./slices/messages-slice";
-import globalbondingReducer from "./slices/GlobalBondSlice";
-import investmentsReducer from "./slices/InvestmentSlice";
-import tokenPriceReducer from "./slices/TokenPriceSlice";
+import globalbondingReducer from "./slices/global-bond-slice";
+import investmentsReducer from "./slices/investment-slice";
+import tokenPriceReducer from "./slices/token-price-slice";
 import appReducer from "./slices/AppSlice";
-import networkReducer from "./slices/NetworkSlice";
-import poolDataReducer from "./slices/PoolThunk";
+import networkReducer from "./slices/network-slice";
+import poolDataReducer from "./slices/pool-thunk";
 import lusdDataReducer from "./slices/LusdSlice";
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer

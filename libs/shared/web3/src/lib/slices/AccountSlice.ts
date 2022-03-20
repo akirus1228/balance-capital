@@ -14,7 +14,7 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { RootState } from "../store";
 import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
 import { chains } from "../providers";
-import { BondAction, BondType, PaymentToken } from "../lib/Bond";
+import { BondAction, BondType, PaymentToken } from "../lib/bond";
 import allBonds from "../helpers/all-bonds";
 
 export const getBalances = createAsyncThunk(

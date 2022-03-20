@@ -20,13 +20,13 @@ import {calcBondDetails} from "../../../../libs/shared/web3/src/lib/slices/bond-
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {useAddress, useBonds} from "../../../../libs/shared/web3/src/lib/hooks";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcGlobalBondDetails} from "../../../../libs/shared/web3/src/lib/slices/GlobalBondSlice";
+import {calcGlobalBondDetails} from "../../../../libs/shared/web3/src/lib/slices/global-bond-slice";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcInvestmentDetails} from "../../../../libs/shared/web3/src/lib/slices/InvestmentSlice";
+import {calcInvestmentDetails} from "../../../../libs/shared/web3/src/lib/slices/investment-slice";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import useInvestments from "../../../../libs/shared/web3/src/lib/hooks/Investments";
+import useInvestments from "../../../../libs/shared/web3/src/lib/hooks/investments";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {fetchTokenPrice} from "../../../../libs/shared/web3/src/lib/slices/TokenPriceSlice";
+import {fetchTokenPrice} from "../../../../libs/shared/web3/src/lib/slices/token-price-slice";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {calculateUserBondDetails, loadAccountDetails} from 'libs/shared/web3/src/lib/slices/AccountSlice';
 

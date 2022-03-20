@@ -1,4 +1,4 @@
-import { StableBond, LPBond, CustomBond, BondAssetType, BondType, PaymentToken, BondAction, RedeemAction } from "../lib/Bond";
+import { StableBond, LPBond, CustomBond, BondAssetType, BondType, PaymentToken, BondAction, RedeemAction } from "../lib/bond";
 import { addresses } from "../constants";
 import {NetworkIDs, NetworkIds} from "../networks";
 
@@ -314,6 +314,25 @@ export const tradfi3month = new StableBond({
     [NetworkIds.FantomTestnet]: {
       bondAddress: "0x38F0e4B286127AEbA6eC76B8466628030301Fb84",
       reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+    },
+  },
+});
+
+export const singleSided = new StableBond({
+  name: "singleSided",
+  type: BondType.TRADFI,
+  displayName: "singleSided",
+  bondToken: "singleSided",
+  decimals: 6,
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
+  isPurchasable: true,
+  bondIconSvg: null,
+  bondContractABI: TradFiBondDepository,
+  paymentToken: PaymentToken.USDB,
+  networkAddrs: {
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0xaB5EBc2C378973477a61947954a9A02362f31382",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
 });

@@ -7,6 +7,8 @@ import {USDBLight} from "@fantohm/shared-ui-themes";
 import {useDispatch, useSelector} from "react-redux";
 import {useWeb3Context} from "@fantohm/shared-web3";
 import {useCallback, useEffect, useState} from "react";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { error } from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
 import {RootState} from "../../../store";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/bond-slice";
@@ -15,6 +17,7 @@ import {
   IApproveBondAsyncThunk,
   IBondAssetAsyncThunk
 } from "../../../../../../../libs/shared/web3/src/lib/slices/interfaces";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
 import {JsonRpcSigner} from "@ethersproject/providers";
 
@@ -32,7 +35,6 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
   const dispatch = useDispatch();
   const {provider, address, chainID} = useWeb3Context();
 
-  const bondAddr = params.bond.getAddressForBond(chainID);
 
   let approveTx;
 

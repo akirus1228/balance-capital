@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { Bond } from "../lib/Bond";
+import { Bond } from "../lib/bond";
 import { Investment } from "../lib/Investment";
 import { NetworkId } from "../networks";
 

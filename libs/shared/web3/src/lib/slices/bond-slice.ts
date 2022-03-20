@@ -13,7 +13,6 @@ import {
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
 } from "./interfaces";
-import { BondType, PaymentToken } from "../types/bond";
 import {segmentUA} from "../helpers/user-analytic-helpers";
 
 import { getBondCalculator } from "../helpers/bond-calculator";
@@ -21,6 +20,7 @@ import { RootState } from "../store";
 import { networks } from "../networks";
 import { waitUntilBlock } from "../helpers/NetworkHelper";
 import {calculateUserBondDetails, getBalances} from "./AccountSlice";
+import {BondType, PaymentToken} from "../lib/bond";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
@@ -264,6 +264,7 @@ export const bondAsset = createAsyncThunk(
     const bondContractForWrite = bond.getContractForBondForWrite(networkId, signer);
     const calculatePremium = await bondContractForRead["bondPrice"]();
     const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
+    console.log(bondContractForWrite)
 
     // Deposit the bond
     let bondTx;

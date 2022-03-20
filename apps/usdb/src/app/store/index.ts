@@ -3,13 +3,13 @@ import appSliceReducer from './reducers/app-slice';
 import accountReducer from './reducers/account-slice';
 import { web3SliceReducer } from '@fantohm/shared-web3';
 import bondingReducer from "../../../../../libs/shared/web3/src/lib/slices/bond-slice";
-import globalbondingReducer from "../../../../../libs/shared/web3/src/lib/slices/GlobalBondSlice";
-import investmentsReducer from "../../../../../libs/shared/web3/src/lib/slices/InvestmentSlice";
-import tokenPriceReducer from "../../../../../libs/shared/web3/src/lib/slices/TokenPriceSlice";
+import globalbondingReducer from "../../../../../libs/shared/web3/src/lib/slices/global-bond-slice";
+import investmentsReducer from "../../../../../libs/shared/web3/src/lib/slices/investment-slice";
+import tokenPriceReducer from "../../../../../libs/shared/web3/src/lib/slices/token-price-slice";
 import appReducer from "../../../../../libs/shared/web3/src/lib/slices/AppSlice";
-import networkReducer from "../../../../../libs/shared/web3/src/lib/slices/NetworkSlice";
+import networkReducer from "../../../../../libs/shared/web3/src/lib/slices/network-slice";
 import pendingTransactionsReducer from "../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
-import poolDataReducer from "../../../../../libs/shared/web3/src/lib/slices/PoolThunk";
+import poolDataReducer from "../../../../../libs/shared/web3/src/lib/slices/pool-thunk";
 import lusdDataReducer from "../../../../../libs/shared/web3/src/lib/slices/LusdSlice";
 import messagesReducer from "../../../../../libs/shared/web3/src/lib/slices/messages-slice";
 
