@@ -49,6 +49,9 @@ const globalTheme: ThemeOptions = {
             background: "transparent"
           }
         }
+      },
+      defaultProps: {
+        elevation: 0
       }
     },
     MuiBackdrop: {

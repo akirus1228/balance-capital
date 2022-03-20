@@ -1,33 +1,46 @@
-import css from './staking-choice.module.scss';
-import {
-  Box,
-  Grid,
-  Paper,
-  Zoom,
-} from '@mui/material';
-import { StakingCard } from './staking-card';
-import daiToken from "../../../assets/tokens/DAI.svg";
-import Headline from '../../components/headline/headline';
+import { Box, Button, Grid, Paper } from "@mui/material";
+import DaiCard from "../../components/dai-card/dai-card";
+import Faq from "../../components/faq/faq";
+import Headline from "../../components/headline/headline";
+import { StakingCard } from "./staking-card";
+import css from "./staking-choice.module.scss";
 
 export const StakingChoicePage = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
     subtitle: ["The safest way to earn on your Dai with zero risk"],
-    sx: {marginTop: '10em'}
-  }
+    sx: {marginTop: "10em"}
+  };
+  const simpleSafe = {
+    title: "Simple & safe returns",
+    subtitle: ["USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises."]
+  };
+  const getStarted = {
+    title: "Get started today",
+    subtitle: ["Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo."]
+  };
+
   return (
     <>
-      <Headline {...heroContent}/>
-      <Box sx={{marginTop: '3em'}}>
-        <Paper className="dai">
-          <div>
-
-          </div>
-        </Paper>
+      <Headline {...heroContent} />
+      <Box sx={{marginTop: "3em"}} className="flexCenterCol">
+        <DaiCard className="dai">
+          <h1>20.00% APR</h1>
+          <Grid container>
+            <Grid item xs={6} sx={{justifyContent:'left'}}>Staked TVL</Grid>
+            <Grid item xs={6} sx={{justifyContent:'right'}}>$1,562,063</Grid>
+          </Grid>
+        </DaiCard>
+        <Box className="flexCenterRow" sx={{my: '2em'}}>
+          <Button>Deposit</Button>
+          <Button variant="outlined">Learn More</Button>
+        </Box>
       </Box>
-      <Box sx={{marginTop: '3em'}}>
-        <Grid container item xs={12} spacing={4} className={css['gridParent']}>
+      <Headline {...simpleSafe} />
+      <Headline {...getStarted} />
+      <Box sx={{marginTop: "3em"}}>
+        <Grid container item xs={12} spacing={4} className={css["gridParent"]}>
           <Grid item xs={0} md={2}>
             &nbsp;
           </Grid>
@@ -42,6 +55,8 @@ export const StakingChoicePage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
+      <Faq />
+      <Headline {...simpleSafe} />
     </>
   );
 };
