@@ -4,7 +4,7 @@ import { abi as ierc20Abi } from "../abi/IERC20.json";
 import { abi as WrappingContract } from "../abi/mwsFHM.json";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAccountSuccess, getBalances } from "./AccountSlice";
+import { fetchAccountSuccess, getBalances } from "./account-slice";
 import { error, info } from "./messages-slice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError, IWrapDetails } from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";

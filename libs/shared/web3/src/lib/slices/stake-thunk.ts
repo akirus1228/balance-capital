@@ -7,7 +7,7 @@ import { abi as fhudAbi } from "../abi/FHUDContract.json";
 import { abi as usdbMinterAbi } from "../abi/USDBMinter.json";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./AccountSlice";
+import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./account-slice";
 import { error, info } from "./messages-slice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";

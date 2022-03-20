@@ -13,7 +13,7 @@ import { TradFi } from "./pages/trad-fi/trad-fi";
 import MyAccount from './pages/my-account/my-account';
 import { RootState } from './store';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {loadAppDetails} from "../../../../libs/shared/web3/src/lib/slices/AppSlice";
+import {loadAppDetails} from "../../../../libs/shared/web3/src/lib/slices/app-slice";
 import {useWeb3Context} from "@fantohm/shared-web3";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {calcBondDetails} from "../../../../libs/shared/web3/src/lib/slices/bond-slice";
@@ -28,7 +28,7 @@ import useInvestments from "../../../../libs/shared/web3/src/lib/hooks/investmen
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {fetchTokenPrice} from "../../../../libs/shared/web3/src/lib/slices/token-price-slice";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calculateUserBondDetails, loadAccountDetails} from 'libs/shared/web3/src/lib/slices/AccountSlice';
+import {calculateUserBondDetails, loadAccountDetails} from 'libs/shared/web3/src/lib/slices/account-slice';
 
 export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);

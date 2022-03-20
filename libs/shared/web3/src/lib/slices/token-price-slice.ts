@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { IHistoricPrices } from "../lib/Investment";
 import { RootState } from "../store";
 import { ICalcTokenPriceAsyncThunk } from "./interfaces";
+import {IHistoricPrices} from "../lib/investment";
 
 export interface ITokenPriceDetails {
   tokenName: string;

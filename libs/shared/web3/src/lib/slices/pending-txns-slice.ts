@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { IUserBondDetails } from "./AccountSlice";
+import { IUserBondDetails } from "./account-slice";
 
 interface IPendingTxn {
   readonly txnHash: string;

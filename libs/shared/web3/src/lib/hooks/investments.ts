@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
-import allInvestments from "../helpers/AllInvestments";
-import { Investment } from "../lib/Investment";
+import allInvestments from "../helpers/all-investments";
+import { Investment } from "../lib/investment";
 
 interface IInvestmentStateView {
   investments: {

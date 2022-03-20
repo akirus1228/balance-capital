@@ -6,11 +6,11 @@ import bondingReducer from "../../../../../libs/shared/web3/src/lib/slices/bond-
 import globalbondingReducer from "../../../../../libs/shared/web3/src/lib/slices/global-bond-slice";
 import investmentsReducer from "../../../../../libs/shared/web3/src/lib/slices/investment-slice";
 import tokenPriceReducer from "../../../../../libs/shared/web3/src/lib/slices/token-price-slice";
-import appReducer from "../../../../../libs/shared/web3/src/lib/slices/AppSlice";
+import appReducer from "../../../../../libs/shared/web3/src/lib/slices/app-slice";
 import networkReducer from "../../../../../libs/shared/web3/src/lib/slices/network-slice";
 import pendingTransactionsReducer from "../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
 import poolDataReducer from "../../../../../libs/shared/web3/src/lib/slices/pool-thunk";
-import lusdDataReducer from "../../../../../libs/shared/web3/src/lib/slices/LusdSlice";
+import lusdDataReducer from "../../../../../libs/shared/web3/src/lib/slices/lusd-slice";
 import messagesReducer from "../../../../../libs/shared/web3/src/lib/slices/messages-slice";
 
 // reducers are named automatically based on the name field in the slice

@@ -1,5 +1,5 @@
 import { ReactComponent as SpiritLinspiritImg } from "../assets/tokens/SPIRIT-LINSPIRIT.svg";
-import { CustomInvestment, HistoricPrices, TokenInvestment } from "../lib/Investment";
+import { CustomInvestment, HistoricPrices, TokenInvestment } from "../lib/investment";
 import { getCoingeckoTokenPrice, getHistoricTokenPrice, getTokenPrice, roundToNearestHour } from "./index";
 import { NetworkIds } from "../networks";
 import { chains } from "../providers";

@@ -8,7 +8,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useWeb3Context} from "@fantohm/shared-web3";
 import {useCallback, useEffect, useState} from "react";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { error } from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
+import {error} from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
 import {RootState} from "../../../store";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/bond-slice";
@@ -150,34 +150,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                 </Grid>
                 <Grid item xs={12}>
                   <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
-                    {!params.bond.isAvailable[chainID ?? 250] ? (
-                      <Button variant="contained" color="primary" id="bond-btn" className="transaction-button"
-                              disabled={true}>
-                        Sold Out
-                      </Button>
-                    ) : hasAllowance() ? (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        id="bond-btn"
-                        className="transaction-button"
-                        disabled={isPendingTxn(pendingTransactions, "bond_" + params.bond.name)}
-                        onClick={useBond}
-                      >
-                        {txnButtonText(pendingTransactions, "bond_" + params.bond.name, params.bond.bondAction)}
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        id="bond-approve-btn"
-                        className="transaction-button"
-                        disabled={isPendingTxn(pendingTransactions, "approve_" + params.bond.name)}
-                        onClick={onSeekApproval}
-                      >
-                        {txnButtonText(pendingTransactions, "approve_" + params.bond.name, "Approve")}
-                      </Button>
-                    )}
+                    <Button variant="contained" color="primary" id="bond-btn" className="transaction-button">Deposit</Button>
                   </Link>
                 </Grid>
               </Grid>

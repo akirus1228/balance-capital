@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import allBonds from "../helpers/all-bonds";
-import { IUserBondDetails } from "../slices/AccountSlice";
+import { IUserBondDetails } from "../slices/account-slice";
 import { Bond, BondType } from "../lib/bond";
 import { IBondDetails } from "../slices/bond-slice";
 import { NetworkId, networks } from "../networks";

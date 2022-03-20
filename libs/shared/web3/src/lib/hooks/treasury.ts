@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { useMemo } from "react";
-import { allInvestmentsMap } from "../helpers/AllInvestments";
+import { allInvestmentsMap } from "../helpers/all-investments";
 import { getRunway, trim } from "../helpers";
 
 interface ITreasuryStateView {

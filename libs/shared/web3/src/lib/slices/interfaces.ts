@@ -1,6 +1,6 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { Bond } from "../lib/bond";
-import { Investment } from "../lib/Investment";
+import { Investment } from "../lib/investment";
 import { NetworkId } from "../networks";
 
 export interface IJsonRPCError {
