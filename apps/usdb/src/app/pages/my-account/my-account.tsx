@@ -1,9 +1,29 @@
-import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material';
-import { tableCellClasses } from '@mui/material/TableCell';
-import { Box } from '@mui/system';
-import { format, formatDuration, intervalToDuration, formatDistanceToNow } from "date-fns";
+import {
+  Button,
+  Grid,
+  Paper,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography
+} from '@mui/material';
+import {tableCellClasses} from '@mui/material/TableCell';
+import {Box} from '@mui/system';
+import {format, formatDuration, intervalToDuration, formatDistanceToNow} from "date-fns";
 import style from './my-account.module.scss';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
+import {
+  isPendingTxn,
+  redeemAllBonds,
+  txnButtonTextGeneralPending,
+  useBonds,
+  useWeb3Context
+} from "@fantohm/shared-web3";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../store";
 
 export interface Investment {
   id: string,
@@ -38,24 +58,61 @@ export const currencyFormat = new Intl.NumberFormat("en-US", {
 });
 
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface MyAccountProps {}
+export interface MyAccountProps {
+}
 
 const activeInvestments: Investment[] = [
-  { id: '4', amount: 39275.51, rewards: 1963.75, rewardToken: 'USDB', term: 3, termType: 'months', roi: 20.0, vestDate: 1655182800 },
+  {
+    id: '4',
+    amount: 39275.51,
+    rewards: 1963.75,
+    rewardToken: 'USDB',
+    term: 3,
+    termType: 'months',
+    roi: 20.0,
+    vestDate: 1655182800
+  },
 ];
 
 const inactiveInvestments: Investment[] = [
-  { id: '1', amount: 29275.51, rewards: 832.23, rewardToken: 'USDB', term: 6, termType: 'months', roi: 32.5, vestDate: 1638507600 },
-  { id: '2', amount: 29275.51, rewards: 1963.75, rewardToken: 'USDB', term: 6, termType: 'months', roi: 32.5, vestDate: 1638507600 },
-  { id: '3', amount: 29275.51, rewards: 1963.75, rewardToken: 'USDB', term: 6, termType: 'months', roi: 32.5, vestDate: 1638507600 },
+  {
+    id: '1',
+    amount: 29275.51,
+    rewards: 832.23,
+    rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: 32.5,
+    vestDate: 1638507600
+  },
+  {
+    id: '2',
+    amount: 29275.51,
+    rewards: 1963.75,
+    rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: 32.5,
+    vestDate: 1638507600
+  },
+  {
+    id: '3',
+    amount: 29275.51,
+    rewards: 1963.75,
+    rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: 32.5,
+    vestDate: 1638507600
+  },
 ];
 
 export function shorten(str: string) {
-	if (str.length < 10) return str;
-	return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
+  if (str.length < 10) return str;
+  return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
@@ -65,7 +122,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(even)': {
     backgroundColor: theme.palette.action.hover,
   },
@@ -76,11 +133,41 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 export const MyAccount = (props: MyAccountProps): JSX.Element => {
+
+  const dispatch = useDispatch();
+  const {provider, address, chainID} = useWeb3Context();
+  const {bonds} = useBonds(chainID ?? 250);
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const pendingClaim = () => {
+    if (
+      isPendingTxn(pendingTransactions, "redeem_all_bonds") ||
+      isPendingTxn(pendingTransactions, "redeem_all_bonds_autostake")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const onRedeemAll = async () => {
+    console.log("redeeming all bonds");
+    if(provider && chainID) {
+      await dispatch(redeemAllBonds({networkId: chainID, address, bonds, provider, autostake: false}));
+    }
+
+    console.log("redeem all complete");
+  };
+
   return (
     <Box sx={{
       display: 'flex',
       justifyContent: 'center',
-      width: '100%'}}>
+      width: '100%'
+    }}>
       <Box sx={{
         display: 'flex',
         justifyContent: 'center',
@@ -89,11 +176,12 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
         paddingLeft: '50px',
         paddingRight: '50px',
         width: '100%',
-        maxWidth: '1200px'}}
-        className={style['hero']}>
+        maxWidth: '1200px'
+      }}
+           className={style['hero']}>
         <Box>
           <Typography variant="subtitle1">My Account ({shorten(accountDetails.address)})</Typography>
-          <Paper elevation={0} sx={{ marginTop: '10px' }}>
+          <Paper elevation={0} sx={{marginTop: '10px'}}>
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={3}>
                 <Typography variant="subtitle2">Portfolio value</Typography>
@@ -108,14 +196,20 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
                 <Typography variant="h5">+{currencyFormat.format(accountDetails.claimableRewards)}</Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <Button variant="contained" disableElevation>Claim all rewards</Button>
+                <Button variant="contained" disableElevation
+                        disabled={pendingClaim()}
+                        onClick={() => {
+                          onRedeemAll()
+                        }}>
+                  {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", "Claim all")}
+                </Button>
               </Grid>
             </Grid>
           </Paper>
         </Box>
         <Box my={4}>
           <Typography variant="subtitle1">Active Investments ({activeInvestments.length})</Typography>
-          <Paper elevation={0} sx={{ marginTop: '10px' }}>
+          <Paper elevation={0} sx={{marginTop: '10px'}}>
             {activeInvestments.map(investment => (
               <Grid container spacing={2}>
                 <Grid item xs={12} sm={4} md={2}>
@@ -124,7 +218,8 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
                   <Typography variant="subtitle2">Rewards</Typography>
-                  <Typography variant="h6">{currencyFormat.format(investment.rewards)} {investment.rewardToken}</Typography>
+                  <Typography
+                    variant="h6">{currencyFormat.format(investment.rewards)} {investment.rewardToken}</Typography>
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
                   <Typography variant="subtitle2">Fixed deposit</Typography>
@@ -147,10 +242,10 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
         </Box>
         <Box>
           <Typography variant="subtitle1">Previous Investments ({inactiveInvestments.length})</Typography>
-          <TableContainer sx={{ marginTop: '10px' }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableContainer sx={{marginTop: '10px'}}>
+            <Table sx={{minWidth: 650}} aria-label="simple table">
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#000', color: '#FFF' }}>
+                <TableRow sx={{backgroundColor: '#000', color: '#FFF'}}>
                   <StyledTableCell>Amount</StyledTableCell>
                   <StyledTableCell>Rewards</StyledTableCell>
                   <StyledTableCell>Fixed deposit</StyledTableCell>
@@ -162,9 +257,10 @@ export const MyAccount = (props: MyAccountProps): JSX.Element => {
                 {inactiveInvestments.map(investment => (
                   <StyledTableRow
                     key={investment.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
                   >
-                    <StyledTableCell component="th" scope="row">{currencyFormat.format(investment.amount)}</StyledTableCell>
+                    <StyledTableCell component="th"
+                                     scope="row">{currencyFormat.format(investment.amount)}</StyledTableCell>
                     <StyledTableCell>{currencyFormat.format(investment.rewards)} {investment.rewardToken}</StyledTableCell>
                     <StyledTableCell>{investment.term} {investment.termType}</StyledTableCell>
                     <StyledTableCell>{investment.roi}%</StyledTableCell>
