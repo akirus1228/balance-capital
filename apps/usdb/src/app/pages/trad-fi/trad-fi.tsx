@@ -50,19 +50,19 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
       <Graph />
       <Grid container spacing={2} maxWidth="md">
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <img src={creditCards} alt="Credit Cards" />
             <span>no investment fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <img src={doughnutChart} alt="Doughnut chart with a quarter filled" />
             <span>no management fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']}`} elevation={0}>
+          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <img src={shield} alt="Shield with lock" />
             <span>no risk of capital loss</span>
           </Paper>

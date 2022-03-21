@@ -4,7 +4,7 @@ import Faq from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card";
 import css from "./staking-choice.module.scss";
-import {useBonds} from "../../../../../../libs/shared/web3/src/lib/hooks";
+import { useBonds } from "@fantohm/shared-web3";
 
 interface IDepositCardParams {
   bondType: string;

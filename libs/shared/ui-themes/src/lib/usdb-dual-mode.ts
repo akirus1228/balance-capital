@@ -47,6 +47,9 @@ const globalTheme: ThemeOptions = {
             border: "1px solid #F3AC28",
             borderRadius: "2em",
             background: "transparent"
+          },
+          "&.softGradient": {
+            borderRadius: "2em",
           }
         }
       },
@@ -153,6 +156,9 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         root: {
           color: usdbLightColors.color,
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(229,229,235,1) 15%, rgba(229,229,235,0.42) 90%)"
+          }
         },
       },
     },
@@ -214,6 +220,9 @@ const USDBDarkBase: ThemeOptions = {
       styleOverrides: {
         root: {
           color: usdbDarkColors.color,
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(8,9,10,1) 0%, rgba(8,9,10,0.62) 5%, rgba(14,15,16,1) 90%)"
+          }
         },
       },
     },
