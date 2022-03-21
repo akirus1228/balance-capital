@@ -37,7 +37,7 @@ export type Web3ContextData = {
 
 const Web3Context = React.createContext<Web3ContextData>(null);
 
-export const useWeb3Context = () => {
+const useWeb3Context = () => {
   const web3Context = useContext(Web3Context);
   if (!web3Context) {
     throw new Error(
