@@ -36,6 +36,7 @@ export function App() {
     bonds.map(bond => {
       dispatch(calcBondDetails({ bond, value: "", networkId: chainID || 250 }));
     });
+    console.log(bonds)
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map(investment => {
       dispatch(calcInvestmentDetails({ investment }));
