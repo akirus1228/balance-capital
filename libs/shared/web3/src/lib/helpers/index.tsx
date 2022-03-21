@@ -5,8 +5,8 @@ import {abi as PairContract} from "../abi/PairContract.json";
 import {abi as RedeemHelperAbi} from "../abi/RedeemHelper.json";
 
 import {SvgIcon} from "@mui/material";
-import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";
-import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
+import {ReactComponent as OhmImg} from "../../../../assets/tokens/token_OHM.svg";
+import {ReactComponent as SOhmImg} from "../../../../assets/tokens/token_sOHM.svg";
 
 import {JsonRpcSigner} from "@ethersproject/providers";
 

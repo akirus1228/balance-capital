@@ -3,7 +3,7 @@ import { ThemeOptions } from '@mui/material';
 
 // light color pallet for use in themes
 const usdbLightColors = {
-  color: '#OOO',
+  color: '#000000',
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
@@ -69,6 +69,21 @@ const globalTheme: ThemeOptions = {
             paddingBottom: '1.8em',
             borderRadius: '1.5em',
             margin: 'auto 1em'
+          },
+          "&.fill": {
+            fontSize: '14px',
+            backgroundColor: '#000',
+            borderRadius: '1.5em',
+            color: "#FFF",
+            padding: "15px 27px"
+          },
+          "&.border": {
+            fontSize: '14px',
+            backgroundColor: '#FFF',
+            borderRadius: '1.5em',
+            color: "#000",
+            padding: "15px 27px",
+            border: "solid 1px #000"
           }
         },
         outlined: {
@@ -121,7 +136,7 @@ const USDBLightBase: ThemeOptions = {
           },
           "&.menuButton": {
             border: '1px solid #000',
-          }
+          },
         },
         outlined: {
           border: '3px solid #000',
@@ -133,6 +148,16 @@ const USDBLightBase: ThemeOptions = {
         root: {
           color: usdbLightColors.color,
         }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          color: usdbLightColors.color,
+          "&$selected": {
+            color: usdbLightColors.gray,
+          },
+        },
       }
     },
   }
@@ -189,6 +214,16 @@ const USDBDarkBase: ThemeOptions = {
         root: {
           color: usdbDarkColors.color,
         }
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        textColorPrimary: {
+          color: usdbDarkColors.backgroundColor,
+          "&$selected": {
+            color: usdbDarkColors.color,
+          },
+        },
       }
     },
   }
