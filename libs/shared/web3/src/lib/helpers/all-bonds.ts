@@ -1,10 +1,10 @@
-import { StableBond, LPBond, CustomBond, BondType, PaymentToken, BondAction, RedeemAction } from "../types/Bond";
+import { StableBond, LPBond, CustomBond, BondType, PaymentToken, BondAction, RedeemAction } from "../types/bond";
 import { addresses } from "../constants";
 import { NetworkIDs } from "../networks";
 
 import { abi as BondTradFiContract } from "../abi/TradFiBondDepository.json";
 import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { getBondCalculator } from "../helpers/BondCalculator";
+import { getBondCalculator } from "./bond-calculator";
 import { getTokenPrice } from "./index";
 import { ethers } from "ethers";
 
@@ -15,7 +15,7 @@ export const tradfi = new StableBond({
   bondToken: "USDB",
   decimals: 18,
   isAvailable: { [NetworkIDs.FantomTestnet]: true,[NetworkIDs.FantomOpera]: true, [NetworkIDs.Ethereum]: true },
-  isPurchaseable: true,
+  isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: BondTradFiContract,
   paymentToken: PaymentToken.FHM,

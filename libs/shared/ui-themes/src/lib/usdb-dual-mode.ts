@@ -1,5 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
+import lightBG from './images/USDB_gradient_light.png';
+import darkBG from './images/USDB_gradient_dark.png';
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -22,7 +24,7 @@ const usdbDarkColors = {
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
   typography: {
-    fontFamily: ['Sora', 'sans-serif'].join(','),
+    fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
   components: {
     MuiAppBar: {
@@ -35,8 +37,8 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: '20px',
-          padding: '2em',
+          borderRadius: '53px',
+          padding: '2.5em',
           '&.MuiAppBar-root': {
             padding: '0',
             marginTop: '2em',
@@ -56,14 +58,13 @@ const globalTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '20px',
-          padding: '10px 50px',
-          fontSize: '18px',
-          textTransform: 'none',
+          borderRadius: '30px',
+          padding: '27px',
+          fontSize: '20px',
+          textTransform: 'capitalize',
           '&.paperButton': {
             width: '100%',
             padding: '1em',
-            margins: '1em',
           },
           '&.menuButton': {
             height: '1em',
@@ -81,6 +82,16 @@ const globalTheme: ThemeOptions = {
       },
       defaultProps: {
         autoCapitalize: 'none',
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundPosition: 'top',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+        },
       },
     },
   },
@@ -118,8 +129,8 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         root: {
           '&.paperButton': {
-            color: '#000',
-            backgroundColor: '#FFF',
+            color: '#FFF',
+            backgroundColor: '#000',
           },
           '&.menuButton': {
             border: '1px solid #000',
@@ -134,6 +145,13 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         root: {
           color: usdbLightColors.color,
+        },
+      },
+    },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage: `url(${lightBG})`,
         },
       },
     },
@@ -191,8 +209,15 @@ const USDBDarkBase: ThemeOptions = {
         },
       },
     },
+    MuiCssBaseline: {
+      styleOverrides: {
+        body: {
+          backgroundImage: `url(${darkBG})`,
+        },
+      },
+    },
   },
 };
 
-export const USDBLight = createTheme(USDBLightBase, globalTheme);
-export const USDBDark = createTheme(USDBDarkBase, globalTheme);
+export const USDBLight = createTheme(globalTheme, USDBLightBase);
+export const USDBDark = createTheme(globalTheme, USDBDarkBase);
