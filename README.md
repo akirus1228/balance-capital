@@ -12,9 +12,9 @@ New Page: Run `nx g @nrwl/react:component my-component --project=usdb --director
 
 ## Generate a library
 
-Run `nx g @nrwl/react:lib my-lib` to generate a library.
+Run `nx g @nrwl/react:lib my-lib` to generate a library..
 
-> You can also use any of the plugins above to generate libraries as well.
+> You can also use any of the plugins above to generate libraries as well..
 
 Libraries are shareable across libraries and applications. They can be imported from `@fantohm/mylib`.
 
