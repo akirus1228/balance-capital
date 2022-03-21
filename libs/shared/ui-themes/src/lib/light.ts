@@ -1,6 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-const lightTheme = {
+export const lightTheme = {
   color: '#253449',
   gold: '#F8CC82',
   gray: '#A3A3A3',
