@@ -304,8 +304,8 @@ export const tradfi3month = new StableBond({
   type: BondType.TRADFI,
   displayName: "tradfi3month",
   bondToken: "tradfi3month",
-  decimals: 6,
-  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.FantomTestnet]: true },
+  decimals: 18,
+  isAvailable: { [NetworkIds.Rinkeby]: true, [NetworkIds.FantomTestnet]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: TradFiBondDepository,
@@ -315,6 +315,10 @@ export const tradfi3month = new StableBond({
       bondAddress: "0x38F0e4B286127AEbA6eC76B8466628030301Fb84",
       reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
     },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x52b27846dd773C8E16Fc8e75E2d1D6abd4e8C48A",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
   },
 });
 
@@ -323,7 +327,7 @@ export const singleSided = new StableBond({
   type: BondType.TRADFI,
   displayName: "singleSided",
   bondToken: "singleSided",
-  decimals: 6,
+  decimals: 18,
   isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
