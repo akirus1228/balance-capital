@@ -10,19 +10,27 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
-import { tableCellClasses } from '@mui/material/TableCell';
-import { Box } from '@mui/system';
+import {useDispatch, useSelector} from 'react-redux';
+import {tableCellClasses} from '@mui/material/TableCell';
+import {Box} from '@mui/system';
 import {
   format,
   formatDuration,
   intervalToDuration,
   formatDistanceToNow,
 } from 'date-fns';
-import { useTheme } from '@mui/material/styles';
+import {useTheme} from '@mui/material/styles';
 import style from './my-account.module.scss';
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
+import {
+  isPendingTxn,
+  redeemBond,
+  RootState,
+  txnButtonTextGeneralPending,
+  useBonds,
+  useWeb3Context
+} from "@fantohm/shared-web3";
 
 export interface Investment {
   id: string;
@@ -109,7 +117,7 @@ export function shorten(str: string) {
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
+const StyledTableCell = styled(TableCell)(({theme}) => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#1A1A1A',
     color: '#E3E2EA',
@@ -122,7 +130,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
   },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(({theme}) => ({
   '&:nth-of-type(even)': {
     backgroundColor: theme.palette.action.hover,
   },
@@ -133,9 +141,42 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+export interface MyAccountProps {
+  bond: any;
+}
+
 export const MyAccount = (): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
+
+  const dispatch = useDispatch();
+  const {provider, address, chainID} = useWeb3Context();
+  const {bonds} = useBonds(chainID ?? 250);
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const pendingClaim = () => {
+    if (
+      isPendingTxn(pendingTransactions, "redeem_all_bonds") ||
+      isPendingTxn(pendingTransactions, "redeem_all_bonds_autostake")
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const onRedeemAll = async () => {
+    console.log("redeeming all bonds");
+    if (provider && chainID) {
+      await dispatch(redeemBond({networkId: chainID, address, bond: bonds[0], provider, autostake: false}));
+    }
+
+    console.log("redeem all complete");
+  };
+
   return (
     <Box
       sx={{
@@ -160,21 +201,21 @@ export const MyAccount = (): JSX.Element => {
         <Box>
           <Typography variant="subtitle1">
             My Account{' '}
-            <span style={{ color: '#858E93' }}>
+            <span style={{color: '#858E93'}}>
               ({shorten(accountDetails.address)})
             </span>
           </Typography>
           <Paper
             elevation={0}
-            sx={{ marginTop: '10px' }}
+            sx={{marginTop: '10px'}}
             className={style['rowCard']}
-            style={{ backgroundColor: `${backgroundColor}` }}
+            style={{backgroundColor: `${backgroundColor}`}}
           >
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6} md={3}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Portfolio value{' '}
-                  <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                  <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                 </Typography>
                 <Typography variant="h5">
                   {currencyFormat.format(accountDetails.balance)}
@@ -207,8 +248,12 @@ export const MyAccount = (): JSX.Element => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <Button variant="contained" disableElevation>
-                  Claim all rewards
+                <Button variant="contained" disableElevation
+                        disabled={pendingClaim()}
+                        onClick={() => {
+                          onRedeemAll()
+                        }}>
+                  {txnButtonTextGeneralPending(pendingTransactions, "redeem_all_bonds", "Claim all")}
                 </Button>
               </Grid>
             </Grid>
@@ -220,9 +265,9 @@ export const MyAccount = (): JSX.Element => {
           </Typography>
           <Paper
             elevation={0}
-            sx={{ marginTop: '10px' }}
+            sx={{marginTop: '10px'}}
             className={style['rowCard']}
-            style={{ backgroundColor: `${backgroundColor}` }}
+            style={{backgroundColor: `${backgroundColor}`}}
           >
             {activeInvestments.map((investment) => (
               <Grid container spacing={2}>
@@ -294,7 +339,7 @@ export const MyAccount = (): JSX.Element => {
                   <Button
                     variant="contained"
                     disableElevation
-                    sx={{ padding: '10px 30px' }}
+                    sx={{padding: '10px 30px'}}
                   >
                     Manage
                   </Button>
@@ -307,29 +352,29 @@ export const MyAccount = (): JSX.Element => {
           <Typography variant="subtitle1">
             Previous Investments ({inactiveInvestments.length})
           </Typography>
-          <TableContainer sx={{ marginTop: '10px' }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableContainer sx={{marginTop: '10px'}}>
+            <Table sx={{minWidth: 650}} aria-label="simple table">
               <TableHead>
-                <TableRow sx={{ backgroundColor: '#000', color: '#FFF' }}>
+                <TableRow sx={{backgroundColor: '#000', color: '#FFF'}}>
                   <StyledTableCell className={style['leftEdge']}>
                     Amount{' '}
-                    <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                    <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                   </StyledTableCell>
                   <StyledTableCell>
                     Rewards{' '}
-                    <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                    <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                   </StyledTableCell>
                   <StyledTableCell>
                     Fixed deposit{' '}
-                    <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                    <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                   </StyledTableCell>
                   <StyledTableCell>
                     ROI{' '}
-                    <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                    <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                   </StyledTableCell>
                   <StyledTableCell className={style['rightEdge']}>
                     Lock up period{' '}
-                    <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                    <img src={Info} alt="info" className={style['infoIcon']}/>{' '}
                   </StyledTableCell>
                 </TableRow>
               </TableHead>
@@ -337,7 +382,7 @@ export const MyAccount = (): JSX.Element => {
                 {inactiveInvestments.map((investment) => (
                   <StyledTableRow
                     key={investment.id}
-                    sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    sx={{'&:last-child td, &:last-child th': {border: 0}}}
                   >
                     <StyledTableCell
                       component="th"

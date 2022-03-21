@@ -1,11 +1,22 @@
-import { Box, Button, Grid, Paper } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card";
 import css from "./staking-choice.module.scss";
+import {useBonds} from "../../../../../../libs/shared/web3/src/lib/hooks";
+
+interface IDepositCardParams {
+  bondType: string;
+  term: number;
+  roi: number;
+  apy: number;
+  bond: any;
+}
 
 export const StakingChoicePage = (): JSX.Element => {
+  const { bonds } = useBonds(250); 
+
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",

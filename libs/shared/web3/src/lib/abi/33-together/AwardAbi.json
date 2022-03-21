@@ -17,12 +17,7 @@
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "contract IERC20Upgradeable",
-            "name": "externalErc20",
-            "type": "address"
-          }
+          { "indexed": true, "internalType": "contract IERC20Upgradeable", "name": "externalErc20", "type": "address" }
         ],
         "name": "ExternalErc20AwardAdded",
         "type": "event"
@@ -49,12 +44,7 @@
             "name": "externalErc721",
             "type": "address"
           },
-          {
-            "indexed": false,
-            "internalType": "uint256[]",
-            "name": "tokenIds",
-            "type": "uint256[]"
-          }
+          { "indexed": false, "internalType": "uint256[]", "name": "tokenIds", "type": "uint256[]" }
         ],
         "name": "ExternalErc721AwardAdded",
         "type": "event"
@@ -75,42 +65,12 @@
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "prizePeriodStart",
-            "type": "uint256"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "prizePeriodSeconds",
-            "type": "uint256"
-          },
-          {
-            "indexed": true,
-            "internalType": "contract PrizePool",
-            "name": "prizePool",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "contract TicketInterface",
-            "name": "ticket",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "contract IERC20Upgradeable",
-            "name": "sponsorship",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "contract RNGInterface",
-            "name": "rng",
-            "type": "address"
-          },
+          { "indexed": false, "internalType": "uint256", "name": "prizePeriodStart", "type": "uint256" },
+          { "indexed": false, "internalType": "uint256", "name": "prizePeriodSeconds", "type": "uint256" },
+          { "indexed": true, "internalType": "contract PrizePool", "name": "prizePool", "type": "address" },
+          { "indexed": false, "internalType": "contract TicketInterface", "name": "ticket", "type": "address" },
+          { "indexed": false, "internalType": "contract IERC20Upgradeable", "name": "sponsorship", "type": "address" },
+          { "indexed": false, "internalType": "contract RNGInterface", "name": "rng", "type": "address" },
           {
             "indexed": false,
             "internalType": "contract IERC20Upgradeable[]",
@@ -121,40 +81,18 @@
         "name": "Initialized",
         "type": "event"
       },
+      { "anonymous": false, "inputs": [], "name": "NoWinners", "type": "event" },
       {
         "anonymous": false,
-        "inputs": [],
-        "name": "NoWinners",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "numberOfWinners",
-            "type": "uint256"
-          }
-        ],
+        "inputs": [{ "indexed": false, "internalType": "uint256", "name": "numberOfWinners", "type": "uint256" }],
         "name": "NumberOfWinnersSet",
         "type": "event"
       },
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "previousOwner",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "newOwner",
-            "type": "address"
-          }
+          { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+          { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
         ],
         "name": "OwnershipTransferred",
         "type": "event"
@@ -174,44 +112,17 @@
       },
       {
         "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "prizePeriodSeconds",
-            "type": "uint256"
-          }
-        ],
+        "inputs": [{ "indexed": false, "internalType": "uint256", "name": "prizePeriodSeconds", "type": "uint256" }],
         "name": "PrizePeriodSecondsUpdated",
         "type": "event"
       },
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "operator",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "prizePool",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "uint32",
-            "name": "rngRequestId",
-            "type": "uint32"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint32",
-            "name": "rngLockBlock",
-            "type": "uint32"
-          }
+          { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+          { "indexed": true, "internalType": "address", "name": "prizePool", "type": "address" },
+          { "indexed": true, "internalType": "uint32", "name": "rngRequestId", "type": "uint32" },
+          { "indexed": false, "internalType": "uint32", "name": "rngLockBlock", "type": "uint32" }
         ],
         "name": "PrizePoolAwardCancelled",
         "type": "event"
@@ -219,30 +130,10 @@
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "operator",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "prizePool",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "uint32",
-            "name": "rngRequestId",
-            "type": "uint32"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint32",
-            "name": "rngLockBlock",
-            "type": "uint32"
-          }
+          { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+          { "indexed": true, "internalType": "address", "name": "prizePool", "type": "address" },
+          { "indexed": true, "internalType": "uint32", "name": "rngRequestId", "type": "uint32" },
+          { "indexed": false, "internalType": "uint32", "name": "rngLockBlock", "type": "uint32" }
         ],
         "name": "PrizePoolAwardStarted",
         "type": "event"
@@ -250,18 +141,8 @@
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "operator",
-            "type": "address"
-          },
-          {
-            "indexed": false,
-            "internalType": "uint256",
-            "name": "randomNumber",
-            "type": "uint256"
-          }
+          { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+          { "indexed": false, "internalType": "uint256", "name": "randomNumber", "type": "uint256" }
         ],
         "name": "PrizePoolAwarded",
         "type": "event"
@@ -269,64 +150,30 @@
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "address",
-            "name": "operator",
-            "type": "address"
-          },
-          {
-            "indexed": true,
-            "internalType": "uint256",
-            "name": "prizePeriodStartedAt",
-            "type": "uint256"
-          }
+          { "indexed": true, "internalType": "address", "name": "operator", "type": "address" },
+          { "indexed": true, "internalType": "uint256", "name": "prizePeriodStartedAt", "type": "uint256" }
         ],
         "name": "PrizePoolOpened",
         "type": "event"
       },
+      { "anonymous": false, "inputs": [], "name": "RngRequestFailed", "type": "event" },
       {
         "anonymous": false,
-        "inputs": [],
-        "name": "RngRequestFailed",
-        "type": "event"
-      },
-      {
-        "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "uint32",
-            "name": "rngRequestTimeout",
-            "type": "uint32"
-          }
-        ],
+        "inputs": [{ "indexed": false, "internalType": "uint32", "name": "rngRequestTimeout", "type": "uint32" }],
         "name": "RngRequestTimeoutSet",
         "type": "event"
       },
       {
         "anonymous": false,
         "inputs": [
-          {
-            "indexed": true,
-            "internalType": "contract RNGInterface",
-            "name": "rngService",
-            "type": "address"
-          }
+          { "indexed": true, "internalType": "contract RNGInterface", "name": "rngService", "type": "address" }
         ],
         "name": "RngServiceUpdated",
         "type": "event"
       },
       {
         "anonymous": false,
-        "inputs": [
-          {
-            "indexed": false,
-            "internalType": "bool",
-            "name": "splitExternalErc20Awards",
-            "type": "bool"
-          }
-        ],
+        "inputs": [{ "indexed": false, "internalType": "bool", "name": "splitExternalErc20Awards", "type": "bool" }],
         "name": "SplitExternalErc20AwardsSet",
         "type": "event"
       },
@@ -344,26 +191,14 @@
         "type": "event"
       },
       {
-        "inputs": [
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "_externalErc20",
-            "type": "address"
-          }
-        ],
+        "inputs": [{ "internalType": "contract IERC20Upgradeable", "name": "_externalErc20", "type": "address" }],
         "name": "addExternalErc20Award",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "contract IERC20Upgradeable[]",
-            "name": "_externalErc20s",
-            "type": "address[]"
-          }
-        ],
+        "inputs": [{ "internalType": "contract IERC20Upgradeable[]", "name": "_externalErc20s", "type": "address[]" }],
         "name": "addExternalErc20Awards",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -371,16 +206,8 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "contract IERC721Upgradeable",
-            "name": "_externalErc721",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256[]",
-            "name": "_tokenIds",
-            "type": "uint256[]"
-          }
+          { "internalType": "contract IERC721Upgradeable", "name": "_externalErc721", "type": "address" },
+          { "internalType": "uint256[]", "name": "_tokenIds", "type": "uint256[]" }
         ],
         "name": "addExternalErc721Award",
         "outputs": [],
@@ -390,13 +217,7 @@
       {
         "inputs": [],
         "name": "beforeAwardListener",
-        "outputs": [
-          {
-            "internalType": "contract BeforeAwardListenerInterface",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract BeforeAwardListenerInterface", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
@@ -404,11 +225,7 @@
         "inputs": [
           { "internalType": "address", "name": "to", "type": "address" },
           { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          {
-            "internalType": "address",
-            "name": "controlledToken",
-            "type": "address"
-          },
+          { "internalType": "address", "name": "controlledToken", "type": "address" },
           { "internalType": "address", "name": "referrer", "type": "address" }
         ],
         "name": "beforeTokenMint",
@@ -421,11 +238,7 @@
           { "internalType": "address", "name": "from", "type": "address" },
           { "internalType": "address", "name": "to", "type": "address" },
           { "internalType": "uint256", "name": "amount", "type": "uint256" },
-          {
-            "internalType": "address",
-            "name": "controlledToken",
-            "type": "address"
-          }
+          { "internalType": "address", "name": "controlledToken", "type": "address" }
         ],
         "name": "beforeTokenTransfer",
         "outputs": [],
@@ -433,17 +246,9 @@
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "currentTime",
-            "type": "uint256"
-          }
-        ],
+        "inputs": [{ "internalType": "uint256", "name": "currentTime", "type": "uint256" }],
         "name": "calculateNextPrizePeriodStartTime",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
@@ -461,74 +266,40 @@
         "stateMutability": "view",
         "type": "function"
       },
-      {
-        "inputs": [],
-        "name": "cancelAward",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [],
-        "name": "completeAward",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
+      { "inputs": [], "name": "cancelAward", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+      { "inputs": [], "name": "completeAward", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
       {
         "inputs": [],
         "name": "currentPrize",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "secondsPerBlockMantissa",
-            "type": "uint256"
-          }
-        ],
+        "inputs": [{ "internalType": "uint256", "name": "secondsPerBlockMantissa", "type": "uint256" }],
         "name": "estimateRemainingBlocksToPrize",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "getExternalErc20Awards",
-        "outputs": [
-          { "internalType": "address[]", "name": "", "type": "address[]" }
-        ],
+        "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "contract IERC721Upgradeable",
-            "name": "_externalErc721",
-            "type": "address"
-          }
-        ],
+        "inputs": [{ "internalType": "contract IERC721Upgradeable", "name": "_externalErc721", "type": "address" }],
         "name": "getExternalErc721AwardTokenIds",
-        "outputs": [
-          { "internalType": "uint256[]", "name": "", "type": "uint256[]" }
-        ],
+        "outputs": [{ "internalType": "uint256[]", "name": "", "type": "uint256[]" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "getExternalErc721Awards",
-        "outputs": [
-          { "internalType": "address[]", "name": "", "type": "address[]" }
-        ],
+        "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
         "stateMutability": "view",
         "type": "function"
       },
@@ -548,41 +319,13 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "_prizePeriodStart",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_prizePeriodSeconds",
-            "type": "uint256"
-          },
-          {
-            "internalType": "contract PrizePool",
-            "name": "_prizePool",
-            "type": "address"
-          },
-          {
-            "internalType": "contract TicketInterface",
-            "name": "_ticket",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "_sponsorship",
-            "type": "address"
-          },
-          {
-            "internalType": "contract RNGInterface",
-            "name": "_rng",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC20Upgradeable[]",
-            "name": "externalErc20Awards",
-            "type": "address[]"
-          }
+          { "internalType": "uint256", "name": "_prizePeriodStart", "type": "uint256" },
+          { "internalType": "uint256", "name": "_prizePeriodSeconds", "type": "uint256" },
+          { "internalType": "contract PrizePool", "name": "_prizePool", "type": "address" },
+          { "internalType": "contract TicketInterface", "name": "_ticket", "type": "address" },
+          { "internalType": "contract IERC20Upgradeable", "name": "_sponsorship", "type": "address" },
+          { "internalType": "contract RNGInterface", "name": "_rng", "type": "address" },
+          { "internalType": "contract IERC20Upgradeable[]", "name": "externalErc20Awards", "type": "address[]" }
         ],
         "name": "initialize",
         "outputs": [],
@@ -591,41 +334,13 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "_prizePeriodStart",
-            "type": "uint256"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_prizePeriodSeconds",
-            "type": "uint256"
-          },
-          {
-            "internalType": "contract PrizePool",
-            "name": "_prizePool",
-            "type": "address"
-          },
-          {
-            "internalType": "contract TicketInterface",
-            "name": "_ticket",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "_sponsorship",
-            "type": "address"
-          },
-          {
-            "internalType": "contract RNGInterface",
-            "name": "_rng",
-            "type": "address"
-          },
-          {
-            "internalType": "uint256",
-            "name": "_numberOfWinners",
-            "type": "uint256"
-          }
+          { "internalType": "uint256", "name": "_prizePeriodStart", "type": "uint256" },
+          { "internalType": "uint256", "name": "_prizePeriodSeconds", "type": "uint256" },
+          { "internalType": "contract PrizePool", "name": "_prizePool", "type": "address" },
+          { "internalType": "contract TicketInterface", "name": "_ticket", "type": "address" },
+          { "internalType": "contract IERC20Upgradeable", "name": "_sponsorship", "type": "address" },
+          { "internalType": "contract RNGInterface", "name": "_rng", "type": "address" },
+          { "internalType": "uint256", "name": "_numberOfWinners", "type": "uint256" }
         ],
         "name": "initializeMultipleWinners",
         "outputs": [],
@@ -663,18 +378,14 @@
       {
         "inputs": [],
         "name": "numberOfWinners",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "owner",
-        "outputs": [
-          { "internalType": "address", "name": "", "type": "address" }
-        ],
+        "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
@@ -682,11 +393,7 @@
         "inputs": [],
         "name": "periodicPrizeStrategyListener",
         "outputs": [
-          {
-            "internalType": "contract PeriodicPrizeStrategyListenerInterface",
-            "name": "",
-            "type": "address"
-          }
+          { "internalType": "contract PeriodicPrizeStrategyListenerInterface", "name": "", "type": "address" }
         ],
         "stateMutability": "view",
         "type": "function"
@@ -694,64 +401,42 @@
       {
         "inputs": [],
         "name": "prizePeriodEndAt",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "prizePeriodRemainingSeconds",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "prizePeriodSeconds",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "prizePeriodStartedAt",
-        "outputs": [
-          { "internalType": "uint256", "name": "", "type": "uint256" }
-        ],
+        "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "prizePool",
-        "outputs": [
-          {
-            "internalType": "contract PrizePool",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract PrizePool", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "_externalErc20",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "_prevExternalErc20",
-            "type": "address"
-          }
+          { "internalType": "contract IERC20Upgradeable", "name": "_externalErc20", "type": "address" },
+          { "internalType": "contract IERC20Upgradeable", "name": "_prevExternalErc20", "type": "address" }
         ],
         "name": "removeExternalErc20Award",
         "outputs": [],
@@ -760,39 +445,19 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "contract IERC721Upgradeable",
-            "name": "_externalErc721",
-            "type": "address"
-          },
-          {
-            "internalType": "contract IERC721Upgradeable",
-            "name": "_prevExternalErc721",
-            "type": "address"
-          }
+          { "internalType": "contract IERC721Upgradeable", "name": "_externalErc721", "type": "address" },
+          { "internalType": "contract IERC721Upgradeable", "name": "_prevExternalErc721", "type": "address" }
         ],
         "name": "removeExternalErc721Award",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
-      {
-        "inputs": [],
-        "name": "renounceOwnership",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
+      { "inputs": [], "name": "renounceOwnership", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
       {
         "inputs": [],
         "name": "rng",
-        "outputs": [
-          {
-            "internalType": "contract RNGInterface",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract RNGInterface", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
@@ -805,11 +470,7 @@
       },
       {
         "inputs": [
-          {
-            "internalType": "contract BeforeAwardListenerInterface",
-            "name": "_beforeAwardListener",
-            "type": "address"
-          }
+          { "internalType": "contract BeforeAwardListenerInterface", "name": "_beforeAwardListener", "type": "address" }
         ],
         "name": "setBeforeAwardListener",
         "outputs": [],
@@ -817,9 +478,7 @@
         "type": "function"
       },
       {
-        "inputs": [
-          { "internalType": "uint256", "name": "count", "type": "uint256" }
-        ],
+        "inputs": [{ "internalType": "uint256", "name": "count", "type": "uint256" }],
         "name": "setNumberOfWinners",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -839,65 +498,35 @@
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint256",
-            "name": "_prizePeriodSeconds",
-            "type": "uint256"
-          }
-        ],
+        "inputs": [{ "internalType": "uint256", "name": "_prizePeriodSeconds", "type": "uint256" }],
         "name": "setPrizePeriodSeconds",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "uint32",
-            "name": "_rngRequestTimeout",
-            "type": "uint32"
-          }
-        ],
+        "inputs": [{ "internalType": "uint32", "name": "_rngRequestTimeout", "type": "uint32" }],
         "name": "setRngRequestTimeout",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "contract RNGInterface",
-            "name": "rngService",
-            "type": "address"
-          }
-        ],
+        "inputs": [{ "internalType": "contract RNGInterface", "name": "rngService", "type": "address" }],
         "name": "setRngService",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "bool",
-            "name": "_splitExternalErc20Awards",
-            "type": "bool"
-          }
-        ],
+        "inputs": [{ "internalType": "bool", "name": "_splitExternalErc20Awards", "type": "bool" }],
         "name": "setSplitExternalErc20Awards",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"
       },
       {
-        "inputs": [
-          {
-            "internalType": "contract TokenListenerInterface",
-            "name": "_tokenListener",
-            "type": "address"
-          }
-        ],
+        "inputs": [{ "internalType": "contract TokenListenerInterface", "name": "_tokenListener", "type": "address" }],
         "name": "setTokenListener",
         "outputs": [],
         "stateMutability": "nonpayable",
@@ -913,27 +542,13 @@
       {
         "inputs": [],
         "name": "sponsorship",
-        "outputs": [
-          {
-            "internalType": "contract IERC20Upgradeable",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract IERC20Upgradeable", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
+      { "inputs": [], "name": "startAward", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
       {
-        "inputs": [],
-        "name": "startAward",
-        "outputs": [],
-        "stateMutability": "nonpayable",
-        "type": "function"
-      },
-      {
-        "inputs": [
-          { "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }
-        ],
+        "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
         "name": "supportsInterface",
         "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
         "stateMutability": "view",
@@ -942,33 +557,19 @@
       {
         "inputs": [],
         "name": "ticket",
-        "outputs": [
-          {
-            "internalType": "contract TicketInterface",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract TicketInterface", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
         "inputs": [],
         "name": "tokenListener",
-        "outputs": [
-          {
-            "internalType": "contract TokenListenerInterface",
-            "name": "",
-            "type": "address"
-          }
-        ],
+        "outputs": [{ "internalType": "contract TokenListenerInterface", "name": "", "type": "address" }],
         "stateMutability": "view",
         "type": "function"
       },
       {
-        "inputs": [
-          { "internalType": "address", "name": "newOwner", "type": "address" }
-        ],
+        "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
         "name": "transferOwnership",
         "outputs": [],
         "stateMutability": "nonpayable",

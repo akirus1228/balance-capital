@@ -9,6 +9,11 @@
         },
         {
           "internalType": "address",
+          "name": "_sFHM",
+          "type": "address"
+        },
+        {
+          "internalType": "address",
           "name": "_principle",
           "type": "address"
         },
@@ -24,7 +29,7 @@
         },
         {
           "internalType": "address",
-          "name": "_feed",
+          "name": "_bondCalculator",
           "type": "address"
         },
         {
@@ -218,6 +223,45 @@
       "type": "function"
     },
     {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "name": "_bondInfo",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "gonsPayout",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "fhmPayout",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "vesting",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "lastBlock",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "pricePaid",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [],
       "name": "adjustment",
       "outputs": [
@@ -252,12 +296,12 @@
     },
     {
       "inputs": [],
-      "name": "assetPrice",
+      "name": "bondCalculator",
       "outputs": [
         {
-          "internalType": "int256",
+          "internalType": "address",
           "name": "",
-          "type": "int256"
+          "type": "address"
         }
       ],
       "stateMutability": "view",
@@ -267,7 +311,7 @@
       "inputs": [
         {
           "internalType": "address",
-          "name": "",
+          "name": "_depositor",
           "type": "address"
         }
       ],
@@ -459,6 +503,11 @@
         },
         {
           "internalType": "uint256",
+          "name": "_fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "_maxDebt",
           "type": "uint256"
         },
@@ -471,6 +520,19 @@
       "name": "initializeBondTerms",
       "outputs": [],
       "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "isLiquidityBond",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -653,6 +715,19 @@
       "type": "function"
     },
     {
+      "inputs": [],
+      "name": "sFHM",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         {
           "internalType": "bool",
@@ -683,7 +758,7 @@
     {
       "inputs": [
         {
-          "internalType": "enum NonStablecoinBondDepository.PARAMETER",
+          "internalType": "enum FantohmBondStakingDepository.PARAMETER",
           "name": "_parameter",
           "type": "uint8"
         },
@@ -704,11 +779,6 @@
           "internalType": "address",
           "name": "_staking",
           "type": "address"
-        },
-        {
-          "internalType": "bool",
-          "name": "_helper",
-          "type": "bool"
         }
       ],
       "name": "setStaking",
@@ -719,19 +789,6 @@
     {
       "inputs": [],
       "name": "staking",
-      "outputs": [
-        {
-          "internalType": "address",
-          "name": "",
-          "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "stakingHelper",
       "outputs": [
         {
           "internalType": "address",
@@ -786,6 +843,11 @@
         },
         {
           "internalType": "uint256",
+          "name": "fee",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
           "name": "maxDebt",
           "type": "uint256"
         }
@@ -814,19 +876,6 @@
           "internalType": "address",
           "name": "",
           "type": "address"
-        }
-      ],
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "useHelper",
-      "outputs": [
-        {
-          "internalType": "bool",
-          "name": "",
-          "type": "bool"
         }
       ],
       "stateMutability": "view",
