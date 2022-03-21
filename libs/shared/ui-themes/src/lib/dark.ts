@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 import fonts from './fonts';
 
-const darkTheme = {
+export const darkTheme = {
   color: '#FCFCFC',
   gold: '#F7C775',
   gray: '#E0E0E0',
@@ -114,19 +114,19 @@ export const dark = createTheme({
         containedSecondary: {
           backgroundColor: darkTheme.paperBg,
           color: darkTheme.color,
-          "&:hover": {
+          '&:hover': {
             backgroundColor: `${darkTheme.containedSecondaryButtonHoverBG} !important`,
           },
-          "&:active": {
+          '&:active': {
             backgroundColor: darkTheme.containedSecondaryButtonHoverBG,
           },
-          "&:focus": {
+          '&:focus': {
             backgroundColor: darkTheme.paperBg,
           },
-          "@media (hover:none)": {
+          '@media (hover:none)': {
             color: darkTheme.color,
             backgroundColor: darkTheme.paperBg,
-            "&:hover": {
+            '&:hover': {
               backgroundColor: `${darkTheme.containedSecondaryButtonHoverBG} !important`,
             },
           },
@@ -134,43 +134,43 @@ export const dark = createTheme({
         outlinedPrimary: {
           color: darkTheme.gold,
           borderColor: darkTheme.gold,
-          "&:hover": {
+          '&:hover': {
             color: darkTheme.outlinedPrimaryButtonHoverColor,
             backgroundColor: darkTheme.primaryButtonHoverBG,
           },
-          "@media (hover:none)": {
+          '@media (hover:none)': {
             color: darkTheme.gold,
             borderColor: darkTheme.gold,
-            "&:hover": {
+            '&:hover': {
               color: darkTheme.outlinedPrimaryButtonHoverColor,
               backgroundColor: `${darkTheme.primaryButtonHoverBG} !important`,
-              textDecoration: "none !important",
+              textDecoration: 'none !important',
             },
           },
         },
         outlinedSecondary: {
           color: darkTheme.color,
           borderColor: darkTheme.color,
-          "&:hover": {
+          '&:hover': {
             color: darkTheme.outlinedSecondaryButtonHoverColor,
             backgroundColor: darkTheme.outlinedSecondaryButtonHoverBG,
             borderColor: darkTheme.gold,
           },
         },
         textPrimary: {
-          color: "#A3A3A3",
-          "&:hover": {
+          color: '#A3A3A3',
+          '&:hover': {
             color: darkTheme.gold,
-            backgroundColor: "#00000000",
+            backgroundColor: '#00000000',
           },
-          "&:active": {
+          '&:active': {
             color: darkTheme.gold,
-            borderBottom: "#F7C775",
+            borderBottom: '#F7C775',
           },
         },
         textSecondary: {
           color: darkTheme.color,
-          "&:hover": {
+          '&:hover': {
             color: darkTheme.textHighlightColor,
           },
         },
@@ -180,19 +180,19 @@ export const dark = createTheme({
       styleOverrides: {
         root: {
           color: darkTheme.color,
-          "&:hover": {
+          '&:hover': {
             color: darkTheme.textHighlightColor,
-            textDecoration: "none",
-            "&.active": {
+            textDecoration: 'none',
+            '&.active': {
               color: darkTheme.color,
             },
           },
-          "&.active": {
+          '&.active': {
             color: darkTheme.color,
-            textDecoration: "underline",
+            textDecoration: 'underline',
           },
-        }
-      }
-    }
+        },
+      },
+    },
   },
 });
