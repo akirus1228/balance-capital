@@ -223,7 +223,6 @@ export const calculateUserBondDetails = createAsyncThunk(
         bondAction: bond.bondAction,
       };
     }
-console.log(address)
     const provider = await chains[networkId].provider;
 
     // Contracts
@@ -242,7 +241,6 @@ console.log(address)
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
-    console.log(allowance)
 
     if (Number(bondLength) === 0) return{
       bond: bond.name,
@@ -260,8 +258,8 @@ console.log(address)
 
     //Contract Interactions
     const [bondDetails, pendingPayout] = await Promise.all([
-      bondContract["bondInfo"](address, bondLength),
-      bondContract["pendingPayoutFor"](address),
+      bondContract["bondInfo"](address, bondLength - 1),
+      bondContract["pendingPayoutFor"](address, bondLength - 1),
     ]).then(([bondDetails, pendingPayout]) => [
       bondDetails,
       ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
