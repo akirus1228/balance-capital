@@ -18,7 +18,6 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const {bonds, allBonds} = useBonds(chainID || 250);
 
   const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
-  console.log(bonds)
   return (
     <Box sx={{marginTop: '3em'}} id={params.id}>
       <Zoom in={true}>

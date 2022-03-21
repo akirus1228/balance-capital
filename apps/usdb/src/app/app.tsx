@@ -36,20 +36,19 @@ export function App() {
     bonds.map(bond => {
       dispatch(calcBondDetails({ bond, value: "", networkId: chainID || 250 }));
     });
-    console.log(bonds)
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map(investment => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainID]);
+  }, [chainID, address]);
 
   // Load account details
   useEffect(() => {
     if (address) {
       dispatch(loadAccountDetails({ networkId: chainID || 250, address }));
       bonds.map(bond => {
-        dispatch(calculateUserBondDetails({ address, bond, networkId: chainID || 250 }));
+        dispatch(calculateUserBondDetails({address, bond, networkId: chainID || 250 }));
       });
     }
   }, [chainID, address]);
