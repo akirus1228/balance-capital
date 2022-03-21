@@ -73,6 +73,9 @@ const globalTheme: ThemeOptions = {
             borderRadius: "1.5em",
             margin: "auto 1em"
           },
+          "&.thin": {
+            padding: "15px 27px"
+          },
           "&.fill": {
             fontSize: '14px',
             backgroundColor: '#000',

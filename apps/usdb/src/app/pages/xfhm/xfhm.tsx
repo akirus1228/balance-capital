@@ -7,7 +7,7 @@ import {
   FormControl,
   OutlinedInput,
   InputAdornment,
-  Button,
+  Button
 } from "@mui/material";
 import { a11yProps, formatAmount } from "@fantohm/shared-helpers";
 import {
@@ -66,7 +66,13 @@ export const XfhmPage = (): JSX.Element => {
         dispatch(error("You cannot stake more than your FHM balance."));
         return;
       }
-      await dispatch(changeStakeForXfhm({ address, action, value: stakeQuantity.toString(), provider, networkID: chainID }));
+      await dispatch(changeStakeForXfhm({
+        address,
+        action,
+        value: stakeQuantity.toString(),
+        provider,
+        networkID: chainID
+      }));
     } else {
       // @ts-ignore
       if (isNaN(unstakeQuantity) || unstakeQuantity === 0 || unstakeQuantity === "") {
@@ -77,7 +83,13 @@ export const XfhmPage = (): JSX.Element => {
         dispatch(error("You cannot unstake more than your FHM balance."));
         return;
       }
-      await dispatch(changeStakeForXfhm({ address, action, value: unstakeQuantity.toString(), provider, networkID: chainID }));
+      await dispatch(changeStakeForXfhm({
+        address,
+        action,
+        value: unstakeQuantity.toString(),
+        provider,
+        networkID: chainID
+      }));
     }
   };
 
@@ -100,7 +112,7 @@ export const XfhmPage = (): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log('address changed to  ', address);
+    console.log("address changed to  ", address);
     dispatch(calcXfhmDetails({ address, networkID: chainID as NetworkID }));
   }, [address]);
 
@@ -134,7 +146,7 @@ export const XfhmPage = (): JSX.Element => {
                   <Skeleton /> }
                 <Typography variant='body2' color='textPrimary'>Claimable xFHM</Typography>
               </Box>
-              <Button color='primary' className='fill'>
+              <Button className="thin" color='primary' variant='contained'>
                 Claim xFHM
               </Button>
             </Box>
@@ -202,69 +214,73 @@ export const XfhmPage = (): JSX.Element => {
                     <Tab label='Stake' { ...a11yProps(0) } />
                     <Tab label='Unstake' { ...a11yProps(1) } />
                   </Tabs>
-                  <Box mt="20px">
+                  <Box mt='20px'>
                     {
                       stakeView === 0 ? (
                         <>
-                          <FormControl className='ohm-input' style={ { width: "100%" } } variant='outlined' color='primary'>
+                          <FormControl className='ohm-input' style={ { width: "100%" } } variant='outlined'
+                                       color='primary'>
                             <OutlinedInput
                               id='amount-input'
                               type='number'
-                              placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
+                              placeholder={ `Enter an ${ stakeView === 0 ? "stake" : "unstake" } amount` }
                               className='stake-input'
                               value={ stakeQuantity }
                               onChange={ e => setStakeQuantity(e.target.value) }
                               endAdornment={
                                 <InputAdornment position='end'>
-                                  <Button variant='text' onClick={() => setMax(stakeView) } color='inherit'>
+                                  <Button variant='text' onClick={ () => setMax(stakeView) } color='inherit'>
                                     Max
                                   </Button>
                                 </InputAdornment>
                               }
                             />
                           </FormControl>
-                          <Box mt="20px">
+                          <Box mt='20px'>
                             <Button
-                              className="border w-full"
-                              variant="contained"
-                              disabled={isPendingTxn(pendingTransactions, "staking")}
-                              onClick={() => {
+                              className='w-full thin'
+                              color='primary'
+                              variant='contained'
+                              disabled={ isPendingTxn(pendingTransactions, "staking") }
+                              onClick={ () => {
                                 onChangeStake("stake").then();
-                              }}
+                              } }
                             >
-                              {txnButtonText(pendingTransactions, "staking", "Stake FHM")}
+                              { txnButtonText(pendingTransactions, "staking", "Stake FHM") }
                             </Button>
                           </Box>
                         </>
                       ) : (
                         <>
-                          <FormControl className='ohm-input' style={ { width: "100%" } } variant='outlined' color='primary'>
+                          <FormControl className='ohm-input' style={ { width: "100%" } } variant='outlined'
+                                       color='primary'>
                             <OutlinedInput
                               id='amount-input'
                               type='number'
-                              placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
+                              placeholder={ `Enter an ${ stakeView === 0 ? "stake" : "unstake" } amount` }
                               className='stake-input'
+                              color='primary'
                               value={ unstakeQuantity }
                               onChange={ e => setUnStakeQuantity(e.target.value) }
                               endAdornment={
                                 <InputAdornment position='end'>
-                                  <Button variant='text' onClick={() => setMax(stakeView) } color='inherit'>
+                                  <Button variant='text' onClick={ () => setMax(stakeView) } color='inherit'>
                                     Max
                                   </Button>
                                 </InputAdornment>
                               }
                             />
                           </FormControl>
-                          <Box mt="20px">
+                          <Box mt='20px'>
                             <Button
-                              className="border w-full"
-                              variant="contained"
-                              disabled={isPendingTxn(pendingTransactions, "unstaking")}
-                              onClick={() => {
+                              className='w-full thin'
+                              variant='contained'
+                              disabled={ isPendingTxn(pendingTransactions, "unstaking") }
+                              onClick={ () => {
                                 onChangeStake("unstake").then();
-                              }}
+                              } }
                             >
-                              {txnButtonText(pendingTransactions, "unstaking", "Unstake FHM")}
+                              { txnButtonText(pendingTransactions, "unstaking", "Unstake FHM") }
                             </Button>
                           </Box>
                         </>
@@ -274,7 +290,7 @@ export const XfhmPage = (): JSX.Element => {
                 </Box>
               ) : (
                 <Box display='flex' justifyContent='center'>
-                  <Button color='primary' className='fill'
+                  <Button className='thin' color='primary' variant='contained'
                           disabled={ isPendingTxn(pendingTransactions, "approve_fhm") }
                           onClick={ () => onSeekApproval() }>
                     { txnButtonText(pendingTransactions, "approve_fhm", "Approve") }
