@@ -1,17 +1,17 @@
 import { configureStore } from '@reduxjs/toolkit';
 import appSliceReducer from './reducers/app-slice';
-import accountReducer from './reducers/account-slice';
+import {accountReducer} from '@fantohm/shared-web3';
 import { web3SliceReducer } from '@fantohm/shared-web3';
-import bondingReducer from "../../../../../libs/shared/web3/src/lib/slices/bond-slice";
-import globalbondingReducer from "../../../../../libs/shared/web3/src/lib/slices/global-bond-slice";
-import investmentsReducer from "../../../../../libs/shared/web3/src/lib/slices/investment-slice";
-import tokenPriceReducer from "../../../../../libs/shared/web3/src/lib/slices/token-price-slice";
-import appReducer from "../../../../../libs/shared/web3/src/lib/slices/app-slice";
-import networkReducer from "../../../../../libs/shared/web3/src/lib/slices/network-slice";
-import pendingTransactionsReducer from "../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
-import poolDataReducer from "../../../../../libs/shared/web3/src/lib/slices/pool-thunk";
-import lusdDataReducer from "../../../../../libs/shared/web3/src/lib/slices/lusd-slice";
-import messagesReducer from "../../../../../libs/shared/web3/src/lib/slices/messages-slice";
+import { bondingReducer } from "@fantohm/shared-web3";
+import { globalbondingReducer } from "@fantohm/shared-web3";
+import {investmentsReducer} from "@fantohm/shared-web3";
+import {tokenPriceReducer} from "@fantohm/shared-web3";
+import {appReducer} from "@fantohm/shared-web3";
+import {networkReducer} from "@fantohm/shared-web3";
+import { pendingTransactionsReducer } from "@fantohm/shared-web3";
+import {poolDataReducer} from "@fantohm/shared-web3";
+import {lusdDataReducer} from "@fantohm/shared-web3";
+import { messagesReducer } from "@fantohm/shared-web3";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer

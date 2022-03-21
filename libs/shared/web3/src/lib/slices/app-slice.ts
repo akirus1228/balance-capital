@@ -126,7 +126,7 @@ const appSlice = createSlice({
 // @ts-ignore
 const baseInfo = (state: RootState) => state.app;
 
-export default appSlice.reducer;
+export const appReducer = appSlice.reducer;
 
 export const {fetchAppSuccess} = appSlice.actions;
 

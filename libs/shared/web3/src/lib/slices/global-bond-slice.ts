@@ -97,7 +97,7 @@ const globalBondingSlice = createSlice({
   },
 });
 
-export default globalBondingSlice.reducer;
+export const globalbondingReducer = globalBondingSlice.reducer;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

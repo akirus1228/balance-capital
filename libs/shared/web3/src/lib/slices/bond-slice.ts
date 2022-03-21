@@ -431,7 +431,7 @@ const bondingSlice = createSlice({
   },
 });
 
-export default bondingSlice.reducer;
+export const bondingReducer = bondingSlice.reducer;
 
 export const { fetchBondSuccess } = bondingSlice.actions;
 

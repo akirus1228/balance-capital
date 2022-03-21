@@ -11,7 +11,7 @@ interface IInvestmentStateView {
 }
 
 // Smash all the interfaces together to get the InvestmentData Type
-function useInvestments() {
+export function useInvestments() {
   const investmentsLoading = useSelector((state: IInvestmentStateView) => !state.investments.loading);
   const investmentsState = useSelector((state: IInvestmentStateView) => state.investments);
   const [investments, setInvestments] = useState<Investment[]>(allInvestments);

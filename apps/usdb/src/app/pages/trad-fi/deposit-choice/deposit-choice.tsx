@@ -5,11 +5,8 @@ import {
   Zoom,
 } from '@mui/material';
 import {DepositCard} from './deposit-card';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {BondType} from "../../../../../../../libs/shared/web3/src/lib/lib/bond";
-import Bond from "../../bond/bond";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {useBonds} from "../../../../../../../libs/shared/web3/src/lib/hooks";
+import {BondType} from "@fantohm/shared-web3";
+import {useBonds} from "@fantohm/shared-web3";
 import {useWeb3Context} from "@fantohm/shared-web3";
 
 interface IDepositChoiceParams {

@@ -37,7 +37,7 @@ export type Web3ContextData = {
 
 const Web3Context = React.createContext<Web3ContextData>(null);
 
-export const useWeb3Context = () => {
+const useWeb3Context = () => {
   const web3Context = useContext(Web3Context);
   if (!web3Context) {
     throw new Error(
@@ -72,7 +72,7 @@ export const getSavedNetworkId = () => {
   return null;
 };
 
-export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({children}) => {
+const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({children}) => {
   const [connected, setConnected] = useState(false);
 
   const defaultNetworkId = getSavedNetworkId() || NetworkIds.FantomOpera;

@@ -12,23 +12,15 @@ import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
 import { TradFi } from "./pages/trad-fi/trad-fi";
 import MyAccount from './pages/my-account/my-account';
 import { RootState } from './store';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {loadAppDetails} from "../../../../libs/shared/web3/src/lib/slices/app-slice";
+import {loadAppDetails} from "@fantohm/shared-web3";
 import {useWeb3Context} from "@fantohm/shared-web3";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcBondDetails} from "../../../../libs/shared/web3/src/lib/slices/bond-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {useAddress, useBonds} from "../../../../libs/shared/web3/src/lib/hooks";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcGlobalBondDetails} from "../../../../libs/shared/web3/src/lib/slices/global-bond-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calcInvestmentDetails} from "../../../../libs/shared/web3/src/lib/slices/investment-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import useInvestments from "../../../../libs/shared/web3/src/lib/hooks/investments";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {fetchTokenPrice} from "../../../../libs/shared/web3/src/lib/slices/token-price-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {calculateUserBondDetails, loadAccountDetails} from 'libs/shared/web3/src/lib/slices/account-slice';
+import {calcBondDetails} from "@fantohm/shared-web3";
+import {useAddress, useBonds} from "@fantohm/shared-web3";
+import {calcGlobalBondDetails} from "@fantohm/shared-web3";
+import {calcInvestmentDetails} from "@fantohm/shared-web3";
+import {useInvestments} from "@fantohm/shared-web3";
+import {fetchTokenPrice} from "@fantohm/shared-web3";
+import {calculateUserBondDetails, loadAccountDetails} from '@fantohm/shared-web3';
 
 export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);

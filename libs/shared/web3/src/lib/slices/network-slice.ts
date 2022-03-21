@@ -59,7 +59,7 @@ const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ ne
  * originalPromiseResult?.whateverValue;
  * ```
  */
-export const findOrLoadMarketPrice = createAsyncThunk(
+const findOrLoadMarketPrice = createAsyncThunk(
 	"networks/findOrLoadMarketPrice",
 	async ({ networkId }: IBaseAsyncThunk, { dispatch, getState }) => {
 		const state: any = getState();
@@ -183,7 +183,7 @@ const networksSlice = createSlice({
   },
 });
 
-export default networksSlice.reducer;
+export const networkReducer = networksSlice.reducer;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

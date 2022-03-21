@@ -4,22 +4,6 @@ import DAIIcon from "../../../../assets/tokens/DAI.svg";
 import {Link} from 'react-router-dom';
 import {ThemeProvider} from "@mui/material/styles";
 import {USDBLight} from "@fantohm/shared-ui-themes";
-import {useDispatch, useSelector} from "react-redux";
-import {useWeb3Context} from "@fantohm/shared-web3";
-import {useCallback, useEffect, useState} from "react";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {error} from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
-import {RootState} from "../../../store";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/bond-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {
-  IApproveBondAsyncThunk,
-  IBondAssetAsyncThunk
-} from "../../../../../../../libs/shared/web3/src/lib/slices/interfaces";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
-import {JsonRpcSigner} from "@ethersproject/providers";
 
 interface IDepositCardParams {
   bondType: string;

@@ -67,7 +67,7 @@ const investmentsSlice = createSlice({
   },
 });
 
-export default investmentsSlice.reducer;
+export const investmentsReducer = investmentsSlice.reducer;
 
 export const { fetchInvestmentsSuccess } = investmentsSlice.actions;
 

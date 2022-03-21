@@ -59,7 +59,7 @@ export const getRNGStatus = createAsyncThunk("pool/getRNGStatus", async ({ netwo
   };
 });
 
-export const changeApproval = createAsyncThunk(
+const changeApproval = createAsyncThunk(
   "pool/changeApproval",
   async ({ token, provider, address, networkId }: IChangeApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
@@ -332,7 +332,7 @@ const poolTogetherSlice = createSlice({
   },
 });
 
-export default poolTogetherSlice.reducer;
+export const poolDataReducer = poolTogetherSlice.reducer;
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore

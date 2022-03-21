@@ -4,22 +4,17 @@ import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import style from './deposit.module.scss';
 import CloseIcon from '@mui/icons-material/Close';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {isPendingTxn, txnButtonText} from "../../../../../../../libs/shared/web3/src/lib/slices/pending-txns-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { error } from "../../../../../../../libs/shared/web3/src/lib/slices/messages-slice";
+import {isPendingTxn, txnButtonText} from "@fantohm/shared-web3";
+import { error } from "@fantohm/shared-web3";
 import {useDispatch, useSelector} from "react-redux";
 import {useWeb3Context} from "@fantohm/shared-web3";
 import {RootState} from "../../../store";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import {bondAsset, changeApproval} from "../../../../../../../libs/shared/web3/src/lib/slices/bond-slice";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import {bondAsset, changeApproval} from "@fantohm/shared-web3";
 import {
   IApproveBondAsyncThunk,
   IBondAssetAsyncThunk
-} from "../../../../../../../libs/shared/web3/src/lib/slices/interfaces";
+} from "@fantohm/shared-web3";
 
-/* eslint-disable-next-line */
 export interface DepositProps {
   bond: any;
 }

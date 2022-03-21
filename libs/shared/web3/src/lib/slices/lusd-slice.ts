@@ -60,7 +60,7 @@ const lusdSlice = createSlice({
   },
 });
 
-export default lusdSlice.reducer;
+export const lusdDataReducer = lusdSlice.reducer;
 
 const baseInfo = (state: any) => state.lusdData;
 
