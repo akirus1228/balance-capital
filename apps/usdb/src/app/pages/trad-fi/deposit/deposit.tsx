@@ -70,7 +70,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (params.bond.interestDue > 0 || params.bond.pendingPayout > 0) {
+    } else if (params.bond.userBonds[0].interestDue > 0 || params.bond.userBonds[0].pendingPayout > 0) {
       const shouldProceed = window.confirm(
         "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
       );

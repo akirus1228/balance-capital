@@ -70,7 +70,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (singleSidedBond.interestDue > 0 || Number(singleSidedBond.pendingPayout) > 0) {
+    } else if (singleSidedBond.userBonds[0].interestDue > 0 || Number(singleSidedBond.userBonds[0].pendingPayout) > 0) {
       if (cardState === "redeem") {
         // dispatch(
         //   redeemBond({

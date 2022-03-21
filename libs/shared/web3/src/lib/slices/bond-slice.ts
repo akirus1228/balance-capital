@@ -287,7 +287,7 @@ export const bondAsset = createAsyncThunk(
       const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
 
       // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if (userBondDetails && userBondDetails.bondMaturationBlock && (userBondDetails.bondMaturationBlock - minedBlock) === 1) {
+      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
         waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
       }
     } catch (e: unknown) {
