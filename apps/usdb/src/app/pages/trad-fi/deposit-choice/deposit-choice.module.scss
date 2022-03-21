@@ -1,15 +1,18 @@
-.gridParent{
-    Box {
-        justify-content: center;
-    }
-}
-
 .bondCard {
-    border: 3px solid #FFF;
     padding: 30px;
     justify-content: center;
+    text-align: center;
 
-    h1, h3 {
+    h1 {
+        font-size: 45px;
+        margin-top: 0.5em;
+    }
+
+    h2 {
+        font-size: 42px;
+    }
+    
+    h3 {
         margin: 4px 0;
     }
 }
@@ -45,18 +48,21 @@
 
 .iconWrapper {
     position: absolute;
+    height: 86px;
 }
 
 .daiIcon {
     position: relative;
-    height: 95px;
+    height: 100%;
+    top: -47px;
 }
 
 .titleWrapper {
-    background-color: #FFF;
+    background-color: #000;
     padding: 0em 2em;
     border-radius: 3em;
-    color: #000;
+    color: #FFF;
+    margin-top: 1em;
 
     h3 {
         margin: 0.5em;
