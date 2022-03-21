@@ -40,6 +40,31 @@
       "anonymous": false,
       "inputs": [
         {
+          "indexed": true,
+          "internalType": "address",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "principlePayout",
+          "type": "uint256"
+        }
+      ],
+      "name": "BondCancelled",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
           "indexed": false,
           "internalType": "uint256",
           "name": "deposit",
@@ -316,6 +341,30 @@
     {
       "inputs": [
         {
+          "internalType": "address",
+          "name": "_depositor",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "index",
+          "type": "uint256"
+        }
+      ],
+      "name": "cancelBond",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "assetPayout_",
+          "type": "uint256"
+        }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
           "internalType": "uint256",
           "name": "payout",
           "type": "uint256"
@@ -477,6 +526,11 @@
           "internalType": "bool",
           "name": "_useCircuitBreaker",
           "type": "bool"
+        },
+        {
+          "internalType": "uint256",
+          "name": "_prematureReturnRate",
+          "type": "uint256"
         }
       ],
       "name": "initializeBondTerms",
@@ -869,6 +923,11 @@
         {
           "internalType": "uint256",
           "name": "soldBondsLimitUsd",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "prematureReturnRate",
           "type": "uint256"
         }
       ],
