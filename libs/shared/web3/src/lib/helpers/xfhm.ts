@@ -55,7 +55,7 @@ export const xFhmToken = new Xfhm({
   networkAddrs: {
     [NetworkIDs.FantomOpera]: "",
     [NetworkIDs.FantomTestnet]: "",
-    [NetworkIDs.Rinkeby]: "0x8ABf6F83F636C9DB306E1Ab473E083f3bdcA4268",
+    [NetworkIDs.Rinkeby]: "0x9D6A0D99E9d9f6e7f83f7646438c97746a0a14D9",
   },
   decimals: 18
 });

@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { NetworkID } from "../networks";
 import {Bond} from "../types/bond";
-import { Xfhm } from '../helpers/Xfhm';
+import { Xfhm } from '../helpers/xfhm';
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -51,8 +51,13 @@ export interface IBaseBondAsyncThunk extends IBaseAsyncThunk {
 
 // Xfhm Slice
 
-export interface IBaseXfhmAsyncThunk extends IBaseAddressAsyncThunk {
-  readonly xfhm: Xfhm;
+export interface IXfhmChangeApprovalAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly address: string;
+}
+
+export interface IXfhmActionValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly value: string;
+  readonly action: string;
 }
 
 export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {

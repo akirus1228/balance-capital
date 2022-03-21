@@ -25,3 +25,4 @@ const web3Slice = createSlice({
 export const { setWalletConnected } = web3Slice.actions;
 
 export const web3SliceReducer = web3Slice.reducer;
+export default web3Slice.reducer;

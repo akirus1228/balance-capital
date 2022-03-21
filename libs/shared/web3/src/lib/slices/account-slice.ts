@@ -27,8 +27,6 @@ export const getBalances = createAsyncThunk(
       const fhmContract = new ethers.Contract(addresses[networkID]["OHM_ADDRESS"] as string, ierc20Abi, provider);
       fhmBalance = await fhmContract["balanceOf"](address);
     }
-console.log(usdbBalance)
-    console.log(fhmBalance)
     return {
       balances: {
         fhm: ethers.utils.formatUnits(fhmBalance, 18),

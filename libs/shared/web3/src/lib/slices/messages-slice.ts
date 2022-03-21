@@ -62,4 +62,5 @@ const messagesSlice = createSlice({
 
 export const { error, info, close, handle_obsolete } = messagesSlice.actions;
 
+export const messagesSliceReducer = messagesSlice.reducer;
 export default messagesSlice.reducer;

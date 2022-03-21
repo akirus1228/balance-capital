@@ -72,6 +72,21 @@ const globalTheme: ThemeOptions = {
             paddingBottom: "1.8em",
             borderRadius: "1.5em",
             margin: "auto 1em"
+          },
+          "&.fill": {
+            fontSize: '14px',
+            backgroundColor: '#000',
+            borderRadius: '1.5em',
+            color: "#FFF",
+            padding: "15px 27px"
+          },
+          "&.border": {
+            fontSize: '14px',
+            backgroundColor: '#FFF',
+            borderRadius: '1.5em',
+            color: "#000",
+            padding: "15px 27px",
+            border: "solid 1px #000"
           }
         },
         outlined: {
