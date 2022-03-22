@@ -22,18 +22,14 @@
     {
       "inputs": [],
       "name": "OHM",
-      "outputs": [
-        { "internalType": "contract IERC20", "name": "", "type": "address" }
-      ],
+      "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
       "stateMutability": "view",
       "type": "function"
     },
     {
       "inputs": [],
       "name": "aOHM",
-      "outputs": [
-        { "internalType": "contract IERC20", "name": "", "type": "address" }
-      ],
+      "outputs": [{ "internalType": "contract IERC20", "name": "", "type": "address" }],
       "stateMutability": "view",
       "type": "function"
     },
@@ -56,9 +52,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "uint256", "name": "amount", "type": "uint256" }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "amount", "type": "uint256" }],
       "name": "migrate",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -93,9 +87,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "newOwner", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
       "name": "transferOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",

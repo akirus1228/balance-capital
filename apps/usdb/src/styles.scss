@@ -22,6 +22,24 @@ a {
     align-items: center;
 }
 
+.flexSBRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.flexSBCol {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.w100 {
+    width: 100%;
+}
+
 .w-full {
   width: 100%;
 }
@@ -37,6 +55,7 @@ a {
 .font-weight-bolder {
   font-weight: bolder;
 }
+
 /* experimental animated gradient background
 body {
     background: radial-gradient(ellipse at top, #492e9554, transparent),

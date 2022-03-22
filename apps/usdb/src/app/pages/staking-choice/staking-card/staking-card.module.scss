@@ -1,0 +1,82 @@
+.titleWrapper {
+    background-color: #000;
+    padding: 0.5em 2em;
+    border-radius: 3em;
+    color: #FFF;
+    display: inline;
+
+    h3 {
+        margin: 0.5em;
+    }
+}
+
+.smokeyToggle {
+    padding: 0.5em;
+    background: #FFF;
+    color: #000;
+    border-radius: 2em;
+    cursor: pointer;
+    
+    .dot {
+        height: 12.5px;
+        width: 12.5px;
+        background-color: #000;
+        border-radius: 50%;
+        display: inline-block;
+        margin-right: 0.5em;
+    }
+}
+
+.smokeyToggle.active {
+    filter: drop-shadow(0px 3px 90px #000);
+}
+
+.lowerStats {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    span {
+        text-align: center;
+        color:#929BA0;
+        font-size: 20px;
+    }
+
+    h1 {
+        margin-bottom: 0em;
+    }
+}
+
+.currencySelector {
+    border: 2px solid rgba(105,108,128,0.2);
+    padding: 1em;
+    border-radius: 3em;
+    height: 60px;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+
+    .name {
+        font-size: 15px;
+    }
+    .amount {
+        font-size: 13px;
+        color: #696C80
+    }
+    input {
+        width: 100%;
+    }
+    input, input:focus {
+        border: none;
+        background: transparent;
+        outline: none;
+    }
+}
+
+.infoBox {
+    border-radius: 0.5em;
+    background: #f3ac283d;
+    color: #BE8824;
+    padding: 1em;
+    max-width: 500px;
+}

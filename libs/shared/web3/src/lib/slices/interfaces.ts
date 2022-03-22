@@ -1,6 +1,7 @@
-import { JsonRpcProvider } from "@ethersproject/providers";
-import { NetworkID } from "../networks";
-import {Bond} from "../types/bond";
+import { JsonRpcProvider } from '@ethersproject/providers';
+import { NetworkID } from '../networks';
+import { Investment } from "../lib/investment";
+import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
 
 export interface IJsonRPCError {
@@ -9,7 +10,7 @@ export interface IJsonRPCError {
 }
 
 export interface IBaseAsyncThunk {
-  readonly networkID: NetworkID;
+  readonly networkId: NetworkID;
 }
 
 export interface IInteractiveAsyncThunk {
@@ -75,6 +76,14 @@ export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiv
 
 export interface ICalcBondDetailsAsyncThunk extends IBaseBondAsyncThunk {
   readonly value: string;
+}
+
+export interface ICalcInvestmentDetailsAsyncThunk {
+  readonly investment: Investment;
+}
+
+export interface ICalcTokenPriceAsyncThunk {
+  readonly investment: Investment;
 }
 
 export interface ICalcGlobalBondDetailsAsyncThunk {

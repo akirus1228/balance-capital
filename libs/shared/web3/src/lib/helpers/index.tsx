@@ -1,32 +1,22 @@
-import {addresses} from "../constants";
-import {ethers} from "ethers";
+import { addresses } from "../constants";
+import { ethers } from "ethers";
 import axios from "axios";
-import {abi as PairContract} from "../abi/PairContract.json";
-import {abi as RedeemHelperAbi} from "../abi/RedeemHelper.json";
+import { abi as PairContract } from "../abi/PairContract.json";
+import { abi as RedeemHelperAbi } from "../abi/RedeemHelper.json";
 
 import {SvgIcon} from "@mui/material";
-import {ReactComponent as OhmImg} from "../../../../assets/tokens/token_OHM.svg";
-import {ReactComponent as SOhmImg} from "../../../../assets/tokens/token_sOHM.svg";
+import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";
+import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 
 import {JsonRpcSigner} from "@ethersproject/providers";
 
 import {NetworkID, networks} from "../networks";
-import {LocalStorage} from "./local-storage";
-import {chains} from "../providers";
+import { LocalStorage } from "./local-storage";
+import { chains } from "../providers";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
-export async function getMarketPrice(networkID : NetworkID) {
-	const provider = await chains[networkID].provider;
-	const marketPriceReserveAddress = networks[networkID].addresses["MARKET_PRICE_LP_ADDRESS"];
-	const pairContract = new ethers.Contract(marketPriceReserveAddress, PairContract, provider);
-	const reserves = await pairContract["getReserves"]();
-	const reserveDecimals = networks[networkID].liquidityPoolReserveDecimals;
-
-	const reserve0 = reserves[0] / Math.pow(10, reserveDecimals.token0Decimals);
-	const reserve1 = reserves[1] / Math.pow(10, reserveDecimals.token1Decimals);
-
-	const marketPrice = reserveDecimals.token1Decimals === 9 ? reserve0/reserve1 : reserve1/reserve0;
-	return marketPrice;
+export async function getMarketPrice(networkId : NetworkID) {
+	return 0;
 }
 
 const validCacheTime = 60 * 1000;
@@ -58,28 +48,19 @@ export async function getTokenPrice(tokenId = "fantohm") {
 }
 
 export async function getCoingeckoTokenPrice(chain: string, ca: string) {
+	if (!ca) {
+		return;
+	}
 	const cacheKey = "tokenPrice_" + chain + "_" + ca;
 	const entry = LocalStorage.get(cacheKey);
 	if (entry && new Date().getTime() <= entry.valid) return entry.data;
-	else {
-		try {
-			const resp = await axios.get(`https://coingecko.arcade.money/?action=coingeckoTokenPrice&chain=${chain}&ca=${ca}`);
-			const tokenPrice: number = resp.data[ca.toLowerCase()]["usd"];
-			LocalStorage.set(cacheKey, {
-				valid: new Date().getTime() + validCacheTime,
-				data: tokenPrice,
-			});
-			return tokenPrice;
-		} catch (e) {
-			const resp = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/${chain}?contract_addresses=${ca}&vs_currencies=usd`);
-			const tokenPrice: number = resp.data[ca.toLowerCase()]["usd"];
-			LocalStorage.set(cacheKey, {
-				valid: new Date().getTime() + validCacheTime,
-				data: tokenPrice,
-			});
-			return tokenPrice;
-		}
-	}
+	const resp = await axios.get(`https://api.coingecko.com/api/v3/simple/token_price/${chain}?contract_addresses=${ca}&vs_currencies=usd`);
+	const tokenPrice: number = resp.data[ca.toLowerCase()]["usd"];
+	LocalStorage.set(cacheKey, {
+		valid: new Date().getTime() + validCacheTime,
+		data: tokenPrice,
+	});
+	return tokenPrice;
 }
 
 export function roundToNearestHour(seconds: number) {
@@ -88,6 +69,7 @@ export function roundToNearestHour(seconds: number) {
 
 export async function getHistoricTokenPrice(chain:string, ca:string) {
   const resp: any = await axios.get(`https://api.coingecko.com/api/v3/coins/${chain}/contract/${ca}/market_chart?vs_currency=usd&days=90`);
+	const prices = resp.data.prices;
   return resp.data.prices.reduce((prices: {[key: number]: number}, price: [number, number]) => (prices[roundToNearestHour(price[0] / 1000)] = price[1], prices), {});
 }
 
@@ -119,24 +101,27 @@ export function trim(number = 0, precision = 0) {
 
 	const poppedNumber = array.pop() || "0";
 	array.push(poppedNumber.substring(0, precision));
-  return array.join(".");
+	const trimmedNumber = array.join(".");
+	return trimmedNumber;
 }
 
-export function getRebaseBlock(networkID: NetworkID, currentBlock: number) {
-	return currentBlock + networks[networkID].epochInterval - ((currentBlock - networks[networkID].epochBlock) % networks[networkID].epochInterval);
+export function getRebaseBlock(networkId: NetworkID, currentBlock: number) {
+	return currentBlock + networks[networkId].epochInterval - ((currentBlock - networks[networkId].epochBlock) % networks[networkId].epochInterval);
 }
 
-export function secondsUntilBlock(networkID: NetworkID, startBlock: number, endBlock: number) {
+export function secondsUntilBlock(networkId: NetworkID, startBlock: number, endBlock: number) {
 	const blocksAway = endBlock - startBlock;
-  return blocksAway * networks[networkID].blocktime;
+	const secondsAway = blocksAway * networks[networkId].blocktime;
+
+	return secondsAway;
 }
 
-export function prettyVestingPeriod(networkID: NetworkID, currentBlock: number, vestingBlock: number) {
+export function prettyVestingPeriod(networkId: NetworkID, currentBlock: number, vestingBlock: number) {
 	if (vestingBlock === 0) {
 		return "";
 	}
 
-	const seconds = secondsUntilBlock(networkID, currentBlock, vestingBlock);
+	const seconds = secondsUntilBlock(networkId, currentBlock, vestingBlock);
 	if (seconds < 0) {
 		return "Fully Vested";
 	}
@@ -153,12 +138,12 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 	const m = Math.floor((seconds % 3600) / 60);
 
 	if (resolution === "day") {
-		return d + (d === 1 ? " day" : " days");
+		return d + (d == 1 ? " day" : " days");
 	}
 
-	const dDisplay = d > 0 ? d + (d === 1 ? " day, " : " days, ") : "";
-	const hDisplay = h > 0 ? h + (h === 1 ? " hr, " : " hrs, ") : "";
-	const mDisplay = m > 0 ? m + (m === 1 ? " min" : " mins") : "";
+	const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+	const hDisplay = h > 0 ? h + (h == 1 ? " hr, " : " hrs, ") : "";
+	const mDisplay = m > 0 ? m + (m == 1 ? " min" : " mins") : "";
 
 	let result = dDisplay + hDisplay + mDisplay;
 	if (mDisplay === "") {
@@ -171,22 +156,27 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 }
 
 function getSohmTokenImage() {
-	return <SvgIcon component={SOhmImg} viewBox="0 0 100 100" style={{height: "1rem", width: "1rem"}}/>;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+  return;
 }
 
 export function getOhmTokenImage(w?: number, h?: number) {
 	const height = h == null ? "32px" : `${h}px`;
 	const width = w == null ? "32px" : `${w}px`;
-	return <SvgIcon component={OhmImg} viewBox="0 0 32 32" style={{height, width}}/>;
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	// @ts-ignore
+  return;
 }
 
 export function getTokenImage(name: string) {
+	if (name === "fhm") return getOhmTokenImage();
 	if (name === "sfhm") return getSohmTokenImage();
   return getOhmTokenImage();
 }
 
 // TS-REFACTOR-NOTE - Used for:
-// AccountSlice.ts, AppSlice.ts, LusdSlice.ts
+// account-slice.ts, app-slice.ts, lusd-slice.ts
 export function setAll(state: any, properties: any) {
 	const props = Object.keys(properties);
 	props.forEach(key => {
@@ -195,13 +185,13 @@ export function setAll(state: any, properties: any) {
 }
 
 export function contractForRedeemHelper({
-											networkID,
+											networkId,
 											signer,
 										}: {
-	networkID: number;
+	networkId: number;
 	signer: JsonRpcSigner;
 }) {
-	return new ethers.Contract(addresses[networkID]["REDEEM_HELPER_ADDRESS"] as string, RedeemHelperAbi, signer);
+	return new ethers.Contract(addresses[networkId]["REDEEM_HELPER_ADDRESS"] as string, RedeemHelperAbi, signer);
 }
 
 /**
@@ -287,7 +277,7 @@ export function getQueryParams(search: string): { [key: string]: boolean } {
   const param = new URLSearchParams(search.toString()?.replace("/", ""));
   const custom: { [key: string]: boolean } = {};
   param.forEach(function (value, key) {
-    custom[key] = value === "true";
+    custom[key] = value === "true" ? true : false;
   });
   return custom;
 }

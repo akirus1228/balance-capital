@@ -9,12 +9,14 @@ import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
 import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
-import { isIframe } from '@fantohm/shared-helpers';
-import { Web3ContextData } from './types';
-import { NetworkID, NetworkIDs, enabledNetworkIDs } from './networks';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { Web3ContextData } from './types/types';
+import { NetworkID, NetworkIDs, enabledNetworkIDs } from '../lib/networks';
 import { chains } from './providers';
+import {isIframe} from "@fantohm/shared-helpers";
 
 export const getURI = (networkID: NetworkID): string => {
+  console.log(chains[networkID].rpcUrls[0]);
   return chains[networkID].rpcUrls[0];
 };
 
@@ -34,9 +36,9 @@ export const useWeb3Context = () => {
   }, [web3Context]);
 };
 
-const saveNetworkID = (networkID: NetworkID) => {
+const saveNetworkID = (NetworkID: NetworkID) => {
   if (window.localStorage) {
-    window.localStorage.setItem('defaultNetworkID', networkID.toString());
+    window.localStorage.setItem('defaultNetworkID', NetworkID.toString());
   }
 };
 
@@ -63,8 +65,8 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   const [provider, setProvider] = useState<JsonRpcProvider | null>(null);
 
   const rpcUris = enabledNetworkIDs.reduce(
-    (rpcUris: { [key: string]: string }, networkID) => (
-      (rpcUris[networkID] = getURI(networkID)), rpcUris
+    (rpcUris: { [key: string]: string }, NetworkID: NetworkID) => (
+      (rpcUris[NetworkID] = getURI(NetworkID)), rpcUris
     ),
     {}
   );
@@ -125,7 +127,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   );
 
   /**
-   * throws an error if networkID is not supported
+   * throws an error if NetworkID is not supported
    */
   const _checkNetwork = (otherChainID: number): boolean => {
     if (chainID !== otherChainID) {
@@ -141,10 +143,10 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   };
 
   const switchEthereumChain = async (
-    networkID: NetworkID,
+    NetworkID: NetworkID,
     forceSwitch = false
   ) => {
-    const chainID = `0x${networkID.toString(16)}`;
+    const chainID = `0x${NetworkID.toString(16)}`;
     if (connected || forceSwitch) {
       try {
         await window.ethereum.request({
@@ -154,13 +156,13 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         return true;
       } catch (e: any) {
         if (e.code === 4902) {
-          if (!(networkID in chains)) {
+          if (!(NetworkID in chains)) {
             console.warn(
               `Details of network with chainID: ${chainID} not known`
             );
             return false;
           }
-          const chainDetails = chains[networkID];
+          const chainDetails = chains[NetworkID];
           try {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
@@ -189,7 +191,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       }
     } else {
       // Wallet not connected, just switch network for static providers
-      saveNetworkID(networkID);
+      saveNetworkID(NetworkID);
       window.location.reload();
       return true;
     }
@@ -206,7 +208,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     }
 
     // new _initListeners implementation matches Web3Modal Docs
-    // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/src/App.tsx#L185
+    // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
     _initListeners(rawProvider);
     const connectedProvider = new Web3Provider(rawProvider, 'any');
     const chainID = await connectedProvider

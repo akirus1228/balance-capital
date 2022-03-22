@@ -20,7 +20,8 @@
       "@fantohm/shared-helpers": ["libs/shared/helpers/src/index.ts"],
       "@fantohm/shared-ui-themes": ["libs/shared/ui-themes/src/index.ts"],
       "@fantohm/shared-web3": ["libs/shared/web3/src/index.ts"],
-      "@fantohm/shared/assets/*": ["libs/shared/assets/*"]
+      "@fantohm/shared/assets/*": ["libs/shared/assets/*"],
+      "@fantohm/shared/images": ["libs/shared/images/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

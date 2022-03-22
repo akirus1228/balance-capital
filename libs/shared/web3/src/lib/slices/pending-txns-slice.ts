@@ -47,5 +47,5 @@ export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], 
 
 export const { fetchPendingTxns, clearPendingTxn } = pendingTxnsSlice.actions;
 
-export const pendingTxnsSliceReducer = pendingTxnsSlice.reducer;
+export const pendingTransactionsReducer = pendingTxnsSlice.reducer;
 export default pendingTxnsSlice.reducer;

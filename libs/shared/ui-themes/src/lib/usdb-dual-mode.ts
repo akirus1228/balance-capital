@@ -1,38 +1,39 @@
-import { createTheme } from "@mui/material/styles";
-import { ThemeOptions } from "@mui/material";
-import lightBG from "./images/USDB_gradient_light.png";
-import darkBG from "./images/USDB_gradient_dark.png";
+import { createTheme } from '@mui/material/styles';
+import { ThemeOptions } from '@mui/material';
+import lightBG from './images/USDB_gradient_light.png';
+import darkBG from './images/USDB_gradient_dark.png';
+import { shadows } from '@mui/system';
 
 // light color pallet for use in themes
 const usdbLightColors = {
-  color: "#000",
-  invertedColor: "#FFF",
-  backgroundColor: "#ECECF4",
-  paperBg: "#FFF",
-  gray: "#696C80",
+  color: '#000',
+  invertedColor: '#FFF',
+  backgroundColor: '#ECECF4',
+  paperBg: '#FFF',
+  gray: '#696C80',
 };
 
 // dark color pallet for use in themes
 const usdbDarkColors = {
-  color: "#FFF",
-  invertedColor: "#000",
-  backgroundColor: "#000",
-  paperBg: "#0E0F10",
-  gray: "#929BA0",
+  color: '#FFF',
+  invertedColor: '#000',
+  backgroundColor: '#000',
+  paperBg: '#0E0F10',
+  gray: '#929BA0',
 };
 
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
   typography: {
-    fontFamily: ["Sora", "Roboto", "sans-serif"].join(","),
+    fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
   components: {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          fontSize: "22px",
-        }
-      }
+          fontSize: '22px',
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {
@@ -42,18 +43,29 @@ const globalTheme: ThemeOptions = {
           "&.MuiAppBar-root": {
             padding: "0",
             marginTop: "2em"
+          },
+          "&.dai": {
+            border: "1px solid #F3AC28",
+            borderRadius: "2em",
+            background: "transparent"
+          },
+          "&.softGradient": {
+            borderRadius: "2em",
           }
         }
+      },
+      defaultProps: {
+        elevation: 0
       }
     },
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          background: "rgba(100, 100, 100, 0.1)",
-          backdropFilter: "blur(33px)",
-          "-webkit-backdrop-filter": "blur(33px)",
-        }
-      }
+          background: 'rgba(100, 100, 100, 0.1)',
+          backdropFilter: 'blur(33px)',
+          '-webkit-backdrop-filter': 'blur(33px)',
+        },
+      },
     },
     MuiButton: {
       styleOverrides: {
@@ -66,12 +78,15 @@ const globalTheme: ThemeOptions = {
             width: "100%",
             padding: "1em",
           },
-          "&.menuButton": {
-            height: "1em",
-            paddingTop: "1.8em",
-            paddingBottom: "1.8em",
-            borderRadius: "1.5em",
-            margin: "auto 1em"
+          '&.menuButton': {
+            height: '1em',
+            paddingTop: '1.8em',
+            paddingBottom: '1.8em',
+            borderRadius: '1.5em',
+            margin: 'auto 1em',
+          },
+          '&.cardActionButton': {
+            width: "100%"
           },
           "&.thin": {
             padding: "15px 27px"
@@ -93,14 +108,14 @@ const globalTheme: ThemeOptions = {
           }
         },
         outlined: {
-          borderRadius: "30px",
-          padding: "27px",
-          fontSize: "20px",
+          borderRadius: '30px',
+          padding: '27px',
+          fontSize: '20px',
         },
       },
       defaultProps: {
-        autoCapitalize: "none",
-      }
+        autoCapitalize: 'none',
+      },
     },
     MuiTab: {
       styleOverrides: {
@@ -112,20 +127,20 @@ const globalTheme: ThemeOptions = {
     MuiCssBaseline: {
       styleOverrides: {
         body: {
-          backgroundPosition: "top",
-          backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-          backgroundSize: "cover"
-        }
-      }
-    }
-  }
-}
+          backgroundPosition: 'top',
+          backgroundRepeat: 'no-repeat',
+          backgroundAttachment: 'fixed',
+          backgroundSize: 'cover',
+        },
+      },
+    },
+  },
+};
 
 // light theme
 const USDBLightBase: ThemeOptions = {
   palette: {
-    mode: "light",
+    mode: 'light',
     primary: {
       main: usdbLightColors.color,
       contrastText: usdbLightColors.invertedColor,
@@ -146,49 +161,50 @@ const USDBLightBase: ThemeOptions = {
     MuiToolbar: {
       styleOverrides: {
         root: {
-          color: usdbLightColors.color
-        }
-      }
+          color: usdbLightColors.color,
+        },
+      },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          "&.paperButton": {
-            color: "#FFF",
-            backgroundColor: "#000",
+          '&.paperButton': {
+            color: '#FFF',
+            backgroundColor: '#000',
           },
-          "&.menuButton": {
-            border: "1px solid #000",
-          }
+          '&.menuButton': {
+            border: '1px solid #000',
+          },
         },
         outlined: {
-          border: "3px solid #000",
-        }
-      }
+          border: '3px solid #000',
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
           color: usdbLightColors.color,
-        }
-      }
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(229,229,235,1) 15%, rgba(229,229,235,0.42) 90%)"
+          }
+        },
+      },
     },
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           backgroundImage: `url(${lightBG})`,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
-
-
 
 // dark theme
 const USDBDarkBase: ThemeOptions = {
   palette: {
-    mode: "dark",
+    mode: 'dark',
     primary: {
       main: usdbDarkColors.color,
       contrastText: usdbDarkColors.invertedColor,
@@ -209,43 +225,45 @@ const USDBDarkBase: ThemeOptions = {
     MuiToolbar: {
       styleOverrides: {
         root: {
-          color: usdbDarkColors.color
-        }
-      }
+          color: usdbDarkColors.color,
+        },
+      },
     },
     MuiButton: {
       styleOverrides: {
         root: {
-          "&.paperButton": {
-            color: "#FFF",
-            backgroundColor: "#000",
+          '&.paperButton': {
+            color: '#FFF',
+            backgroundColor: '#000',
           },
-          "&.menuButton": {
-            border: "1px solid #FFF",
-          }
+          '&.menuButton': {
+            border: '1px solid #FFF',
+          },
         },
         outlined: {
-          border: "3px solid #FFF",
-        }
-      }
+          border: '3px solid #FFF',
+        },
+      },
     },
     MuiPaper: {
       styleOverrides: {
         root: {
           color: usdbDarkColors.color,
-        }
-      }
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(8,9,10,1) 0%, rgba(8,9,10,0.62) 5%, rgba(14,15,16,1) 90%)"
+          }
+        },
+      },
     },
     MuiCssBaseline: {
       styleOverrides: {
         body: {
           backgroundImage: `url(${darkBG})`,
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 };
-
 
 export const USDBLight = createTheme(globalTheme, USDBLightBase);
 export const USDBDark = createTheme(globalTheme, USDBDarkBase);

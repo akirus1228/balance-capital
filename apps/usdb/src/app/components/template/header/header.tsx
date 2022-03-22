@@ -66,7 +66,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkID: 250 }));
+    dispatch(getBalances({networkId: 4002, address: address }));
   }, [connected]);
 
   const toggleTheme = () => {
@@ -117,14 +117,16 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Button href={page.href}>{page.title}</Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button href={page.href}>{page.title}</Button>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
 
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Button onClick={connect}>{connected ? 'Disconnect' : 'Connect Wallet'}</Button>
+                  <Button  onClick={clickFunc}>{buttonText}</Button>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
@@ -164,14 +166,15 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Button
-                      autoCapitalize='none'
-                      disabled={page.params?.comingSoon}
-                      href={page.href}
-                      sx={{...(page.params && page.params.sx)}}
-                    >
-                      {page.title}
-                    </Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button
+                        autoCapitalize='none'
+                        disabled={page.params?.comingSoon}
+                        sx={{...(page.params && page.params.sx)}}
+                      >
+                        {page.title}
+                      </Button>
+                    </Link>
                   )}
               </Box>
             ))}
