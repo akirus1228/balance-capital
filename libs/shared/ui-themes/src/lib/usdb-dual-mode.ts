@@ -85,6 +85,9 @@ const globalTheme: ThemeOptions = {
             borderRadius: '1.5em',
             margin: 'auto 1em',
           },
+          '&.cardActionButton': {
+            width: "100%"
+          }
         },
         outlined: {
           borderRadius: '30px',

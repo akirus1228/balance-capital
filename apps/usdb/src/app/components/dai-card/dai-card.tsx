@@ -28,17 +28,15 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper sx={{marginTop: '47px'}} className={`${style['cardWrapper']} ${props.className} flexCenterCol`}>
-          <Grid container rowSpacing={3}>
-              <Grid item xs={12}>
-                  <Box className={`flexCenterCol`}>
-                      <div className={`${style['iconWrapper']}`}>
-                          <img src={daiToken} alt="DAI token" className={style['daiIcon']}/>
-                      </div>
-                  </Box>
-              </Grid>
-          </Grid>
-          {props.children}
+      <Paper sx={{marginTop: '47px'}} className={`daiCard ${style['cardWrapper']} ${props.className} flexCenterCol`}>
+          <Box className={`flexCenterCol`}>
+              <div className={`${style['iconWrapper']}`}>
+                  <img src={daiToken} alt="DAI token" className={style['daiIcon']}/>
+              </div>
+          </Box>
+          <Box className="flexCenterCol" sx={{mt: '1em'}}>
+            {props.children}
+          </Box>
       </Paper>
     </ThemeProvider>
   );
