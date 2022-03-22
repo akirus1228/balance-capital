@@ -1,5 +1,15 @@
 import { EnvHelper } from "./environment";
 
+interface ISegmentData {
+    address: string;
+    value?: string;
+    type: string | null;
+    bondName?: string;
+    approved: boolean;
+    txHash: string | null;
+    country?: string;
+}
+
 /**
  * Obtain country from IP address
  * @returns the country name or an empty string
@@ -7,11 +17,11 @@ import { EnvHelper } from "./environment";
 async function countryLookup() {
   // Determine the country the user is from, based on IP
   // Geoapify offers 3000 lookups/day, so we should be fine
-  var apiKey = EnvHelper.getGeoapifyAPIKey();
+  const apiKey = EnvHelper.getGeoapifyAPIKey();
 
   if (!apiKey) return "";
 
-  var response = await fetch("https://api.geoapify.com/v1/ipinfo?apiKey=" + apiKey, {
+  const response = await fetch("https://api.geoapify.com/v1/ipinfo?apiKey=" + apiKey, {
     method: "GET",
   });
 
@@ -20,14 +30,15 @@ async function countryLookup() {
     return "";
   }
 
-  var json = await response.json();
+  const json = await response.json();
   return json.country.name;
 }
 
 // Pushing data to segment analytics
-export function segmentUA(data) {
+export function segmentUA(data: ISegmentData) {
+  const thisWindow = window as any;
   // eslint-disable-next-line no-self-assign
-  const analytics = (window.analytics = window.analytics);
+  const analytics = (thisWindow.analytics = thisWindow.analytics);
   countryLookup().then(country => (data.country = country));
 
   // NOTE (appleseed): the analytics object may not exist (if there is no SEGMENT_API_KEY)

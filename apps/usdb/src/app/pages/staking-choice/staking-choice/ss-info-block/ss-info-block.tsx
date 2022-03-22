@@ -9,7 +9,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
   return (
     <Box sx={{mx: {xs: "1em", md: "3em"}}} className={style['infoBlockContainer']}>
       <Grid container spacing={12}>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol" sx={{height: "100%", justifyContent: 'flex-start'}}>
@@ -25,7 +25,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{height: "100%"}}>
               <Box className={style['centerBox']} >
@@ -36,7 +36,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol">
