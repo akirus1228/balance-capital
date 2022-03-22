@@ -1,9 +1,9 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
-import css from "./staking-choice.module.scss";
+import style from "./staking-choice.module.scss";
 import { useBonds } from "@fantohm/shared-web3";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
 
@@ -38,16 +38,24 @@ export const StakingChoicePage = (): JSX.Element => {
       <Headline {...heroContent} />
       <Box sx={{marginTop: "3em"}} className="flexCenterCol">
         <DaiCard className="dai">
-          <h1>20.00% APR</h1>
+          <h2 className={style['daiAPR']}>20.00% APR</h2>
           <Grid container>
-            <Grid item xs={6} sx={{justifyContent:'left'}}>Staked TVL</Grid>
-            <Grid item xs={6} sx={{justifyContent:'right'}}>$1,562,063</Grid>
+            <Grid item xs={6} sx={{justifyContent:'left'}}>
+              <span className={style['tvlInfo']}>Staked TVL</span>
+            </Grid>
+            <Grid item xs={6} sx={{display:'flex', justifyContent: 'flex-end'}}>
+              <span className={style['tvlInfo']}>$1,562,063</span>
+            </Grid>
           </Grid>
         </DaiCard>
-        <Box className="flexCenterRow" sx={{my: '2em'}}>
-          <Button>Deposit</Button>
-          <Button variant="outlined">Learn More</Button>
-        </Box>
+        <Grid container sx={{my: '2em'}} columnSpacing={2}>
+          <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
+            <Button variant="contained" color="primary" sx={{width: '255px'}}>Deposit</Button>
+          </Grid>
+          <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}, mt: {xs: '1em', md: '0'}}}>
+            <Button variant="outlined" sx={{width: '255px'}}>Learn More</Button>
+          </Grid>
+        </Grid>
       </Box>
       <Headline {...simpleSafe} />
       <SsInfoBlock />
