@@ -23,7 +23,8 @@ export enum BondType {
   Bond_11,
   Bond_44,
   Bond_USDB,
-  TRADFI
+  TRADFI,
+  SINGLE_SIDED
 }
 
 export enum BondAction {

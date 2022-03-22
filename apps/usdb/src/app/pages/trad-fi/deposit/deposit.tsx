@@ -50,7 +50,6 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   });
 
   const hasAllowance = useCallback(() => {
-    console.log(params.bond.allowance)
     return params.bond.allowance > 0;
   }, [params.bond.allowance]);
 

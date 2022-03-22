@@ -327,6 +327,50 @@ export const redeemBond = createAsyncThunk(
       txHash: null,
     };
     try {
+      redeemTx = await bondContract["redeem"](address);
+      const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
+      uaData.txHash = redeemTx.hash;
+      dispatch(
+        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+      );
+
+      await redeemTx.wait();
+      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: unknown) {
+      uaData.approved = false;
+      dispatch(error((e as IJsonRPCError).message));
+    } finally {
+      if (redeemTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(redeemTx.hash));
+      }
+    }
+  },
+);
+
+export const redeemOneBond = createAsyncThunk(
+  "bonding/redeemBond",
+  async ({ address, bond, networkId, provider, autostake }: IRedeemBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+
+    let redeemTx;
+    const uaData = {
+      address: address,
+      type: "Redeem",
+      bondName: bond.displayName,
+      autoStake: autostake,
+      approved: true,
+      txHash: null,
+    };
+    try {
       redeemTx = await bondContract["redeemOne"](address);
       const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
       uaData.txHash = redeemTx.hash;

@@ -1,41 +1,44 @@
-import { ethers } from "ethers";
-import { addresses } from "../constants";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as usdbAbi } from "../abi/USDBContract.json";
-import { abi as sOHM } from "../abi/sOHM.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { abi as fuseProxy } from "../abi/FuseProxy.json";
-import { abi as wsOHM } from "../abi/wsOHM.json";
-import { abi as OlympusStaking } from "../abi/OlympusStakingv2.json";
+import {ethers} from "ethers";
+import {addresses} from "../constants";
+import {abi as ierc20Abi} from "../abi/IERC20.json";
+import {abi as usdbAbi} from "../abi/USDBContract.json";
+import {abi as sOHMv2} from "../abi/sOhmv2.json";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import {abi as daiAbi} from "../abi/reserves/DAIContract.json";
+import {abi as wsOHM} from "../abi/wsOHM.json";
+import {abi as OlympusStaking} from "../abi/OlympusStakingv2.json";
 
-import { setAll } from "../helpers";
+import {setAll} from "../helpers";
 
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
-import { IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk } from "./interfaces";
-import { chains } from "../providers";
-import { BondAction, BondType, PaymentToken } from "../lib/bond";
+import {createAsyncThunk, createSelector, createSlice} from "@reduxjs/toolkit";
+import {RootState} from "../store";
+import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfaces";
+import {chains} from "../providers";
+import {BondAction, BondType, PaymentToken} from "../lib/bond";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
   async ({ address, networkId }: IBaseAddressAsyncThunk) => {
     const provider = await chains[networkId].provider;
-
     // Contracts
-    // const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
-    // const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, provider);
-    // const wsohmContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, wsOHM, provider);
-    //let usdbBalance = 0;
+    //  const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
+    //  const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, provider);
+    //  const wsohmContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, wsOHM, provider);
+
+
+    // let usdbBalance = 0;
     // if (networkId === 250 || networkId === 4002) {
     //   const usdbContract = new ethers.Contract(addresses[networkId]["USDB_ADDRESS"] as string, usdbAbi, provider);
     //   usdbBalance = await usdbContract["balanceOf"](address);
-    //}
-    // Contract interactions
+    // }
+    //Contract interactions
     // const [ohmBalance, sohmBalance, wsohmBalance] = await Promise.all([
     //   ohmContract["balanceOf"](address),
     //   sohmContract["balanceOf"](address),
     //   wsohmContract["balanceOf"](address),
     // ]);
+
 
     const poolBalance = 0;
     // const poolTokenContract = new ethers.Contract(addresses[networkId].PT_TOKEN_ADDRESS as string, ierc20Abi, provider);
@@ -119,7 +122,8 @@ export const loadAccountDetails = createAsyncThunk(
       OlympusStaking,
       provider,
     );
-
+    console.log(addresses[networkId]["DAI_ADDRESS"] as string)
+    const daiContract = new ethers.Contract(addresses[networkId]["DAI_ADDRESS"] as string, daiAbi, provider);
     // Contract Interactions
     const [
       ohmBalance,
@@ -130,8 +134,8 @@ export const loadAccountDetails = createAsyncThunk(
       wsohmBalance,
       sohmWrappingAllowance,
       wsohmUnwrappingAllowance,
+      daiBalance,
       warmupInfo,
-      { bridgeTokenBalance, bridgeUpstreamAllowance, bridgeDownstreamAllowance },
     ] = await Promise.all([
       ohmContract["balanceOf"](address),
       ohmContract["allowance"](address, addresses[networkId]["STAKING_HELPER_ADDRESS"]),
@@ -141,8 +145,8 @@ export const loadAccountDetails = createAsyncThunk(
       wsohmContract["balanceOf"](address),
       sohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]),
       wsohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]),
+      daiContract["balanceOf"](address),
       stakingContract["warmupInfo"](address),
-      loadBridgeAccountDetails(),
     ]);
 
     let usdbBalance = 0;
@@ -176,9 +180,9 @@ export const loadAccountDetails = createAsyncThunk(
 
     return {
       balances: {
+        dai: ethers.utils.formatUnits(daiBalance, 18),
         fhm: ethers.utils.formatUnits(0, 18),
         usdb: ethers.utils.formatUnits(usdbBalance, 18),
-        dai: 0,
       },
       staking: {
         ohmStake: +stakeAllowance,
@@ -230,7 +234,11 @@ export const calculateUserBondDetails = createAsyncThunk(
     let interestDue, bondMaturationBlock;
 
     const paymentTokenDecimals = bond.paymentToken === PaymentToken.USDB ? 18 : 9;
-    const bondLength = await bondContract["bondlength"](address)
+
+    let bondLength = 0;
+    if(bond.type === BondType.TRADFI) {
+      bondLength = await bondContract["bondlength"](address)
+    }
 
     const [allowance, balance] = await Promise.all([
       reserveContract["allowance"](address, bond.getAddressForBond(networkId)),
