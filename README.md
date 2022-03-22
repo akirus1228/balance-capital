@@ -83,10 +83,10 @@ When in doubt: https://google.github.io/styleguide/tsguide.html
 
 | Style |	Category |
 |-------|----------|
-| UpperCamelCase |	class / interface / type / enum / decorator / type parameters|
-|lowerCamelCase |	variable / parameter / function / method / property / module alias|
-|CONSTANT_CASE |	global constant values, including enum values|
-|#ident |	private identifiers are never used.|
+| UpperCamelCase |	class / interface / type / enum / decorator / type parameters |
+| lowerCamelCase |	variable / parameter / function / method / property / module alias |
+| CONSTANT_CASE |	global constant values, including enum values |
+| #ident |	private identifiers are never used. |
 
 ### Imports
 
