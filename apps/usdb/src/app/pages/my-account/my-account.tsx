@@ -24,13 +24,17 @@ import style from './my-account.module.scss';
 import {styled} from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import {
-  isPendingTxn,
+  Bond, IAllBondData,
+  isPendingTxn, IUserBondDetails, redeemAllBonds,
+  RootState, setWalletConnected,
   redeemOneBond,
-  RootState,
   txnButtonTextGeneralPending,
   useBonds,
   useWeb3Context
 } from "@fantohm/shared-web3";
+import {useEffect, useState} from "react";
+import {allBonds} from "@fantohm/shared-web3";
+import {prettifySeconds, secondsUntilBlock} from "@fantohm/shared-web3";
 
 export interface Investment {
   id: string;
@@ -39,7 +43,7 @@ export interface Investment {
   rewardToken: string;
   term: number;
   termType: string;
-  roi: number;
+  roi: string;
   vestDate: number;
 }
 
@@ -66,7 +70,7 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
 
 // export interface MyAccountProps {}
 
-const activeInvestments: Investment[] = [
+let activeInvestments: Investment[] = [
   {
     id: '4',
     amount: 39275.51,
@@ -74,7 +78,7 @@ const activeInvestments: Investment[] = [
     rewardToken: 'FHUD',
     term: 3,
     termType: 'months',
-    roi: 20.0,
+    roi: "20.0",
     vestDate: 1655182800,
   },
 ];
@@ -87,7 +91,7 @@ const inactiveInvestments: Investment[] = [
     rewardToken: 'USDB',
     term: 6,
     termType: 'months',
-    roi: 32.5,
+    roi: "32.5",
     vestDate: 1638507600,
   },
   {
@@ -97,7 +101,7 @@ const inactiveInvestments: Investment[] = [
     rewardToken: 'USDB',
     term: 6,
     termType: 'months',
-    roi: 32.5,
+    roi: "32.5",
     vestDate: 1638507600,
   },
   {
@@ -107,7 +111,7 @@ const inactiveInvestments: Investment[] = [
     rewardToken: 'USDB',
     term: 6,
     termType: 'months',
-    roi: 32.5,
+    roi: "32.5",
     vestDate: 1638507600,
   },
 ];
@@ -152,10 +156,53 @@ export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
   const {provider, address, chainId} = useWeb3Context();
   const {bonds} = useBonds(chainId ?? 250);
+  const [currentBlock, setCurrentBlock] = useState(0);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
+
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
+
+  useEffect(() => {
+    activeInvestments = []
+    if (accountBonds) {
+      for (let i = 0; i < bonds.length - 1; i++) {
+        const bond: IAllBondData = (bonds[i] as IAllBondData);
+        if (accountBonds[allBonds[i].name]) {
+          console.log(accountBonds);
+          const userBonds = accountBonds[allBonds[i].name].userBonds;
+          for (let j = 0; j < userBonds.length; j++) {
+            const investment: Investment = {
+              id: `${j}`,
+              amount: 29275.51,
+              rewards: Number(userBonds[j].pendingPayout),
+              rewardToken: 'USDB',
+              term: Number(bond.vestingTerm),
+              termType: 'months',
+              roi: bonds[i].roi,
+              vestDate: Number(userBonds[j].bondMaturationBlock),
+            }
+            activeInvestments.push(
+              investment
+            )
+          }
+        }
+      }
+    }
+  }, [accountBonds]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (provider) {
+        setCurrentBlock(await provider.getBlockNumber())
+      }
+    }
+
+    fetchData()
+  }, [provider])
 
   const pendingClaim = () => {
     if (
@@ -171,7 +218,16 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     console.log("redeeming all bonds");
     if (provider && chainId) {
-      await dispatch(redeemOneBond({networkId: chainId, address, bond: bonds[0], provider, autostake: false}));
+      await dispatch(redeemAllBonds({networkId: chainId, address, bonds, provider, autostake: false}));
+    }
+
+    console.log("redeem all complete");
+  };
+
+  const onRedeemOne = async () => {
+    console.log("redeeming all bonds");
+    if (provider && chainId) {
+      await dispatch(redeemAllBonds({networkId: chainId, address, bonds, provider, autostake: false}));
     }
 
     console.log("redeem all complete");
@@ -331,9 +387,11 @@ export const MyAccount = (): JSX.Element => {
                       className={style['infoIcon']}
                     />{' '}
                   </Typography>
+                  {currentBlock ? (
                   <Typography variant="h6">
-                    {formatDistanceToNow(new Date(investment.vestDate * 1000))}
+                    {prettifySeconds(secondsUntilBlock(chainID ?? 250, currentBlock, investment.vestDate))}
                   </Typography>
+                    ) : (<></>)}
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
                   <Button

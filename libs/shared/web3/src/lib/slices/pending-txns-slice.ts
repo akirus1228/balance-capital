@@ -38,7 +38,7 @@ export const txnButtonText = (pendingTransactions: IPendingTxn[], type: string, 
 };
 
 export const isClaimable = (bond: IUserBondDetails) => {
-  return bond.pendingPayout !== '0.0';
+  return bond.userBonds.some(userBond => userBond.pendingPayout !== '0.0');
 }
 
 export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], type: string, defaultText: string) => {
