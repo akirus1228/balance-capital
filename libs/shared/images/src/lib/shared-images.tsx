@@ -15,6 +15,7 @@ import LightCardsIcon from "./images/light/USDB_icon_cards_light.png";
 import LightDoughnutChartIcon from "./images/light/USDB_icon_chart_light.png";
 import LightLockIcon from "./images/light/USDB_icon_lock_light.png";
 import LightShieldIcon from "./images/light/USDB_icon_shield_light.png";
+import DaiToken from "./images/tokens/DAI.svg";
 
 export { 
     NFTsIcon, 
@@ -33,5 +34,6 @@ export {
     LightCardsIcon,
     LightDoughnutChartIcon,
     LightLockIcon,
-    LightShieldIcon
+    LightShieldIcon,
+    DaiToken
 }

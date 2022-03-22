@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
+import { shadows } from '@mui/system';
 
 // light color pallet for use in themes
 const usdbLightColors = {

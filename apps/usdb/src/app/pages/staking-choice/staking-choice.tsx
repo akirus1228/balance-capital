@@ -2,7 +2,7 @@ import { Box, Button, Grid } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
-import { StakingCard } from "./staking-card";
+import { StakingCard } from "./staking-card/staking-card";
 import css from "./staking-choice.module.scss";
 import { useBonds } from "@fantohm/shared-web3";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
@@ -52,21 +52,8 @@ export const StakingChoicePage = (): JSX.Element => {
       <Headline {...simpleSafe} />
       <SsInfoBlock />
       <Headline {...getStarted} />
-      <Box sx={{marginTop: "3em"}}>
-        <Grid container item xs={12} spacing={4} className={css["gridParent"]}>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <StakingCard bondType="3month" term={3} roi={5} apy={21.55} />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
-          </Grid>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-        </Grid>
+      <Box className="flexCenterCol" sx={{marginTop: "3em"}}>
+        <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
       </Box>
       <Faq />
       <Headline {...simpleSafe} />
