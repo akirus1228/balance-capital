@@ -150,8 +150,8 @@ export const MyAccount = (): JSX.Element => {
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
 
   const dispatch = useDispatch();
-  const {provider, address, chainID} = useWeb3Context();
-  const {bonds} = useBonds(chainID ?? 250);
+  const {provider, address, chainId} = useWeb3Context();
+  const {bonds} = useBonds(chainId ?? 250);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -170,8 +170,8 @@ export const MyAccount = (): JSX.Element => {
 
   const onRedeemAll = async () => {
     console.log("redeeming all bonds");
-    if (provider && chainID) {
-      await dispatch(redeemOneBond({networkId: chainID, address, bond: bonds[0], provider, autostake: false}));
+    if (provider && chainId) {
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bonds[0], provider, autostake: false}));
     }
 
     console.log("redeem all complete");

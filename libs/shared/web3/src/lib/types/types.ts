@@ -10,8 +10,8 @@ type onChainProvider = {
   connected: boolean;
   web3Modal: Web3Modal;
   hasCachedProvider?: () => boolean;
-  chainID?: number
-  switchEthereumChain?: (networkID: NetworkId, forceSwitch?: boolean) => Promise<boolean>
+  chainId?: number
+  switchEthereumChain?: (networkId: NetworkId, forceSwitch?: boolean) => Promise<boolean>
 };
 
 export type Web3ContextData = {

@@ -1,4 +1,4 @@
-import {Bond} from "./bond";
+import { Bond } from "../lib/bond";
 
 export type Terms = {
   vestingTermSeconds: number; // in seconds
@@ -42,5 +42,5 @@ export type SoldBonds = {
 //   _bondInfo: Bond;
 //   usersCount: number;
 //
-//   getTreasuryBalance(networkID: number): PromiseLike<any> | any | Promise<any> | any | Promise<{ valuation: number; bondQuote: any }>;
+//   getTreasuryBalance(networkId: number): PromiseLike<any> | any | Promise<any> | any | Promise<{ valuation: number; bondQuote: any }>;
 // }

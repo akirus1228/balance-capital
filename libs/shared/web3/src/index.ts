@@ -2,6 +2,8 @@ export * from './lib/web3-context';
 export * from './lib/networks';
 export { web3SliceReducer, setWalletConnected } from './lib/slices/web3-slice';
 export { getBalances } from './lib/slices/account-slice';
+export * from './lib/slices/xfhm-slice';
+export * from './lib/helpers/asset-tokens';
 export * from './lib/slices/account-slice';
 export * from './lib/slices/app-slice';
 export * from './lib/slices/bond-slice';
@@ -21,9 +23,3 @@ export * from './lib/hooks/web3-context';
 export * from './lib/hooks/investments';
 export * from './lib/store';
 export * from './lib/helpers/index';
-
-
-
-
-
-

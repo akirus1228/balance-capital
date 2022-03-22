@@ -79,3 +79,4 @@ const messagesSlice = createSlice({
 export const { error, info, close, handle_obsolete, multiChainSwap, closeAll } = messagesSlice.actions;
 
 export const messagesReducer = messagesSlice.reducer;
+export default messagesSlice.reducer;

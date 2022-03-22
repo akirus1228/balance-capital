@@ -30,8 +30,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [cardState, setCardState] = useState("deposit");
   const [quantity, setQuantity] = useState("");
   const dispatch = useDispatch();
-  const {provider, address, chainID} = useWeb3Context();
-  const {bonds} = useBonds(chainID || 250);
+  const {provider, address, chainId} = useWeb3Context();
+  const {bonds} = useBonds(chainId || 250);
   const singleSidedBond = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
 
   const toggleStakingDirection = useCallback(() => {
@@ -77,7 +77,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         //     value: String(quantity),
         //     slippage,
         //     bond: singleSidedBond,
-        //     networkId: chainID || 250,
+        //     networkId: chainId || 250,
         //     provider,
         //     address: address,
         //   } as IBondAssetAsyncThunk)
@@ -92,7 +92,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             value: String(quantity),
             slippage,
             bond: singleSidedBond,
-            networkId: chainID || 250,
+            networkId: chainId || 250,
             provider,
             address: address,
           } as IBondAssetAsyncThunk)
@@ -105,7 +105,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSidedBond,
-          networkId: chainID || 250,
+          networkId: chainId || 250,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -120,7 +120,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const onSeekApproval = async () => {
     if (provider) {
-      dispatch(changeApproval({address, bond: singleSidedBond, provider, networkId: chainID ?? 250}));
+      dispatch(changeApproval({address, bond: singleSidedBond, provider, networkId: chainId ?? 250}));
     }
   };
 
@@ -175,7 +175,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
-      {!singleSidedBond.isAvailable[chainID ?? 250] ? (
+      {!singleSidedBond.isAvailable[chainId ?? 250] ? (
         <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
           Sold Out
         </Button>

@@ -2,7 +2,7 @@ import { setAll } from "../helpers";
 import {createSlice, createSelector, createAsyncThunk, PayloadAction} from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { IBaseAsyncThunk } from "./interfaces";
-import { enabledMainNetworkIDs, enabledNetworkIdsExceptBscAndEth } from "../networks";
+import { enabledMainNetworkIds, enabledNetworkIdsExceptBscAndEth } from "../networks";
 import { loadNetworkDetails } from "./network-slice";
 
 const initialState = {
@@ -21,7 +21,7 @@ export const loadAppDetails = createAsyncThunk(
 			throw new Error(`Unable to load local network details. networkId: ${networkId}`);
 		}
 
-		const prodNetworkDetailsList = networkDetailsList.filter((networkDetails: { networkId: any; }) => enabledMainNetworkIDs.includes(networkDetails.networkId));
+		const prodNetworkDetailsList = networkDetailsList.filter((networkDetails: { networkId: any; }) => enabledMainNetworkIds.includes(networkDetails.networkId));
 
 		// Global network calculations
 		const globalMarketCap = prodNetworkDetailsList.map((networkDetails: { marketCap: any; }) => networkDetails.marketCap).reduce((sum: any, a: any) => sum + a, 0);
@@ -32,8 +32,8 @@ export const loadAppDetails = createAsyncThunk(
 		const globalStakingCircSupply = prodNetworkDetailsList.map((networkDetails: { stakingCircSupply: any; }) => networkDetails.stakingCircSupply).reduce((sum: any, a: any) => sum + a, 0);
 
 		const globalStakingRebase = globalStakingRewardFHM / globalStakingCircSupply;
-		const globalFiveDayRate = prodNetworkDetailsList.map((networkDetails: { fiveDayRate: any; }) => networkDetails.fiveDayRate).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIDs.length), 0);
-		const globalStakingAPY = prodNetworkDetailsList.map((networkDetails: { stakingAPY: any; }) => networkDetails.stakingAPY).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIDs.length), 0);
+		const globalFiveDayRate = prodNetworkDetailsList.map((networkDetails: { fiveDayRate: any; }) => networkDetails.fiveDayRate).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIds.length), 0);
+		const globalStakingAPY = prodNetworkDetailsList.map((networkDetails: { stakingAPY: any; }) => networkDetails.stakingAPY).reduce((sum: number, a: number) => sum + a * (1 / enabledMainNetworkIds.length), 0);
 
 		return {
 			currentIndex: localNetworkDetails.currentIndex,

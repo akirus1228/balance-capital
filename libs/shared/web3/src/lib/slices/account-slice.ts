@@ -122,7 +122,6 @@ export const loadAccountDetails = createAsyncThunk(
       OlympusStaking,
       provider,
     );
-    console.log(addresses[networkId]["DAI_ADDRESS"] as string)
     const daiContract = new ethers.Contract(addresses[networkId]["DAI_ADDRESS"] as string, daiAbi, provider);
     // Contract Interactions
     const [
