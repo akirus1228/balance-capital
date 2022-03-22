@@ -28,11 +28,11 @@ import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 
 
-export function App() {
+export const App = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBLight);
   const dispatch = useDispatch();
-  const { address, hasCachedProvider, chainId } = useWeb3Context();
+  const { address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
 

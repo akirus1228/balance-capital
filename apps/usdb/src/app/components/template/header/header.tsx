@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -41,7 +41,7 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected, address } = useWeb3Context();
+  const { connect, disconnect, connected, address, hasCachedProvider } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
@@ -56,20 +56,29 @@ export const Header = (): JSX.Element => {
     setAnchorElNav(null);
   };
 
-  const handleConnect = async() => {
+  const handleConnect = useCallback(async () => {
     if (connected) {
       await disconnect();
-      setConnectButtonText("Connect Wallet");
     } else {
       await connect();
-      setConnectButtonText("Disconnect");
     }
-  };
+  }, [connected]);
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
     dispatch(getBalances({ address: address, networkId: 250 }));
-  }, [connected]);
+    if (connected) {
+      setConnectButtonText("Connect Wallet");
+    } else {
+      setConnectButtonText("Disconnect");
+    }
+  }, [connected, address]);
+
+  useEffect(() => {
+    if (hasCachedProvider && hasCachedProvider()) {
+      connect();
+    }
+  }, [connected, hasCachedProvider]);
 
   const toggleTheme = () => {
     dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
@@ -119,7 +128,9 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Button href={page.href}>{page.title}</Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button>{page.title}</Button>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -166,14 +177,15 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Button
-                      autoCapitalize='none'
-                      disabled={page.params?.comingSoon}
-                      href={page.href}
-                      sx={{...(page.params && page.params.sx)}}
-                    >
-                      {page.title}
-                    </Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button
+                        autoCapitalize='none'
+                        disabled={page.params?.comingSoon}
+                        sx={{...(page.params && page.params.sx)}}
+                      >
+                        {page.title}
+                      </Button>
+                    </Link>
                   )}
               </Box>
             ))}
