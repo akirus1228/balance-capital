@@ -4,6 +4,7 @@ import React, {
   useContext,
   useMemo,
   useCallback,
+  useEffect,
 } from 'react';
 import Web3Modal from 'web3modal';
 import WalletConnectProvider from '@walletconnect/web3-provider';
@@ -13,10 +14,9 @@ import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 import { Web3ContextData } from './types/types';
 import { NetworkId, NetworkIds, enabledNetworkIds } from '../lib/networks';
 import { chains } from './providers';
-import {isIframe} from "@fantohm/shared-helpers";
+import { isIframe } from "@fantohm/shared-helpers";
 
 export const getURI = (networkId: NetworkId): string => {
-  console.log(chains[networkId].rpcUrls[0]);
   return chains[networkId].rpcUrls[0];
 };
 
@@ -85,11 +85,11 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     })
   );
 
-  const hasCachedProvider = (): boolean => {
+  const hasCachedProvider = useCallback((): boolean => {
     if (!web3Modal) return false;
     if (!web3Modal.cachedProvider) return false;
     return true;
-  };
+  }, [web3Modal]);
 
   // NOTE (appleseed): none of these listeners are needed for Backend API Providers
   // ... so I changed these listeners so that they only apply to walletProviders, eliminating
@@ -239,7 +239,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   }, [provider, web3Modal, connected]);
 
   const disconnect = useCallback(async () => {
-    console.log('disconnecting');
     web3Modal.clearCachedProvider();
     setConnected(false);
 

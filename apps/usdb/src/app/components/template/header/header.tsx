@@ -1,4 +1,4 @@
-import { MouseEvent, useEffect, useState } from 'react';
+import { MouseEvent, useCallback, useEffect, useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -41,7 +41,7 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected, address } = useWeb3Context();
+  const { connect, disconnect, connected, address, hasCachedProvider } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
@@ -56,20 +56,35 @@ export const Header = (): JSX.Element => {
     setAnchorElNav(null);
   };
 
-  const handleConnect = async() => {
+  const handleConnect = useCallback(async () => {
     if (connected) {
       await disconnect();
-      setConnectButtonText("Connect Wallet");
     } else {
       await connect();
-      setConnectButtonText("Disconnect");
     }
-  };
+  }, [connected]);
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
     dispatch(getBalances({ address: address, networkId: 250 }));
-  }, [connected]);
+    if (connected) {
+      setConnectButtonText("Connect Wallet");
+    } else {
+      setConnectButtonText("Disconnect");
+    }
+  }, [connected, address]);
+
+  useEffect(() => {
+    console.log("Do we have a cached provider?");
+    if(hasCachedProvider){
+      console.log("hasCachedProvider: " + hasCachedProvider());
+    }
+    if (hasCachedProvider && hasCachedProvider()) {
+      console.log("Attempting to connect to cached provider");
+      // then user DOES have a wallet
+      connect();
+    }
+  }, [connected, hasCachedProvider]);
 
   const toggleTheme = () => {
     dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
