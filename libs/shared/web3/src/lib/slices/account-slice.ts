@@ -9,7 +9,7 @@ import {abi as daiAbi} from "../abi/reserves/DAIContract.json";
 import {abi as wsOHM} from "../abi/wsOHM.json";
 import {abi as OlympusStaking} from "../abi/OlympusStakingv2.json";
 
-import {setAll} from "../helpers";
+import {setAll, trim} from "../helpers";
 
 import {createAsyncThunk, createSelector, createSlice} from "@reduxjs/toolkit";
 import {RootState} from "../store";
@@ -203,6 +203,7 @@ export interface IUserBond {
   interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
+  lpTokenAmount: string | number;
 }
 
 export interface IUserBondDetails {
@@ -228,6 +229,7 @@ export const calculateUserBondDetails = createAsyncThunk(
             interestDue: 0,
             bondMaturationBlock: 0,
             pendingPayout: "",
+            lpTokenAmount: "0",
           },
         ],
         paymentToken: bond.paymentToken,
@@ -243,41 +245,57 @@ export const calculateUserBondDetails = createAsyncThunk(
 
     const paymentTokenDecimals = bond.paymentToken === PaymentToken.USDB ? 18 : 9;
 
-    let bondLength = 0;
-    if(bond.type === BondType.TRADFI) {
-      bondLength = await bondContract["bondlength"](address)
-    }
-
     const [allowance, balance] = await Promise.all([
       reserveContract["allowance"](address, bond.getAddressForBond(networkId)),
       reserveContract["balanceOf"](address)
     ]).then(([allowance, balance]) => [
-      allowance,
+      allowance ?? 0,
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
 
-    if (Number(bondLength) === 0) return {
-      bond: bond.name,
-      displayName: bond.displayName,
-      bondIconSvg: bond.bondIconSvg,
-      isLP: bond.isLP,
-      allowance,
-      balance,
-      userBonds: [
-        {
-          interestDue: 0,
-          bondMaturationBlock: 0,
-          pendingPayout: "",
-        },
-      ],
-      paymentToken: bond.paymentToken,
-      bondAction: bond.bondAction,
-    };
+    let bondLength = 0;
+    if (bond.type === BondType.TRADFI) {
+      bondLength = await bondContract["bondlength"](address)
+    } else {
+
+      const [bondDetails, pendingPayout] = await Promise.all([
+        bondContract["bondInfo"](address),
+        bondContract["pendingPayoutFor"](address),
+      ]).then(([bondDetails, pendingPayout]) => [
+        bondDetails,
+        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+      ]);
+
+      // eslint-disable-next-line prefer-const
+      interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+      // eslint-disable-next-line prefer-const
+      bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
+
+      return {
+        bond: bond.name,
+        displayName: bond.displayName,
+        bondIconSvg: bond.bondIconSvg,
+        isLP: bond.isLP,
+        allowance,
+        balance,
+        userBonds: [
+          {
+            interestDue: interestDue,
+            bondMaturationBlock: bondMaturationBlock,
+            pendingPayout: pendingPayout,
+            lpTokenAmount: lpTokenAmount
+          },
+        ],
+        paymentToken: bond.paymentToken,
+        bondAction: bond.bondAction,
+      };
+    }
 
     //Contract Interactions
     const userBonds = [];
-    for(let i = 0; i < bondLength ; i++) {
+    for (let i = 0; i < bondLength; i++) {
       const [bondDetails, pendingPayout] = await Promise.all([
         bondContract["bondInfo"](address, i),
         bondContract["pendingPayoutFor"](address, i),
@@ -291,9 +309,10 @@ export const calculateUserBondDetails = createAsyncThunk(
       bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
       userBonds.push(
         {
-            interestDue,
-            bondMaturationBlock,
-            pendingPayout,
+          interestDue,
+          bondMaturationBlock,
+          pendingPayout,
+          lpTokenAmount: "0",
         }
       )
     }

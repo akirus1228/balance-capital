@@ -99,6 +99,11 @@ export interface IRedeemBondAsyncThunk extends IBaseBondAsyncThunk, IInteractive
   readonly autostake: boolean;
 }
 
+export interface IRedeemSingleSidedBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
+  readonly address: string;
+  readonly value: string;
+}
+
 export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
   readonly bonds: Bond[];
   readonly address: string;

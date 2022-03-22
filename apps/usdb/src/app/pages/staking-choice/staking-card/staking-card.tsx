@@ -1,4 +1,4 @@
-import {useCallback, useState} from "react";
+import {useCallback, useEffect, useState} from "react";
 import {Box, Button, Grid, Icon} from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import style from "./staking-card.module.scss";
@@ -8,15 +8,18 @@ import DaiCard from "../../../components/dai-card/dai-card";
 import {DaiToken} from "@fantohm/shared/images";
 import {useDispatch, useSelector} from "react-redux";
 import {
+  Bond,
   bondAsset,
   BondType, changeApproval,
-  error, IAllBondData,
-  IBondAssetAsyncThunk, isPendingTxn, redeemBond,
-  RootState,
+  error, getBalances, IAllBondData,
+  IBondAssetAsyncThunk, isPendingTxn, redeemSingleSidedBond,
+  RootState, setWalletConnected,
   trim, txnButtonText,
   useBonds,
   useWeb3Context
 } from "@fantohm/shared-web3";
+import {allBonds} from "@fantohm/shared-web3";
+import {ethers} from "ethers";
 
 
 interface IStakingCardParams {
@@ -30,10 +33,17 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [cardState, setCardState] = useState("deposit");
   const [quantity, setQuantity] = useState("");
   const dispatch = useDispatch();
-  const {provider, address, chainId} = useWeb3Context();
+  const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
-  const singleSidedBond = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
+  const singleSidedBondData = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
+  const singleSided = allBonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as Bond
 
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
+
+  const singleSidedBond = accountBonds[singleSidedBondData?.name]
+  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
   const toggleStakingDirection = useCallback(() => {
     setCardState(cardState === "deposit" ? "redeem" : "deposit");
   }, [cardState])
@@ -46,7 +56,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     if (cardState === "deposit") {
       setQuantity(daiBalance);
     } else {
-      setQuantity("");
+      setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
     }
   };
 
@@ -55,9 +65,9 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   });
 
   const hasAllowance = useCallback(() => {
-    return singleSidedBond.allowance > 0;
-  }, [singleSidedBond.allowance]);
-
+    console.log(singleSidedBond?.userBonds[0].lpTokenAmount)
+      return singleSidedBondData.allowance > 0;
+  }, [singleSidedBondData, connected, singleSidedBond]);
 
   async function useBond() {
     const slippage = 0;
@@ -70,18 +80,17 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (singleSidedBond.interestDue > 0 || Number(singleSidedBond.pendingPayout) > 0) {
+    } else if (singleSidedBond?.userBonds[0].interestDue > 0 || Number(singleSidedBond?.userBonds[0].pendingPayout) > 0) {
       if (cardState === "redeem") {
-        // dispatch(
-        //   redeemBond({
-        //     value: String(quantity),
-        //     slippage,
-        //     bond: singleSidedBond,
-        //     networkId: chainId || 250,
-        //     provider,
-        //     address: address,
-        //   } as IBondAssetAsyncThunk)
-        // );
+        dispatch(
+          redeemSingleSidedBond({
+            value: String(quantity),
+            bond: singleSided,
+            networkId: chainId || 250,
+            provider,
+            address: address,
+          } as IBondAssetAsyncThunk)
+        );
       }
       const shouldProceed = window.confirm(
         "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
@@ -91,7 +100,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           bondAsset({
             value: String(quantity),
             slippage,
-            bond: singleSidedBond,
+            bond: singleSided,
             networkId: chainId || 250,
             provider,
             address: address,
@@ -104,7 +113,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         bondAsset({
           value: String(quantity),
           slippage,
-          bond: singleSidedBond,
+          bond: singleSided,
           networkId: chainId || 250,
           provider,
           address: address,
@@ -120,7 +129,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const onSeekApproval = async () => {
     if (provider) {
-      dispatch(changeApproval({address, bond: singleSidedBond, provider, networkId: chainId ?? 250}));
+      dispatch(changeApproval({address, bond: singleSided, provider, networkId: chainId ?? 250}));
     }
   };
 
@@ -175,29 +184,35 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
-      {!singleSidedBond.isAvailable[chainId ?? 250] ? (
-        <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
-          Sold Out
+      {!connected ? (
+        <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" onClick={connect}>
+          Connect Wallet
         </Button>
-      ) : hasAllowance() ? (
-        <Button
-          variant="contained"
-          color="primary"
-          className="cardActionButton"
-          disabled={isPendingTxn(pendingTransactions, "bond_" + singleSidedBond.name)}
-          onClick={useBond}>
-          {txnButtonText(pendingTransactions, "bond_" + singleSidedBond.name, cardState)}
-        </Button>
-      ) : (
-        <Button
-          variant="contained"
-          color="primary"
-          className="cardActionButton"
-          disabled={isPendingTxn(pendingTransactions, "approve_" + singleSidedBond.name)}
-          onClick={onSeekApproval}>
-          {txnButtonText(pendingTransactions, "approve_" + singleSidedBond.name, "Approve")}
-        </Button>
-      )}
+      ) : (<>
+        {!singleSided.isAvailable[chainId ?? 250] ? (
+          <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
+            Sold Out
+          </Button>
+        ) : hasAllowance() ? (
+          <Button
+            variant="contained"
+            color="primary"
+            className="cardActionButton"
+            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name)}
+            onClick={useBond}>
+            {txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            color="primary"
+            className="cardActionButton"
+            disabled={isPendingTxn(pendingTransactions, "approve_" + singleSided.name)}
+            onClick={onSeekApproval}>
+            {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
+          </Button>
+        )}
+      </>)}
     </DaiCard>
 
   );

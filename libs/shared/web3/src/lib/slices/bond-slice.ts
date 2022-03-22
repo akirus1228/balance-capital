@@ -11,7 +11,7 @@ import {
   ICalcBondDetailsAsyncThunk,
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
-  IRedeemBondAsyncThunk,
+  IRedeemBondAsyncThunk, IRedeemSingleSidedBondAsyncThunk,
 } from "./interfaces";
 import {segmentUA} from "../helpers/user-analytic-helpers";
 
@@ -306,9 +306,9 @@ export const bondAsset = createAsyncThunk(
   },
 );
 
-export const redeemBond = createAsyncThunk(
+export const redeemSingleSidedBond = createAsyncThunk(
   "bonding/redeemBond",
-  async ({ address, bond, networkId, provider, autostake }: IRedeemBondAsyncThunk, { dispatch }) => {
+  async ({ value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -319,16 +319,16 @@ export const redeemBond = createAsyncThunk(
 
     let redeemTx;
     const uaData = {
+      value: value,
       address: address,
       type: "Redeem",
       bondName: bond.displayName,
-      autoStake: autostake,
       approved: true,
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeem"](address);
-      const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
+      redeemTx = await bondContract["redeem"](address, value, 0);
+      const pendingTxnType = "redeem_bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),

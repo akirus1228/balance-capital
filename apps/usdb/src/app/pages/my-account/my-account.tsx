@@ -389,7 +389,7 @@ export const MyAccount = (): JSX.Element => {
                   </Typography>
                   {currentBlock ? (
                   <Typography variant="h6">
-                    {prettifySeconds(secondsUntilBlock(chainID ?? 250, currentBlock, investment.vestDate))}
+                    {prettifySeconds(secondsUntilBlock(chainId ?? 250, currentBlock, investment.vestDate))}
                   </Typography>
                     ) : (<></>)}
                 </Grid>
