@@ -1,0 +1,20 @@
+.infoBlockContainer {
+    text-align: center;
+    h1 {
+        font-size: 30px;
+        font-weight: 400;
+        margin-bottom: 2em;
+    }
+
+    h2 {
+        font-size: 24px;
+        font-weight: 400;
+    }
+    
+    .centerBox {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100%;
+    }
+}

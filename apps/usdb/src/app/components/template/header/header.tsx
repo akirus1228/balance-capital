@@ -108,7 +108,9 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Button href={page.href}>{page.title}</Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button href={page.href}>{page.title}</Button>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -155,14 +157,15 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Button
-                      autoCapitalize='none'
-                      disabled={page.params?.comingSoon}
-                      href={page.href}
-                      sx={{...(page.params && page.params.sx)}}
-                    >
-                      {page.title}
-                    </Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button
+                        autoCapitalize='none'  
+                        disabled={page.params?.comingSoon}
+                        sx={{...(page.params && page.params.sx)}}
+                      >
+                        {page.title}
+                      </Button>
+                    </Link>
                   )}
               </Box>
             ))}
