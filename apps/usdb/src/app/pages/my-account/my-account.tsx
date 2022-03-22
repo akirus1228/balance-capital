@@ -171,8 +171,8 @@ export const MyAccount = (): JSX.Element => {
     if (accountBonds) {
       for (let i = 0; i < bonds.length - 1; i++) {
         const bond: IAllBondData = (bonds[i] as IAllBondData);
-
-        if (accountBonds[allBonds[i].name]) {
+        //tried to have bond name plus number up to bondlength - breaks here (0 is hardcoded to show something)
+        if (accountBonds[allBonds[i].name + 0]) {
           const investment: Investment = {
             id: '1',
             amount: 29275.51,
