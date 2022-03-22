@@ -171,29 +171,24 @@ export const MyAccount = (): JSX.Element => {
     if (accountBonds) {
       for (let i = 0; i < bonds.length - 1; i++) {
         const bond: IAllBondData = (bonds[i] as IAllBondData);
-        let j = 0;
-        console.log(accountBonds[allBonds[i].name + j])
 
-          if (accountBonds[allBonds[i].name + j]) {
-            const investment: Investment = {
-              id: '1',
-              amount: 29275.51,
-              rewards: Number(accountBonds[allBonds[i].name + 0].pendingPayout),
-              rewardToken: 'USDB',
-              term: Number(bond.vestingTerm),
-              termType: 'months',
-              roi: bonds[i].roi,
-              vestDate: Number(accountBonds[allBonds[i].name + 0].bondMaturationBlock),
-            }
-            activeInvestments.push(
-              investment
-            )
+        if (accountBonds[allBonds[i].name]) {
+          const investment: Investment = {
+            id: '1',
+            amount: 29275.51,
+            rewards: Number(bond.pendingPayout),
+            rewardToken: 'USDB',
+            term: Number(bond.vestingTerm),
+            termType: 'months',
+            roi: bonds[i].roi,
+            vestDate: Number(bond.bondMaturationBlock),
           }
-
+          activeInvestments.push(
+            investment
+          )
+        }
       }
     }
-    console.log(activeInvestments)
-
   }, [accountBonds]);
 
   useEffect(() => {
