@@ -16,7 +16,7 @@ export const Headline = (props: HeadlineProps): JSX.Element => {
     <Box className={`${style[props.hero ? 'hero' : 'standard']} flexCenterCol`} sx={{...props.sx}}>
       <Typography variant="h1">{props.title}</Typography>
       {
-        subtitle.map((sub) => (<Typography variant="h2" maxWidth="md" sx={{textAlign: 'center'}}>{sub}</Typography>))
+        subtitle.map((value: string, index: number) => (<Typography key={index} variant="h2" maxWidth="md" sx={{textAlign: 'center'}}>{value}</Typography>))
       }
     </Box>
   );

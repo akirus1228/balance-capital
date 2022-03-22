@@ -1,4 +1,4 @@
-import { Backdrop, Button, Fade, Grid, Icon, Paper } from '@mui/material';
+import { Backdrop, Button, Fade, Grid, Icon, Paper, Typography } from '@mui/material';
 import { Box } from '@mui/system';
 import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -14,6 +14,8 @@ import {
   IApproveBondAsyncThunk,
   IBondAssetAsyncThunk
 } from "@fantohm/shared-web3";
+import WalletBallance from '../../../components/wallet-ballance/wallet-ballance';
+import InputWrapper from '../../../components/input-wrapper/input-wrapper';
 
 export interface DepositProps {
   bond: any;
@@ -111,7 +113,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
 
   const navigate = useNavigate();
   const goBack = () => {
-    navigate('/trad-fi');
+    navigate('/trad-fi#get-started');
   }
 
   // useEffect(() => {
@@ -122,26 +124,33 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
       <Backdrop open={true}>
-        <Paper className={`${style['flexCenterCol']} ${style['paperContainer']}`}>
+        <Paper className={` ${style['paperContainer']}`}>
           <Box sx={{display: 'flex', justifyContent:'flex-end'}}>
-            <Button variant="outlined" onClick={goBack}>
+            <Button variant="contained" className="closeButton" onClick={goBack} disableElevation>
               <Icon component={CloseIcon} />
             </Button>
           </Box>
-          <Box sx={{display: 'flex', flexDirection: 'column', alignItems:'center'}}>
-            <h3>Fixed Deposit</h3>
-            <h2>{currentBond.title}</h2>
+          <Box className={`flexCenterCol ${style['titleBlock']}`}>
+            <Box sx={{backgroundColor: "primary.main"}} className={style['typeContainer']}>
+              <Typography className={style['type']} color="primary.contrastText">Fixed Deposit</Typography>
+            </Box>
+            <h1 className={style['title']}>{params.bond.displayName}</h1>
+            <h2 className={style['subtitle']}>90 days</h2>
           </Box>
-          <Grid container maxWidth="lg">
-            <Grid item xs={12} md={3}>
-              Wallet Balance
-            </Grid>
-            <Grid item xs={12} md={5}>
-              Amount <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
+          <Grid container maxWidth="lg" columnSpacing={3}>
+            <Grid item xs={12} md={4}>
+              <WalletBallance sx={{ml: 'auto'}} balance="4000.00"/>
             </Grid>
             <Grid item xs={12} md={4}>
+              <InputWrapper>
+                <span>Amount</span>
+                <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
+                <span>Max</span>
+              </InputWrapper>
+            </Grid>
+            <Grid item xs={12} md={4} sx={{pb: "3em"}}>
               {!params.bond.isAvailable[chainId ?? 250] ? (
-                <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
+                <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
                   Sold Out
                 </Button>
               ) : hasAllowance() ? (
@@ -149,7 +158,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                   variant="contained"
                   color="primary"
                   id="bond-btn"
-                  className="transaction-button"
+                  className="transaction-button inputButton"
                   disabled={isPendingTxn(pendingTransactions, "bond_" + params.bond.name)}
                   onClick={useBond}
                 >
@@ -160,7 +169,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                   variant="contained"
                   color="primary"
                   id="bond-approve-btn"
-                  className="transaction-button"
+                  className="transaction-button inputButton"
                   disabled={isPendingTxn(pendingTransactions, "approve_" + params.bond.name)}
                   onClick={onSeekApproval}
                 >
@@ -168,16 +177,27 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                 </Button>
               )}
             </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid item xs={12} sm>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
                   <span>ROI</span>
                   <span>5%</span>
                 </Box>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
+                  <span>APY</span>
+                  <span>21.55%</span>
+                </Box>
             </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid xs={0} sm={1}>
+              <Box style={{borderLeft: '2px solid #696C804F', height: '120%', width: '1px', marginLeft: 'auto', marginRight: 'auto', position: 'relative', top:'-0.5em'}}/>
+            </Grid>
+            <Grid item xs={12} sm>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Your deposit</span>
                   <span>4,000.00 DAI</span>
+                </Box>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
+                  <span>Reward amount</span>
+                  <span>200.52 USDB</span>
                 </Box>
             </Grid>
           </Grid>

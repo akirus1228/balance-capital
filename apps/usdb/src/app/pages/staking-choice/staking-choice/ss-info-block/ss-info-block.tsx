@@ -1,15 +1,13 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
+import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon } from '@fantohm/shared/images';
 import style from './ss-info-block.module.scss';
-import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon, TradFiIcon } from '@fantohm/shared/images';
 
-/* eslint-disable-next-line */
-export interface SsInfoBlockProps {}
 
-export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
+export const SsInfoBlock = (): JSX.Element => {
   return (
     <Box sx={{mx: {xs: "1em", md: "3em"}}} className={style['infoBlockContainer']}>
       <Grid container spacing={12}>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol" sx={{height: "100%", justifyContent: 'flex-start'}}>
@@ -25,7 +23,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{height: "100%"}}>
               <Box className={style['centerBox']} >
@@ -36,7 +34,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol">

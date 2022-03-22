@@ -15,7 +15,7 @@ import {accountReducer} from "./slices/account-slice";
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     //   we'll have state.account, state.bonding, etc, each handled by the corresponding
     // reducer imported from the slice file
