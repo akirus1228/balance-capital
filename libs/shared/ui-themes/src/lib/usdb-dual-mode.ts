@@ -11,6 +11,7 @@ const usdbLightColors = {
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
+  iconButtonBg: '#181A1C0F',
 };
 
 // dark color pallet for use in themes
@@ -20,6 +21,7 @@ const usdbDarkColors = {
   backgroundColor: '#000',
   paperBg: '#0E0F10',
   gray: '#929BA0',
+  iconButtonBg: '#181A1CD4',
 };
 
 // global theme options that apply to both light and dark
@@ -111,6 +113,7 @@ const globalTheme: ThemeOptions = {
           "&.inputButton": {
             height: "3em",
             borderRadius: "2em",
+            width: "245px",
           }
         },
         outlined: {
@@ -118,6 +121,14 @@ const globalTheme: ThemeOptions = {
           padding: '27px',
           fontSize: '20px',
         },
+        contained: {
+          '&.closeButton': {
+            borderRadius: '50%', 
+            p: '0.5em', 
+            boxSizing: 'border-box', 
+            minWidth: '16px'
+          }
+        }
       },
       defaultProps: {
         autoCapitalize: 'none',
@@ -185,6 +196,12 @@ const USDBLightBase: ThemeOptions = {
         outlined: {
           border: '3px solid #000',
         },
+        contained: {
+          '&.closeButton': {
+            color: usdbLightColors.color,
+            background: usdbLightColors.iconButtonBg
+          }
+        }
       },
     },
     MuiPaper: {
@@ -249,6 +266,12 @@ const USDBDarkBase: ThemeOptions = {
         outlined: {
           border: '3px solid #FFF',
         },
+        contained: {
+          '&.closeButton': {
+            color: usdbDarkColors.color,
+            background: usdbDarkColors.iconButtonBg
+          }
+        }
       },
     },
     MuiPaper: {

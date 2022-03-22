@@ -1,5 +1,5 @@
 import { DaiToken } from '@fantohm/shared/images';
-import { Box } from '@mui/material';
+import { Box, SxProps, Theme } from '@mui/material';
 import { useEffect, useState } from 'react';
 import style from './wallet-ballance.module.scss';
 
@@ -7,26 +7,26 @@ import style from './wallet-ballance.module.scss';
 export interface WalletBalanceProps {
   currency?: string;
   balance?: string;
-}
-
-interface IWalletBalanceState {
-  currency: string;
-  balance: string;
+  sx?: SxProps<Theme>
 }
 
 export const WalletBalance = (props: WalletBalanceProps): JSX.Element => {
-  const [state, setState] = useState({} as IWalletBalanceState)
+  const [currency, setCurrency] = useState('DAI');
+  const [balance, setBalance] = useState('loading...');
   useEffect(() => {
-    setState({...state, currency: props.currency ? props.currency : "DAI"});
-    setState({...state, balance: props.balance ? props.balance : "loading..."});
-  }, [props.currency, props.balance])
+    setCurrency(props.currency ? props.currency : "DAI");
+  }, [props.currency])
+
+  useEffect(() => {
+    setBalance(props.balance ? props.balance : "loading...");
+  }, [props.balance])
 
   return (
-    <Box className={`flexCenterRow ${style['currencySelector']}`}>
-      <img src={DaiToken} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
+    <Box className={`flexCenterRow ${style['currencySelector']}`} sx={{...props.sx}}>
+      <img src={DaiToken} style={{height: '31px', marginRight: "1em"}} alt={`${currency} Token Symbol`}/>
       <Box sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
-        <span className={style['name']}>{props.currency} balance</span>
-        <span className={style['amount']}>{props.balance} DAI</span>
+        <span className={style['name']}>{currency} balance</span>
+        <span className={style['amount']}>{balance} DAI</span>
       </Box>
     </Box>
   );

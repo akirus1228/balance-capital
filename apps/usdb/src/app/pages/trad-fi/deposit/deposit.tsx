@@ -126,7 +126,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
       <Backdrop open={true}>
         <Paper className={` ${style['paperContainer']}`}>
           <Box sx={{display: 'flex', justifyContent:'flex-end'}}>
-            <Button variant="outlined" onClick={goBack}>
+            <Button variant="contained" className="closeButton" onClick={goBack} disableElevation>
               <Icon component={CloseIcon} />
             </Button>
           </Box>
@@ -138,10 +138,10 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
             <h2 className={style['subtitle']}>90 days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
-            <Grid item xs={12} md={3}>
-              <WalletBallance />
+            <Grid item xs={12} md={4}>
+              <WalletBallance sx={{ml: 'auto'}} balance="4000.00"/>
             </Grid>
-            <Grid item xs={12} md={5}>
+            <Grid item xs={12} md={4}>
               <InputWrapper>
                 <span>Amount</span>
                 <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
@@ -177,26 +177,25 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                 </Button>
               )}
             </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid item xs={12} sm>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
                   <span>ROI</span>
                   <span>5%</span>
                 </Box>
-            </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
-                  <span>Your deposit</span>
-                  <span>4,000.00 DAI</span>
-                </Box>
-            </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
                   <span>APY</span>
                   <span>21.55%</span>
                 </Box>
             </Grid>
-            <Grid item xs={6}>
-                <Box sx={{display: 'flex', justifyContent: 'space-between'}}>
+            <Grid xs={0} sm={1}>
+              <Box style={{borderLeft: '2px solid #696C804F', height: '120%', width: '1px', marginLeft: 'auto', marginRight: 'auto', position: 'relative', top:'-0.5em'}}/>
+            </Grid>
+            <Grid item xs={12} sm>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
+                  <span>Your deposit</span>
+                  <span>4,000.00 DAI</span>
+                </Box>
+                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Reward amount</span>
                   <span>200.52 USDB</span>
                 </Box>
