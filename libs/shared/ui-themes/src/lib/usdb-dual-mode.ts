@@ -47,7 +47,9 @@ const globalTheme: ThemeOptions = {
           "&.dai": {
             border: "1px solid #F3AC28",
             borderRadius: "2em",
-            background: "transparent"
+            background: "transparent",
+            width: "100%",
+            maxWidth: "525px",
           },
           "&.softGradient": {
             borderRadius: "2em",
