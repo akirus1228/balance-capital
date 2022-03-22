@@ -5,6 +5,7 @@ import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card";
 import css from "./staking-choice.module.scss";
 import { useBonds } from "@fantohm/shared-web3";
+import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
 
 interface IDepositCardParams {
   bondType: string;
@@ -49,6 +50,7 @@ export const StakingChoicePage = (): JSX.Element => {
         </Box>
       </Box>
       <Headline {...simpleSafe} />
+      <SsInfoBlock />
       <Headline {...getStarted} />
       <Box sx={{marginTop: "3em"}}>
         <Grid container item xs={12} spacing={4} className={css["gridParent"]}>

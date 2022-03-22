@@ -5,7 +5,7 @@ import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
 /* eslint-disable-next-line */
 export interface IconLinkProps {
-  icon: string;
+  icon: string | typeof import("*.png");
   title: string;
   link?: string;
   linkText?: string;
@@ -15,7 +15,7 @@ export function IconLink(props: IconLinkProps) {
   return (
     <Box className={style['iconLinkContainer']}>
       <Box className={style['imageBox']} sx={{height: {xs: '114px', md: '190px'}, width: {xs: '114px', md: '190px'}}}>
-        <img src={props.icon} alt={props.title} className={style['iconImage']}/>
+        <img src={props.icon as string} alt={props.title} className={style['iconImage']}/>
       </Box>
       <h1 className={style['title']}>{props.title}</h1>
       <Link to={props.link ? props.link : '/'}>

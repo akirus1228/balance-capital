@@ -1,16 +1,13 @@
-import { Button, Grid, Paper, Typography } from '@mui/material';
-import { Box } from '@mui/system';
+import { Box, Button, Grid, Paper } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import LongArrowRight from '../../../assets/icons/long-arrow-right.svg';
-import DepositChoice from './deposit-choice/deposit-choice';
 import style from './trad-fi.module.scss';
-import creditCards from '../../../assets/icons/credit-cards.svg';
-import doughnutChart from '../../../assets/icons/doughnut-chart.svg';
-import shield from '../../../assets/icons/shield.svg';
-import Faq from '../../components/faq/faq';
-import Logo from '../../components/logo/logo';
+import DepositChoice from './deposit-choice/deposit-choice';
 import Graph from './graph/graph';
 import Headline from '../../components/headline/headline';
+import Faq from '../../components/faq/faq';
+import Logo from '../../components/logo/logo';
+import { LightCardsIcon, LightShieldIcon, LightDoughnutChartIcon } from '@fantohm/shared/images';
 
 /* eslint-disable-next-line */
 export interface TradfiProps {}
@@ -51,19 +48,19 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
       <Grid container spacing={2} maxWidth="md">
         <Grid item xs={12} md={4}>
           <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={creditCards} alt="Credit Cards" />
+            <img src={LightCardsIcon} alt="Credit Cards" />
             <span>no investment fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={doughnutChart} alt="Doughnut chart with a quarter filled" />
+            <img src={LightDoughnutChartIcon} alt="Doughnut chart with a quarter filled" />
             <span>no management fee</span>
           </Paper>
         </Grid>
         <Grid item xs={12} md={4}>
           <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={shield} alt="Shield with lock" />
+            <img src={LightShieldIcon} alt="Shield with lock" />
             <span>no risk of capital loss</span>
           </Paper>
         </Grid>
