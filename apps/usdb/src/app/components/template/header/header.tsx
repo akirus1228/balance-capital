@@ -75,13 +75,7 @@ export const Header = (): JSX.Element => {
   }, [connected, address]);
 
   useEffect(() => {
-    console.log("Do we have a cached provider?");
-    if(hasCachedProvider){
-      console.log("hasCachedProvider: " + hasCachedProvider());
-    }
     if (hasCachedProvider && hasCachedProvider()) {
-      console.log("Attempting to connect to cached provider");
-      // then user DOES have a wallet
       connect();
     }
   }, [connected, hasCachedProvider]);
@@ -134,7 +128,9 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Button href={page.href}>{page.title}</Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button>{page.title}</Button>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -181,14 +177,15 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Button
-                      autoCapitalize='none'
-                      disabled={page.params?.comingSoon}
-                      href={page.href}
-                      sx={{...(page.params && page.params.sx)}}
-                    >
-                      {page.title}
-                    </Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button
+                        autoCapitalize='none'
+                        disabled={page.params?.comingSoon}
+                        sx={{...(page.params && page.params.sx)}}
+                      >
+                        {page.title}
+                      </Button>
+                    </Link>
                   )}
               </Box>
             ))}
