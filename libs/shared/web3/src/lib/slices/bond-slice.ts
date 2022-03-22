@@ -44,7 +44,7 @@ const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ ne
  * `usage`:
  * ```
  * const originalPromiseResult = await dispatch(
- *    findOrLoadMarketPrice({ networkID: networkID }),
+ *    findOrLoadMarketPrice({ networkId: networkId }),
  *  ).unwrap();
  * originalPromiseResult?.whateverValue;
  * ```

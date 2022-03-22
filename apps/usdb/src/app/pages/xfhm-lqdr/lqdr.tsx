@@ -11,7 +11,7 @@ import {
   calcAssetAmount,
   error,
   isPendingTxn, lqdrApproval,
-  NetworkIDs, payoutForUsdb,
+  NetworkIds, payoutForUsdb,
   txnButtonText,
   useWeb3Context
 } from "@fantohm/shared-web3";
@@ -27,7 +27,7 @@ import "./xfhm-lqdr.module.scss";
 
 export const LqdrPage = (): JSX.Element => {
 
-  const { chainID, address, provider } = useWeb3Context();
+  const { chainId, address, provider } = useWeb3Context();
   const dispatch = useDispatch();
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -87,7 +87,7 @@ export const LqdrPage = (): JSX.Element => {
   };
 
   const calcBTokenAmount = async (aTokenAmount: number): Promise<any> => {
-    if (!assetTokens || !assetTokens?.length || !provider || !chainID) {
+    if (!assetTokens || !assetTokens?.length || !provider || !chainId) {
       return 0;
     }
     const maxAmount = await dispatch(calcAssetAmount({
@@ -95,14 +95,14 @@ export const LqdrPage = (): JSX.Element => {
       action: "calculate-lqdr",
       value: (aTokenAmount || 0).toString(),
       provider,
-      networkID: chainID
+      networkId: chainId
     }));
     // @ts-ignore
     return maxAmount?.payload;
   };
 
   const calcATokenAmount = async (bTokenAmount: number): Promise<any> => {
-    if (!assetTokens || !assetTokens?.length || !provider || !chainID) {
+    if (!assetTokens || !assetTokens?.length || !provider || !chainId) {
       return 0;
     }
     const maxAmount = await dispatch(calcAssetAmount({
@@ -110,14 +110,14 @@ export const LqdrPage = (): JSX.Element => {
       action: "calculate-xfhm",
       value: (bTokenAmount || 0).toString(),
       provider,
-      networkID: chainID
+      networkId: chainId
     }));
     // @ts-ignore
     return maxAmount?.payload;
   };
 
   const onAddLiquidity = async () => {
-    if (!provider || !chainID) {
+    if (!provider || !chainId) {
       return;
     }
     if (Number(bTokenAmount) > formatAmount(bToken.balance, bToken.decimals)) {
@@ -129,19 +129,19 @@ export const LqdrPage = (): JSX.Element => {
       value: ethers.utils.parseUnits(bTokenAmount, bToken.decimals).toString(),
       provider,
       token: bToken,
-      networkID: chainID
+      networkId: chainId
     }));
   };
 
   const onSeekApproval = async () => {
-    if (!provider || !chainID || !address) {
+    if (!provider || !chainId || !address) {
       return;
     }
-    await dispatch(lqdrApproval({ address, provider, networkID: chainID || NetworkIDs.FantomOpera }));
+    await dispatch(lqdrApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
   };
 
   const calcUsdbAmount = async () => {
-    if (!provider || !chainID) {
+    if (!provider || !chainId) {
       return;
     }
     try {
@@ -150,7 +150,7 @@ export const LqdrPage = (): JSX.Element => {
         address,
         value: ethers.utils.parseUnits(bTokenAmount, bToken.decimals).toString(),
         provider,
-        networkID: chainID
+        networkId: chainId
       }));
       // @ts-ignore
       setUsdbAmount(usdbAmount?.payload.toString());

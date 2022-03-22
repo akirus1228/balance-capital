@@ -28,35 +28,34 @@ export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBLight);
   const dispatch = useDispatch();
-  const { address, hasCachedProvider, chainID } = useWeb3Context();
-  const { bonds, allBonds } = useBonds(chainID || 250);
+  const { address, hasCachedProvider, chainId } = useWeb3Context();
+  const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
 
   useEffect(() => {
     setTheme(themeType === "light" ? USDBLight : USDBDark);
   }, [themeType]);
   useEffect(() => {
-    dispatch(loadAppDetails({ networkId: chainID || 250 }));
+    dispatch(loadAppDetails({ networkId: chainId || 250 }));
     bonds.map(bond => {
-      dispatch(calcBondDetails({ bond, value: "", networkId: chainID || 250 }));
+      dispatch(calcBondDetails({ bond, value: "", networkId: chainId || 250 }));
     });
-    console.log(bonds);
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map(investment => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainID]);
+  }, [chainId]);
 
   // Load account details
   useEffect(() => {
     if (address) {
-      dispatch(loadAccountDetails({ networkId: chainID || 250, address }));
+      dispatch(loadAccountDetails({ networkId: chainId || 250, address }));
       bonds.map(bond => {
-        dispatch(calculateUserBondDetails({ address, bond, networkId: chainID || 250 }));
+        dispatch(calculateUserBondDetails({ address, bond, networkId: chainId || 250 }));
       });
     }
-  }, [chainID, address]);
+  }, [chainId, address]);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

@@ -10,7 +10,7 @@ import {
   poolDataReducer,
   lusdDataReducer,
   web3SliceReducer,
-  xfhmSliceReducer,
+  xfhmReducer,
   messagesReducer,
   pendingTransactionsReducer
 } from "@fantohm/shared-web3";
@@ -34,7 +34,7 @@ const store = configureStore({
     lusdData: lusdDataReducer,
     messages: messagesReducer,
     web3: web3SliceReducer,
-    xfhm: xfhmSliceReducer,
+    xfhm: xfhmReducer,
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
 });

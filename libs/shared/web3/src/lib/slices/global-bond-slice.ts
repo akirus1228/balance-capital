@@ -1,7 +1,7 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { RootState } from "../store";
 import { ICalcGlobalBondDetailsAsyncThunk } from "./interfaces";
-import { enabledMainNetworkIDs, NetworkID } from "../networks";
+import { enabledMainNetworkIds, NetworkId } from "../networks";
 import { Bond } from "../lib/bond";
 
 export interface IGlobalBondDetails {
@@ -10,7 +10,7 @@ export interface IGlobalBondDetails {
 }
 
 interface GlobalBond {
-  networkId: NetworkID,
+  networkId: NetworkId,
   bond: Bond,
 }
 
@@ -23,8 +23,8 @@ export const calcGlobalBondDetails = createAsyncThunk(
     const globalBonds: GlobalBond[] = []
     for (let i = 0; i < allBonds.length; i++) {
       const bond = allBonds[i];
-      for (let j = 0; j < enabledMainNetworkIDs.length; j++) {
-        const networkId = enabledMainNetworkIDs[j];
+      for (let j = 0; j < enabledMainNetworkIds.length; j++) {
+        const networkId = enabledMainNetworkIds[j];
         if (bond.hasBond(networkId)) {
           const reserveAddress = bond.getAddressForReserve(networkId);
           // Only include bonds that haven't already been counted

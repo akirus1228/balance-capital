@@ -1,6 +1,15 @@
-import { StableBond, LPBond, CustomBond, BondAssetType, BondType, PaymentToken, BondAction, RedeemAction } from "../lib/bond";
+import {
+  StableBond,
+  LPBond,
+  CustomBond,
+  BondAssetType,
+  BondType,
+  PaymentToken,
+  BondAction,
+  RedeemAction
+} from "../lib/bond";
 import { addresses } from "../constants";
-import {NetworkIDs, NetworkIds} from "../networks";
+import { NetworkIds } from "../networks";
 
 import { abi as BondOhmDaiContract } from "../abi/bonds/OhmDaiContract.json";
 import { abi as BondOhmLusdContract } from "../abi/bonds/OhmLusdContract.json";
@@ -45,9 +54,9 @@ export const dai_v2 = new StableBond({
     // },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0xAA2d73E900ef65D7b6B6D013171301e70f0Fc059",
-      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
-    },
-  },
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286"
+    }
+  }
 });
 
 export const mim_DO_NOT_DELETE = new StableBond({
@@ -67,9 +76,9 @@ export const mim_DO_NOT_DELETE = new StableBond({
     // },
     [NetworkIds.FantomTestnet]: {
       bondAddress: "0x6307251Cf95ac2373EDf3838e349c7C25Ccd1204",
-      reserveAddress: "0xFE2A3Da01681BD281cc77771c985CD7c4E372755",
-    },
-  },
+      reserveAddress: "0xFE2A3Da01681BD281cc77771c985CD7c4E372755"
+    }
+  }
 });
 
 export const usdcm = new StableBond({
@@ -78,7 +87,7 @@ export const usdcm = new StableBond({
   displayName: "USDC.m",
   bondToken: "USDC.m",
   decimals: 6,
-  isAvailable: {  },
+  isAvailable: {},
   isPurchasable: false,
   bondIconSvg: null,
   bondContractABI: DaiBondContract,
@@ -87,7 +96,7 @@ export const usdcm = new StableBond({
     //   bondAddress: "0x25CCF3D5B5B856Bf019ECFb0C1dcC500C6D8E0a9",
     //   reserveAddress: "0x748134b5f553f2bcbd78c6826de99a70274bdeb3",
     // },
-  },
+  }
 });
 
 export const usdcm_44 = new StableBond({
@@ -104,9 +113,9 @@ export const usdcm_44 = new StableBond({
   networkAddrs: {
     [NetworkIds.Moonriver]: {
       bondAddress: "0xd7a8CedAAE9426F156CB987F8DFAEC58c0904876",
-      reserveAddress: "0x748134b5f553f2bcbd78c6826de99a70274bdeb3",
-    },
-  },
+      reserveAddress: "0x748134b5f553f2bcbd78c6826de99a70274bdeb3"
+    }
+  }
 });
 
 
@@ -116,7 +125,7 @@ export const usdtm = new StableBond({
   displayName: "USDT.m",
   bondToken: "USDT.m",
   decimals: 6,
-  isAvailable: {  },
+  isAvailable: {},
   isPurchasable: false,
   bondIconSvg: null,
   bondContractABI: DaiBondContract,
@@ -125,7 +134,7 @@ export const usdtm = new StableBond({
     //   bondAddress: "0xC0c4209E3a6d227ad9Fe4dd3f064A1A1Ab6a3Ce5",
     //   reserveAddress: "0xE936CAA7f6d9F5C9e907111FCAf7c351c184CDA7",
     // },
-  },
+  }
 });
 
 export const usdtm_44 = new StableBond({
@@ -142,9 +151,9 @@ export const usdtm_44 = new StableBond({
   networkAddrs: {
     [NetworkIds.Moonriver]: {
       bondAddress: "0x0B75299da2065998Ec9C3139b22036a7e2CFe13E",
-      reserveAddress: "0xE936CAA7f6d9F5C9e907111FCAf7c351c184CDA7",
-    },
-  },
+      reserveAddress: "0xE936CAA7f6d9F5C9e907111FCAf7c351c184CDA7"
+    }
+  }
 });
 
 export const fhm_dai_lp_44 = new LPBond({
@@ -162,11 +171,11 @@ export const fhm_dai_lp_44 = new LPBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0xFe0aEb293a2d297BE699a9f23F75Fd31C864674d",
-      reserveAddress: "0xd77fc9c4074b56ecf80009744391942fbfddd88b",
-    },
+      reserveAddress: "0xd77fc9c4074b56ecf80009744391942fbfddd88b"
+    }
   },
   lpUrl:
-    "https://spookyswap.finance/add/0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E/0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    "https://spookyswap.finance/add/0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E/0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286"
 });
 
 export const fhm_usdcm_lp_44 = new LPBond({
@@ -184,11 +193,11 @@ export const fhm_usdcm_lp_44 = new LPBond({
   networkAddrs: {
     [NetworkIds.Moonriver]: {
       bondAddress: "0xdF3697fC8ba5421E79922a279EB62364503fb60C",
-      reserveAddress: "0x0b6116bb2926d996cdeba9e1a79e44324b0401c9",
-    },
+      reserveAddress: "0x0b6116bb2926d996cdeba9e1a79e44324b0401c9"
+    }
   },
   lpUrl:
-    "https://www.huckleberry.finance/#/add/0x748134b5F553F2bcBD78c6826De99a70274bDEb3/0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    "https://www.huckleberry.finance/#/add/0x748134b5F553F2bcBD78c6826De99a70274bDEb3/0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286"
 });
 
 export const usdb = new StableBond({
@@ -197,7 +206,7 @@ export const usdb = new StableBond({
   displayName: "USDB",
   bondToken: "USDB",
   decimals: 18,
-  isAvailable: {  },
+  isAvailable: {},
   isPurchasable: false,
   bondIconSvg: null,
   bondContractABI: BondStakingDepositoryContract,
@@ -205,13 +214,13 @@ export const usdb = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0xcF7d038432B7220b44687b13Fbb3001cd1117cD0",
-      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA"
     },
     [NetworkIds.Moonriver]: {
       bondAddress: "0xC6858F8A824d43Acc778d50603528458510D8763",
-      reserveAddress: "0x3E193c39626BaFb41eBe8BDd11ec7ccA9b3eC0b2",
-    },
-  },
+      reserveAddress: "0x3E193c39626BaFb41eBe8BDd11ec7ccA9b3eC0b2"
+    }
+  }
 });
 
 export const usdb_dai_lp = new StableBond({
@@ -220,7 +229,7 @@ export const usdb_dai_lp = new StableBond({
   displayName: "USDB-DAI LP",
   bondToken: "USDB-DAI LP",
   decimals: 18,
-  isAvailable: {  },
+  isAvailable: {},
   isPurchasable: false,
   bondIconSvg: null,
   bondContractABI: BondStakingDepositoryContract,
@@ -228,9 +237,9 @@ export const usdb_dai_lp = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0x955e91c5a7a05E5C790449cc43b1d1519965517C",
-      reserveAddress: "0x7799f423534c319781b1b370B69Aaf2C75Ca16A3",
+      reserveAddress: "0x7799f423534c319781b1b370B69Aaf2C75Ca16A3"
     }
-  },
+  }
 });
 
 export const dai44 = new StableBond({
@@ -247,13 +256,13 @@ export const dai44 = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0xC2B356342D191E2E068B3c9876Fc0440b4d5Ed25",
-      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E"
     },
     [NetworkIds.FantomTestnet]: {
       bondAddress: "0xc7C64C8A27F1c52C0EecAF4542d3b100f5e27a27",
-      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
-    },
-  },
+      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce"
+    }
+  }
 });
 
 export const usdbBuy = new StableBond({
@@ -272,9 +281,9 @@ export const usdbBuy = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0x299f15b527fdBf76A7CA6087a521e60c18F80529",
-      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
-    },
-  },
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E"
+    }
+  }
 });
 
 
@@ -284,7 +293,7 @@ export const usdbSell = new StableBond({
   displayName: "USDB ➜ FHM",
   bondToken: "USDB",
   decimals: 18,
-  isAvailable: { [NetworkIDs.FantomTestnet]: true,[NetworkIDs.FantomOpera]: true, [NetworkIDs.Ethereum]: true },
+  isAvailable: { [NetworkIds.FantomTestnet]: true, [NetworkIds.FantomOpera]: true, [NetworkIds.Ethereum]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: FhudBBondDepositoryContract,
@@ -294,9 +303,9 @@ export const usdbSell = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
       bondAddress: "0x8dC59734b753e465dda2ea908A00F46f06522481",
-      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
-    },
-  },
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA"
+    }
+  }
 });
 
 export const tradfi3month = new StableBond({
@@ -313,13 +322,13 @@ export const tradfi3month = new StableBond({
   networkAddrs: {
     [NetworkIds.FantomTestnet]: {
       bondAddress: "0x38F0e4B286127AEbA6eC76B8466628030301Fb84",
-      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce"
     },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0x52b27846dd773C8E16Fc8e75E2d1D6abd4e8C48A",
-      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
-    },
-  },
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286"
+    }
+  }
 });
 
 export const singleSided = new StableBond({
@@ -336,9 +345,9 @@ export const singleSided = new StableBond({
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
       bondAddress: "0xaB5EBc2C378973477a61947954a9A02362f31382",
-      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
-    },
-  },
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286"
+    }
+  }
 });
 
 // HOW TO ADD A NEW BOND:

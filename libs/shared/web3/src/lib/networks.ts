@@ -2,21 +2,9 @@ import React from "react";
 
 import { DebugHelper } from "./helpers/debug-helper";
 
-export type NetworkID = number;
+export type NetworkId = number;
 
 export enum NetworkIds {
-  Ethereum = 1,
-  Rinkeby = 4,
-  Bsc = 56,
-  FantomOpera = 250,
-  FantomTestnet = 4002,
-  Moonriver = 1285,
-  MoonbaseAlpha = 1287,
-  Boba = 288,
-  Avalanche = 43114,
-}
-
-export enum NetworkIDs {
   Ethereum = 1,
   Rinkeby = 4,
   Bsc = 56,
@@ -370,9 +358,6 @@ export const networks: INetworks = {
   },
 };
 
-export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled);
-export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum);
-export const enabledMainNetworkIDs: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);
-export const enabledNetworkIDs: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled);
-export const enabledNetworkIDsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum);
-export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);
+export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled);
+export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled && networkID !== NetworkIds.Bsc && networkID !== NetworkIds.Ethereum);
+export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkID => !networks[networkID].isTestNet);

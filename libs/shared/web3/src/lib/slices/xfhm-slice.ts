@@ -43,8 +43,8 @@ export interface IXfhmDetails {
 
 export const calcXfhmDetails = createAsyncThunk(
   "xfhm-lqdr/calcDetails",
-  async ({ address, networkID }: IBaseAddressAsyncThunk): Promise<IXfhmDetails> => {
-    const xfhmAddress = xFhmToken.networkAddrs[networkID];
+  async ({ address, networkId }: IBaseAddressAsyncThunk): Promise<IXfhmDetails> => {
+    const xfhmAddress = xFhmToken.networkAddrs[networkId];
     if (!xfhmAddress || !address) {
       return {
         fhmBalance: 0,
@@ -60,17 +60,17 @@ export const calcXfhmDetails = createAsyncThunk(
         claimableXfhm: 0
       };
     }
-    const provider = await chains[networkID].provider;
-    const fhmContract = new ethers.Contract(networks[networkID].addresses["OHM_ADDRESS"] as string, sOHM, provider);
-    const lqdrUsdbLpContract = new ethers.Contract(networks[networkID].addresses["LQDR_USDB_LP_ADDRESS"] as string, sOHM, provider);
-    const lqdrContract = new ethers.Contract(networks[networkID].addresses["LQDR_ADDRESS"] as string, sOHM, provider);
-    const xfhmContract = await xFhmToken.getContract(networkID);
+    const provider = await chains[networkId].provider;
+    const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOHM, provider);
+    const lqdrUsdbLpContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_LP_ADDRESS"] as string, sOHM, provider);
+    const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOHM, provider);
+    const xfhmContract = await xFhmToken.getContract(networkId);
     const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm] = await Promise.all([
       fhmContract["balanceOf"](address),
       xfhmContract["balanceOf"](address),
       lqdrUsdbLpContract["balanceOf"](address),
       fhmContract["allowance"](address, xfhmAddress),
-      lqdrContract["allowance"](address, networks[networkID].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string),
+      lqdrContract["allowance"](address, networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string),
       xfhmContract["users"](address),
       xfhmContract["generationRate"](),
       xfhmContract["getStakedFhm"](address),
@@ -91,7 +91,6 @@ export const calcXfhmDetails = createAsyncThunk(
       claimableXfhm
     ]);
 
-
     return {
       fhmBalance,
       xfhmBalance,
@@ -111,10 +110,10 @@ export const calcXfhmDetails = createAsyncThunk(
 
 export const calcAllAssetTokenDetails = createAsyncThunk(
   "xfhm-lqdr/calcAllAssetTokenDetails",
-  async ({ address, networkID }: IBaseAddressAsyncThunk): Promise<AssetToken[]> => {
+  async ({ address, networkId }: IBaseAddressAsyncThunk): Promise<AssetToken[]> => {
 
     const assetTokens = await Promise.all(allAssetTokens.map(async (token: AssetToken) => {
-      const tokenContract = await token.getContract(networkID);
+      const tokenContract = await token.getContract(networkId);
       const balance = await tokenContract["balanceOf"](address);
       token.setBalance(balance);
       return token;
@@ -126,18 +125,18 @@ export const calcAllAssetTokenDetails = createAsyncThunk(
 
 export const fhmApprovalForXfhm = createAsyncThunk(
   "xfhm-lqdr/fhmApprovalForXfhm",
-  async ({ provider, address, networkID }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const ohmContract = new ethers.Contract(addresses[networkID]["OHM_ADDRESS"] as string, ierc20Abi, signer);
+    const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, signer);
     let approveTx;
     try {
       approveTx = await ohmContract["approve"](
-        addresses[networkID]["XFHM_ADDRESS"],
+        addresses[networkId]["XFHM_ADDRESS"],
         ethers.utils.parseUnits("1000000000", "gwei").toString()
       );
 
@@ -151,7 +150,7 @@ export const fhmApprovalForXfhm = createAsyncThunk(
     } finally {
       if (approveTx) {
         await dispatch(clearPendingTxn(approveTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkID }));
+        await dispatch(calcXfhmDetails({ address, networkId }));
       }
     }
   }
@@ -159,18 +158,18 @@ export const fhmApprovalForXfhm = createAsyncThunk(
 
 export const lqdrApproval = createAsyncThunk(
   "xfhm-lqdr/lqdrApproval",
-  async ({ provider, address, networkID }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const lqdrContract = new ethers.Contract(addresses[networkID]["LQDR_ADDRESS"] as string, ierc20Abi, signer);
+    const lqdrContract = new ethers.Contract(addresses[networkId]["LQDR_ADDRESS"] as string, ierc20Abi, signer);
     let approveTx;
     try {
       approveTx = await lqdrContract["approve"](
-        addresses[networkID]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"],
+        addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"],
         ethers.constants.MaxUint256.toString()
       );
 
@@ -184,7 +183,7 @@ export const lqdrApproval = createAsyncThunk(
     } finally {
       if (approveTx) {
         await dispatch(clearPendingTxn(approveTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkID }));
+        await dispatch(calcXfhmDetails({ address, networkId }));
       }
     }
   }
@@ -192,14 +191,14 @@ export const lqdrApproval = createAsyncThunk(
 
 export const changeStakeForXfhm = createAsyncThunk(
   "xfhm-lqdr/fhmStakeForXfhm",
-  async ({ provider, address, networkID, value, action }: IXfhmActionValueAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId, value, action }: IXfhmActionValueAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const xfhmContract = await xFhmToken.getContractForWrite(networkID, signer);
+    const xfhmContract = await xFhmToken.getContractForWrite(networkId, signer);
     let stakeTx;
     let uaData: IUAData = {
       address: address,
@@ -232,8 +231,8 @@ export const changeStakeForXfhm = createAsyncThunk(
         // segmentUA(uaData);
         await sleep(2);
         dispatch(clearPendingTxn(stakeTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkID }));
-        await dispatch(calcAllAssetTokenDetails({ address, networkID }));
+        await dispatch(calcXfhmDetails({ address, networkId }));
+        await dispatch(calcAllAssetTokenDetails({ address, networkId }));
       }
     }
   }
@@ -241,14 +240,14 @@ export const changeStakeForXfhm = createAsyncThunk(
 
 export const claimForXfhm = createAsyncThunk(
   "xfhm-lqdr/claimForXfhm",
-  async ({ provider, address, networkID }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const xfhmContract = await xFhmToken.getContractForWrite(networkID, signer);
+    const xfhmContract = await xFhmToken.getContractForWrite(networkId, signer);
     let claimTx;
     try {
       claimTx = await xfhmContract["claim"]();
@@ -262,8 +261,8 @@ export const claimForXfhm = createAsyncThunk(
     } finally {
       if (claimTx) {
         await dispatch(clearPendingTxn(claimTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkID }));
-        await dispatch(calcAllAssetTokenDetails({ address, networkID }));
+        await dispatch(calcXfhmDetails({ address, networkId }));
+        await dispatch(calcAllAssetTokenDetails({ address, networkId }));
       }
     }
   }
@@ -271,14 +270,14 @@ export const claimForXfhm = createAsyncThunk(
 
 export const addLiquidity = createAsyncThunk(
   "xfhm-lqdr/addLiquidity",
-  async ({ provider, address, networkID, value, token }: IXfhmAddLiquidityAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId, value, token }: IXfhmAddLiquidityAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkID].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, signer);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, signer);
     const bondPriceInUSD = await lqdrUsdbPolBondContract["bondPriceInUSD"]();
     console.log("bondPriceInUSD: ", bondPriceInUSD);
     let addLiquidityTx;
@@ -294,7 +293,7 @@ export const addLiquidity = createAsyncThunk(
     } finally {
       if (addLiquidityTx) {
         await dispatch(clearPendingTxn(addLiquidityTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkID }));
+        await dispatch(calcXfhmDetails({ address, networkId }));
       }
     }
   }
@@ -302,13 +301,13 @@ export const addLiquidity = createAsyncThunk(
 
 export const calcAssetAmount = createAsyncThunk(
   "xfhm-lqdr/calcAssetAmount",
-  async ({ provider, address, networkID, value, action }: IXfhmActionValueAsyncThunk, { dispatch }): Promise<number> => {
+  async ({ provider, address, networkId, value, action }: IXfhmActionValueAsyncThunk, { dispatch }): Promise<number> => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return 0;
     }
 
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkID].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
     let amount = 0;
     if (action === "calculate-xfhm") {
       amount = await lqdrUsdbPolBondContract['feeInXfhm'](value);
@@ -323,13 +322,13 @@ export const calcAssetAmount = createAsyncThunk(
 
 export const payoutForUsdb = createAsyncThunk(
   "xfhm-lqdr/payoutForUsdb",
-  async ({ provider, address, networkID, value }: IXfhmValueAsyncThunk, { dispatch }): Promise<number> => {
+  async ({ provider, address, networkId, value }: IXfhmValueAsyncThunk, { dispatch }): Promise<number> => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return 0;
     }
 
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkID].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
     return await lqdrUsdbPolBondContract['payoutFor'](value);
   }
 );
@@ -395,5 +394,5 @@ const xfhmSlice = createSlice({
 
 export const { fetchXfhmSuccess } = xfhmSlice.actions;
 
-export const xfhmSliceReducer = xfhmSlice.reducer;
+export const xfhmReducer = xfhmSlice.reducer;
 export default xfhmSlice.reducer;

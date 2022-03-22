@@ -1,5 +1,5 @@
 import { JsonRpcProvider } from '@ethersproject/providers';
-import { NetworkID } from '../networks';
+import { NetworkId } from '../networks';
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
@@ -10,7 +10,7 @@ export interface IJsonRPCError {
 }
 
 export interface IBaseAsyncThunk {
-  readonly networkId: NetworkID;
+  readonly networkId: NetworkId;
 }
 
 export interface IInteractiveAsyncThunk {

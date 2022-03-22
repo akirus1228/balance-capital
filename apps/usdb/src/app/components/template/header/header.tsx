@@ -43,16 +43,8 @@ const pages: Pages[] = [
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address } = useWeb3Context();
   const dispatch = useDispatch();
-  const [isConnected, setConnected] = useState(connected);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-
-  let buttonText = "Connect Wallet";
-  let clickFunc = connect;
-
-  if (isConnected) {
-    buttonText = "Disconnect";
-    clickFunc = disconnect;
-  }
+  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
 
   const themeType = useSelector((state: RootState) => state.app.theme);
 
@@ -64,9 +56,19 @@ export const Header = (): JSX.Element => {
     setAnchorElNav(null);
   };
 
+  const handleConnect = async() => {
+    if (connected) {
+      await disconnect();
+      setConnectButtonText("Connect Wallet");
+    } else {
+      await connect();
+      setConnectButtonText("Disconnect");
+    }
+  };
+
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({networkId: 4002, address: address }));
+    dispatch(getBalances({ address: address, networkId: 250 }));
   }, [connected]);
 
   const toggleTheme = () => {
@@ -117,16 +119,14 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link to={page.href ? page.href : "#"}>
-                      <Button href={page.href}>{page.title}</Button>
-                    </Link>
+                    <Button href={page.href}>{page.title}</Button>
                   </Typography>
                 </MenuItem>
               ))}
 
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
-                  <Button  onClick={clickFunc}>{buttonText}</Button>
+                  <Button onClick={handleConnect}>{connectButtonText}</Button>
                 </Typography>
               </MenuItem>
               <MenuItem onClick={handleCloseNavMenu}>
@@ -166,22 +166,21 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Link to={page.href ? page.href : "#"}>
-                      <Button
-                        autoCapitalize='none'
-                        disabled={page.params?.comingSoon}
-                        sx={{...(page.params && page.params.sx)}}
-                      >
-                        {page.title}
-                      </Button>
-                    </Link>
+                    <Button
+                      autoCapitalize='none'
+                      disabled={page.params?.comingSoon}
+                      href={page.href}
+                      sx={{...(page.params && page.params.sx)}}
+                    >
+                      {page.title}
+                    </Button>
                   )}
               </Box>
             ))}
           </Box>
           <Tooltip title="Connect Wallet">
-            <Button onClick={clickFunc} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
-              {buttonText}
+            <Button onClick={handleConnect} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
+              {connectButtonText}
             </Button>
           </Tooltip>
           <Tooltip title="Toggle Light/Dark Mode">

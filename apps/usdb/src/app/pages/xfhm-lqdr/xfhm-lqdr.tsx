@@ -4,12 +4,12 @@ import { memo, SyntheticEvent, useEffect, useState } from "react";
 
 import { XfhmPage } from "./xfhm";
 import { LqdrPage } from "./lqdr";
-import { calcAllAssetTokenDetails, calcXfhmDetails, NetworkID, useWeb3Context } from "@fantohm/shared-web3";
+import { calcAllAssetTokenDetails, calcXfhmDetails, NetworkId, useWeb3Context } from "@fantohm/shared-web3";
 import { useDispatch } from "react-redux";
 
 export const XfhmLqdrPage = (): JSX.Element => {
 
-  const { chainID, address } = useWeb3Context();
+  const { chainId, address } = useWeb3Context();
   const dispatch = useDispatch();
   const [xfhmView, setXfhmView] = useState<number>(0);
 
@@ -21,8 +21,8 @@ export const XfhmLqdrPage = (): JSX.Element => {
     if (!address) {
       return;
     }
-    dispatch(calcXfhmDetails({ address, networkID: chainID as NetworkID }));
-    dispatch(calcAllAssetTokenDetails({ address, networkID: chainID as NetworkID }));
+    dispatch(calcXfhmDetails({ address, networkId: chainId as NetworkId }));
+    dispatch(calcAllAssetTokenDetails({ address, networkId: chainId as NetworkId }));
   }, [address, xfhmView]);
 
   return (

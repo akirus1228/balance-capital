@@ -10,12 +10,12 @@ import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 
 import {JsonRpcSigner} from "@ethersproject/providers";
 
-import {NetworkID, networks} from "../networks";
+import {NetworkId, networks} from "../networks";
 import { LocalStorage } from "./local-storage";
 import { chains } from "../providers";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
-export async function getMarketPrice(networkId : NetworkID) {
+export async function getMarketPrice(networkId : NetworkId) {
 	return 0;
 }
 
@@ -105,18 +105,18 @@ export function trim(number = 0, precision = 0) {
 	return trimmedNumber;
 }
 
-export function getRebaseBlock(networkId: NetworkID, currentBlock: number) {
+export function getRebaseBlock(networkId: NetworkId, currentBlock: number) {
 	return currentBlock + networks[networkId].epochInterval - ((currentBlock - networks[networkId].epochBlock) % networks[networkId].epochInterval);
 }
 
-export function secondsUntilBlock(networkId: NetworkID, startBlock: number, endBlock: number) {
+export function secondsUntilBlock(networkId: NetworkId, startBlock: number, endBlock: number) {
 	const blocksAway = endBlock - startBlock;
 	const secondsAway = blocksAway * networks[networkId].blocktime;
 
 	return secondsAway;
 }
 
-export function prettyVestingPeriod(networkId: NetworkID, currentBlock: number, vestingBlock: number) {
+export function prettyVestingPeriod(networkId: NetworkId, currentBlock: number, vestingBlock: number) {
 	if (vestingBlock === 0) {
 		return "";
 	}

@@ -14,7 +14,7 @@ import {
   useWeb3Context,
   xFhmToken,
   fhmApprovalForXfhm,
-  NetworkIDs,
+  NetworkIds,
   txnButtonText,
   isPendingTxn,
   error, changeStakeForXfhm, claimForXfhm
@@ -27,14 +27,14 @@ import style from "./xfhm-lqdr.module.scss";
 
 export const XfhmPage = (): JSX.Element => {
 
-  const { chainID, address, provider } = useWeb3Context();
+  const { chainId, address, provider } = useWeb3Context();
   const dispatch = useDispatch();
   const [stakeView, setStakeView] = useState<number>(0);
   const [stakeQuantity, setStakeQuantity] = useState<string>("");
   const [unstakeQuantity, setUnStakeQuantity] = useState<string>("");
 
   const details = useSelector((state: RootState) => {
-    return state?.xfhm.details;
+    return state?.xfhm?.details;
   });
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -46,7 +46,7 @@ export const XfhmPage = (): JSX.Element => {
   };
 
   const onChangeStake = async (action: string) => {
-    if (!provider || !chainID || !address) {
+    if (!provider || !chainId || !address) {
       return;
     }
     if (action === "stake") {
@@ -64,7 +64,7 @@ export const XfhmPage = (): JSX.Element => {
         action,
         value: stakeQuantity.toString(),
         provider,
-        networkID: chainID
+        networkId: chainId
       }));
     } else {
       // @ts-ignore
@@ -81,7 +81,7 @@ export const XfhmPage = (): JSX.Element => {
         action,
         value: unstakeQuantity.toString(),
         provider,
-        networkID: chainID
+        networkId: chainId
       }));
     }
   };
@@ -98,17 +98,17 @@ export const XfhmPage = (): JSX.Element => {
   };
 
   const onSeekApproval = async () => {
-    if (!provider || !chainID || !address) {
+    if (!provider || !chainId || !address) {
       return;
     }
-    await dispatch(fhmApprovalForXfhm({ address, provider, networkID: chainID || NetworkIDs.FantomOpera }));
+    await dispatch(fhmApprovalForXfhm({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
   };
 
   const onClaim = async () => {
-    if (!provider || !chainID) {
+    if (!provider || !chainId) {
       return;
     }
-    await dispatch(claimForXfhm({ address, provider, networkID: chainID }));
+    await dispatch(claimForXfhm({ address, provider, networkId: chainId }));
   };
 
   return (

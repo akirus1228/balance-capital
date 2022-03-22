@@ -1,9 +1,9 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
-import { NetworkID, networks } from "@fantohm/shared-web3";
+import { NetworkId, networks } from "@fantohm/shared-web3";
 import { ethers } from "ethers";
 
 import { chains } from "../providers";
-import { NetworkIDs } from "../../lib/networks";
+import { NetworkIds } from "../../lib/networks";
 import { abi as XfhmAbi } from "../abi/xFhm.json";
 import { abi as LqdrAbi } from "../abi/Lqdr.json";
 import { ReactComponent as OhmImg } from "../../../../assets/tokens/token_OHM.svg";
@@ -46,14 +46,14 @@ export abstract class AssetToken {
     this.balance = balance;
   }
 
-  getContractForWrite(networkID: NetworkID, rpcSigner: JsonRpcSigner) {
-    const address = this.networkAddrs[networkID];
+  getContractForWrite(networkId: NetworkId, rpcSigner: JsonRpcSigner) {
+    const address = this.networkAddrs[networkId];
     return new ethers.Contract(address, this.contractABI, rpcSigner);
   }
 
-  async getContract(networkID: NetworkID) {
-    const address = this.networkAddrs[networkID];
-    return new ethers.Contract(address, this.contractABI, await chains[networkID].provider);
+  async getContract(networkId: NetworkId) {
+    const address = this.networkAddrs[networkId];
+    return new ethers.Contract(address, this.contractABI, await chains[networkId].provider);
   }
 
 }
@@ -65,9 +65,9 @@ export const xFhmToken = new AssetToken({
   contractABI: XfhmAbi,
   iconSvg: OhmImg,
   networkAddrs: {
-    [NetworkIDs.FantomOpera]: "",
-    [NetworkIDs.FantomTestnet]: "",
-    [NetworkIDs.Rinkeby]: networks[NetworkIDs.Rinkeby].addresses["XFHM_ADDRESS"]
+    [NetworkIds.FantomOpera]: "",
+    [NetworkIds.FantomTestnet]: "",
+    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["XFHM_ADDRESS"]
   },
   decimals: 18
 });
@@ -79,9 +79,9 @@ export const lqdrToken = new AssetToken({
   contractABI: LqdrAbi,
   iconSvg: OhmImg,
   networkAddrs: {
-    [NetworkIDs.FantomOpera]: "",
-    [NetworkIDs.FantomTestnet]: "",
-    [NetworkIDs.Rinkeby]: networks[NetworkIDs.Rinkeby].addresses["LQDR_ADDRESS"]
+    [NetworkIds.FantomOpera]: "",
+    [NetworkIds.FantomTestnet]: "",
+    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["LQDR_ADDRESS"]
   },
   decimals: 9
 });
