@@ -11,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 import { useSelector } from 'react-redux';
+import { Link as RouterLink } from 'react-router-dom';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { Box } from '@mui/system';
 import {
@@ -291,13 +292,15 @@ export const MyAccount = (): JSX.Element => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
-                  <Button
-                    variant="contained"
-                    disableElevation
-                    sx={{ padding: '10px 30px' }}
-                  >
-                    Manage
-                  </Button>
+                  <RouterLink to="/staking#bond">
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      sx={{ padding: '10px 30px' }}
+                    >
+                      Manage
+                    </Button>
+                  </RouterLink>
                 </Grid>
               </Grid>
             ))}
