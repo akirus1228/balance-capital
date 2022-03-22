@@ -5,24 +5,28 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
+import { 
+  loadAppDetails, 
+  useWeb3Context, 
+  calcBondDetails, 
+  useBonds, 
+  calcGlobalBondDetails, 
+  calcInvestmentDetails,
+  useInvestments,
+  fetchTokenPrice,
+  calculateUserBondDetails, 
+  loadAccountDetails
+} from "@fantohm/shared-web3";
 import { StakingChoicePage } from "./pages/staking-choice/staking-choice";
 import { Header } from "./components/template";
-import Messages from "./components/messages/messages";
+import { Messages } from "./components/messages/messages";
 import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
 import { HomePage } from "./pages/home/home-page";
 import { TradFiDeposit } from "./pages/trad-fi/deposit/deposit";
 import { TradFi } from "./pages/trad-fi/trad-fi";
-import MyAccount from "./pages/my-account/my-account";
+import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
-import { loadAppDetails } from "@fantohm/shared-web3";
-import { useWeb3Context } from "@fantohm/shared-web3";
-import { calcBondDetails } from "@fantohm/shared-web3";
-import { useAddress, useBonds } from "@fantohm/shared-web3";
-import { calcGlobalBondDetails } from "@fantohm/shared-web3";
-import { calcInvestmentDetails } from "@fantohm/shared-web3";
-import { useInvestments } from "@fantohm/shared-web3";
-import { fetchTokenPrice } from "@fantohm/shared-web3";
-import { calculateUserBondDetails, loadAccountDetails } from "@fantohm/shared-web3";
+
 
 export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);
@@ -35,6 +39,7 @@ export function App() {
   useEffect(() => {
     setTheme(themeType === "light" ? USDBLight : USDBDark);
   }, [themeType]);
+  
   useEffect(() => {
     dispatch(loadAppDetails({ networkId: chainId || 250 }));
     bonds.map(bond => {
@@ -56,6 +61,7 @@ export function App() {
       });
     }
   }, [chainId, address]);
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

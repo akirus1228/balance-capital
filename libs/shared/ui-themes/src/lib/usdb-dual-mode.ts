@@ -107,6 +107,10 @@ const globalTheme: ThemeOptions = {
             color: "#000",
             padding: "15px 27px",
             border: "solid 1px #000"
+          },
+          "&.inputButton": {
+            height: "3em",
+            borderRadius: "2em",
           }
         },
         outlined: {

@@ -45,10 +45,11 @@ function Linear({ message }) {
 }
 
 // A component that displays error messages
-function Messages() {
+export function Messages() {
   const messages = useSelector((state: RootState) => state?.messages);
   const dispatch = useDispatch();
   // Returns a function that can closes a message
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   const handleClose = function (message) {
     return function () {

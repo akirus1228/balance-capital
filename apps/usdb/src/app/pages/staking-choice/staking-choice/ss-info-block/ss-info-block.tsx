@@ -1,11 +1,9 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
+import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon } from '@fantohm/shared/images';
 import style from './ss-info-block.module.scss';
-import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon, TradFiIcon } from '@fantohm/shared/images';
 
-/* eslint-disable-next-line */
-export interface SsInfoBlockProps {}
 
-export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
+export const SsInfoBlock = (): JSX.Element => {
   return (
     <Box sx={{mx: {xs: "1em", md: "3em"}}} className={style['infoBlockContainer']}>
       <Grid container spacing={12}>

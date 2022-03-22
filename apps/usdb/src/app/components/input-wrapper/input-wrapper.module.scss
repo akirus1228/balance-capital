@@ -1,0 +1,12 @@
+.inputWrapper {
+    input {
+        width: 100%;
+        color: inherit;
+    }
+
+    input, input:focus {
+        border: none;
+        background: transparent;
+        outline: none;
+    }
+}
