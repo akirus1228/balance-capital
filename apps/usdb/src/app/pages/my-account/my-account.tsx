@@ -172,6 +172,7 @@ export const MyAccount = (): JSX.Element => {
       for (let i = 0; i < bonds.length - 1; i++) {
         const bond: IAllBondData = (bonds[i] as IAllBondData);
         if (accountBonds[allBonds[i].name]) {
+          console.log(accountBonds);
           const userBonds = accountBonds[allBonds[i].name].userBonds;
           for (let j = 0; j < userBonds.length; j++) {
             const investment: Investment = {

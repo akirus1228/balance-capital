@@ -297,13 +297,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       isLP: bond.isLP,
       allowance,
       balance,
-      userBonds: [
-        {
-          interestDue: 0,
-          bondMaturationBlock: 0,
-          pendingPayout: "",
-        },
-      ],
+      userBonds,
       paymentToken: bond.paymentToken,
       bondAction: bond.bondAction,
     };
