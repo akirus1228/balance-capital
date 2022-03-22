@@ -25,7 +25,7 @@ import {styled} from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import {
   isPendingTxn,
-  redeemBond,
+  redeemOneBond,
   RootState,
   txnButtonTextGeneralPending,
   useBonds,
@@ -171,7 +171,7 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     console.log("redeeming all bonds");
     if (provider && chainId) {
-      await dispatch(redeemBond({networkId: chainId, address, bond: bonds[0], provider, autostake: false}));
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bonds[0], provider, autostake: false}));
     }
 
     console.log("redeem all complete");
