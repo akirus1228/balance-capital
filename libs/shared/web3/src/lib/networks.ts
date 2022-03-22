@@ -1,23 +1,10 @@
 import React from "react";
 
 import { DebugHelper } from "./helpers/debug-helper";
+
 export type NetworkId = number;
 
-export type NetworkID = number;
-
 export enum NetworkIds {
-  Ethereum = 1,
-  Rinkeby = 4,
-  Bsc = 56,
-  FantomOpera = 250,
-  FantomTestnet = 4002,
-  Moonriver = 1285,
-  MoonbaseAlpha = 1287,
-  Boba = 288,
-  Avalanche = 43114,
-}
-
-export enum NetworkIDs {
   Ethereum = 1,
   Rinkeby = 4,
   Bsc = 56,
@@ -100,9 +87,11 @@ export const networks: INetworks = {
       MARKET_PRICE_LP_ADDRESS: "0xd77fc9c4074b56ecf80009744391942fbfddd88b",
       WSOHM_ADDRESS: "0x73199ba57BBFe82a935B9C95850395d80a400937",
       USDB_ADDRESS: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
-      USDB_MINTER: "0xe036823Fa26455D9DF0e3ed5Ec287a19356941e3",
-      FHUD_ADDRESS: "0x18F7f88BE24a1d1d0a4E61B6Ebf564225398adb0",
-    }
+      XFHM_ADDRESS: "",
+      LQDR_ADDRESS: "",
+      LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
+      LQDR_USDB_LP_ADDRESS: ""
+    },
   },
   [NetworkIds.FantomTestnet]: {
     name: 'Fantom Testnet',
@@ -142,6 +131,11 @@ export const networks: INetworks = {
       USDB_ADDRESS: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
       USDB_MINTER: "0xe036823Fa26455D9DF0e3ed5Ec287a19356941e3",
       FHUD_ADDRESS: "0x18F7f88BE24a1d1d0a4E61B6Ebf564225398adb0",
+      DAI_ADDRESS: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+      XFHM_ADDRESS: "",
+      LQDR_ADDRESS: "",
+      LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
+      LQDR_USDB_LP_ADDRESS: ""
       // staking warmup: 0x312DBa92153E931D91c5e75870Dbc62E2DCD21AC
       // staking warmup manager: 0x8D4603d7302f2F962CCf6044A6AC2Dfd812B92bE
       // FHUD Minter: 0xA3b5fE35db679D21af9a499EE88231Ea9B656Cb8
@@ -186,6 +180,10 @@ export const networks: INetworks = {
       MARKET_PRICE_LP_ADDRESS: "0x0b6116bb2926d996cdeba9e1a79e44324b0401c9",
       WSOHM_ADDRESS: "0x9051c67790f6ABBF464a023ff6A85D678c20e3CA",
       USDB_ADDRESS: "0x3E193c39626BaFb41eBe8BDd11ec7ccA9b3eC0b2",
+      XFHM_ADDRESS: "",
+      LQDR_ADDRESS: "",
+      LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
+      LQDR_USDB_LP_ADDRESS: ""
     }
   },
   [NetworkIds.MoonbaseAlpha]: {
@@ -238,6 +236,11 @@ export const networks: INetworks = {
       BRIDGE_ADDRESS: "0x688d514e98bbc32FdCD8Ab2197eFF203A13dD7A1",
       WSOHM_ADDRESS: "0xefa60366a9C414A584375721125a8A42aDb663C0",
       USDB_ADDRESS: "0x0000000000000000000000000000000000000000",
+      DAI_ADDRESS: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+      XFHM_ADDRESS: "",
+      LQDR_ADDRESS: "",
+      LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
+      LQDR_USDB_LP_ADDRESS: ""
     }
   },
   [NetworkIds.Rinkeby]: {
@@ -273,6 +276,11 @@ export const networks: INetworks = {
       MARKET_PRICE_LP_ADDRESS: "0xfb7f259e16ce5c3706dfffd0ab73033f58c6ce21",
       WSOHM_ADDRESS: "0x0bEd9f95b3fEEf5672b10693cF7ed7b78F021793",
       USDB_ADDRESS: "0xE827c1D2da22496A09055140c2454c953710751C",
+      DAI_ADDRESS: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+      XFHM_ADDRESS: "0xcd9703c30454d9a9113cf0cc2e2762e237d8aaa9",
+      LQDR_ADDRESS: "0xF03b216dfc70008442e6F56Ac085C18210B740f5",
+      LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "0x4f06EC6079BB6F6B39aF11010d764f1B4747E3eC",
+      LQDR_USDB_LP_ADDRESS: "0xF1AF8B78eAB2E33e59a4D487fb9CF9dCCEF65427"
       // staking warmup: 0xCD12666f754aCefa1ee5477fA809911bAB915aa0
       // staking warmup manager: 0xeD1f984502f8773Ec950E2D006781D7ce33CEEE4
       // FHUD Minter: 0x139ffDD962A2d8D498a92aB33b31ed78397cbae2
@@ -355,9 +363,6 @@ export const networks: INetworks = {
   },
 };
 
-export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled);
-export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum);
-export const enabledMainNetworkIDs: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);
-export const enabledNetworkIDs: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled);
-export const enabledNetworkIDsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkId => parseInt(networkId)).filter(networkId => networks[networkId].isEnabled && networkId !== NetworkIds.Bsc && networkId !== NetworkIds.Ethereum);
-export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkId => !networks[networkId].isTestNet);
+export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled);
+export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled && networkID !== NetworkIds.Bsc && networkID !== NetworkIds.Ethereum);
+export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkID => !networks[networkID].isTestNet);

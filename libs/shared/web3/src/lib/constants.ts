@@ -10,4 +10,4 @@ interface IAddresses {
   [key: number]: { [key: string]: string };
 };
 
-export const addresses: IAddresses = enabledNetworkIds.reduce((addresses: { [key: number]: { [key: string]: string } }, networkID) => (addresses[networkID] = networks[networkID].addresses, addresses), {});
+export const addresses: IAddresses = enabledNetworkIds.reduce((addresses: { [key: number]: { [key: string]: string } }, networkId) => (addresses[networkId] = networks[networkId].addresses, addresses), {});

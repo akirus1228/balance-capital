@@ -10,6 +10,7 @@ import {networkReducer} from "./slices/network-slice";
 import {pendingTransactionsReducer} from "./slices/pending-txns-slice";
 import {poolDataReducer} from "./slices/pool-thunk";
 import {messagesReducer} from "./slices/messages-slice";
+import {xfhmReducer} from "./slices/xfhm-slice";
 import {accountReducer} from "./slices/account-slice";
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -28,7 +29,8 @@ const store = configureStore({
     pendingTransactions: pendingTransactionsReducer,
     poolData: poolDataReducer,
     lusdData: lusdDataReducer,
-    messages: messagesReducer
+    messages: messagesReducer,
+    xfhm: xfhmReducer
   },
   middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
 });

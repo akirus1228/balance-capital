@@ -72,13 +72,13 @@ const globalTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: '30px',
-          padding: '27px',
-          fontSize: '20px',
-          textTransform: 'capitalize',
-          '&.paperButton': {
-            width: '100%',
-            padding: '1em',
+          borderRadius: "30px",
+          padding: "27px",
+          fontSize: "20px",
+          textTransform: "unset",
+          "&.paperButton": {
+            width: "100%",
+            padding: "1em",
           },
           '&.menuButton': {
             height: '1em',
@@ -89,6 +89,24 @@ const globalTheme: ThemeOptions = {
           },
           '&.cardActionButton': {
             width: "100%"
+          },
+          "&.thin": {
+            padding: "15px 27px"
+          },
+          "&.fill": {
+            fontSize: '14px',
+            backgroundColor: '#000',
+            borderRadius: '1.5em',
+            color: "#FFF",
+            padding: "15px 27px"
+          },
+          "&.border": {
+            fontSize: '14px',
+            backgroundColor: '#FFF',
+            borderRadius: '1.5em',
+            color: "#000",
+            padding: "15px 27px",
+            border: "solid 1px #000"
           }
         },
         outlined: {
@@ -100,6 +118,13 @@ const globalTheme: ThemeOptions = {
       defaultProps: {
         autoCapitalize: 'none',
       },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: "unset",
+        }
+      }
     },
     MuiCssBaseline: {
       styleOverrides: {
