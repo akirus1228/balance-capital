@@ -196,11 +196,15 @@ export const loadAccountDetails = createAsyncThunk(
   },
 );
 
-export interface IUserBondDetails {
-  allowance: number;
+export interface IUserBond {
   interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
+}
+
+export interface IUserBondDetails {
+  allowance: number;
+  userBonds: IUserBond[];
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
 }
@@ -216,9 +220,13 @@ export const calculateUserBondDetails = createAsyncThunk(
         isLP: false,
         allowance: 0,
         balance: "0",
-        interestDue: 0,
-        bondMaturationBlock: 0,
-        pendingPayout: "",
+        userBonds: [
+          {
+            interestDue: 0,
+            bondMaturationBlock: 0,
+            pendingPayout: "",
+          },
+        ],
         paymentToken: bond.paymentToken,
         bondAction: bond.bondAction,
       };
@@ -243,19 +251,21 @@ export const calculateUserBondDetails = createAsyncThunk(
     ]);
 
     if (Number(bondLength) === 0) return {
-      bonds: [{
-        bond: bond.name,
-        displayName: bond.displayName,
-        bondIconSvg: bond.bondIconSvg,
-        isLP: bond.isLP,
-        allowance,
-        balance,
-        interestDue: 0,
-        bondMaturationBlock: 0,
-        pendingPayout: "",
-        paymentToken: bond.paymentToken,
-        bondAction: bond.bondAction,
-      }]
+      bond: bond.name,
+      displayName: bond.displayName,
+      bondIconSvg: bond.bondIconSvg,
+      isLP: bond.isLP,
+      allowance,
+      balance,
+      userBonds: [
+        {
+          interestDue: 0,
+          bondMaturationBlock: 0,
+          pendingPayout: "",
+        },
+      ],
+      paymentToken: bond.paymentToken,
+      bondAction: bond.bondAction,
     };
 
     //Contract Interactions
@@ -274,21 +284,29 @@ export const calculateUserBondDetails = createAsyncThunk(
       bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
       userBonds.push(
         {
-            bond: bond.name + i,
-            displayName: bond.displayName,
-            bondIconSvg: bond.bondIconSvg,
-            isLP: bond.isLP,
-            allowance,
-            balance,
             interestDue,
             bondMaturationBlock,
             pendingPayout,
-            paymentToken: bond.paymentToken,
-            bondAction: bond.bondAction,
         }
       )
     }
-    return {bonds: userBonds}
+    return {
+      bond: bond.name,
+      displayName: bond.displayName,
+      bondIconSvg: bond.bondIconSvg,
+      isLP: bond.isLP,
+      allowance,
+      balance,
+      userBonds: [
+        {
+          interestDue: 0,
+          bondMaturationBlock: 0,
+          pendingPayout: "",
+        },
+      ],
+      paymentToken: bond.paymentToken,
+      bondAction: bond.bondAction,
+    };
   },
 );
 
@@ -346,12 +364,8 @@ const accountSlice = createSlice({
       })
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
-        const bonds = action.payload.bonds;
-        if(bonds) {
-          for (let i = 0; i < bonds.length; i++) {
-            if (bonds[i]) state.bonds[bonds[i].bond] = bonds[i];
-          }
-        }
+        const bond = action.payload.bond;
+        state.bonds[bond] = action.payload;
         state.loading = false;
       })
       .addCase(calculateUserBondDetails.rejected, (state, {error}) => {
