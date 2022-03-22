@@ -4,21 +4,9 @@
       "inputs": [
         { "internalType": "address", "name": "_OHM", "type": "address" },
         { "internalType": "address", "name": "_sOHM", "type": "address" },
-        {
-          "internalType": "uint256",
-          "name": "_epochLength",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_firstEpochNumber",
-          "type": "uint256"
-        },
-        {
-          "internalType": "uint256",
-          "name": "_firstEpochBlock",
-          "type": "uint256"
-        }
+        { "internalType": "uint256", "name": "_epochLength", "type": "uint256" },
+        { "internalType": "uint256", "name": "_firstEpochNumber", "type": "uint256" },
+        { "internalType": "uint256", "name": "_firstEpochBlock", "type": "uint256" }
       ],
       "stateMutability": "nonpayable",
       "type": "constructor"
@@ -26,18 +14,8 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
+        { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+        { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
       ],
       "name": "OwnershipPulled",
       "type": "event"
@@ -45,18 +23,8 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "previousOwner",
-          "type": "address"
-        },
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "newOwner",
-          "type": "address"
-        }
+        { "indexed": true, "internalType": "address", "name": "previousOwner", "type": "address" },
+        { "indexed": true, "internalType": "address", "name": "newOwner", "type": "address" }
       ],
       "name": "OwnershipPushed",
       "type": "event"
@@ -69,9 +37,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "_recipient", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "_recipient", "type": "address" }],
       "name": "claim",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -103,17 +69,9 @@
       "stateMutability": "view",
       "type": "function"
     },
+    { "inputs": [], "name": "forfeit", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
-      "inputs": [],
-      "name": "forfeit",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
       "name": "giveLockBonus",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -140,40 +98,18 @@
       "stateMutability": "view",
       "type": "function"
     },
+    { "inputs": [], "name": "pullManagement", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
-      "inputs": [],
-      "name": "pullManagement",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "newOwner_", "type": "address" }
-      ],
+      "inputs": [{ "internalType": "address", "name": "newOwner_", "type": "address" }],
       "name": "pushManagement",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
     },
+    { "inputs": [], "name": "rebase", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
+    { "inputs": [], "name": "renounceManagement", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
-      "inputs": [],
-      "name": "rebase",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [],
-      "name": "renounceManagement",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "uint256", "name": "_amount", "type": "uint256" }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "_amount", "type": "uint256" }],
       "name": "returnLockBonus",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -188,11 +124,7 @@
     },
     {
       "inputs": [
-        {
-          "internalType": "enum OlympusStaking.CONTRACTS",
-          "name": "_contract",
-          "type": "uint8"
-        },
+        { "internalType": "enum OlympusStaking.CONTRACTS", "name": "_contract", "type": "uint8" },
         { "internalType": "address", "name": "_address", "type": "address" }
       ],
       "name": "setContract",
@@ -201,13 +133,7 @@
       "type": "function"
     },
     {
-      "inputs": [
-        {
-          "internalType": "uint256",
-          "name": "_warmupPeriod",
-          "type": "uint256"
-        }
-      ],
+      "inputs": [{ "internalType": "uint256", "name": "_warmupPeriod", "type": "uint256" }],
       "name": "setWarmup",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -223,13 +149,7 @@
       "stateMutability": "nonpayable",
       "type": "function"
     },
-    {
-      "inputs": [],
-      "name": "toggleDepositLock",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
+    { "inputs": [], "name": "toggleDepositLock", "outputs": [], "stateMutability": "nonpayable", "type": "function" },
     {
       "inputs": [],
       "name": "totalBonus",

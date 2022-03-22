@@ -10,8 +10,8 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { useSelector } from 'react-redux';
 import { Link as RouterLink } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { Box } from '@mui/system';
 import {
@@ -24,6 +24,14 @@ import { useTheme } from '@mui/material/styles';
 import style from './my-account.module.scss';
 import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
+import {
+  isPendingTxn,
+  redeemBond,
+  RootState,
+  txnButtonTextGeneralPending,
+  useBonds,
+  useWeb3Context,
+} from '@fantohm/shared-web3';
 
 export interface Investment {
   id: string;
@@ -134,9 +142,50 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
+export interface MyAccountProps {
+  bond: any;
+}
+
 export const MyAccount = (): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
+
+  const dispatch = useDispatch();
+  const { provider, address, chainID } = useWeb3Context();
+  const { bonds } = useBonds(chainID ?? 250);
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const pendingClaim = () => {
+    if (
+      isPendingTxn(pendingTransactions, 'redeem_all_bonds') ||
+      isPendingTxn(pendingTransactions, 'redeem_all_bonds_autostake')
+    ) {
+      return true;
+    }
+
+    return false;
+  };
+
+  const onRedeemAll = async () => {
+    console.log('redeeming all bonds');
+    if (provider && chainID) {
+      await dispatch(
+        redeemBond({
+          networkId: chainID,
+          address,
+          bond: bonds[0],
+          provider,
+          autostake: false,
+        })
+      );
+    }
+
+    console.log('redeem all complete');
+  };
+
   return (
     <Box
       sx={{
@@ -208,8 +257,19 @@ export const MyAccount = (): JSX.Element => {
                 </Typography>
               </Grid>
               <Grid item xs={12} sm={6} md={3}>
-                <Button variant="contained" disableElevation>
-                  Claim all rewards
+                <Button
+                  variant="contained"
+                  disableElevation
+                  disabled={pendingClaim()}
+                  onClick={() => {
+                    onRedeemAll();
+                  }}
+                >
+                  {txnButtonTextGeneralPending(
+                    pendingTransactions,
+                    'redeem_all_bonds',
+                    'Claim all'
+                  )}
                 </Button>
               </Grid>
             </Grid>

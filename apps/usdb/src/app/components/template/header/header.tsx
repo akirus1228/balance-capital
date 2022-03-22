@@ -57,7 +57,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkID: 250 }));
+    dispatch(getBalances({networkId: 4002, address: address }));
   }, [connected]);
 
   const toggleTheme = () => {
@@ -108,7 +108,9 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Button href={page.href}>{page.title}</Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button href={page.href}>{page.title}</Button>
+                    </Link>
                   </Typography>
                 </MenuItem>
               ))}
@@ -144,7 +146,7 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Box sx={{display: 'flex'}} key={page.title}>
-                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ? 
+                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ?
                   (
                     <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                       <span className={style['comingSoonTitle']}>
@@ -155,14 +157,15 @@ export const Header = (): JSX.Element => {
                       </span>
                     </Box>
                   ) : (
-                    <Button
-                      autoCapitalize='none'  
-                      disabled={page.params?.comingSoon}
-                      href={page.href}
-                      sx={{...(page.params && page.params.sx)}}
-                    >
-                      {page.title}
-                    </Button>
+                    <Link to={page.href ? page.href : "#"}>
+                      <Button
+                        autoCapitalize='none'  
+                        disabled={page.params?.comingSoon}
+                        sx={{...(page.params && page.params.sx)}}
+                      >
+                        {page.title}
+                      </Button>
+                    </Link>
                   )}
               </Box>
             ))}

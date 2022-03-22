@@ -712,9 +712,7 @@
         },
         "fullyImplemented": true,
         "id": 3844,
-        "linearizedBaseContracts": [
-          3844, 1164, 401, 1772, 14573, 2035, 14984, 13688
-        ],
+        "linearizedBaseContracts": [3844, 1164, 401, 1772, 14573, 2035, 14984, 13688],
         "name": "SyntheticToken",
         "nodeType": "ContractDefinition",
         "nodes": [
@@ -2655,9 +2653,7 @@
         },
         "fullyImplemented": true,
         "id": 3844,
-        "linearizedBaseContracts": [
-          3844, 1164, 401, 1772, 14573, 2035, 14984, 13688
-        ],
+        "linearizedBaseContracts": [3844, 1164, 401, 1772, 14573, 2035, 14984, 13688],
         "name": "SyntheticToken",
         "nodeType": "ContractDefinition",
         "nodes": [

@@ -2,6 +2,7 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
+import { shadows } from '@mui/system';
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -37,14 +38,25 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: '53px',
-          padding: '2.5em',
-          '&.MuiAppBar-root': {
-            padding: '0',
-            marginTop: '2em',
+          borderRadius: "53px",
+          padding: "2.5em",
+          "&.MuiAppBar-root": {
+            padding: "0",
+            marginTop: "2em"
           },
-        },
+          "&.dai": {
+            border: "1px solid #F3AC28",
+            borderRadius: "2em",
+            background: "transparent"
+          },
+          "&.softGradient": {
+            borderRadius: "2em",
+          }
+        }
       },
+      defaultProps: {
+        elevation: 0
+      }
     },
     MuiBackdrop: {
       styleOverrides: {
@@ -73,6 +85,9 @@ const globalTheme: ThemeOptions = {
             borderRadius: '1.5em',
             margin: 'auto 1em',
           },
+          '&.cardActionButton': {
+            width: "100%"
+          }
         },
         outlined: {
           borderRadius: '30px',
@@ -145,6 +160,9 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         root: {
           color: usdbLightColors.color,
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(229,229,235,1) 15%, rgba(229,229,235,0.42) 90%)"
+          }
         },
       },
     },
@@ -206,6 +224,9 @@ const USDBDarkBase: ThemeOptions = {
       styleOverrides: {
         root: {
           color: usdbDarkColors.color,
+          "&.softGradient": {
+            background: "linear-gradient(45deg, rgba(8,9,10,1) 0%, rgba(8,9,10,0.62) 5%, rgba(14,15,16,1) 90%)"
+          }
         },
       },
     },

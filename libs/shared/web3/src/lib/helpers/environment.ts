@@ -106,7 +106,8 @@ export class EnvHelper {
   }
 
   static getFallbackURIs() {
-    return [...EnvHelper.getAlchemyAPIKeyList(), ...EnvHelper.getInfuraIdList()];
+    const ALL_URIs = [...EnvHelper.getAlchemyAPIKeyList(), ...EnvHelper.getInfuraIdList()];
+    return ALL_URIs;
   }
 
   static getGeoapifyAPIKey() {
