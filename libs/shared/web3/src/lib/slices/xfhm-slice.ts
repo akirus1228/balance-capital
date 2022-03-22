@@ -32,6 +32,7 @@ export interface IXfhmDetails {
   xfhmBalance: number;
   lqdrUsdbLpBalance: number;
   allowance: number;
+  xfhmForLqdrUsdbPolAllowance: number,
   lqdrAllowance: number;
   depositAmount: number;
   xfhmPerHour: number;
@@ -51,6 +52,7 @@ export const calcXfhmDetails = createAsyncThunk(
         xfhmBalance: 0,
         lqdrUsdbLpBalance: 0,
         allowance: 0,
+        xfhmForLqdrUsdbPolAllowance: 0,
         lqdrAllowance: 0,
         depositAmount: 0,
         xfhmPerHour: 0,
@@ -62,14 +64,15 @@ export const calcXfhmDetails = createAsyncThunk(
     }
     const provider = await chains[networkId].provider;
     const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOHM, provider);
-    const lqdrUsdbLpContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_LP_ADDRESS"] as string, sOHM, provider);
+    const lqdrUsdbPolContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
     const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOHM, provider);
     const xfhmContract = await xFhmToken.getContract(networkId);
-    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm] = await Promise.all([
+    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm] = await Promise.all([
       fhmContract["balanceOf"](address),
       xfhmContract["balanceOf"](address),
-      lqdrUsdbLpContract["balanceOf"](address),
+      lqdrUsdbPolContract["bondInfo"](address),
       fhmContract["allowance"](address, xfhmAddress),
+      xfhmContract["allowance"](address, networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string),
       lqdrContract["allowance"](address, networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string),
       xfhmContract["users"](address),
       xfhmContract["generationRate"](),
@@ -77,11 +80,12 @@ export const calcXfhmDetails = createAsyncThunk(
       xfhmContract["totalSupply"](),
       xfhmContract["maxCap"](),
       xfhmContract["claimable"](address)
-    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm]) => [
+    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm]) => [
       fhmBalance,
       xfhmBalance,
-      lqdrUsdbLpBalance,
+      lqdrUsdbLpBalance[1],
       allowance,
+      xfhmForLqdrUsdbPolAllowance,
       lqdrAllowance,
       depositAmount[0],
       (xfhmPerHour * 3600 * depositAmount[0] + Math.pow(10, 18) / 2) / Math.pow(10, 18),
@@ -96,6 +100,7 @@ export const calcXfhmDetails = createAsyncThunk(
       xfhmBalance,
       lqdrUsdbLpBalance,
       allowance,
+      xfhmForLqdrUsdbPolAllowance,
       lqdrAllowance,
       depositAmount,
       xfhmPerHour,
@@ -175,6 +180,39 @@ export const lqdrApproval = createAsyncThunk(
 
       const text = "Approve";
       const pendingTxnType = "approve-lqdr";
+      await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
+      await approveTx.wait();
+    } catch (e: any) {
+      dispatch(error(e?.error.message));
+      return;
+    } finally {
+      if (approveTx) {
+        await dispatch(clearPendingTxn(approveTx.hash));
+        await dispatch(calcXfhmDetails({ address, networkId }));
+      }
+    }
+  }
+);
+
+export const xfhmApproval = createAsyncThunk(
+  "xfhm-lqdr/xfhmApproval",
+  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const xfhmContract = new ethers.Contract(addresses[networkId]["XFHM_ADDRESS"] as string, ierc20Abi, signer);
+    let approveTx;
+    try {
+      approveTx = await xfhmContract["approve"](
+        addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"],
+        ethers.constants.MaxUint256.toString()
+      );
+
+      const text = "Approve";
+      const pendingTxnType = "approve-xfhm";
       await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
       await approveTx.wait();
     } catch (e: any) {

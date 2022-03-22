@@ -13,7 +13,7 @@ import {
   isPendingTxn, lqdrApproval,
   NetworkIds, payoutForUsdb,
   txnButtonText,
-  useWeb3Context
+  useWeb3Context, xfhmApproval
 } from "@fantohm/shared-web3";
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -133,11 +133,16 @@ export const LqdrPage = (): JSX.Element => {
     }));
   };
 
-  const onSeekApproval = async () => {
+  const onSeekApproval = async (token: string) => {
     if (!provider || !chainId || !address) {
       return;
     }
-    await dispatch(lqdrApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
+    if (token === 'lqdr') {
+      await dispatch(lqdrApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
+    }
+    if (token === 'xfhm') {
+      await dispatch(xfhmApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
+    }
   };
 
   const calcUsdbAmount = async () => {
@@ -208,7 +213,6 @@ export const LqdrPage = (): JSX.Element => {
               <Typography variant="h5" color="textPrimary"
                           className="font-weight-bolder" textAlign="center">USDB</Typography>
             </Box>
-            <Typography className="w-full" variant="body2" color="textPrimary" textAlign="center">~$80.01</Typography>
           </Box>
         </Grid>
         <Grid item xs={6}>
@@ -221,7 +225,6 @@ export const LqdrPage = (): JSX.Element => {
               <Typography variant="h5" color="textPrimary"
                           className="font-weight-bolder" textAlign="center">LQDR</Typography>
             </Box>
-            <Typography className="w-full" variant="body2" color="textPrimary" textAlign="center">~$79.58</Typography>
           </Box>
         </Grid>
       </Grid>
@@ -232,30 +235,42 @@ export const LqdrPage = (): JSX.Element => {
           <Typography variant="body2" color="textPrimary">USDB-LQDR LP</Typography>
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
-          {details ? <Typography variant="h5" color="textPrimary" className="font-weight-bolder">{
-              formatAmount(details.lqdrUsdbLpBalance, 18, 9)
+          {details ? <Typography noWrap variant="h5" color="textPrimary" className="font-weight-bolder">{
+              formatAmount(details.lqdrUsdbLpBalance, 18, 9, true)
             } LP</Typography> :
-            <Skeleton width="100%" />}
-          <Typography variant="body2" color="textPrimary">~$15,879.58</Typography>
+            <Skeleton width="100px" />}
         </Box>
       </Box>
-      <Box className="w-full" my="20px">
-        {
-          details && details.lqdrAllowance > 0 ? (
-            <Button className="w-full thin" color="primary" variant="contained"
-                    disabled={isPendingTxn(pendingTransactions, "add-liquidity") || Number(bTokenAmount) <= 0}
-                    onClick={() => onAddLiquidity().then()}>
-              {txnButtonText(pendingTransactions, "add-liquidity", "Add Liquidity")}
-            </Button>
-          ) : (
-            <Button className="w-full thin" color="primary" variant="contained"
-                    disabled={isPendingTxn(pendingTransactions, "approve-lqdr")}
-                    onClick={() => onSeekApproval()}>
-              {txnButtonText(pendingTransactions, "approve-lqdr", "Approve LQDR")}
-            </Button>
-          )
-        }
-      </Box>
+      {
+        details && !(details.lqdrAllowance > 0) &&
+        <Box className="w-full" my="20px">
+          <Button className="w-full thin" color="primary" variant="contained"
+                  disabled={isPendingTxn(pendingTransactions, "approve-lqdr")}
+                  onClick={() => onSeekApproval('lqdr')}>
+            {txnButtonText(pendingTransactions, "approve-lqdr", "Approve LQDR")}
+          </Button>
+        </Box>
+      }
+      {
+        details && !(details.xfhmForLqdrUsdbPolAllowance > 0) &&
+        <Box className="w-full" my="20px">
+          <Button className="w-full thin" color="primary" variant="contained"
+                  disabled={isPendingTxn(pendingTransactions, "approve-xfhm")}
+                  onClick={() => onSeekApproval('xfhm')}>
+            {txnButtonText(pendingTransactions, "approve-xfhm", "Approve xFHM")}
+          </Button>
+        </Box>
+      }
+      {
+        details && details.xfhmForLqdrUsdbPolAllowance > 0 && details.lqdrAllowance > 0 &&
+        <Box className="w-full" my="20px">
+          <Button className="w-full thin" color="primary" variant="contained"
+                  disabled={isPendingTxn(pendingTransactions, "add-liquidity") || Number(bTokenAmount) <= 0}
+                  onClick={() => onAddLiquidity().then()}>
+            {txnButtonText(pendingTransactions, "add-liquidity", "Add Liquidity")}
+          </Button>
+        </Box>
+      }
     </Box>
   );
 };
