@@ -11,13 +11,13 @@ import { JsonRpcProvider, Web3Provider } from '@ethersproject/providers';
 import { IFrameEthereumProvider } from '@ledgerhq/iframe-provider';
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Web3ContextData } from './types/types';
-import { NetworkID, NetworkIDs, enabledNetworkIDs } from '../lib/networks';
+import { NetworkId, NetworkIds, enabledNetworkIds } from '../lib/networks';
 import { chains } from './providers';
 import {isIframe} from "@fantohm/shared-helpers";
 
-export const getURI = (NetworkID: NetworkID): string => {
-  console.log(chains[NetworkID].rpcUrls[0]);
-  return chains[NetworkID].rpcUrls[0];
+export const getURI = (networkId: NetworkId): string => {
+  console.log(chains[networkId].rpcUrls[0]);
+  return chains[networkId].rpcUrls[0];
 };
 
 const Web3Context = React.createContext<Web3ContextData>(null);
@@ -36,19 +36,19 @@ export const useWeb3Context = () => {
   }, [web3Context]);
 };
 
-const saveNetworkID = (NetworkID: NetworkID) => {
+const saveNetworkId = (NetworkId: NetworkId) => {
   if (window.localStorage) {
-    window.localStorage.setItem('defaultNetworkID', NetworkID.toString());
+    window.localStorage.setItem('defaultNetworkId', NetworkId.toString());
   }
 };
 
-const getSavedNetworkID = () => {
-  const savedNetworkID =
-    window.localStorage && window.localStorage.getItem('defaultNetworkID');
-  if (savedNetworkID) {
-    const parsedNetworkID = parseInt(savedNetworkID);
-    if (enabledNetworkIDs.includes(parsedNetworkID)) {
-      return parsedNetworkID;
+const getSavedNetworkId = () => {
+  const savedNetworkId =
+    window.localStorage && window.localStorage.getItem('defaultNetworkId');
+  if (savedNetworkId) {
+    const parsedNetworkId = parseInt(savedNetworkId);
+    if (enabledNetworkIds.includes(parsedNetworkId)) {
+      return parsedNetworkId;
     }
   }
   return null;
@@ -59,14 +59,14 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
 }) => {
   const [connected, setConnected] = useState(false);
 
-  const defaultNetworkID = getSavedNetworkID() || NetworkIDs.FantomOpera;
-  const [chainID, setChainID] = useState(defaultNetworkID);
+  const defaultNetworkId = getSavedNetworkId() || NetworkIds.FantomOpera;
+  const [chainId, setChainID] = useState(defaultNetworkId);
   const [address, setAddress] = useState('');
   const [provider, setProvider] = useState<JsonRpcProvider | null>(null);
 
-  const rpcUris = enabledNetworkIDs.reduce(
-    (rpcUris: { [key: string]: string }, NetworkID: NetworkID) => (
-      (rpcUris[NetworkID] = getURI(NetworkID)), rpcUris
+  const rpcUris = enabledNetworkIds.reduce(
+    (rpcUris: { [key: string]: string }, NetworkId: NetworkId) => (
+      (rpcUris[NetworkId] = getURI(NetworkId)), rpcUris
     ),
     {}
   );
@@ -104,15 +104,15 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       });
 
       rawProvider.on('chainChanged', async (chain: string) => {
-        let chainID;
+        let chainId;
         // On mobile chain comes in as a number but on web it comes in as a hex string
         if (typeof chain === 'number') {
-          chainID = chain;
+          chainId = chain;
         } else {
-          chainID = parseInt(chain, 16);
+          chainId = parseInt(chain, 16);
         }
-        setChainID(chainID);
-        if (!_checkNetwork(chainID)) {
+        setChainID(chainId);
+        if (!_checkNetwork(chainId)) {
           disconnect();
         }
         setTimeout(() => window.location.reload(), 1);
@@ -127,14 +127,14 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   );
 
   /**
-   * throws an error if NetworkID is not supported
+   * throws an error if NetworkId is not supported
    */
   const _checkNetwork = (otherChainID: number): boolean => {
-    if (chainID !== otherChainID) {
+    if (chainId !== otherChainID) {
       console.warn('You are switching networks');
-      if (enabledNetworkIDs.includes(otherChainID)) {
+      if (enabledNetworkIds.includes(otherChainID)) {
         setChainID(otherChainID);
-        saveNetworkID(otherChainID);
+        saveNetworkId(otherChainID);
         return true;
       }
       return false;
@@ -143,32 +143,32 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   };
 
   const switchEthereumChain = async (
-    NetworkID: NetworkID,
+    NetworkId: NetworkId,
     forceSwitch = false
   ) => {
-    const chainID = `0x${NetworkID.toString(16)}`;
+    const chainId = `0x${NetworkId.toString(16)}`;
     if (connected || forceSwitch) {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainID }],
+          params: [{ chainId: chainId }],
         });
         return true;
       } catch (e: any) {
         if (e.code === 4902) {
-          if (!(NetworkID in chains)) {
+          if (!(NetworkId in chains)) {
             console.warn(
-              `Details of network with chainID: ${chainID} not known`
+              `Details of network with chainId: ${chainId} not known`
             );
             return false;
           }
-          const chainDetails = chains[NetworkID];
+          const chainDetails = chains[NetworkId];
           try {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainID,
+                  chainId,
                   chainName: chainDetails.networkName,
                   nativeCurrency: {
                     symbol: chainDetails.symbol,
@@ -191,7 +191,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       }
     } else {
       // Wallet not connected, just switch network for static providers
-      saveNetworkID(NetworkID);
+      saveNetworkId(NetworkId);
       window.location.reload();
       return true;
     }
@@ -211,13 +211,13 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
     _initListeners(rawProvider);
     const connectedProvider = new Web3Provider(rawProvider, 'any');
-    const chainID = await connectedProvider
+    const chainId = await connectedProvider
       .getNetwork()
       .then((network) => network.chainId);
     const connectedAddress = await connectedProvider.getSigner().getAddress();
-    const validNetwork = _checkNetwork(chainID);
+    const validNetwork = _checkNetwork(chainId);
     if (!validNetwork) {
-      const switched = await switchEthereumChain(defaultNetworkID, true);
+      const switched = await switchEthereumChain(defaultNetworkId, true);
       if (!switched) {
         web3Modal.clearCachedProvider();
         const errorMessage =
@@ -257,7 +257,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       provider,
       connected,
       address,
-      chainID,
+      chainId,
       web3Modal,
     }),
     [
@@ -267,7 +267,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       provider,
       connected,
       address,
-      chainID,
+      chainId,
       web3Modal,
     ]
   );

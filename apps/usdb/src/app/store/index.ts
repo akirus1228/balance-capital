@@ -1,17 +1,19 @@
-import { configureStore } from '@reduxjs/toolkit';
-import appSliceReducer from './reducers/app-slice';
-import {accountReducer} from '@fantohm/shared-web3';
-import { web3SliceReducer } from '@fantohm/shared-web3';
-import { bondingReducer } from "@fantohm/shared-web3";
-import { globalbondingReducer } from "@fantohm/shared-web3";
-import {investmentsReducer} from "@fantohm/shared-web3";
-import {tokenPriceReducer} from "@fantohm/shared-web3";
-import {appReducer} from "@fantohm/shared-web3";
-import {networkReducer} from "@fantohm/shared-web3";
-import { pendingTransactionsReducer } from "@fantohm/shared-web3";
-import {poolDataReducer} from "@fantohm/shared-web3";
-import {lusdDataReducer} from "@fantohm/shared-web3";
-import { messagesReducer } from "@fantohm/shared-web3";
+import { configureStore } from "@reduxjs/toolkit";
+import {
+  accountReducer,
+  bondingReducer,
+  globalbondingReducer,
+  investmentsReducer,
+  tokenPriceReducer,
+  appReducer,
+  networkReducer,
+  poolDataReducer,
+  lusdDataReducer,
+  web3SliceReducer,
+  xfhmReducer,
+  messagesReducer,
+  pendingTransactionsReducer
+} from "@fantohm/shared-web3";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -30,9 +32,11 @@ const store = configureStore({
     pendingTransactions: pendingTransactionsReducer,
     poolData: poolDataReducer,
     lusdData: lusdDataReducer,
-    messages: messagesReducer
+    messages: messagesReducer,
+    web3: web3SliceReducer,
+    xfhm: xfhmReducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false }),
+  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
 });
 
 export type RootState = ReturnType<typeof store.getState>;

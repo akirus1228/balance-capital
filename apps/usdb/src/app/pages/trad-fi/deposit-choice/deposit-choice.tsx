@@ -14,8 +14,8 @@ interface IDepositChoiceParams {
 }
 
 export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
-  const {connect, hasCachedProvider, chainID} = useWeb3Context();
-  const {bonds, allBonds} = useBonds(chainID || 250);
+  const {connect, hasCachedProvider, chainId} = useWeb3Context();
+  const {bonds, allBonds} = useBonds(chainId || 250);
 
   const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
   console.log(bonds)

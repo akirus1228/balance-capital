@@ -40,7 +40,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   const [currentBond, setCurrentBond] = useState<IBond>({title: ''});
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch();
-  const { provider, address, chainID } = useWeb3Context();
+  const { provider, address, chainId } = useWeb3Context();
 
   const [quantity, setQuantity] = useState(0);
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
@@ -50,7 +50,6 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   });
 
   const hasAllowance = useCallback(() => {
-    console.log(params.bond.allowance)
     return params.bond.allowance > 0;
   }, [params.bond.allowance]);
 
@@ -80,7 +79,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
             value: String(quantity),
             slippage,
             bond: params.bond,
-            networkId: chainID || 250,
+            networkId: chainId || 250,
             provider,
             address: address,
           } as IBondAssetAsyncThunk)
@@ -93,7 +92,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: params.bond,
-          networkId: chainID || 250,
+          networkId: chainId || 250,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -103,7 +102,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   }
 
   const onSeekApproval = async () => {
-    dispatch(changeApproval({address, provider, bond: params.bond, networkId: chainID} as IApproveBondAsyncThunk));
+    dispatch(changeApproval({address, provider, bond: params.bond, networkId: chainId} as IApproveBondAsyncThunk));
   };
 
   const clearInput = () => {
@@ -141,7 +140,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
               Amount <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
             </Grid>
             <Grid item xs={12} md={4}>
-              {!params.bond.isAvailable[chainID ?? 250] ? (
+              {!params.bond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
                   Sold Out
                 </Button>

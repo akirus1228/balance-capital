@@ -26,7 +26,7 @@ import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import {
   isPendingTxn,
-  redeemBond,
+  redeemOneBond,
   RootState,
   txnButtonTextGeneralPending,
   useBonds,
@@ -151,8 +151,8 @@ export const MyAccount = (): JSX.Element => {
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
 
   const dispatch = useDispatch();
-  const { provider, address, chainID } = useWeb3Context();
-  const { bonds } = useBonds(chainID ?? 250);
+  const { provider, address, chainId } = useWeb3Context();
+  const { bonds } = useBonds(chainId ?? 250);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -171,10 +171,10 @@ export const MyAccount = (): JSX.Element => {
 
   const onRedeemAll = async () => {
     console.log('redeeming all bonds');
-    if (provider && chainID) {
+    if (provider && chainId) {
       await dispatch(
-        redeemBond({
-          networkId: chainID,
+        redeemOneBond({
+          networkId: chainId,
           address,
           bond: bonds[0],
           provider,

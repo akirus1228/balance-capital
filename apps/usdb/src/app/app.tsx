@@ -7,11 +7,13 @@ import { ThemeProvider } from '@mui/material/styles';
 import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
+import Messages from './components/messages/messages';
+import { XfhmLqdrPage } from './pages/xfhm-lqdr/xfhm-lqdr';
 import { HomePage } from './pages/home/home-page';
+import Mint from './pages/mint/mint';
 import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
 import { TradFi } from './pages/trad-fi/trad-fi';
 import MyAccount from './pages/my-account/my-account';
-import Mint from './pages/mint/mint';
 import { RootState } from './store';
 import { loadAppDetails } from '@fantohm/shared-web3';
 import { useWeb3Context } from '@fantohm/shared-web3';
@@ -30,41 +32,41 @@ export function App() {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBLight);
   const dispatch = useDispatch();
-  const { address, hasCachedProvider, chainID } = useWeb3Context();
-  const { bonds, allBonds } = useBonds(chainID || 250);
+  const { address, hasCachedProvider, chainId } = useWeb3Context();
+  const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
 
   useEffect(() => {
     setTheme(themeType === 'light' ? USDBLight : USDBDark);
   }, [themeType]);
   useEffect(() => {
-    dispatch(loadAppDetails({ networkId: chainID || 250 }));
+    dispatch(loadAppDetails({ networkId: chainId || 250 }));
     bonds.map((bond) => {
-      dispatch(calcBondDetails({ bond, value: '', networkId: chainID || 250 }));
+      dispatch(calcBondDetails({ bond, value: '', networkId: chainId || 250 }));
     });
-    console.log(bonds);
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map((investment) => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainID]);
+  }, [chainId]);
 
   // Load account details
   useEffect(() => {
     if (address) {
-      dispatch(loadAccountDetails({ networkId: chainID || 250, address }));
+      dispatch(loadAccountDetails({ networkId: chainId || 250, address }));
       bonds.map((bond) => {
         dispatch(
-          calculateUserBondDetails({ address, bond, networkId: chainID || 250 })
+          calculateUserBondDetails({ address, bond, networkId: chainId || 250 })
         );
       });
     }
-  }, [chainID, address]);
+  }, [chainId, address]);
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box sx={{ height: '100vh' }}>
+        <Messages />
         <Header />
         <Routes>
           <Route path="/" element={<HomePage title="Home" />} />
@@ -75,8 +77,9 @@ export function App() {
               element={<TradFiDeposit bond={allBonds[0]} />}
             />
           </Route>
-          <Route path="/my-account" element={<MyAccount />} />
           <Route path="/mint" element={<Mint />} />
+          <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route
             path="*"
             element={
