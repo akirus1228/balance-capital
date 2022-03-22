@@ -15,7 +15,6 @@ import { NetworkID, NetworkIDs, enabledNetworkIDs } from './networks';
 import { chains } from './providers';
 
 export const getURI = (networkID: NetworkID): string => {
-  console.log(chains[networkID].rpcUrls[0]);
   return chains[networkID].rpcUrls[0];
 };
 

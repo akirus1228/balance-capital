@@ -43,10 +43,14 @@ export const truncateDecimals = (number: any, digits = 2) => {
   return truncatedNum / multiplier;
 };
 
-export const formatAmount = (amount: any, decimals: any, length = 2) => {
+export const formatAmount = (amount: any, decimals: any, length = 2, truncate = false) => {
   if (!amount || !decimals) {
     return 0;
   }
-  const result = ethers.utils.formatUnits(scientificToDecimal(amount).toString(), decimals);
-  return truncateDecimals(result, length);
+  const result = ethers.utils.formatUnits(scientificToDecimal(parseInt(amount, 10)).toString(), decimals);
+  if (truncate) {
+    return truncateDecimals(result, length);
+  } else {
+    return result;
+  }
 };

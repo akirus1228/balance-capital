@@ -1,7 +1,7 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
 import { NetworkID } from "../networks";
 import {Bond} from "../types/bond";
-import { Xfhm } from '../helpers/xfhm';
+import { AssetToken } from "../helpers/asset-tokens";
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -58,6 +58,15 @@ export interface IXfhmChangeApprovalAsyncThunk extends IBaseAddressAsyncThunk, I
 export interface IXfhmActionValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
   readonly value: string;
   readonly action: string;
+}
+
+export interface IXfhmValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly value: string;
+}
+
+export interface IXfhmAddLiquidityAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly value: string;
+  readonly token: AssetToken;
 }
 
 export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {

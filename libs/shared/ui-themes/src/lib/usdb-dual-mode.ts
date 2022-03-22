@@ -61,7 +61,7 @@ const globalTheme: ThemeOptions = {
           borderRadius: "30px",
           padding: "27px",
           fontSize: "20px",
-          textTransform: "capitalize",
+          textTransform: "unset",
           "&.paperButton": {
             width: "100%",
             padding: "1em",
@@ -100,6 +100,13 @@ const globalTheme: ThemeOptions = {
       },
       defaultProps: {
         autoCapitalize: "none",
+      }
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          textTransform: "unset",
+        }
       }
     },
     MuiCssBaseline: {

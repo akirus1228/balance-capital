@@ -8,7 +8,7 @@ import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { StakingChoicePage } from "./pages/staking-choice/staking-choice";
 import { Header } from "./components/template";
 import Messages from "./components/messages/messages";
-import { XfhmPage } from "./pages/xfhm/xfhm";
+import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
 import { HomePage } from "./pages/home/home-page";
 import { TradFiDeposit } from "./pages/trad-fi/deposit/deposit";
 import { TradFi } from "./pages/trad-fi/trad-fi";
@@ -37,7 +37,7 @@ export function App() {
             <Route path='/trad-fi/deposit/:bondType' element={ <TradFiDeposit /> } />
           </Route>
           <Route path='/my-account' element={ <MyAccount /> } />
-          <Route path='/xfhm' element={ <XfhmPage /> } />
+          <Route path='/xfhm' element={ <XfhmLqdrPage /> } />
           <Route
             path='*'
             element={

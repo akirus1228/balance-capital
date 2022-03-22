@@ -43,7 +43,16 @@ const pages: Pages[] = [
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address } = useWeb3Context();
   const dispatch = useDispatch();
+  const [isConnected, setConnected] = useState(connected);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+
+  let buttonText = "Connect Wallet";
+  let clickFunc = connect;
+
+  if (isConnected) {
+    buttonText = "Disconnect";
+    clickFunc = disconnect;
+  }
 
   const themeType = useSelector((state: RootState) => state.app.theme);
 
@@ -144,7 +153,7 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Box sx={{display: 'flex'}} key={page.title}>
-                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ? 
+                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ?
                   (
                     <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                       <span className={style['comingSoonTitle']}>
@@ -156,7 +165,7 @@ export const Header = (): JSX.Element => {
                     </Box>
                   ) : (
                     <Button
-                      autoCapitalize='none'  
+                      autoCapitalize='none'
                       disabled={page.params?.comingSoon}
                       href={page.href}
                       sx={{...(page.params && page.params.sx)}}
@@ -168,8 +177,8 @@ export const Header = (): JSX.Element => {
             ))}
           </Box>
           <Tooltip title="Connect Wallet">
-            <Button onClick={connect} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
-              {connected ? 'Disconnect' : 'Connect Wallet'}
+            <Button onClick={clickFunc} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className='menuButton'>
+              {buttonText}
             </Button>
           </Tooltip>
           <Tooltip title="Toggle Light/Dark Mode">

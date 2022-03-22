@@ -5,4 +5,4 @@ export { getBalances } from './lib/slices/account-slice';
 export * from './lib/slices/messages-slice';
 export * from './lib/slices/pending-txns-slice';
 export * from './lib/slices/xfhm-slice';
-export { xFhmToken } from './lib/helpers/xfhm';
+export * from './lib/helpers/asset-tokens';
