@@ -22,7 +22,6 @@ const appSlice = createSlice({
       }
     },
   });
-  
 
 export const {selectBondType, setTheme} = appSlice.actions;
 

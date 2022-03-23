@@ -81,7 +81,14 @@ export const Header = (): JSX.Element => {
   }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = () => {
-    dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
+    const type = themeType === 'light' ? 'dark' : 'light';
+    localStorage.setItem("use-theme", type);
+    dispatch(setTheme(type));
+  }
+
+  const useTheme = localStorage.getItem("use-theme");
+  if(useTheme) {
+    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
   }
 
   return (
