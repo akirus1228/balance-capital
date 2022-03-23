@@ -43,7 +43,7 @@ export const Linear = (props: ILinearProps): JSX.Element => {
     return () => {
       clearInterval(timer);
     };
-  }, [dispatch, message]);
+  }, [dispatch, props?.message]);
 
   return (
     <div className={classes.root}>
