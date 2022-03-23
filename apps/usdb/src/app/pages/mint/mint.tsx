@@ -1,8 +1,7 @@
 import React from 'react';
 import { Typography, Box, Grid, Button, Paper } from '@mui/material';
 import { ReactComponent as DAI } from '../../../assets/tokens/DAI.svg';
-import { ReactComponent as Settings } from '../../../assets/icons/settings.svg';
-
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import style from './mint.module.scss';
 
 const token = [
@@ -52,7 +51,7 @@ export default function Mint() {
         </Grid>
         <Grid item md={6}>
           <Paper className={style['subCard']}>
-            <Settings className={style['settingIcon']} />
+            <SettingsOutlinedIcon className={style['settingIcon']} />
             <div className={style['subTitle']}>{selectedToken.title}</div>
             <Grid container spacing={1}>
               <Grid item md={4}>

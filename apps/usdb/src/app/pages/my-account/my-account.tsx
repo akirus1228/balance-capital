@@ -10,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { tableCellClasses } from '@mui/material/TableCell';
 import { Box } from '@mui/system';
@@ -352,7 +352,7 @@ export const MyAccount = (): JSX.Element => {
                   </Typography>
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
-                  <RouterLink to="/staking#bond">
+                  <Link to="/staking#bond">
                     <Button
                       variant="contained"
                       disableElevation
@@ -360,7 +360,7 @@ export const MyAccount = (): JSX.Element => {
                     >
                       Manage
                     </Button>
-                  </RouterLink>
+                  </Link>
                 </Grid>
               </Grid>
             ))}
