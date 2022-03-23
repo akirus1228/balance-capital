@@ -68,9 +68,9 @@ export const Header = (): JSX.Element => {
     dispatch(setWalletConnected(connected));
     dispatch(getBalances({ address: address, networkId: 250 }));
     if (connected) {
-      setConnectButtonText("Connect Wallet");
-    } else {
       setConnectButtonText("Disconnect");
+    } else {
+      setConnectButtonText("Connect Wallet");
     }
   }, [connected, address]);
 

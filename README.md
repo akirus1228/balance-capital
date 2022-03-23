@@ -94,4 +94,4 @@ Module namespace imports are lowerCamelCase while files are kabab-case, which me
 `src/app/pages/my-page-name/my-page-name.tsx`
 `src/app/components/new-component-plus/new-component-plus.tsx`
 
-Code should pass all eslint tests and any prettification rules unless exception is necessary and commented.
+Code should pass all eslint tests and any prettification rules unless exception is necessary and commented. .

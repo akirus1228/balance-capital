@@ -54,6 +54,11 @@ export interface IBaseBondAsyncThunk extends IBaseAsyncThunk {
 
 export interface IXfhmChangeApprovalAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
   readonly address: string;
+  readonly token: string;
+}
+
+export interface IXfhmClaimAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly address: string;
 }
 
 export interface IXfhmActionValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
