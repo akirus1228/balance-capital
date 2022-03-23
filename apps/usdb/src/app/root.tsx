@@ -3,8 +3,8 @@ import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
 
 import { Web3ContextProvider } from '@fantohm/shared-web3';
-import App from './app';
-import store from "../../../../libs/shared/web3/src/lib/store";
+import { App } from './app';
+import { store } from '@fantohm/shared-web3';
 
 const Root = (): JSX.Element => {
 

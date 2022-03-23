@@ -11,7 +11,7 @@ import { abi as TradFiBondDepository } from "../abi/bonds/TradFiBondDepository.j
 export const tradfi3month = new StableBond({
   name: "tradfi3month",
   type: BondType.TRADFI,
-  displayName: "tradfi3month",
+  displayName: "TradFi 3 Month",
   bondToken: "tradfi3month",
   decimals: 18,
   roi: "21.5",
@@ -35,7 +35,7 @@ export const tradfi3month = new StableBond({
 export const singleSided = new StableBond({
   name: "singleSided",
   type: BondType.SINGLE_SIDED,
-  displayName: "singleSided",
+  displayName: "Staking",
   bondToken: "singleSided",
   decimals: 18,
   roi: "32.5",

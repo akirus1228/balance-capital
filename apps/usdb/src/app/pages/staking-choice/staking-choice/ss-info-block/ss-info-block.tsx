@@ -1,15 +1,13 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
+import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon } from '@fantohm/shared/images';
 import style from './ss-info-block.module.scss';
-import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon, TradFiIcon } from '@fantohm/shared/images';
 
-/* eslint-disable-next-line */
-export interface SsInfoBlockProps {}
 
-export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
+export const SsInfoBlock = (): JSX.Element => {
   return (
     <Box sx={{mx: {xs: "1em", md: "3em"}}} className={style['infoBlockContainer']}>
       <Grid container spacing={12}>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol" sx={{height: "100%", justifyContent: 'flex-start'}}>
@@ -25,18 +23,18 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{height: "100%"}}>
               <Box className={style['centerBox']} >
                 <Typography variant="h1">Risk averse Investment</Typography>
-                <Typography variant="h2">Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo.</Typography>
+                <Typography variant="h2">Investors only need to provide DAI, while our protocol provides the other token in the pair, USDB.</Typography>
                 <img src={LightBankIcon as string} alt="Illustration depicting roman style building to infer a bank. USDB logo on the roof." style={{marginTop: 'auto', height: '305px'}}/>
               </Box>
             </Paper>
           </Box>
         </Grid>
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4}>
           <Box className="flexCenterCol" sx={{height: "100%"}}>
             <Paper className="softGradient" sx={{marginBottom: "3em", minHeight: "309px"}}>
               <Box className="flexCenterCol">
@@ -46,7 +44,7 @@ export const SsInfoBlock = (props: SsInfoBlockProps): JSX.Element => {
             </Paper>
             <Paper className="softGradient" sx={{height: "100%"}}>
               <Box className="flexCenterCol">
-                <Typography variant="h1">Earn Up to 20% Risk Free</Typography>
+                <Typography variant="h1">Earn 20% APR</Typography>
                 <img src={LightShieldIcon as string} alt="Illustration of shield with a lock on front and graphs in front." />
               </Box>
             </Paper>

@@ -25,7 +25,7 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
     } else {
       return themeType === 'light' ? USDBLight : USDBDark;
     }
-  }, [themeType, props.invertTheme])
+  }, [themeType, props.invertTheme]);
 
   return (
     <ThemeProvider theme={theme}>

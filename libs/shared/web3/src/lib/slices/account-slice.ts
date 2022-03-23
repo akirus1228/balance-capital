@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import {BigNumber, ethers} from "ethers";
 import {addresses} from "../constants";
 import {abi as ierc20Abi} from "../abi/IERC20.json";
 import {abi as usdbAbi} from "../abi/USDBContract.json";
@@ -85,7 +85,7 @@ interface IUserAccountDetails {
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
-  async ({networkId, address}: IBaseAddressAsyncThunk, {dispatch}) => {
+  async ({ networkId, address }: IBaseAddressAsyncThunk, { dispatch }) => {
     const provider = await chains[networkId].provider;
 
     async function loadBridgeAccountDetails() {
@@ -200,10 +200,19 @@ export const loadAccountDetails = createAsyncThunk(
 );
 
 export interface IUserBond {
+  amount: string;
+  rewards: string;
+  rewardToken: PaymentToken;
   interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
   lpTokenAmount: string | number;
+}
+
+export interface IUserBondDetails {
+  allowance: number;
+  userBonds: IUserBond[];
+  percentVestedFor: number;
 }
 
 export interface IUserBondDetails {
@@ -241,9 +250,13 @@ export const calculateUserBondDetails = createAsyncThunk(
     // Contracts
     const bondContract = await bond.getContractForBond(networkId);
     const reserveContract = await bond.getContractForReserve(networkId);
-    let interestDue, bondMaturationBlock;
 
     const paymentTokenDecimals = bond.paymentToken === PaymentToken.USDB ? 18 : 9;
+
+    let bondLength = 0;
+    if(bond.type === BondType.TRADFI) {
+      bondLength = Number(await bondContract["bondlength"](address))
+    }
 
     const [allowance, balance] = await Promise.all([
       reserveContract["allowance"](address, bond.getAddressForBond(networkId)),
@@ -254,25 +267,36 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
 
-    let bondLength = 0;
-    if (bond.type === BondType.TRADFI) {
-      bondLength = await bondContract["bondlength"](address)
-    } else {
-
-      const [bondDetails, pendingPayout] = await Promise.all([
-        bondContract["bondInfo"](address),
-        bondContract["pendingPayoutFor"](address),
-      ]).then(([bondDetails, pendingPayout]) => [
+    if (Number(bondLength) === 0) {
+      // Contract Interactions
+      const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
+        bondContract['bondInfo'](address),
+        bondContract['pendingPayoutFor'](address),
+        reserveContract['allowance'](address, bond.getAddressForBond(networkId)),
+        reserveContract['balanceOf'](address),
+      ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
         bondDetails,
         ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+        Number(allowance),
+        // balance should NOT be converted to a number. it loses decimal precision
+        ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
       ]);
 
-      // eslint-disable-next-line prefer-const
-      interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-      // eslint-disable-next-line prefer-const
-      bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
       const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
-
+      const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+      const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
+        {
+          amount: '9999', // TODO
+          rewards: '1000', // TODO
+          rewardToken: PaymentToken.USDB, // TODO
+          interestDue,
+          bondMaturationBlock,
+          pendingPayout,
+          percentVestedFor: 50, // TODO
+          lpTokenAmount: lpTokenAmount
+        }
+      ] : [];
       return {
         bond: bond.name,
         displayName: bond.displayName,
@@ -280,42 +304,38 @@ export const calculateUserBondDetails = createAsyncThunk(
         isLP: bond.isLP,
         allowance,
         balance,
-        userBonds: [
-          {
-            interestDue: interestDue,
-            bondMaturationBlock: bondMaturationBlock,
-            pendingPayout: pendingPayout,
-            lpTokenAmount: lpTokenAmount
-          },
-        ],
+        userBonds,
         paymentToken: bond.paymentToken,
         bondAction: bond.bondAction,
       };
-    }
+  }
 
-    //Contract Interactions
-    const userBonds = [];
-    for (let i = 0; i < bondLength; i++) {
-      const [bondDetails, pendingPayout] = await Promise.all([
-        bondContract["bondInfo"](address, i),
-        bondContract["pendingPayoutFor"](address, i),
-      ]).then(([bondDetails, pendingPayout]) => [
-        bondDetails,
-        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-      ]);
-      // eslint-disable-next-line prefer-const
-      interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-      // eslint-disable-next-line prefer-const
-      bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-      userBonds.push(
-        {
+    const userBonds: IUserBond[] = await Promise.all(
+      [...Array(bondLength).keys()].map(async bondIndex => {
+        const [bondDetails, pendingPayout, percentVestedFor] = await Promise.all([
+          bondContract["bondInfo"](address, bondIndex),
+          bondContract["pendingPayoutFor"](address, bondIndex),
+          bondContract["percentVestedFor"](address, bondIndex),
+        ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
+          bondDetails,
+          ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+          Number(percentVestedFor.div(BigNumber.from('100'))),
+        ]);
+        const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+        const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+        return {
+          amount: ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals),
+          rewards: '100', // TODO
+          rewardToken: PaymentToken.USDB, // TODO
           interestDue,
           bondMaturationBlock,
           pendingPayout,
+          percentVestedFor,
           lpTokenAmount: "0",
         }
-      )
-    }
+      })
+    );
+
     return {
       bond: bond.name,
       displayName: bond.displayName,
@@ -344,7 +364,7 @@ interface IAccountSlice {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: {ohm: "", sohm: "", dai: "", oldsohm: ""},
+  balances: { ohm: "", sohm: "", dai: "", oldsohm: "" },
 };
 
 const accountSlice = createSlice({
@@ -364,7 +384,7 @@ const accountSlice = createSlice({
         setAll(state, action.payload);
         state.loading = false;
       })
-      .addCase(loadAccountDetails.rejected, (state, {error}) => {
+      .addCase(loadAccountDetails.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
       })
@@ -375,7 +395,7 @@ const accountSlice = createSlice({
         setAll(state, action.payload);
         state.loading = false;
       })
-      .addCase(getBalances.rejected, (state, {error}) => {
+      .addCase(getBalances.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
       })
@@ -385,19 +405,19 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
         const bond = action.payload.bond;
-        state.bonds[bond] = action.payload;
+        if(bond) state.bonds[bond] = action.payload;
         state.loading = false;
       })
-      .addCase(calculateUserBondDetails.rejected, (state, {error}) => {
+      .addCase(calculateUserBondDetails.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
       });
   },
 });
 
-export const accountReducer = accountSlice.reducer;
+export const accountReducer =  accountSlice.reducer;
 
-export const {fetchAccountSuccess} = accountSlice.actions;
+export const { fetchAccountSuccess } = accountSlice.actions;
 
 const baseInfo = (state: RootState) => state.account;
 

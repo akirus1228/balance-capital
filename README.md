@@ -76,14 +76,22 @@ When using Nx, you can create multiple applications and libraries in the same wo
 Visit the [Nx Documentation](https://nx.dev) to learn more.
 
 ## Code and File standards
-Variables should use Camel Case
-- Abbreviations and Acronyms should be capitalized
-`const myVariableName = ...`
-`let USDBAsAService = ...`
-`export const userID = {...}`
 
-Files and folders should use kabab case.
+When in doubt: https://google.github.io/styleguide/tsguide.html
+
+### Identifiers
+
+| Style |	Category |
+|-------|----------|
+| UpperCamelCase |	class / interface / type / enum / decorator / type parameters |
+| lowerCamelCase |	variable / parameter / function / method / property / module alias |
+| CONSTANT_CASE |	global constant values, including enum values |
+| #ident |	private identifiers are never used. |
+
+### Imports
+
+Module namespace imports are lowerCamelCase while files are kabab-case, which means that imports correctly will not match in casing style, such as:
 `src/app/pages/my-page-name/my-page-name.tsx`
 `src/app/components/new-component-plus/new-component-plus.tsx`
 
-Code should pass all eslint tests and any prettification rules unless exception is necessary and commented.
+Code should pass all eslint tests and any prettification rules unless exception is necessary and commented. .
