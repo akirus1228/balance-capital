@@ -80,9 +80,9 @@ export const App = (): JSX.Element => {
               element={<TradFiDeposit />}
             />
           </Route>
+          <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
           <Route path="/my-account" element={<MyAccount />} />
-          <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route
             path="*"
             element={

@@ -1,4 +1,4 @@
-import css from './deposit-choice.module.scss';
+import style from './deposit-choice.module.scss';
 import {
   Box,
   Grid,
@@ -26,24 +26,11 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
 
   console.log(bonds);
   return (
-    <Box sx={{marginTop: '3em'}} id={params.id}>
-      <Zoom in={true}>
-        <Grid container item xs={12} spacing={4} className={css['gridParent']}>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-          <Grid item xs={12} md={4}>
+   <Box id={params.id}>
+        <Box className={style["__bond-cards"]}>
             {bondsUsdb?.map((bond, index) => 
               (<DepositCard key={index} bondType="3month" term={3} roi={5} apy={21.55} bond={bond} days={1}/>))}
-          </Grid>
-          <Grid item xs={12} md={4}>
-            
-          </Grid>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-        </Grid>
-      </Zoom>
+        </Box>
     </Box>
   );
 };

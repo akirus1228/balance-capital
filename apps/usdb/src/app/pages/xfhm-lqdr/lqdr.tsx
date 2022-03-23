@@ -9,11 +9,11 @@ import {
   allAssetTokens,
   AssetToken,
   calcAssetAmount, changeApprovalForXfhm,
-  error,
+  error, getAssetTokenPriceInUsd,
   isPendingTxn,
   NetworkIds, payoutForUsdb,
   txnButtonText,
-  useWeb3Context,
+  useWeb3Context
 } from "@fantohm/shared-web3";
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";

@@ -86,6 +86,7 @@ interface IAppData {
 	readonly epochNumber: number;
 	readonly loading: boolean;
 	readonly theme: string;
+	readonly bondType: string | null;
 }
 
 // load cached application state
@@ -108,21 +109,10 @@ const appSlice = createSlice({
 		},
 		setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
 			state.theme = action.payload;
-		}
-	},
-	extraReducers: builder => {
-		builder
-			.addCase(loadAppDetails.pending, state => {
-				state.loading = true;
-			})
-			.addCase(loadAppDetails.fulfilled, (state, action) => {
-				setAll(state, action.payload);
-				state.loading = false;
-			})
-			.addCase(loadAppDetails.rejected, (state, {error}) => {
-				state.loading = false;
-				console.error(error.name, error.message, error.stack);
-			});
+		},
+		selectBondType: (state, action) => {
+			state.bondType = action.payload;
+		},
 	},
 });
 
@@ -132,6 +122,7 @@ const baseInfo = (state: RootState) => state.app;
 
 export const appReducer = appSlice.reducer;
 
-export const {fetchAppSuccess, setTheme} = appSlice.actions;
+export const {selectBondType, setTheme} = appSlice.actions;
 
 export const getAppState = createSelector(baseInfo, app => app);
+
