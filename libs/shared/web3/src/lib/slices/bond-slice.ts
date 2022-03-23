@@ -411,7 +411,7 @@ export const claimSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await masterchefContract["harvest"](address);
+      redeemTx = await masterchefContract["harvest"](0, address);
       const pendingTxnType = "redeem_bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(

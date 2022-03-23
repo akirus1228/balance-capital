@@ -98,10 +98,12 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   async function useBond() {
     const slippage = 0;
 
-    if (Number(quantity) === 0) {
+    if (Number(quantity) === 0 && cardState !== "claim") {
       dispatch(error("Please enter a value!"));
-    } else if (isNaN(Number(quantity))) {
+    } else if (isNaN(Number(quantity)) && cardState !== "claim") {
       dispatch(error("Please enter a valid value!"));
+    } else if (Number(quantity) > Number(tokenBalance)) {
+      dispatch(error("Input must be less than or equal to token balance!"));
     } else if (cardState === "redeem") {
       dispatch(
         redeemSingleSidedBond({
@@ -199,12 +201,14 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
           </Box>
         </Grid>
-        <Grid item xs={12} md={6}>
+        {cardState !== "claim" ? (
+
+          <Grid item xs={12} md={6}>
           <Box className={`${style['currencySelector']}`} flexGrow={1}>
             <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)}/>
             <span className={style['amount']} onClick={setMax}>Max</span>
           </Box>
-        </Grid>
+        </Grid>) : <></>}
       </Grid>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
         <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
