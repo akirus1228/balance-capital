@@ -50,7 +50,7 @@ export const App = (): JSX.Element => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainId, allBonds, bonds, dispatch, investments]);
+  }, [chainId, dispatch]);
 
   // Load account details
   useEffect(() => {
@@ -62,7 +62,7 @@ export const App = (): JSX.Element => {
         );
       });
     }
-  }, [chainId, address, bonds, dispatch]);
+  }, [chainId, address, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
