@@ -20,7 +20,8 @@ import {
 import {segmentUA} from "../helpers/user-analytic-helpers";
 
 import { getBondCalculator } from "../helpers/bond-calculator";
-import { RootState } from "../store";
+import { networks } from "../networks";
+import { waitUntilBlock } from "../helpers/network-helper";
 import {calculateUserBondDetails, getBalances} from "./account-slice";
 import {BondType, PaymentToken} from "../lib/bond";
 import {addresses} from "../constants";
@@ -582,7 +583,3 @@ const bondingSlice = createSlice({
 export const bondingReducer = bondingSlice.reducer;
 
 export const { fetchBondSuccess } = bondingSlice.actions;
-
-const baseInfo = (state: RootState) => state.bonding;
-
-export const getBondingState = createSelector(baseInfo, bonding => bonding);

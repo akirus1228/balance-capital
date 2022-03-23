@@ -7,7 +7,6 @@ import { ThemeProvider } from '@mui/material/styles';
 import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
 import Mint from './pages/mint/mint';
 import {
-  loadAppDetails,
   useWeb3Context,
   calcBondDetails,
   useBonds,
@@ -27,11 +26,13 @@ import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
 import { TradFi } from './pages/trad-fi/trad-fi';
 import { MyAccount } from './pages/my-account/my-account';
 import { RootState } from './store';
+import { loadAppDetails } from './store/reducers/app-slice';
 
 export const App = (): JSX.Element => {
+  const dispatch = useDispatch();
+
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBLight);
-  const dispatch = useDispatch();
   const { address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
@@ -76,7 +77,7 @@ export const App = (): JSX.Element => {
           <Route path="/trad-fi" element={<TradFi />}>
             <Route
               path="/trad-fi/deposit/:bondType"
-              element={<TradFiDeposit bond={allBonds[0]} />}
+              element={<TradFiDeposit />}
             />
           </Route>
           <Route path="/xfhm" element={<XfhmLqdrPage />} />

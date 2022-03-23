@@ -76,25 +76,18 @@ export const Header = (): JSX.Element => {
   }, [connected, address, dispatch]);
 
   useEffect(() => {
-    if (hasCachedProvider && hasCachedProvider()) {
+    if (hasCachedProvider && hasCachedProvider() && !connected) {
       connect();
     }
   }, [connected, hasCachedProvider, connect]);
 
+  const toggleTheme = useCallback(() => {
+    dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
+  }, [dispatch, themeType]);
+    
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
   };
-
-  const toggleTheme = () => {
-    const type = themeType === 'light' ? 'dark' : 'light';
-    localStorage.setItem("use-theme", type);
-    dispatch(setTheme(type));
-  }
-
-  const useTheme = localStorage.getItem("use-theme");
-  if(useTheme) {
-    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
-  }
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>

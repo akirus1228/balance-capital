@@ -12,7 +12,6 @@ import {abi as OlympusStaking} from "../abi/OlympusStakingv2.json";
 import {setAll, trim} from "../helpers";
 
 import {createAsyncThunk, createSelector, createSlice} from "@reduxjs/toolkit";
-import {RootState} from "../store";
 import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfaces";
 import {chains} from "../providers";
 import {BondAction, BondType, PaymentToken} from "../lib/bond";
@@ -439,7 +438,3 @@ const accountSlice = createSlice({
 export const accountReducer =  accountSlice.reducer;
 
 export const { fetchAccountSuccess } = accountSlice.actions;
-
-const baseInfo = (state: RootState) => state.account;
-
-export const getAccountState = createSelector(baseInfo, account => account);

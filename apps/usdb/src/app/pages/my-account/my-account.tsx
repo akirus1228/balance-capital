@@ -21,20 +21,19 @@ import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import {
   BondType,
-  cancelBond,
   IAllBondData,
   isPendingTxn,
   prettifySeconds,
   redeemAllBonds,
-  RootState,
   secondsUntilBlock,
   txnButtonTextGeneralPending,
   useBonds,
   useWeb3Context,
+  chains,
+  cancelBond
 } from '@fantohm/shared-web3';
+import { RootState } from '../../store';
 import { useEffect, useMemo, useState } from 'react';
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
-import { chains } from 'libs/shared/web3/src/lib/providers';
 
 export interface Investment {
   id: string;

@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 import { ICalcTokenPriceAsyncThunk } from "./interfaces";
 import {IHistoricPrices} from "../lib/investment";
 
@@ -58,9 +57,3 @@ const tokenPriceSlice = createSlice({
 });
 
 export const tokenPriceReducer = tokenPriceSlice.reducer;
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const baseInfo = (state: RootState) => state.tokenPrices;
-
-export const getTokenPricesState = createSelector(baseInfo, tokenPrices => tokenPrices);

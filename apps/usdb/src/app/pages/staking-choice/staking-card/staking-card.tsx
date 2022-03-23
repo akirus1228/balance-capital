@@ -14,14 +14,25 @@ import {useDispatch, useSelector} from "react-redux";
 import {
   Bond,
   bondAsset,
-  BondType, changeApproval, claimSingleSidedBond,
-  error, getBalances, IAllBondData,
-  IBondAssetAsyncThunk, IRedeemBondAsyncThunk, isPendingTxn, redeemSingleSidedBond, redeemSingleSidedILProtection,
-  RootState, setWalletConnected,
-  trim, txnButtonText,
+  BondType, 
+  changeApproval, 
+  claimSingleSidedBond,
+  error, 
+  getBalances, 
+  IAllBondData,
+  IBondAssetAsyncThunk, 
+  IRedeemBondAsyncThunk, 
+  isPendingTxn, 
+  redeemSingleSidedBond, 
+  redeemSingleSidedILProtection,
+  setWalletConnected,
+  trim, 
+  txnButtonText,
   useBonds,
   useWeb3Context
 } from "@fantohm/shared-web3";
+
+import { RootState } from '../../../store';
 import {allBonds} from "@fantohm/shared-web3";
 import {ethers} from "ethers";
 

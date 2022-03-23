@@ -2,7 +2,6 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import { BigNumber, ethers } from "ethers";
 import { NetworkId, networks } from "../networks";
 import { chains } from "../providers";
-import { RootState } from "../store";
 import { IBaseAsyncThunk } from "./interfaces";
 import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
 import { abi as sOHM } from "../abi/sOHM.json";
@@ -184,9 +183,3 @@ const networksSlice = createSlice({
 });
 
 export const networkReducer = networksSlice.reducer;
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const baseInfo = (state: RootState) => state.networks;
-
-export const getNetworksState = createSelector(baseInfo, networks => networks);
