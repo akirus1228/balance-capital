@@ -34,7 +34,7 @@ export const HomePage = ({ title }: { title: string }): JSX.Element => {
                 <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} alt="BUSD Logo" className={style['heroLogo']} />
               </Box>
               <h1 className={style['heroTitle']}>Where traditional finance meets DeFi</h1>
-              <h3 className={style['heroSubtitle']}>USDB others a plethora of financial tools and services for individuals and insitutions</h3>
+              <h3 className={style['heroSubtitle']}>USDB provides a wide range of financial tools and services to individuals and institutions</h3>
               <Link to="/staking" className={style['heroLink']}>
                 Learn more
                 <Icon component={ArrowUpwardIcon} className={style['linkArrow']}/>
