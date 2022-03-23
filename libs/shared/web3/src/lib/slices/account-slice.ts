@@ -16,6 +16,7 @@ import {RootState} from "../store";
 import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfaces";
 import {chains} from "../providers";
 import {BondAction, BondType, PaymentToken} from "../lib/bond";
+import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -209,6 +210,7 @@ export interface IUserBond {
   percentVestedFor: number;
   lpTokenAmount: string;
   iLBalance: string;
+  pendingFHM: string;
 }
 
 export interface IUserBondDetails {
@@ -239,6 +241,7 @@ export const calculateUserBondDetails = createAsyncThunk(
             percentVestedFor: 0,
             lpTokenAmount: "0",
             iLBalance: "0",
+            pendingFHM: "0"
           },
         ],
         paymentToken: bond.paymentToken,
@@ -284,9 +287,12 @@ export const calculateUserBondDetails = createAsyncThunk(
       const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
       const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
       const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      let pendingFHM = "0";
       let iLBalance = "0";
       if(bond.type === BondType.SINGLE_SIDED){
-        iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
+        const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
+        pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
+        iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
       }
       const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
         {
@@ -299,6 +305,7 @@ export const calculateUserBondDetails = createAsyncThunk(
           percentVestedFor: 50, // TODO
           lpTokenAmount: lpTokenAmount,
           iLBalance: iLBalance,
+          pendingFHM
         }
       ] : [];
       return {
@@ -326,7 +333,10 @@ export const calculateUserBondDetails = createAsyncThunk(
           Number(percentVestedFor.div(BigNumber.from('100'))),
         ]);
         let iLBalance = "0";
+        let pendingFHM = "0";
         if(bond.type === BondType.SINGLE_SIDED){
+          const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
+          pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFHM"](0, address)))), 2);
           iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
         }
         const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
@@ -341,7 +351,8 @@ export const calculateUserBondDetails = createAsyncThunk(
           pendingPayout,
           percentVestedFor,
           lpTokenAmount: lpTokenAmount,
-          iLBalance: iLBalance
+          iLBalance: iLBalance,
+          pendingFHM: pendingFHM
         }
       })
     );

@@ -37,6 +37,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [cardState, setCardState] = useState("deposit");
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
+  const [claimableBalance, setClaimableBalance] = useState("0");
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
@@ -61,8 +62,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
     } else if(cardState === "ilredeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
+    } else if(cardState === "claim") {
+      setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
     }
   };
+  useEffect(() => {
+    setClaimableBalance(singleSidedBond?.userBonds[0].pendingFHM)
+  }, [singleSidedBond?.userBonds[0].pendingFHM])
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -73,7 +79,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }, [singleSidedBondData, connected, singleSidedBond]);
 
   useEffect(() => {
-    if(cardState === "deposit"){
+    if(!address) setTokenBalance("0")
+    else if(cardState === "deposit"){
       setToken("DAI");
       setTokenBalance(daiBalance)
     } else if(cardState === "redeem"){
@@ -82,8 +89,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     } else if(cardState === "ilredeem"){
       setToken("USD");
       setTokenBalance(String(singleSidedBond?.userBonds[0]?.iLBalance))
+    } else if (cardState === "claim") {
+      setToken("FHM");
+      setTokenBalance(String(singleSidedBond?.userBonds[0]?.pendingFHM))
     }
-  }, [cardState, daiBalance]);
+  }, [cardState, daiBalance, address]);
 
   async function useBond() {
     const slippage = 0;
@@ -202,7 +212,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Box>
       <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
         <span>Reward amount <Icon component={InfoOutlinedIcon}/></span>
-        <span>20.00 FHM</span>
+        <span>{claimableBalance} FHM</span>
       </Box>
       <Box className={`${style["infoBox"]}`} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
