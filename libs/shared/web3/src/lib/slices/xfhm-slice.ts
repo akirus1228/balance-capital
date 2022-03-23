@@ -6,13 +6,16 @@ import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./pending
 import { chains } from "../providers";
 import {
   IBaseAddressAsyncThunk,
-  IXfhmActionValueAsyncThunk, IXfhmAddLiquidityAsyncThunk, IXfhmChangeApprovalAsyncThunk, IXfhmValueAsyncThunk
+  IXfhmActionValueAsyncThunk,
+  IXfhmAddLiquidityAsyncThunk,
+  IXfhmChangeApprovalAsyncThunk,
+  IXfhmClaimAsyncThunk,
+  IXfhmValueAsyncThunk
 } from "./interfaces";
 import { setAll } from "../helpers";
-import { AssetToken, lqdrToken } from "../helpers/asset-tokens";
+import { AssetToken } from "../helpers/asset-tokens";
 import { allAssetTokens, xFhmToken } from "../helpers/asset-tokens";
 import { sleep } from "../helpers/sleep";
-import { segmentUA } from "../helpers/user-analytic-helpers";
 import { addresses } from "../constants";
 import { networks } from "../networks";
 import { abi as sOHM } from "../abi/sOHM.json";
@@ -43,7 +46,7 @@ export interface IXfhmDetails {
 }
 
 export const calcXfhmDetails = createAsyncThunk(
-  "xfhm-lqdr/calcDetails",
+  "xfhm-lqdr/calcXfhmDetails",
   async ({ address, networkId }: IBaseAddressAsyncThunk): Promise<IXfhmDetails> => {
     const xfhmAddress = xFhmToken.networkAddrs[networkId];
     if (!xfhmAddress || !address) {
@@ -128,91 +131,32 @@ export const calcAllAssetTokenDetails = createAsyncThunk(
   }
 );
 
-export const fhmApprovalForXfhm = createAsyncThunk(
-  "xfhm-lqdr/fhmApprovalForXfhm",
-  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+export const changeApprovalForXfhm = createAsyncThunk(
+  "xfhm-lqdr/changeApprovalForXfhm",
+  async ({ provider, address, networkId, token }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, signer);
+    let contract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, signer);
+    let spenderAddress = addresses[networkId]["XFHM_ADDRESS"];
+    if (token === 'lqdr') {
+      contract = new ethers.Contract(addresses[networkId]["LQDR_ADDRESS"] as string, ierc20Abi, signer);
+      spenderAddress = addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"];
+    } else if (token === 'xfhm') {
+      contract = new ethers.Contract(addresses[networkId]["XFHM_ADDRESS"] as string, ierc20Abi, signer);
+      spenderAddress = addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"];
+    }
     let approveTx;
     try {
-      approveTx = await ohmContract["approve"](
-        addresses[networkId]["XFHM_ADDRESS"],
-        ethers.utils.parseUnits("1000000000", "gwei").toString()
-      );
-
-      const text = "Approve";
-      const pendingTxnType = "approve-fhm";
-      await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
-      await approveTx.wait();
-    } catch (e: any) {
-      dispatch(error(e?.error.message));
-      return;
-    } finally {
-      if (approveTx) {
-        await dispatch(clearPendingTxn(approveTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkId }));
-      }
-    }
-  }
-);
-
-export const lqdrApproval = createAsyncThunk(
-  "xfhm-lqdr/lqdrApproval",
-  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
-    if (!provider) {
-      dispatch(error("Please connect your wallet!"));
-      return;
-    }
-
-    const signer = provider.getSigner();
-    const lqdrContract = new ethers.Contract(addresses[networkId]["LQDR_ADDRESS"] as string, ierc20Abi, signer);
-    let approveTx;
-    try {
-      approveTx = await lqdrContract["approve"](
-        addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"],
+      approveTx = await contract["approve"](
+        spenderAddress,
         ethers.constants.MaxUint256.toString()
       );
-
       const text = "Approve";
-      const pendingTxnType = "approve-lqdr";
-      await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
-      await approveTx.wait();
-    } catch (e: any) {
-      dispatch(error(e?.error.message));
-      return;
-    } finally {
-      if (approveTx) {
-        await dispatch(clearPendingTxn(approveTx.hash));
-        await dispatch(calcXfhmDetails({ address, networkId }));
-      }
-    }
-  }
-);
-
-export const xfhmApproval = createAsyncThunk(
-  "xfhm-lqdr/xfhmApproval",
-  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
-    if (!provider) {
-      dispatch(error("Please connect your wallet!"));
-      return;
-    }
-
-    const signer = provider.getSigner();
-    const xfhmContract = new ethers.Contract(addresses[networkId]["XFHM_ADDRESS"] as string, ierc20Abi, signer);
-    let approveTx;
-    try {
-      approveTx = await xfhmContract["approve"](
-        addresses[networkId]["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"],
-        ethers.constants.MaxUint256.toString()
-      );
-
-      const text = "Approve";
-      const pendingTxnType = "approve-xfhm";
+      const pendingTxnType = `approve-${token}`;
       await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
       await approveTx.wait();
     } catch (e: any) {
@@ -278,7 +222,7 @@ export const changeStakeForXfhm = createAsyncThunk(
 
 export const claimForXfhm = createAsyncThunk(
   "xfhm-lqdr/claimForXfhm",
-  async ({ provider, address, networkId }: IXfhmChangeApprovalAsyncThunk, { dispatch }) => {
+  async ({ provider, address, networkId }: IXfhmClaimAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -317,7 +261,6 @@ export const addLiquidity = createAsyncThunk(
     const signer = provider.getSigner();
     const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, signer);
     const bondPriceInUSD = await lqdrUsdbPolBondContract["bondPriceInUSD"]();
-    console.log("bondPriceInUSD: ", bondPriceInUSD);
     let addLiquidityTx;
     try {
       addLiquidityTx = await lqdrUsdbPolBondContract["deposit"](value, bondPriceInUSD, address);
@@ -352,7 +295,6 @@ export const calcAssetAmount = createAsyncThunk(
     }
     if (action === "calculate-lqdr") {
       amount = await lqdrUsdbPolBondContract['maxPrincipleAmount'](value);
-      console.log('amount: ', amount);
     }
     return amount;
   }
@@ -373,12 +315,10 @@ export const payoutForUsdb = createAsyncThunk(
 
 const setDetailState = (state: IXfhmSlice, payload: IXfhmDetails) => {
   state.details = { ...state.details, ...payload };
-  state.loading = false;
 };
 
 const setAssetTokensState = (state: IXfhmSlice, payload: AssetToken[]) => {
   state.assetTokens = [...payload];
-  state.loading = false;
 };
 
 interface IXfhmSlice {
@@ -407,8 +347,8 @@ const xfhmSlice = createSlice({
         state.loading = true;
       })
       .addCase(calcXfhmDetails.fulfilled, (state, action) => {
-        if (!action.payload) return;
         setDetailState(state, action.payload);
+        state.loading = false;
       })
       .addCase(calcXfhmDetails.rejected, (state, { error }) => {
         state.loading = false;
@@ -420,6 +360,7 @@ const xfhmSlice = createSlice({
       .addCase(calcAllAssetTokenDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
         setAssetTokensState(state, action.payload);
+        state.loading = false;
       })
       .addCase(calcAllAssetTokenDetails.rejected, (state, { error }) => {
         state.loading = false;

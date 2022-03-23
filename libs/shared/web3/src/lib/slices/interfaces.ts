@@ -54,6 +54,11 @@ export interface IBaseBondAsyncThunk extends IBaseAsyncThunk {
 
 export interface IXfhmChangeApprovalAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
   readonly address: string;
+  readonly token: string;
+}
+
+export interface IXfhmClaimAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+  readonly address: string;
 }
 
 export interface IXfhmActionValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
@@ -99,10 +104,21 @@ export interface IRedeemBondAsyncThunk extends IBaseBondAsyncThunk, IInteractive
   readonly autostake: boolean;
 }
 
+export interface IRedeemSingleSidedBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
+  readonly address: string;
+  readonly value: string;
+}
+
 export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
   readonly bonds: Bond[];
   readonly address: string;
   readonly autostake: boolean;
+}
+
+export interface ICancelBondAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
+  readonly bond: Bond;
+  readonly index: number;
+  readonly address: string;
 }
 
 export interface IWrapDetails extends IBaseAsyncThunk {

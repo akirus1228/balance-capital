@@ -8,12 +8,12 @@ import {
   addLiquidity,
   allAssetTokens,
   AssetToken,
-  calcAssetAmount,
-  error,
-  isPendingTxn, lqdrApproval,
+  calcAssetAmount, changeApprovalForXfhm,
+  error, getAssetTokenPriceInUsd,
+  isPendingTxn,
   NetworkIds, payoutForUsdb,
   txnButtonText,
-  useWeb3Context, xfhmApproval
+  useWeb3Context
 } from "@fantohm/shared-web3";
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -34,11 +34,12 @@ export const LqdrPage = (): JSX.Element => {
     return state?.pendingTransactions;
   });
   const details = useSelector((state: RootState) => {
-    return state?.xfhm.details;
+    return state?.xfhm?.details;
   });
   const assetTokens = useSelector((state: RootState) => {
-    return state?.xfhm.assetTokens;
+    return state?.xfhm?.assetTokens;
   });
+
 
   const [aToken, setAToken] = useState<AssetToken>(allAssetTokens[0]);
   const [bToken, setBToken] = useState<AssetToken>(allAssetTokens[1]);
@@ -137,12 +138,7 @@ export const LqdrPage = (): JSX.Element => {
     if (!provider || !chainId || !address) {
       return;
     }
-    if (token === 'lqdr') {
-      await dispatch(lqdrApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
-    }
-    if (token === 'xfhm') {
-      await dispatch(xfhmApproval({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
-    }
+    await dispatch(changeApprovalForXfhm({ address, provider, networkId: chainId || NetworkIds.FantomOpera, token }));
   };
 
   const calcUsdbAmount = async () => {
@@ -241,35 +237,41 @@ export const LqdrPage = (): JSX.Element => {
             <Skeleton width="100px" />}
         </Box>
       </Box>
+
+
       {
-        details && !(details.lqdrAllowance > 0) &&
-        <Box className="w-full" my="20px">
-          <Button className="w-full thin" color="primary" variant="contained"
-                  disabled={isPendingTxn(pendingTransactions, "approve-lqdr")}
-                  onClick={() => onSeekApproval('lqdr')}>
-            {txnButtonText(pendingTransactions, "approve-lqdr", "Approve LQDR")}
-          </Button>
-        </Box>
-      }
-      {
-        details && !(details.xfhmForLqdrUsdbPolAllowance > 0) &&
-        <Box className="w-full" my="20px">
-          <Button className="w-full thin" color="primary" variant="contained"
-                  disabled={isPendingTxn(pendingTransactions, "approve-xfhm")}
-                  onClick={() => onSeekApproval('xfhm')}>
-            {txnButtonText(pendingTransactions, "approve-xfhm", "Approve xFHM")}
-          </Button>
-        </Box>
-      }
-      {
-        details && details.xfhmForLqdrUsdbPolAllowance > 0 && details.lqdrAllowance > 0 &&
-        <Box className="w-full" my="20px">
-          <Button className="w-full thin" color="primary" variant="contained"
-                  disabled={isPendingTxn(pendingTransactions, "add-liquidity") || Number(bTokenAmount) <= 0}
-                  onClick={() => onAddLiquidity().then()}>
-            {txnButtonText(pendingTransactions, "add-liquidity", "Add Liquidity")}
-          </Button>
-        </Box>
+        details && details.xfhmForLqdrUsdbPolAllowance > 0 && details.lqdrAllowance > 0 ? (
+          <Box className="w-full" my="20px">
+            <Button className="w-full thin" color="primary" variant="contained"
+                    disabled={isPendingTxn(pendingTransactions, "add-liquidity") || Number(bTokenAmount) <= 0}
+                    onClick={() => onAddLiquidity().then()}>
+              {txnButtonText(pendingTransactions, "add-liquidity", "Add Liquidity")}
+            </Button>
+          </Box>
+        ) : (
+          <>
+            {
+              details && !(details.xfhmForLqdrUsdbPolAllowance > 0) &&
+              <Box className="w-full" my="20px">
+                <Button className="w-full thin" color="primary" variant="contained"
+                        disabled={isPendingTxn(pendingTransactions, "approve-xfhm")}
+                        onClick={() => onSeekApproval('xfhm')}>
+                  {txnButtonText(pendingTransactions, "approve-xfhm", "Approve xFHM")}
+                </Button>
+              </Box>
+            }
+            {
+              details && !(details.lqdrAllowance > 0) &&
+              <Box className="w-full" my="20px">
+                <Button className="w-full thin" color="primary" variant="contained"
+                        disabled={isPendingTxn(pendingTransactions, "approve-lqdr")}
+                        onClick={() => onSeekApproval('lqdr')}>
+                  {txnButtonText(pendingTransactions, "approve-lqdr", "Approve LQDR")}
+                </Button>
+              </Box>
+            }
+          </>
+        )
       }
     </Box>
   );

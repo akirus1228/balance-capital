@@ -1,5 +1,5 @@
 .bondCard {
-    padding: 30px;
+    padding: 3vw;
     justify-content: center;
     text-align: center;
 
@@ -11,7 +11,7 @@
     h2 {
         font-size: 42px;
     }
-    
+
     h3 {
         margin: 4px 0;
     }
@@ -33,9 +33,20 @@
     }
 }
 
+.__bond-cards {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
 @media screen and (max-width: 600px) {
     .bondCard {
         margin: 0px 10px;
+
+        h2 {
+          font-size: 26px;
+        }
     }
 }
 

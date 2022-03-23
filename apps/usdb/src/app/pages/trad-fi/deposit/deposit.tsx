@@ -1,14 +1,13 @@
-import { Backdrop, Button, Fade, Grid, Icon, Paper, Typography } from '@mui/material';
+import {Backdrop, Button, Fade, Grid, Icon, Paper, Typography} from '@mui/material';
 import { Box } from '@mui/system';
 import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import style from './deposit.module.scss';
 import CloseIcon from '@mui/icons-material/Close';
-import {isPendingTxn, txnButtonText} from "@fantohm/shared-web3";
+import {Available, isPendingTxn, StableBond, txnButtonText, useBonds, useWeb3Context} from "@fantohm/shared-web3";
 import { error } from "@fantohm/shared-web3";
 import {useDispatch, useSelector} from "react-redux";
-import {useWeb3Context} from "@fantohm/shared-web3";
-import {RootState} from "../../../store";
+import {getAccountState, RootState} from "../../../store";
 import {bondAsset, changeApproval} from "@fantohm/shared-web3";
 import {
   IApproveBondAsyncThunk,
@@ -17,9 +16,6 @@ import {
 import WalletBallance from '../../../components/wallet-ballance/wallet-ballance';
 import InputWrapper from '../../../components/input-wrapper/input-wrapper';
 
-export interface DepositProps {
-  bond: any;
-}
 export interface IBond {
   title: string;
 }
@@ -28,9 +24,18 @@ export interface IBondType {
 }
 
 // route: /trad-fi/deposit/:bondType
-export const TradFiDeposit = (params: DepositProps): JSX.Element => {
+export const TradFiDeposit = (): JSX.Element => {
+  const { provider, address, chainId } = useWeb3Context();
+  const { bonds, allBonds } = useBonds(chainId || 250);
   const { bondType } = useParams();
+  const [bond, setBond] = useState<StableBond>({
+    displayName: '',
+    allowance: 0,
+    isAvailable: {'250': false} as Available
+  } as StableBond);
   const [isDeposit, setIsDeposit] = useState(true);
+  const accountSlice = useSelector(getAccountState);
+
   const bondTypes: IBondType = {
     '3month': {
       title: '3 Month'
@@ -39,11 +44,10 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
       title: '6 Month'
     }
   };
-  const [currentBond, setCurrentBond] = useState<IBond>({title: ''});
+  
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch();
-  const { provider, address, chainId } = useWeb3Context();
-
+  
   const [quantity, setQuantity] = useState(0);
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
 
@@ -51,15 +55,16 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
     return state?.pendingTransactions;
   });
 
-  const hasAllowance = useCallback(() => {
-    return params.bond.allowance > 0;
-  }, [params.bond.allowance]);
+  useEffect(() => {
+    setBond(allBonds[0]);
+  }, [bondType, allBonds]);
 
-  // const currentBlock = useSelector((state: RootState) => {
-  //   console.log(state)
-  //   return state.app.currentBlock;
-  // });
+  const hasAllowance = useCallback(() => {
+    return bond && bond.allowance && bond.allowance > 0;
+  }, [bond]);
+
   const isBondLoading = useSelector((state: RootState) => state?.bonding["loading"] ?? true);
+
   async function useBond() {
 
     if (quantity === 0) {
@@ -70,7 +75,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (params.bond.userBonds[0].interestDue > 0 || params.bond.userBonds[0].pendingPayout > 0) {
+    } else if (accountSlice && accountSlice.bonds && accountSlice.bonds['tradfi3month']) {
       const shouldProceed = window.confirm(
         "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
       );
@@ -80,7 +85,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
           bondAsset({
             value: String(quantity),
             slippage,
-            bond: params.bond,
+            bond: bond,
             networkId: chainId || 250,
             provider,
             address: address,
@@ -93,7 +98,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
         bondAsset({
           value: String(quantity),
           slippage,
-          bond: params.bond,
+          bond: bond,
           networkId: chainId || 250,
           provider,
           address: address,
@@ -104,7 +109,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   }
 
   const onSeekApproval = async () => {
-    dispatch(changeApproval({address, provider, bond: params.bond, networkId: chainId} as IApproveBondAsyncThunk));
+    dispatch(changeApproval({address, provider, bond: bond, networkId: chainId} as IApproveBondAsyncThunk));
   };
 
   const clearInput = () => {
@@ -115,11 +120,6 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
   const goBack = () => {
     navigate('/trad-fi#get-started');
   }
-
-  // useEffect(() => {
-  //   const thisBond: IBond = !!bondType && !!bondTypes[bondType] ? bondTypes[bondType] : {title: ''};
-  //   setCurrentBond(thisBond);
-  // }, [bondType, bondTypes]);
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
@@ -134,7 +134,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
             <Box sx={{backgroundColor: "primary.main"}} className={style['typeContainer']}>
               <Typography className={style['type']} color="primary.contrastText">Fixed Deposit</Typography>
             </Box>
-            <h1 className={style['title']}>{params.bond.displayName}</h1>
+            <h1 className={style['title']}>{bond.displayName}</h1>
             <h2 className={style['subtitle']}>90 days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
@@ -144,12 +144,12 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
             <Grid item xs={12} md={4}>
               <InputWrapper>
                 <span>Amount</span>
-                <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
+                <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
                 <span>Max</span>
               </InputWrapper>
             </Grid>
             <Grid item xs={12} md={4} sx={{pb: "3em"}}>
-              {!params.bond.isAvailable[chainId ?? 250] ? (
+              {!bond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
                   Sold Out
                 </Button>
@@ -159,10 +159,10 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                   color="primary"
                   id="bond-btn"
                   className="transaction-button inputButton"
-                  disabled={isPendingTxn(pendingTransactions, "bond_" + params.bond.name)}
+                  disabled={isPendingTxn(pendingTransactions, "bond_" + bond.name)}
                   onClick={useBond}
                 >
-                  {txnButtonText(pendingTransactions, "bond_" + params.bond.name, params.bond.bondAction)}
+                  {txnButtonText(pendingTransactions, "bond_" + bond.name, bond.bondAction)}
                 </Button>
               ) : (
                 <Button
@@ -170,10 +170,10 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
                   color="primary"
                   id="bond-approve-btn"
                   className="transaction-button inputButton"
-                  disabled={isPendingTxn(pendingTransactions, "approve_" + params.bond.name)}
+                  disabled={isPendingTxn(pendingTransactions, "approve_" + bond.name)}
                   onClick={onSeekApproval}
                 >
-                  {txnButtonText(pendingTransactions, "approve_" + params.bond.name, "Approve")}
+                  {txnButtonText(pendingTransactions, "approve_" + bond.name, "Approve")}
                 </Button>
               )}
             </Grid>

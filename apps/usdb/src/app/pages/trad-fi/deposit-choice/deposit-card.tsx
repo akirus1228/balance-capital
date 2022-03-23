@@ -1,9 +1,9 @@
-import {Box, Button, Grid, Paper, Typography} from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import css from "./deposit-choice.module.scss";
 import DAIIcon from "../../../../assets/tokens/DAI.svg";
-import {Link} from 'react-router-dom';
-import {ThemeProvider} from "@mui/material/styles";
-import {USDBLight} from "@fantohm/shared-ui-themes";
+import { Link } from 'react-router-dom';
+import { ThemeProvider } from "@mui/material/styles";
+import { USDBLight } from "@fantohm/shared-ui-themes";
 
 interface IDepositCardParams {
   bondType: string;
@@ -18,7 +18,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
 
   return (
     <ThemeProvider theme={USDBLight}>
-      <Box sx={{height: '100%', width: '100%'}} className={`${css['bondCard']} flexCenterCol`}>
+      <Box className={`${css['bondCard']} flexCenterCol`}>
         <Paper sx={{marginTop: '47px', maxWidth: '470px'}} elevation={0}>
           <Grid container rowSpacing={3}>
             <Grid item xs={12}>

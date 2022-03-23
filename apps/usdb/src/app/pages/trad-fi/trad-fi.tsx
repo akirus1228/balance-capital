@@ -7,77 +7,77 @@ import Graph from './graph/graph';
 import Headline from '../../components/headline/headline';
 import Faq from '../../components/faq/faq';
 import Logo from '../../components/logo/logo';
-import { LightCardsIcon, LightShieldIcon, LightDoughnutChartIcon } from '@fantohm/shared/images';
+import { ThemeImage } from '../../components/theme-image/theme-image';
 
-/* eslint-disable-next-line */
-export interface TradfiProps {}
+export const TradFi = (): JSX.Element => {
+  console.log("TradFi rendered");
 
-export const TradFi = (props: TradfiProps): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Take your investing to the next level",
-    subtitle: ["The safest way to earn up to 32.5% on your stables.", "No risk. No surprises."]
+    subtitle: ["The safest way to earn up to 32.5% on your stables.",]
   };
   const simpleSafe = {
-    title: "Simple & safe returns",
-    subtitle: ["USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises."]
+    title: "Simple & Safe returns",
+    subtitle: ["USDB offers the safest way to earn up to 32.5% on your stables.","Below are some comparative yields for different market offerings"]
   };
   const getStarted = {
     title: "Get started today",
-    subtitle: ["Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo."]
+    subtitle: ["TradFi bonds are suitable for long-term, savvy investors to safely park their funds and earn stable yields"]
   };
+  const invert = () => {
+    if (localStorage.getItem('use-theme') === 'dark') return 1;
+    return 0;
+  };
+
   return (
     <>
-      <Box sx={{
-        paddingTop: '300px'
-      }}
-      className={`flexCenterCol`}
-    >
-      <Headline hero={heroContent.hero}  title={heroContent.title} subtitle={heroContent.subtitle} />
-      <a href="/trad-fi#get-started">
-        <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined">
-          Get started 
-          <img src={LongArrowRight} alt="Arrow to the right" style={{marginLeft: '2em'}}/>
-        </Button>
-      </a>
-    </Box>
-    <Box className={`flexCenterCol`}>
-      <Box sx={{height: '20em'}}/>
-      <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
-      <Graph />
-      <Grid container spacing={2} maxWidth="md">
-        <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={LightCardsIcon} alt="Credit Cards" />
-            <span>no investment fee</span>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={LightDoughnutChartIcon} alt="Doughnut chart with a quarter filled" />
-            <span>no management fee</span>
-          </Paper>
-        </Grid>
-        <Grid item xs={12} md={4}>
-          <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <img src={LightShieldIcon} alt="Shield with lock" />
-            <span>no risk of capital loss</span>
-          </Paper>
-        </Grid>
-      </Grid>
-    </Box>
-    <Box sx={{height: '10em'}}/>
-    <Headline title={getStarted.title} subtitle={getStarted.subtitle} />
-    <DepositChoice id="get-started"/>
-    <Outlet />
-    <Faq />
-    <Box className={`${style['tradFiBlock']} flexCenterCol`}>
-      <Box sx={{height: '10em'}}/>
-      <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
-    </Box>
-    <Box className={`${style['tradFiBlock']} flexCenterCol`} sx={{paddingBottom: '4em'}}>
-      <Logo />
-    </Box>
+      <Box className={style["__heading"]}>
+        <Headline hero={heroContent.hero}  title={heroContent.title} subtitle={heroContent.subtitle} />
+        <a href="/trad-fi#get-started">
+          <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined">
+            Get started
+            <img src={LongArrowRight} alt="Arrow to the right" style={{marginLeft: '2em', filter: 'invert('+invert()+')'}}/>
+          </Button>
+        </a>
+      </Box>
+      <Box className={style["__section"]}>
+        <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
+        <Graph style={{margin: "auto"}} />
+        <Box className={style["__icons"]}>
+          <Grid item xs={12} md={4}>
+            <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
+            <ThemeImage image="CardsIcon" />
+              <span>no investment fee</span>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
+            <ThemeImage image="DoughnutChartIcon" />
+              <span>no management fee</span>
+            </Paper>
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
+            <ThemeImage image="ShieldIcon" />
+              <span>no risk of capital loss</span>
+            </Paper>
+          </Grid>
+        </Box>
+      </Box>
+      <Box className={style["__section"]}>
+        <Headline title={getStarted.title} subtitle={getStarted.subtitle} />
+        <DepositChoice id="get-started"/>
+        <Outlet />
+        <Faq />
+        <Box className={`${style['tradFiBlock']} flexCenterCol`}>
+          <Box sx={{height: '10em'}}/>
+          <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
+        </Box>
+        <Box className={`${style['tradFiBlock']} flexCenterCol`} sx={{paddingBottom: '4em'}}>
+          <Logo />
+        </Box>
+      </Box>
   </>
   );
 }

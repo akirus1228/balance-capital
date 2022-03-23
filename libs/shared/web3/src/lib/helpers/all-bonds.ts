@@ -35,7 +35,7 @@ export const tradfi3month = new StableBond({
 export const singleSided = new StableBond({
   name: "singleSided",
   type: BondType.SINGLE_SIDED,
-  displayName: "singleSided",
+  displayName: "Staking",
   bondToken: "singleSided",
   decimals: 18,
   roi: "32.5",

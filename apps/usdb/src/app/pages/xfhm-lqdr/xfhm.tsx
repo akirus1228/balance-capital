@@ -13,7 +13,7 @@ import { a11yProps, formatAmount } from "@fantohm/shared-helpers";
 import {
   useWeb3Context,
   xFhmToken,
-  fhmApprovalForXfhm,
+  changeApprovalForXfhm,
   NetworkIds,
   txnButtonText,
   isPendingTxn,
@@ -36,6 +36,7 @@ export const XfhmPage = (): JSX.Element => {
   const details = useSelector((state: RootState) => {
     return state?.xfhm?.details;
   });
+  console.log('details: ', details);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -101,7 +102,7 @@ export const XfhmPage = (): JSX.Element => {
     if (!provider || !chainId || !address) {
       return;
     }
-    await dispatch(fhmApprovalForXfhm({ address, provider, networkId: chainId || NetworkIds.FantomOpera }));
+    await dispatch(changeApprovalForXfhm({ address, provider, networkId: chainId || NetworkIds.FantomOpera, token: 'fhm' }));
   };
 
   const onClaim = async () => {
