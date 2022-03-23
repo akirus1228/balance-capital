@@ -62,7 +62,7 @@ export const Header = (): JSX.Element => {
     } else {
       await connect();
     }
-  }, [connected]);
+  }, [connected, disconnect, connect]);
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
@@ -72,20 +72,20 @@ export const Header = (): JSX.Element => {
     } else {
       setConnectButtonText("Connect Wallet");
     }
-  }, [connected, address]);
+  }, [connected, address, dispatch]);
 
   useEffect(() => {
     if (hasCachedProvider && hasCachedProvider()) {
       connect();
     }
-  }, [connected, hasCachedProvider]);
+  }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = () => {
     dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
   }
 
   return (
-    <AppBar position="static" color="transparent" elevation={0}>
+    <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -153,7 +153,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} />
+            <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} alt="USDB logo" />
           </Typography>
           <Box
             sx={{
@@ -166,7 +166,7 @@ export const Header = (): JSX.Element => {
           >
             {pages.map((page: Pages) => (
               <Box sx={{display: 'flex'}} key={page.title}>
-                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon === true ?
+                {!!page.params && typeof(page.params.comingSoon) == 'boolean' && page.params.comingSoon ?
                   (
                     <Box sx={{mx: '1.5em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', height: '100%'}}>
                       <span className={style['comingSoonTitle']}>

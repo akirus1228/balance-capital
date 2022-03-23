@@ -50,7 +50,7 @@ export const App = (): JSX.Element => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainId]);
+  }, [chainId, allBonds, bonds, dispatch, investments]);
 
   // Load account details
   useEffect(() => {
@@ -62,16 +62,16 @@ export const App = (): JSX.Element => {
         );
       });
     }
-  }, [chainId, address]);
+  }, [chainId, address, bonds, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box sx={{ height: '100vh' }}>
+      <Box paddingTop={5} paddingBottom={12} sx={{ height: '100vh' }}>
         <Messages />
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage title="Home" />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi" element={<TradFi />}>
             <Route
