@@ -21,16 +21,16 @@ export const StakingChoicePage = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
-    subtitle: ["The safest way to earn on your Dai with zero risk"],
+    subtitle: ["The safest way to earn yeilds on your Dai"],
     sx: {marginTop: "10em"}
   };
   const simpleSafe = {
     title: "Simple & safe returns",
-    subtitle: ["USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises."]
+    subtitle: ["To farm and earn rewards, investors only provide one side of the pair while our protocol deposits the other."]
   };
   const getStarted = {
     title: "Get started today",
-    subtitle: ["Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo."]
+    subtitle: ["Single Sided Staking is similar to Liquidity Pair (LP) farming, but eliminates the impermanent losses."]
   };
 
   return (
