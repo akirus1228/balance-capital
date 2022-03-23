@@ -50,17 +50,17 @@ export const StakingChoicePage = (): JSX.Element => {
         </DaiCard>
         <Grid container sx={{my: '2em'}} columnSpacing={2}>
           <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
-            <Button variant="contained" color="primary" sx={{width: '255px'}}>Deposit</Button>
+            <Button variant="contained" color="primary" sx={{width: '255px'}} href="staking#deposit">Deposit</Button>
           </Grid>
           <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}, mt: {xs: '1em', md: '0'}}}>
-            <Button variant="outlined" sx={{width: '255px'}}>Learn More</Button>
+            <Button variant="outlined" sx={{width: '255px'}} href="staking#learn-more">Learn More</Button>
           </Grid>
         </Grid>
       </Box>
-      <Headline {...simpleSafe} />
+      <Headline {...simpleSafe} id="learn-more"/>
       <SsInfoBlock />
       <Headline {...getStarted} />
-      <Box className="flexCenterCol" sx={{marginTop: "3em"}}>
+      <Box className="flexCenterCol" sx={{marginTop: "3em"}} id="deposit">
         <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
       </Box>
       <Faq />
