@@ -16,24 +16,27 @@ import LightDoughnutChartIcon from "./images/light/USDB_icon_chart_light.png";
 import LightLockIcon from "./images/light/USDB_icon_lock_light.png";
 import LightShieldIcon from "./images/light/USDB_icon_shield_light.png";
 import DaiToken from "./images/tokens/DAI.svg";
+import USDCToken from "./images/tokens/USDC.svg";
 
-export { 
-    NFTsIcon, 
-    TradFiIcon, 
-    BankIcon, 
-    DoughnutChartIcon,
-    ShieldIcon,
-    StakingIcon,
-    WalletIcon,
-    DarkBankIcon,
-    DarkCardsIcon,
-    DarkDoughnutChartIcon,
-    DarkLockIcon,
-    DarkShieldIcon,
-    LightBankIcon,
-    LightCardsIcon,
-    LightDoughnutChartIcon,
-    LightLockIcon,
-    LightShieldIcon,
-    DaiToken
+
+export {
+  NFTsIcon,
+  TradFiIcon,
+  BankIcon,
+  DoughnutChartIcon,
+  ShieldIcon,
+  StakingIcon,
+  WalletIcon,
+  DarkBankIcon,
+  DarkCardsIcon,
+  DarkDoughnutChartIcon,
+  DarkLockIcon,
+  DarkShieldIcon,
+  LightBankIcon,
+  LightCardsIcon,
+  LightDoughnutChartIcon,
+  LightLockIcon,
+  LightShieldIcon,
+  DaiToken,
+  USDCToken
 }

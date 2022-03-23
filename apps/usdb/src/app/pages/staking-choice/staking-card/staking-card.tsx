@@ -6,6 +6,10 @@ import DaiCard from "../../../components/dai-card/dai-card";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {DaiToken} from "@fantohm/shared/images";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import {USDCToken} from "@fantohm/shared/images";
+
 import {useDispatch, useSelector} from "react-redux";
 import {
   Bond,
@@ -128,7 +132,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   };
 
   return (
-    <DaiCard>
+    <>
+    <DaiCard tokenImage={DaiToken}>
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box sx={{width: '100%'}}>
@@ -219,6 +224,97 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </>)}
     </DaiCard>
 
+  <DaiCard tokenImage={USDCToken}>
+    <h3 className={style['titleWrapper']}>Single</h3>
+    <h1>DAI Liquidity Pool</h1>
+    <Box sx={{width: '100%'}}>
+      <hr style={{border: 'none', borderTop: '2px solid rgba(105,108,128,0.07)'}}/>
+    </Box>
+    <Box className={`flexCenterRow`}>
+      <Box className={`${style['smokeyToggle']} ${cardState === "deposit" ? style['active'] : ""}`} sx={{mr: '1em'}}
+           onClick={() => setCardState("deposit")}>
+        <div className={style['dot']}/>
+        <span>Deposit</span>
+      </Box>
+      <Box className={`${style['smokeyToggle']} ${cardState === "redeem" ? style['active'] : ""}`}
+           onClick={() => setCardState("redeem")}>
+        <div className={style['dot']}/>
+        <span>Redeem</span>
+      </Box>
+      <Box className={`${style['smokeyToggle']} ${cardState === "claim" ? style['active'] : ""}`}
+           onClick={() => setCardState("claim")}>
+        <div className={style['dot']}/>
+        <span>Claim</span>
+      </Box>
+      <Box className={`${style['smokeyToggle']} ${cardState === "ilredeem" ? style['active'] : ""}`}
+           onClick={() => setCardState("ilredeem")}>
+        <div className={style['dot']}/>
+        <span>ILRedeem</span>
+      </Box>
+    </Box>
+    <Box className={`flexCenterRow`}>
+      <h1>{params.apy}% APR</h1>
+    </Box>
+    <Grid container spacing={2}>
+      <Grid item xs={12} md={6}>
+        <Box className={`flexCenterRow ${style['currencySelector']}`}>
+          <img src={USDCToken} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
+          <Box sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
+            <span className={style['name']}>DAI balance</span>
+            <span className={style['amount']}>{daiBalance} DAI</span>
+          </Box>
+        </Box>
+      </Grid>
+      <Grid item xs={12} md={6}>
+        <Box className={`${style['currencySelector']}`} flexGrow={1}>
+          <input type="number" placeholder="0.00" value={quantity} onChange={e => setQuantity(e.target.value)}/>
+          <span className={style['amount']} onClick={setMax}>Max</span>
+        </Box>
+      </Grid>
+    </Grid>
+    <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
+      <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
+      <span>100.00 DAI</span>
+    </Box>
+    <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
+      <span>Reward amount <Icon component={InfoOutlinedIcon}/></span>
+      <span>20.00 FHM</span>
+    </Box>
+    <Box className={`${style["infoBox"]}`} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+      <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
+      <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
+    </Box>
+    {!connected ? (
+      <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" onClick={connect}>
+        Connect Wallet
+      </Button>
+    ) : (<>
+      {!singleSided.isAvailable[chainId ?? 250] ? (
+        <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
+          Sold Out
+        </Button>
+      ) : hasAllowance() ? (
+        <Button
+          variant="contained"
+          color="primary"
+          className="cardActionButton"
+          disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name)}
+          onClick={useBond}>
+          {txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
+        </Button>
+      ) : (
+        <Button
+          variant="contained"
+          color="primary"
+          className="cardActionButton"
+          disabled={isPendingTxn(pendingTransactions, "approve_" + singleSided.name)}
+          onClick={onSeekApproval}>
+          {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
+        </Button>
+      )}
+    </>)}
+  </DaiCard>
+  </>
   );
 }
 
