@@ -51,7 +51,7 @@ export const App = (): JSX.Element => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainId, dispatch]);
+  }, [chainId, address, dispatch]);
 
   // Load account details
   useEffect(() => {
