@@ -18,7 +18,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
 
   return (
     <ThemeProvider theme={USDBLight}>
-      <Box sx={{height: '100%', width: '100%'}} className={`${css['bondCard']} flexCenterCol`}>
+      <Box className={`${css['bondCard']} flexCenterCol`}>
         <Paper sx={{marginTop: '47px', maxWidth: '470px'}} elevation={0}>
           <Grid container rowSpacing={3}>
             <Grid item xs={12}>

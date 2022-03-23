@@ -201,7 +201,9 @@ const USDBLightBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #000',
+          '&, &:hover': {
+            border: '3px solid #000'
+          }
         },
         contained: {
           '&.closeButton': {
@@ -271,7 +273,9 @@ const USDBDarkBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #FFF',
+          '&, &:hover': {
+            border: '3px solid #FFF'
+          }
         },
         contained: {
           '&.closeButton': {

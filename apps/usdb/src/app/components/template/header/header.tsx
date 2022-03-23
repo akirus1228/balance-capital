@@ -86,8 +86,15 @@ export const Header = (): JSX.Element => {
   };
 
   const toggleTheme = () => {
-    dispatch(setTheme(themeType === "light" ? "dark" : "light"));
-  };
+    const type = themeType === 'light' ? 'dark' : 'light';
+    localStorage.setItem("use-theme", type);
+    dispatch(setTheme(type));
+  }
+
+  const useTheme = localStorage.getItem("use-theme");
+  if(useTheme) {
+    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
+  }
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
