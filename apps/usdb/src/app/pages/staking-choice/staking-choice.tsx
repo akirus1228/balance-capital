@@ -34,7 +34,7 @@ export const StakingChoicePage = (): JSX.Element => {
   };
 
   return (
-    <>
+    <Box className="flexCenterCol">
       <Headline {...heroContent} />
       <Box sx={{marginTop: "3em"}} className="flexCenterCol">
         <DaiCard className="dai">
@@ -65,7 +65,7 @@ export const StakingChoicePage = (): JSX.Element => {
       </Box>
       <Faq />
       <Headline {...simpleSafe} />
-    </>
+    </Box>
   );
 };
 
