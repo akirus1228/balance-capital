@@ -9,6 +9,7 @@ import {
   IBaseAsyncThunk,
   IBondAssetAsyncThunk,
   ICalcBondDetailsAsyncThunk,
+  ICancelBondAsyncThunk,
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
@@ -284,12 +285,7 @@ export const bondAsset = createAsyncThunk(
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
 
-      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
-
-      // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if (userBondDetails && userBondDetails.bondMaturationBlock && (userBondDetails.bondMaturationBlock - minedBlock) === 1) {
-        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
-      }
+      dispatch(calculateUserBondDetails({ address, bond, networkId }));
     } catch (e: unknown) {
       const rpcError = e as IJsonRPCError;
       if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
@@ -429,6 +425,26 @@ export const redeemAllBonds = createAsyncThunk(
       if (redeemAllTx) {
         dispatch(clearPendingTxn(redeemAllTx.hash));
       }
+    }
+  },
+);
+
+export const cancelBond = createAsyncThunk(
+  "bonding/cancelBond",
+  async ({ bond, address, networkId, provider, index }: ICancelBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const contract = bond.getContractForBondForWrite(networkId, signer);
+
+    try {
+      await contract["cancelBond"](address, index);
+      dispatch(calculateUserBondDetails({ address, bond, networkId }));
+    } catch (e: unknown) {
+      dispatch(error((e as IJsonRPCError).message));
     }
   },
 );
