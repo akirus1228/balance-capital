@@ -31,7 +31,7 @@ export function useBonds(networkId: NetworkId) {
   const bondLoading = useSelector((state: IBondingStateView) => !state.bonding.loading);
   const bondState = useSelector((state: IBondingStateView) => state.bonding);
   const accountBondsState = useSelector((state: IBondingStateView) => state.account.bonds);
-  const [bonds, setBonds] = useState<Bond[] | IAllBondData[]>(filteredBonds);
+  const [bonds, setBonds] = useState<IAllBondData[]>([]);
 
   const stakingRebase = useSelector((state: IBondingStateView) => state.app.stakingRebase);
   const fhmMarketPrice = useSelector((state: IBondingStateView) => state.app.marketPrice);

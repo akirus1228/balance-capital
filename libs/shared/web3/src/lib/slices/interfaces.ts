@@ -105,6 +105,12 @@ export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractive
   readonly autostake: boolean;
 }
 
+export interface ICancelBondAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
+  readonly bond: Bond;
+  readonly index: number;
+  readonly address: string;
+}
+
 export interface IWrapDetails extends IBaseAsyncThunk {
     isWrap: boolean;
     value: string;
