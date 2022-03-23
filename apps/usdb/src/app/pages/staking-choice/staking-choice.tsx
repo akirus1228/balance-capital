@@ -9,6 +9,7 @@ import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {DaiToken} from "@fantohm/shared/images";
+import Logo from "../../components/logo/logo";
 
 interface IDepositCardParams {
   bondType: string;
@@ -39,7 +40,7 @@ export const StakingChoicePage = (): JSX.Element => {
   return (
     <Box className="flexCenterCol">
       <Headline {...heroContent} />
-      <Box sx={{marginTop: "3em"}} className="flexCenterCol">
+      <Box sx={{marginTop: "3em", mb: '20em'}} className="flexCenterCol">
         <DaiCard className="dai" tokenImage={DaiToken}>
           <h2 className={style['daiAPR']}>20.00% APR</h2>
           <Grid container>
@@ -60,14 +61,15 @@ export const StakingChoicePage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-      <Headline {...simpleSafe} id="learn-more"/>
+      <Headline {...simpleSafe} id="learn-more" sx={{mb: '5em'}} />
       <SsInfoBlock />
       <Headline {...getStarted} />
-      <Box className="flexCenterCol" sx={{marginTop: "3em"}} id="deposit">
+      <Box className="flexCenterCol" sx={{marginTop: "3em", mb:'10em'}} id="deposit">
         <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
       </Box>
-      <Faq />
-      <Headline {...simpleSafe} />
+      <Faq sx={{mb: '10em'}}/>
+      <Headline {...simpleSafe} sx={{mb: '2em'}}/>
+      <Logo />
     </Box>
   );
 };
