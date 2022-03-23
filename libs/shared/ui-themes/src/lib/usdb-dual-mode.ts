@@ -40,8 +40,8 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: "53px",
-          padding: "2.5em",
+          borderRadius: "10px",
+          padding: "0.5em",
           "&.MuiAppBar-root": {
             padding: "0",
             marginTop: "2em"
@@ -65,9 +65,9 @@ const globalTheme: ThemeOptions = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          background: 'rgba(100, 100, 100, 0.1)',
-          backdropFilter: 'blur(33px)',
-          '-webkit-backdrop-filter': 'blur(33px)',
+          // background: 'rgba(100, 100, 100, 0.1)',
+          // backdropFilter: 'blur(33px)',
+          // '-webkit-backdrop-filter': 'blur(33px)',
         },
       },
     },
@@ -94,6 +94,13 @@ const globalTheme: ThemeOptions = {
           },
           "&.thin": {
             padding: "15px 27px"
+          },
+          "&.portfolio": {
+            height: '1em',
+            paddingTop: '1.8em',
+            paddingBottom: '1.8em',
+            background: "#384bff",
+            color: "#FFF",
           },
           "&.fill": {
             fontSize: '14px',

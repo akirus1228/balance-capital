@@ -79,9 +79,9 @@ export const App = (): JSX.Element => {
               element={<TradFiDeposit bond={allBonds[0]} />}
             />
           </Route>
+          <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
           <Route path="/my-account" element={<MyAccount />} />
-          <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route
             path="*"
             element={

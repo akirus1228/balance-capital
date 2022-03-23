@@ -15,7 +15,6 @@ export const HomePage = (): JSX.Element => {
     <Container
       maxWidth="xl"
       sx={{
-        height: 'calc(100% - 89px)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'center',
@@ -29,7 +28,7 @@ export const HomePage = (): JSX.Element => {
           justifyContent: 'center',
           flexDirection: 'column',
           alignItems: 'center',
-          paddingTop: '112px',
+          paddingTop: { xs: '52px', md: '112px' }
         }}
         className={style['hero']}
       >
@@ -44,7 +43,7 @@ export const HomePage = (): JSX.Element => {
           </Grid>
           <Grid item lg={6} md={12} order={{ lg: 2, xs: 1 }}>
             <Box className={style['heroRight']}>
-              <Box sx={{ height: { xs: '132px', md: '180px' } }}>
+              <Box sx={{ height: { xs: '132px', md: '180px' }, display: { xs: "none", md: "flex" } }}>
                 <img
                   src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
                   alt="USDB Logo"
