@@ -34,6 +34,7 @@ import {
 } from '@fantohm/shared-web3';
 import { RootState } from '../../store';
 import { useEffect, useMemo, useState } from 'react';
+import { chains } from 'libs/shared/web3/src/lib/providers';
 
 export interface Investment {
   id: string;
@@ -456,7 +457,7 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onRedeemOne(bond, investment.bondIndex);
+                          bond && onRedeemOne(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Redeem
@@ -471,7 +472,7 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onCancelBond(bond, investment.bondIndex);
+                          bond && onCancelBond(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Cancel

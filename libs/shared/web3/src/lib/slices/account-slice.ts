@@ -9,12 +9,13 @@ import {abi as daiAbi} from "../abi/reserves/DAIContract.json";
 import {abi as wsOHM} from "../abi/wsOHM.json";
 import {abi as OlympusStaking} from "../abi/OlympusStakingv2.json";
 
-import {setAll} from "../helpers";
+import {setAll, trim} from "../helpers";
 
 import {createAsyncThunk, createSelector, createSlice} from "@reduxjs/toolkit";
 import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfaces";
 import {chains} from "../providers";
 import {BondAction, BondType, PaymentToken} from "../lib/bond";
+import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -206,6 +207,9 @@ export interface IUserBond {
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
   percentVestedFor: number;
+  lpTokenAmount: string;
+  iLBalance: string;
+  pendingFHM: string;
 }
 
 export interface IUserBondDetails {
@@ -217,6 +221,32 @@ export interface IUserBondDetails {
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
   async ({ address, bond, networkId }: ICalcUserBondDetailsAsyncThunk) => {
+    if (!address) {
+      return {
+        bond: "",
+        displayName: "",
+        bondIconSvg: "",
+        isLP: false,
+        allowance: 0,
+        balance: "0",
+        userBonds: [
+          {
+            amount: "0",
+            rewards: "0",
+            rewardToken: PaymentToken.USDB,
+            interestDue: 0,
+            bondMaturationBlock: 0,
+            pendingPayout: "",
+            percentVestedFor: 0,
+            lpTokenAmount: "0",
+            iLBalance: "0",
+            pendingFHM: "0"
+          },
+        ],
+        paymentToken: bond.paymentToken,
+        bondAction: bond.bondAction,
+      };
+    }
     const provider = await chains[networkId].provider;
 
     // Contracts
@@ -253,9 +283,16 @@ export const calculateUserBondDetails = createAsyncThunk(
         // balance should NOT be converted to a number. it loses decimal precision
         ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
       ]);
-
+      const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
       const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
       const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      let pendingFHM = "0";
+      let iLBalance = "0";
+      if(bond.type === BondType.SINGLE_SIDED){
+        const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
+        pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
+        iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
+      }
       const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
         {
           amount: '9999', // TODO
@@ -265,6 +302,9 @@ export const calculateUserBondDetails = createAsyncThunk(
           bondMaturationBlock,
           pendingPayout,
           percentVestedFor: 50, // TODO
+          lpTokenAmount: lpTokenAmount,
+          iLBalance: iLBalance,
+          pendingFHM
         }
       ] : [];
       return {
@@ -278,7 +318,7 @@ export const calculateUserBondDetails = createAsyncThunk(
         paymentToken: bond.paymentToken,
         bondAction: bond.bondAction,
       };
-  }
+    }
 
     const userBonds: IUserBond[] = await Promise.all(
       [...Array(bondLength).keys()].map(async bondIndex => {
@@ -291,6 +331,14 @@ export const calculateUserBondDetails = createAsyncThunk(
           ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
           Number(percentVestedFor.div(BigNumber.from('100'))),
         ]);
+        let iLBalance = "0";
+        let pendingFHM = "0";
+        if(bond.type === BondType.SINGLE_SIDED){
+          const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
+          pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFHM"](0, address)))), 2);
+          iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
+        }
+        const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
         const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
         const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
         return {
@@ -301,10 +349,13 @@ export const calculateUserBondDetails = createAsyncThunk(
           bondMaturationBlock,
           pendingPayout,
           percentVestedFor,
+          lpTokenAmount: lpTokenAmount,
+          iLBalance: iLBalance,
+          pendingFHM: pendingFHM
         }
       })
     );
-    
+
     return {
       bond: bond.name,
       displayName: bond.displayName,
