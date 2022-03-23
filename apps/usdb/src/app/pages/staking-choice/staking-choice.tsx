@@ -33,11 +33,11 @@ export const StakingChoicePage = (): JSX.Element => {
   };
   const getStarted = {
     title: "Get started today",
-    subtitle: ["Single Sided Staking is similar to Liquidity Pair (LP) farming, but eliminates the impermanent losses."]
+    subtitle: ["Single Sided Staking is similar to Liquidity Pair (LP) farming, but eliminates impermanent loss."]
   };
 
   return (
-    <>
+    <Box className="flexCenterCol">
       <Headline {...heroContent} />
       <Box sx={{marginTop: "3em"}} className="flexCenterCol">
         <DaiCard className="dai" tokenImage={DaiToken}>
@@ -68,7 +68,7 @@ export const StakingChoicePage = (): JSX.Element => {
       </Box>
       <Faq />
       <Headline {...simpleSafe} />
-    </>
+    </Box>
   );
 };
 

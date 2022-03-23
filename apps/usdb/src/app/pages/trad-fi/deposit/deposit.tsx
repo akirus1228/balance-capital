@@ -1,4 +1,4 @@
-import { Backdrop, Button, Fade, Grid, Icon, Paper, Typography } from '@mui/material';
+import {Backdrop, Button, Fade, Grid, Icon, Paper, Typography} from '@mui/material';
 import { Box } from '@mui/system';
 import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -144,7 +144,7 @@ export const TradFiDeposit = (params: DepositProps): JSX.Element => {
             <Grid item xs={12} md={4}>
               <InputWrapper>
                 <span>Amount</span>
-                <input type="number" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
+                <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
                 <span>Max</span>
               </InputWrapper>
             </Grid>

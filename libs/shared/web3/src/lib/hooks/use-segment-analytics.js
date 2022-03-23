@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { EnvHelper } from "../helpers/Environment";
+import { EnvHelper } from "../helpers/environment";
 import { useLocation } from "react-router-dom";
 import { useWeb3Context } from "./web3-context";
 import { v4 as uuidv4 } from "uuid";
@@ -23,7 +23,7 @@ export default function useSegmentAnalytics() {
       const utm = {
         utmSource: utmSource,
         utmMedium: utmMedium,
-        utmCampaign: utmCampaign,
+        utmCampaign: utmCampaign
       };
       initSegmentAnalytics(utm);
       setLoadedSegment(true);
@@ -44,7 +44,7 @@ export default function useSegmentAnalytics() {
     if (loadedSegment && address) {
       analytics.identify(address, {
         wallet: address,
-        sessionId: uuidv4(),
+        sessionId: uuidv4()
       });
     }
   }, [address]);
@@ -76,10 +76,10 @@ function initSegmentAnalytics(utm) {
         "addSourceMiddleware",
         "addIntegrationMiddleware",
         "setAnonymousId",
-        "addDestinationMiddleware",
+        "addDestinationMiddleware"
       ];
-      analytics.factory = function (e) {
-        return function () {
+      analytics.factory = function(e) {
+        return function() {
           var t = Array.prototype.slice.call(arguments);
           t.unshift(e);
           analytics.push(t);
@@ -90,7 +90,7 @@ function initSegmentAnalytics(utm) {
         var key = analytics.methods[e];
         analytics[key] = analytics.factory(key);
       }
-      analytics.load = function (key, e) {
+      analytics.load = function(key, e) {
         var t = document.createElement("script");
         t.type = "text/javascript";
         t.async = !0;

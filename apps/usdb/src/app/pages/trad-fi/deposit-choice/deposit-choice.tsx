@@ -1,4 +1,4 @@
-import css from './deposit-choice.module.scss';
+import style from './deposit-choice.module.scss';
 import {
   Box,
   Grid,
@@ -19,25 +19,15 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
 
   const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
   return (
-    <Box sx={{marginTop: '3em'}} id={params.id}>
-      <Zoom in={true}>
-        <Grid container item xs={12} spacing={4} className={css['gridParent']}>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-          <Grid item xs={12} md={4}>
+    <Box id={params.id}>
+        <Box className={style["__bond-cards"]}>
             <DepositCard bondType="3month" term={3} roi={5} apy={21.55} bond={bondsUsdb[0]} days={1}/>
             <DepositCard bondType="3month" term={3} roi={5} apy={21.55} days={90} bond={bondsUsdb[0]}/>
-          </Grid>
-          <Grid item xs={12} md={4}>
+        </Box>
+        <Box className={style["__bond-cards"]}>
             <DepositCard bondType="6month" term={6} roi={15} apy={32.55} bond={bondsUsdb[0]} days={1}/>
             <DepositCard bondType="6month" term={6} roi={15} apy={32.55} days={180} bond={bondsUsdb[0]}/>
-          </Grid>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-        </Grid>
-      </Zoom>
+        </Box>
     </Box>
   );
 };

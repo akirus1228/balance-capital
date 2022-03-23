@@ -201,7 +201,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         </Grid>
         <Grid item xs={12} md={6}>
           <Box className={`${style['currencySelector']}`} flexGrow={1}>
-            <input type="number" placeholder="0.00" value={quantity} onChange={e => setQuantity(e.target.value)}/>
+            <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)}/>
             <span className={style['amount']} onClick={setMax}>Max</span>
           </Box>
         </Grid>
