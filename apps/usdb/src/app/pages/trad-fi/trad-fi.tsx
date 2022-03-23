@@ -26,6 +26,11 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
     title: "Get started today",
     subtitle: ["TradFi bonds are suitable for long-term, savvy investors to safely park their funds and earn stable yields"]
   };
+  const invert = () => {
+    if (localStorage.getItem('use-theme') === 'dark') return 1;
+    return 0;
+  };
+
   return (
     <>
       <Box className={style["__heading"]}>
@@ -33,7 +38,7 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
         <a href="/trad-fi#get-started">
           <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined">
             Get started
-            <img src={LongArrowRight} alt="Arrow to the right" style={{marginLeft: '2em'}}/>
+            <img src={LongArrowRight} alt="Arrow to the right" style={{marginLeft: '2em', filter: 'invert('+invert()+')'}}/>
           </Button>
         </a>
       </Box>
