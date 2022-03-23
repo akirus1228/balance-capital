@@ -85,7 +85,9 @@ export const AssetSection = (props: any): JSX.Element => {
                 onChange={e => changeAmount(e)}
                 inputProps={{
                   classes: {
-                    notchedOutline: style["no-touched-outline "]
+                    notchedOutline: {
+                      border: "none"
+                    }
                   }
                 }}
                 startAdornment={
