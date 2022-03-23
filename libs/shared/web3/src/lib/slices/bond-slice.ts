@@ -18,7 +18,7 @@ import {segmentUA} from "../helpers/user-analytic-helpers";
 
 import { getBondCalculator } from "../helpers/bond-calculator";
 import { networks } from "../networks";
-import { waitUntilBlock } from "../helpers/NetworkHelper";
+import { waitUntilBlock } from "../helpers/network-helper";
 import {calculateUserBondDetails, getBalances} from "./account-slice";
 import {BondType, PaymentToken} from "../lib/bond";
 /**
