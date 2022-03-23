@@ -33,6 +33,7 @@ import {
   useWeb3Context,
 } from '@fantohm/shared-web3';
 import { useEffect, useMemo, useState } from 'react';
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { chains } from 'libs/shared/web3/src/lib/providers';
 
 export interface Investment {
@@ -456,7 +457,7 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onRedeemOne(bond, investment.bondIndex);
+                          bond && onRedeemOne(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Redeem
@@ -471,7 +472,7 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onCancelBond(bond, investment.bondIndex);
+                          bond && onCancelBond(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Cancel

@@ -19,7 +19,7 @@ import {BondAction, BondType, PaymentToken} from "../lib/bond";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
-  async ({address, networkId}: IBaseAddressAsyncThunk) => {
+  async ({ address, networkId }: IBaseAddressAsyncThunk) => {
     const provider = await chains[networkId].provider;
     // Contracts
     //  const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
@@ -206,13 +206,9 @@ export interface IUserBond {
   interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
-  lpTokenAmount: string | number;
-}
-
-export interface IUserBondDetails {
-  allowance: number;
-  userBonds: IUserBond[];
   percentVestedFor: number;
+  lpTokenAmount: string;
+  iLBalance: string;
 }
 
 export interface IUserBondDetails {
@@ -221,10 +217,9 @@ export interface IUserBondDetails {
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
 }
-
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
-  async ({address, bond, networkId}: ICalcUserBondDetailsAsyncThunk) => {
+  async ({ address, bond, networkId }: ICalcUserBondDetailsAsyncThunk) => {
     if (!address) {
       return {
         bond: "",
@@ -235,10 +230,15 @@ export const calculateUserBondDetails = createAsyncThunk(
         balance: "0",
         userBonds: [
           {
+            amount: "0",
+            rewards: "0",
+            rewardToken: PaymentToken.USDB,
             interestDue: 0,
             bondMaturationBlock: 0,
             pendingPayout: "",
+            percentVestedFor: 0,
             lpTokenAmount: "0",
+            iLBalance: "0",
           },
         ],
         paymentToken: bond.paymentToken,
@@ -262,7 +262,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       reserveContract["allowance"](address, bond.getAddressForBond(networkId)),
       reserveContract["balanceOf"](address)
     ]).then(([allowance, balance]) => [
-      allowance ?? 0,
+      allowance,
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
@@ -281,10 +281,13 @@ export const calculateUserBondDetails = createAsyncThunk(
         // balance should NOT be converted to a number. it loses decimal precision
         ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
       ]);
-
       const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
       const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
       const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      let iLBalance = "0";
+      if(bond.type === BondType.SINGLE_SIDED){
+        iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
+      }
       const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
         {
           amount: '9999', // TODO
@@ -294,7 +297,8 @@ export const calculateUserBondDetails = createAsyncThunk(
           bondMaturationBlock,
           pendingPayout,
           percentVestedFor: 50, // TODO
-          lpTokenAmount: lpTokenAmount
+          lpTokenAmount: lpTokenAmount,
+          iLBalance: iLBalance,
         }
       ] : [];
       return {
@@ -308,7 +312,7 @@ export const calculateUserBondDetails = createAsyncThunk(
         paymentToken: bond.paymentToken,
         bondAction: bond.bondAction,
       };
-  }
+    }
 
     const userBonds: IUserBond[] = await Promise.all(
       [...Array(bondLength).keys()].map(async bondIndex => {
@@ -321,6 +325,11 @@ export const calculateUserBondDetails = createAsyncThunk(
           ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
           Number(percentVestedFor.div(BigNumber.from('100'))),
         ]);
+        let iLBalance = "0";
+        if(bond.type === BondType.SINGLE_SIDED){
+          iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
+        }
+        const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
         const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
         const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
         return {
@@ -331,7 +340,8 @@ export const calculateUserBondDetails = createAsyncThunk(
           bondMaturationBlock,
           pendingPayout,
           percentVestedFor,
-          lpTokenAmount: "0",
+          lpTokenAmount: lpTokenAmount,
+          iLBalance: iLBalance
         }
       })
     );

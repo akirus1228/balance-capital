@@ -6,6 +6,9 @@ import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
 import { useBonds } from "@fantohm/shared-web3";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import {DaiToken} from "@fantohm/shared/images";
 
 interface IDepositCardParams {
   bondType: string;
@@ -16,7 +19,7 @@ interface IDepositCardParams {
 }
 
 export const StakingChoicePage = (): JSX.Element => {
-  const { bonds } = useBonds(250); 
+  const { bonds } = useBonds(250);
 
   const heroContent = {
     hero: true,
@@ -37,7 +40,7 @@ export const StakingChoicePage = (): JSX.Element => {
     <>
       <Headline {...heroContent} />
       <Box sx={{marginTop: "3em"}} className="flexCenterCol">
-        <DaiCard className="dai">
+        <DaiCard className="dai" tokenImage={DaiToken}>
           <h2 className={style['daiAPR']}>20.00% APR</h2>
           <Grid container>
             <Grid item xs={6} sx={{justifyContent:'left'}}>

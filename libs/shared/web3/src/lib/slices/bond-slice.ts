@@ -351,7 +351,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
 
 export const redeemSingleSidedILProtection = createAsyncThunk(
   "bonding/redeemBond",
-  async ({ address, bond, networkId, provider, autostake }: IRedeemBondAsyncThunk, { dispatch }) => {
+  async ({ address, bond, networkId, provider }: IRedeemBondAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
