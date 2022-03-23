@@ -287,7 +287,13 @@ export const bondAsset = createAsyncThunk(
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
 
-      dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
+      // If the maturation block is the next one. wait until the next block and then refresh bond details
+      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
+        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+      }
+
     } catch (e: unknown) {
       const rpcError = e as IJsonRPCError;
       if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {

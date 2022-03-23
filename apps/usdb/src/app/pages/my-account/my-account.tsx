@@ -20,20 +20,24 @@ import style from './my-account.module.scss';
 import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import {
+  Bond, 
   BondType,
+  chains,
+  cancelBond,
   IAllBondData,
-  isPendingTxn,
-  prettifySeconds,
-  redeemAllBonds,
-  secondsUntilBlock,
+  isPendingTxn, 
+  IUserBondDetails, 
+  redeemAllBonds, 
+  redeemOneBond,
+  setWalletConnected,
   txnButtonTextGeneralPending,
   useBonds,
   useWeb3Context,
-  chains,
-  cancelBond
-} from '@fantohm/shared-web3';
+  prettifySeconds,
+  secondsUntilBlock
+} from "@fantohm/shared-web3";
+import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
-import { useEffect, useMemo, useState } from 'react';
 
 export interface Investment {
   id: string;
@@ -41,10 +45,13 @@ export interface Investment {
   amount: number;
   rewards: number;
   rewardToken: string;
+  term: number;
+  termType: string;
+  vestDate: number;
   bondName: string;
   bondIndex: number;
   displayName: string;
-  roi: number;
+  roi: string;
   secondsToVest: number;
   percentVestedFor: number;
 }
@@ -72,10 +79,13 @@ const inactiveInvestments: Investment[] = [
     type: BondType.TRADFI,
     rewards: 832.23,
     rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 0,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -85,10 +95,13 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 1,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -98,10 +111,13 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 2,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -169,7 +185,7 @@ export const MyAccount = (): JSX.Element => {
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
-          return userBonds.map((userBond, i) => {
+          return userBonds.map((userBond: any, i: number) => {
             const secondsToVest = secondsUntilBlock(
               chainId,
               currentBlock,
@@ -184,9 +200,12 @@ export const MyAccount = (): JSX.Element => {
               bondName: bond.name,
               bondIndex: i,
               displayName: bond.displayName,
-              roi: Number(bond.roi),
+              roi: bond.roi,
+              term: Number(bond.vestingTerm),
+              termType: 'months',
               secondsToVest,
               percentVestedFor: userBond.percentVestedFor,
+              vestDate: Number(userBonds[i].bondMaturationBlock),
             };
             return investment;
           });
@@ -215,9 +234,48 @@ export const MyAccount = (): JSX.Element => {
     }
   }, [address, JSON.stringify(activeInvestments)]);
 
+
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
+
+  // useEffect(() => {
+  //   activeInvestments = []
+  //   if (accountBonds) {
+  //     for (let i = 0; i < bonds.length - 1; i++) {
+  //       const bond: IAllBondData = (bonds[i] as IAllBondData);
+  //       if (accountBonds[allBonds[i].name]) {
+  //         console.log(accountBonds);
+  //         const userBonds = accountBonds[allBonds[i].name].userBonds;
+  //         for (let j = 0; j < userBonds.length; j++) {
+  //           const investment: Investment = {
+  //             id: `${j}`,
+  //             amount: 29275.51,
+  //             rewards: Number(userBonds[j].pendingPayout),
+  //             rewardToken: 'USDB',
+  //             term: Number(bond.vestingTerm),
+  //             termType: 'months',
+  //             roi: bonds[i].roi,
+  //             vestDate: Number(userBonds[j].bondMaturationBlock),
+  //           }
+  //           activeInvestments.push(
+  //             investment
+  //           )
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [accountBonds]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (provider) {
+        setCurrentBlock(await provider.getBlockNumber())
+      }
+    }
+
+    fetchData()
+  }, [provider])
 
   const pendingClaim = () => {
     if (
@@ -247,23 +305,25 @@ export const MyAccount = (): JSX.Element => {
     console.log('redeem all complete');
   };
 
-  const onRedeemOne = async (bond: IAllBondData, index: number) => {
-    console.log('redeeming bond');
-
-    // TODO
-
-    console.log('redeem complete');
-  };
-
   const onCancelBond = async (bond: IAllBondData, index: number) => {
     console.log('cancelling bond');
     if (provider && chainId) {
+      //await dispatch(redeemAllBonds({networkId: chainId, address, bonds, provider, autostake: false}));
       await dispatch(
         cancelBond({ networkId: chainId, address, bond, provider, index })
       );
     }
 
     console.log('cancelling bond complete');
+  };
+
+  const onRedeemOne = async (bond: IAllBondData, index: number) => {
+    console.log("redeeming one bonds");
+    if (provider && chainId) {
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
+    }
+
+    console.log("redeem one complete");
   };
 
   return (
@@ -429,9 +489,11 @@ export const MyAccount = (): JSX.Element => {
                       className={style['infoIcon']}
                     />{' '}
                   </Typography>
+                  {currentBlock ? (
                   <Typography variant="h6">
-                    {prettifySeconds(investment.secondsToVest)}
+                    {prettifySeconds(secondsUntilBlock(chainId ?? 250, currentBlock, investment.vestDate))}
                   </Typography>
+                    ) : (<></>)}
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
                   <ButtonGroup>

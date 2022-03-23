@@ -113,17 +113,21 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       dispatch(error("Please enter a value!"));
     } else if (isNaN(Number(quantity)) && cardState !== "claim") {
       dispatch(error("Please enter a valid value!"));
-    } else if (Number(quantity) > Number(tokenBalance)) {
-      dispatch(error("Input must be less than or equal to token balance!"));
-    } else if (cardState === "redeem") {
-      dispatch(
-        redeemSingleSidedBond({
-          value: String(quantity),
-          bond: singleSided,
-          networkId: chainId || 250,
-          provider,
-          address: address,
-        } as IBondAssetAsyncThunk)
+    } else if (singleSidedBond.userBonds[0].interestDue > 0 || Number(singleSidedBond.userBonds[0].pendingPayout) > 0) {
+      if (cardState === "redeem") {
+        // dispatch(
+        //   redeemBond({
+        //     value: String(quantity),
+        //     slippage,
+        //     bond: singleSidedBond,
+        //     networkId: chainId || 250,
+        //     provider,
+        //     address: address,
+        //   } as IBondAssetAsyncThunk)
+        // );
+      }
+      const shouldProceed = window.confirm(
+        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
       );
     } else if (cardState === "deposit") {
       dispatch(
