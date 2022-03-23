@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 
 import { Web3ContextProvider } from '@fantohm/shared-web3';
 import { App } from './app';
-import { store } from '@fantohm/shared-web3';
+import store from './store';
 
 const Root = (): JSX.Element => {
 

@@ -7,13 +7,11 @@ import Graph from './graph/graph';
 import Headline from '../../components/headline/headline';
 import Faq from '../../components/faq/faq';
 import Logo from '../../components/logo/logo';
-import { LightCardsIcon, LightShieldIcon, LightDoughnutChartIcon } from '@fantohm/shared/images';
 import { ThemeImage } from '../../components/theme-image/theme-image';
 
-/* eslint-disable-next-line */
-export interface TradfiProps {}
+export const TradFi = (): JSX.Element => {
+  console.log("TradFi rendered");
 
-export const TradFi = (props: TradfiProps): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Take your investing to the next level",

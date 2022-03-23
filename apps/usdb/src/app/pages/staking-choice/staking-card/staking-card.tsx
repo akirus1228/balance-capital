@@ -12,11 +12,11 @@ import {
   BondType, changeApproval,
   error, IAllBondData,
   IBondAssetAsyncThunk, isPendingTxn, redeemBond,
-  RootState,
   trim, txnButtonText,
   useBonds,
   useWeb3Context
 } from "@fantohm/shared-web3";
+import { RootState } from '../../../store';
 
 
 interface IStakingCardParams {

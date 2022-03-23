@@ -75,14 +75,14 @@ export const Header = (): JSX.Element => {
   }, [connected, address, dispatch]);
 
   useEffect(() => {
-    if (hasCachedProvider && hasCachedProvider()) {
+    if (hasCachedProvider && hasCachedProvider() && !connected) {
       connect();
     }
   }, [connected, hasCachedProvider, connect]);
 
-  const toggleTheme = () => {
+  const toggleTheme = useCallback(() => {
     dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
-  }
+  }, [dispatch, themeType]);
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>

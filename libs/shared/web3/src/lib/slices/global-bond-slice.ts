@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 import { ICalcGlobalBondDetailsAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIds, NetworkId } from "../networks";
 import { Bond } from "../lib/bond";
@@ -99,8 +98,3 @@ const globalBondingSlice = createSlice({
 
 export const globalbondingReducer = globalBondingSlice.reducer;
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const baseInfo = (state: RootState) => state.globalbonding;
-
-export const getGlobalBondingState = createSelector(baseInfo, globalbonding => globalbonding);

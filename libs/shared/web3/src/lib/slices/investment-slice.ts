@@ -1,5 +1,4 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { RootState } from "../store";
 import { ICalcInvestmentDetailsAsyncThunk } from "./interfaces";
 
 export interface IInvestmentDetails {
@@ -70,9 +69,3 @@ const investmentsSlice = createSlice({
 export const investmentsReducer = investmentsSlice.reducer;
 
 export const { fetchInvestmentsSuccess } = investmentsSlice.actions;
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const baseInfo = (state: RootState) => state.investments;
-
-export const getInvestmentsState = createSelector(baseInfo, investments => investments);

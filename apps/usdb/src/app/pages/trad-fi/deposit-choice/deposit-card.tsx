@@ -1,9 +1,9 @@
-import {Box, Button, Grid, Paper, Typography} from "@mui/material";
+import { Box, Button, Grid, Paper, Typography } from "@mui/material";
 import css from "./deposit-choice.module.scss";
 import DAIIcon from "../../../../assets/tokens/DAI.svg";
-import {Link} from 'react-router-dom';
-import {ThemeProvider} from "@mui/material/styles";
-import {USDBLight} from "@fantohm/shared-ui-themes";
+import { Link } from 'react-router-dom';
+import { ThemeProvider } from "@mui/material/styles";
+import { USDBLight } from "@fantohm/shared-ui-themes";
 
 interface IDepositCardParams {
   bondType: string;
