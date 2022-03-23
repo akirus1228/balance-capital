@@ -18,7 +18,6 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const {bonds, allBonds} = useBonds(chainId || 250);
 
   const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
-  console.log(bonds)
   return (
     <Box id={params.id}>
         <Box className={style["__bond-cards"]}>

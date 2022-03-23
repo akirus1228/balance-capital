@@ -13,11 +13,12 @@ export interface DaiCardProps {
   children: JSX.Element | Array<JSX.Element>;
   className?: string;
   invertTheme?: boolean;
+  tokenImage?: any;
 }
 
 export const DaiCard = (props: DaiCardProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
-  
+
   const theme = useCallback(() => {
     if(props.invertTheme){
       return themeType === 'light' ? USDBDark : USDBLight;
@@ -31,7 +32,7 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
       <Paper sx={{marginTop: '47px'}} className={`daiCard ${style['cardWrapper']} ${props.className} flexCenterCol`}>
           <Box className={`flexCenterCol`}>
               <div className={`${style['iconWrapper']}`}>
-                  <img src={daiToken} alt="DAI token" className={style['daiIcon']}/>
+                  <img src={props.tokenImage} alt="DAI token" className={style['daiIcon']}/>
               </div>
           </Box>
           <Box className="flexCenterCol" sx={{mt: '1em'}}>
