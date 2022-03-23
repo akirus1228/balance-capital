@@ -29,7 +29,6 @@ import {
   IUserBondDetails, 
   redeemAllBonds, 
   redeemOneBond,
-  redeemBond,
   setWalletConnected,
   txnButtonTextGeneralPending,
   useBonds,
