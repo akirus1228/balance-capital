@@ -3,6 +3,9 @@ import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
 
 import {
   IApproveBondAsyncThunk,
@@ -21,6 +24,7 @@ import { networks } from "../networks";
 import { waitUntilBlock } from "../helpers/NetworkHelper";
 import {calculateUserBondDetails, getBalances} from "./account-slice";
 import {BondType, PaymentToken} from "../lib/bond";
+import {addresses} from "../constants";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
@@ -264,7 +268,6 @@ export const bondAsset = createAsyncThunk(
     const bondContractForWrite = bond.getContractForBondForWrite(networkId, signer);
     const calculatePremium = await bondContractForRead["bondPrice"]();
     const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
-    console.log(bondContractForWrite)
 
     // Deposit the bond
     let bondTx;
@@ -327,7 +330,94 @@ export const redeemSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeem"](address, value, 0);
+      redeemTx = await bondContract["redeem"](address, ethers.utils.parseUnits(value, 18), 0);
+      const pendingTxnType = "redeem_bond_" + bond.name;
+      uaData.txHash = redeemTx.hash;
+      dispatch(
+        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+      );
+
+      await redeemTx.wait();
+      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: unknown) {
+      uaData.approved = false;
+      dispatch(error((e as IJsonRPCError).message));
+    } finally {
+      if (redeemTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(redeemTx.hash));
+      }
+    }
+  },
+);
+
+export const redeemSingleSidedILProtection = createAsyncThunk(
+  "bonding/redeemBond",
+  async ({  address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+
+    let redeemTx;
+    const uaData = {
+      address: address,
+      type: "Redeem",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      redeemTx = await bondContract["ilProtectionRedeem"](address);
+      const pendingTxnType = "redeem_bond_" + bond.name;
+      uaData.txHash = redeemTx.hash;
+      dispatch(
+        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+      );
+
+      await redeemTx.wait();
+      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: unknown) {
+      uaData.approved = false;
+      dispatch(error((e as IJsonRPCError).message));
+    } finally {
+      if (redeemTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(redeemTx.hash));
+      }
+    }
+  },
+);
+
+export const claimSingleSidedBond = createAsyncThunk(
+  "bonding/redeemBond",
+  async ({ value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, signer);
+
+    let redeemTx;
+    const uaData = {
+      value: value,
+      address: address,
+      type: "Redeem",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      redeemTx = await masterchefContract["withdraw"](0, ethers.utils.parseUnits(value, 18), address);
       const pendingTxnType = "redeem_bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(

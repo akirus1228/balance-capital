@@ -10,9 +10,9 @@ import {useDispatch, useSelector} from "react-redux";
 import {
   Bond,
   bondAsset,
-  BondType, changeApproval,
+  BondType, changeApproval, claimSingleSidedBond,
   error, getBalances, IAllBondData,
-  IBondAssetAsyncThunk, isPendingTxn, redeemSingleSidedBond,
+  IBondAssetAsyncThunk, isPendingTxn, redeemSingleSidedBond, redeemSingleSidedILProtection,
   RootState, setWalletConnected,
   trim, txnButtonText,
   useBonds,
@@ -43,10 +43,6 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   });
 
   const singleSidedBond = accountBonds[singleSidedBondData?.name]
-  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
-  const toggleStakingDirection = useCallback(() => {
-    setCardState(cardState === "deposit" ? "redeem" : "deposit");
-  }, [cardState])
 
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
@@ -73,15 +69,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     const slippage = 0;
 
     if (Number(quantity) === 0) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       dispatch(error("Please enter a value!"));
     } else if (isNaN(Number(quantity))) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (singleSidedBond?.userBonds[0].interestDue > 0 || Number(singleSidedBond?.userBonds[0].pendingPayout) > 0) {
-      if (cardState === "redeem") {
+    } else if (cardState === "redeem") {
         dispatch(
           redeemSingleSidedBond({
             value: String(quantity),
@@ -91,11 +82,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             address: address,
           } as IBondAssetAsyncThunk)
         );
-      }
-      const shouldProceed = window.confirm(
-        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
-      );
-      if (shouldProceed) {
+      } else if (cardState === "deposit") {
         dispatch(
           bondAsset({
             value: String(quantity),
@@ -106,11 +93,9 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             address: address,
           } as IBondAssetAsyncThunk)
         );
-      }
-    } else {
-      const slippage = 0.005;
+      } else if (cardState === "claim") {
       dispatch(
-        bondAsset({
+        claimSingleSidedBond({
           value: String(quantity),
           slippage,
           bond: singleSided,
@@ -119,9 +104,18 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
+    } else if (cardState === "ilredeem") {
+      dispatch(
+        redeemSingleSidedILProtection({
+          bond: singleSided,
+          networkId: chainId || 250,
+          provider,
+          address: address,
+        } as IBondAssetAsyncThunk)
+      );
+    }
       clearInput();
     }
-  }
 
   const clearInput = () => {
     setQuantity("0");
@@ -142,14 +136,24 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Box>
       <Box className={`flexCenterRow`}>
         <Box className={`${style['smokeyToggle']} ${cardState === "deposit" ? style['active'] : ""}`} sx={{mr: '1em'}}
-             onClick={toggleStakingDirection}>
+             onClick={() => setCardState("deposit")}>
           <div className={style['dot']}/>
           <span>Deposit</span>
         </Box>
         <Box className={`${style['smokeyToggle']} ${cardState === "redeem" ? style['active'] : ""}`}
-             onClick={toggleStakingDirection}>
+             onClick={() => setCardState("redeem")}>
           <div className={style['dot']}/>
           <span>Redeem</span>
+        </Box>
+        <Box className={`${style['smokeyToggle']} ${cardState === "claim" ? style['active'] : ""}`}
+             onClick={() => setCardState("claim")}>
+          <div className={style['dot']}/>
+          <span>Claim</span>
+        </Box>
+        <Box className={`${style['smokeyToggle']} ${cardState === "ilredeem" ? style['active'] : ""}`}
+             onClick={() => setCardState("ilredeem")}>
+          <div className={style['dot']}/>
+          <span>ILRedeem</span>
         </Box>
       </Box>
       <Box className={`flexCenterRow`}>
