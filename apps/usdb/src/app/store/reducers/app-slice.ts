@@ -3,14 +3,6 @@ import {createSlice, createSelector, createAsyncThunk, PayloadAction} from "@red
 import { loadState } from "../localstorage";
 import { RootState } from "..";
 
-const appState = loadState();
-
-const initialState = appState ? appState : {
-	loading: false,
-	loadingMarketPrice: false,
-  theme: 'light'
-};
-
 export const loadAppDetails = createAsyncThunk(
 	"app/loadAppDetails",
 	async ({ networkId }: IBaseAsyncThunk, {dispatch}) => {
@@ -92,8 +84,20 @@ interface IAppData {
 	readonly globalStakingCircSupply: number;
 	readonly endBlock: number;
 	readonly epochNumber: number;
-  readonly theme: string;
+	readonly loading: boolean;
+	readonly theme: string;
 }
+
+// load cached application state
+const appState = loadState();
+const initialState: IAppData = {
+	loading: false,
+	loadingMarketPrice: false,
+	theme: 'light',
+	...appState.app,
+};
+
+console.log(initialState);
 
 const appSlice = createSlice({
 	name: "app",
@@ -102,9 +106,9 @@ const appSlice = createSlice({
 		fetchAppSuccess(state, action) {
 			setAll(state, action.payload);
 		},
-    setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
-      state.theme = action.payload;
-    }
+		setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+			state.theme = action.payload;
+		}
 	},
 	extraReducers: builder => {
 		builder
