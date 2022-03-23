@@ -71,7 +71,7 @@ export const App = (): JSX.Element => {
         <Messages />
         <Header />
         <Routes>
-          <Route path="/" element={<HomePage title="Home" />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi" element={<TradFi />}>
             <Route

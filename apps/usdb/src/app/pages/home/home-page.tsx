@@ -47,7 +47,7 @@ export const HomePage = (): JSX.Element => {
               <Box sx={{ height: { xs: '132px', md: '180px' } }}>
                 <img
                   src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-                  alt="BUSD Logo"
+                  alt="USDB Logo"
                   className={style['heroLogo']}
                 />
               </Box>
