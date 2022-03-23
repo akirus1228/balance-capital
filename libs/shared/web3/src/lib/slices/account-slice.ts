@@ -1,4 +1,4 @@
-import {ethers} from "ethers";
+import {BigNumber, ethers} from "ethers";
 import {addresses} from "../constants";
 import {abi as ierc20Abi} from "../abi/IERC20.json";
 import {abi as usdbAbi} from "../abi/USDBContract.json";
@@ -199,44 +199,36 @@ export const loadAccountDetails = createAsyncThunk(
   },
 );
 
-export interface IUserBondDetails {
-  allowance: number;
+export interface IUserBond {
+  amount: string;
+  rewards: string;
+  rewardToken: PaymentToken;
   interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
+  percentVestedFor: number;
+}
+
+export interface IUserBondDetails {
+  allowance: number;
+  userBonds: IUserBond[];
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
 }
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
   async ({ address, bond, networkId }: ICalcUserBondDetailsAsyncThunk) => {
-    if (!address) {
-      return {
-        bond: "",
-        displayName: "",
-        bondIconSvg: "",
-        isLP: false,
-        allowance: 0,
-        balance: "0",
-        interestDue: 0,
-        bondMaturationBlock: 0,
-        pendingPayout: "",
-        paymentToken: bond.paymentToken,
-        bondAction: bond.bondAction,
-      };
-    }
     const provider = await chains[networkId].provider;
 
     // Contracts
     const bondContract = await bond.getContractForBond(networkId);
     const reserveContract = await bond.getContractForReserve(networkId);
-    let interestDue, bondMaturationBlock;
 
     const paymentTokenDecimals = bond.paymentToken === PaymentToken.USDB ? 18 : 9;
 
     let bondLength = 0;
     if(bond.type === BondType.TRADFI) {
-      bondLength = await bondContract["bondlength"](address)
+      bondLength = Number(await bondContract["bondlength"](address))
     }
 
     const [allowance, balance] = await Promise.all([
@@ -248,34 +240,72 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
 
-    if (Number(bondLength) === 0) return{
-      bond: bond.name,
-      displayName: bond.displayName,
-      bondIconSvg: bond.bondIconSvg,
-      isLP: bond.isLP,
-      allowance,
-      balance,
-      interestDue: 0,
-      bondMaturationBlock: 0,
-      pendingPayout: "",
-      paymentToken: bond.paymentToken,
-      bondAction: bond.bondAction,
-    };
+    if (Number(bondLength) === 0) {
+      // Contract Interactions
+      const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
+        bondContract['bondInfo'](address),
+        bondContract['pendingPayoutFor'](address),
+        reserveContract['allowance'](address, bond.getAddressForBond(networkId)),
+        reserveContract['balanceOf'](address),
+      ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
+        bondDetails,
+        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+        Number(allowance),
+        // balance should NOT be converted to a number. it loses decimal precision
+        ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
+      ]);
 
-    //Contract Interactions
-    const [bondDetails, pendingPayout] = await Promise.all([
-      bondContract["bondInfo"](address, bondLength - 1),
-      bondContract["pendingPayoutFor"](address, bondLength - 1),
-    ]).then(([bondDetails, pendingPayout]) => [
-      bondDetails,
-      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-    ]);
+      const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+      const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+      const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
+        {
+          amount: '9999', // TODO
+          rewards: '1000', // TODO
+          rewardToken: PaymentToken.USDB, // TODO
+          interestDue,
+          bondMaturationBlock,
+          pendingPayout,
+          percentVestedFor: 50, // TODO
+        }
+      ] : [];
+      return {
+        bond: bond.name,
+        displayName: bond.displayName,
+        bondIconSvg: bond.bondIconSvg,
+        isLP: bond.isLP,
+        allowance,
+        balance,
+        userBonds,
+        paymentToken: bond.paymentToken,
+        bondAction: bond.bondAction,
+      };
+  }
 
-    // eslint-disable-next-line prefer-const
-    interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-    // eslint-disable-next-line prefer-const
-    bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-
+    const userBonds: IUserBond[] = await Promise.all(
+      [...Array(bondLength).keys()].map(async bondIndex => {
+        const [bondDetails, pendingPayout, percentVestedFor] = await Promise.all([
+          bondContract["bondInfo"](address, bondIndex),
+          bondContract["pendingPayoutFor"](address, bondIndex),
+          bondContract["percentVestedFor"](address, bondIndex),
+        ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
+          bondDetails,
+          ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+          Number(percentVestedFor.div(BigNumber.from('100'))),
+        ]);
+        const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+        const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+        return {
+          amount: ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals),
+          rewards: '100', // TODO
+          rewardToken: PaymentToken.USDB, // TODO
+          interestDue,
+          bondMaturationBlock,
+          pendingPayout,
+          percentVestedFor,
+        }
+      })
+    );
+    
     return {
       bond: bond.name,
       displayName: bond.displayName,
@@ -283,9 +313,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       isLP: bond.isLP,
       allowance,
       balance,
-      interestDue,
-      bondMaturationBlock,
-      pendingPayout,
+      userBonds,
       paymentToken: bond.paymentToken,
       bondAction: bond.bondAction,
     };

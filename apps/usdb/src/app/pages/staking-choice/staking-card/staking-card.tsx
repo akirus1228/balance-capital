@@ -55,8 +55,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   });
 
   const hasAllowance = useCallback(() => {
-    return singleSidedBond.allowance > 0;
-  }, [singleSidedBond.allowance]);
+    return singleSidedBond && singleSidedBond.allowance > 0;
+  }, [JSON.stringify(singleSidedBond)]);
 
 
   async function useBond() {
@@ -70,7 +70,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (singleSidedBond.interestDue > 0 || Number(singleSidedBond.pendingPayout) > 0) {
+    } else if (singleSidedBond.userBonds.length > 0 && (singleSidedBond.userBonds[0].interestDue > 0 || Number(singleSidedBond.userBonds[0].pendingPayout) > 0)) {
       if (cardState === "redeem") {
         // dispatch(
         //   redeemBond({
@@ -175,7 +175,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
-      {!singleSidedBond.isAvailable[chainId ?? 250] ? (
+      {!singleSidedBond || !singleSidedBond.isAvailable[chainId ?? 250] ? (
         <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
           Sold Out
         </Button>
