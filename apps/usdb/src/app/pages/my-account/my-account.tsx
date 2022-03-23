@@ -34,7 +34,6 @@ import {
 } from '@fantohm/shared-web3';
 import { RootState } from '../../store';
 import { useEffect, useMemo, useState } from 'react';
-import { chains } from 'libs/shared/web3/src/lib/providers';
 
 export interface Investment {
   id: string;

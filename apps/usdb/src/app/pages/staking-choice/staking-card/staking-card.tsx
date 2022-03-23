@@ -25,7 +25,6 @@ import {
   isPendingTxn, 
   redeemSingleSidedBond, 
   redeemSingleSidedILProtection,
-  RootState, 
   setWalletConnected,
   trim, 
   txnButtonText,
