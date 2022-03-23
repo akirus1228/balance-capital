@@ -30,7 +30,7 @@ export const StakingChoicePage = (): JSX.Element => {
   };
   const getStarted = {
     title: "Get started today",
-    subtitle: ["Single Sided Staking is similar to Liquidity Pair (LP) farming, but eliminates the impermanent losses."]
+    subtitle: ["Single Sided Staking is similar to Liquidity Pair (LP) farming, but eliminates impermanent loss."]
   };
 
   return (

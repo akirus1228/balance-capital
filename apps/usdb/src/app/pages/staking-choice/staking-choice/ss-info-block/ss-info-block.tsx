@@ -32,7 +32,7 @@ export const SsInfoBlock = (): JSX.Element => {
             <Paper className='softGradient' sx={{height: '100%', width: '100%'}}>
               <Box className={style['centerBox']} >
                 <Typography variant='h1'>Risk Averse Investment</Typography>
-                <Typography variant='h2'>Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo.</Typography>
+                <Typography variant='h2'>Investors only need to provide DAI, while our protocol provides the other token in the pair, USDB.</Typography>
                 <Box className='flexCenterCol h-full'>
                   <img src={LightBankIcon} alt='Illustration depicting roman style building to infer a bank. USDB logo on the roof.'/>
                 </Box>
@@ -52,7 +52,7 @@ export const SsInfoBlock = (): JSX.Element => {
             </Paper>
             <Paper className='softGradient' sx={{height: '100%', width: '100%'}}>
               <Box className='flexCenterCol'>
-                <Typography variant='h1'>Earn Up to 20% Risk Free</Typography>
+                <Typography variant='h1'>Earn 20% APR</Typography>
                 <Box className='flexCenterCol h-full'>
                   <img src={LightShieldIcon} alt='Illustration of shield with a lock on front and graphs in front.' />
                 </Box>
