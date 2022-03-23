@@ -1,31 +1,48 @@
-import { Box, Icon } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Box } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
 import style from './icon-link.module.scss';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
+import { useCallback } from 'react';
 
 /* eslint-disable-next-line */
 export interface IconLinkProps {
-  icon: string | typeof import("*.png");
+  icon: string | typeof import('*.png');
   title: string;
-  link?: string;
-  linkText?: string;
+  link?: string | undefined;
 }
 
-export function IconLink(props: IconLinkProps) {
+export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
+  const navigate = useNavigate();
+  const handleOnClick = useCallback(() => {
+    if (link) navigate(link);
+  }, [navigate, link]);
+
   return (
     <Box className={style['iconLinkContainer']}>
-      <Box className={style['imageBox']} sx={{height: {xs: '114px', md: '190px'}, width: {xs: '114px', md: '190px'}}}>
-        <img src={props.icon as string} alt={props.title} className={style['iconImage']}/>
+      <Box
+        textAlign="center"
+        sx={link ? { cursor: 'pointer' } : {}}
+        onClick={handleOnClick}
+      >
+        <Box
+          className={style['imageBox']}
+          sx={{
+            height: { xs: '114px', md: '150px' },
+            width: { xs: '114px', md: '150px' },
+          }}
+        >
+          <img
+            src={icon as string}
+            alt={title}
+            className={style['iconImage']}
+          />
+        </Box>
+        <h1 className={style['title']}>{title}</h1>
+        {!link && (
+          <h2 className={`${style['link']} ${style['disabled']}`}>
+            Coming Soon
+          </h2>
+        )}
       </Box>
-      <h1 className={style['title']}>{props.title}</h1>
-      <Link to={props.link ? props.link : '/'}>
-        <h2 className={`${style['link']} ${!props.link ? style['disabled'] : ''}`}>
-          {props.link ? props.linkText : "Coming Soon"}
-          {props.link ? (
-            <Icon component={ArrowUpwardIcon} className={style['linkArrow']}/>
-          ):''}
-        </h2>
-      </Link>
     </Box>
   );
 }

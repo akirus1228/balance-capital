@@ -16,15 +16,15 @@ export const TradFi = (props: TradfiProps): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Take your investing to the next level",
-    subtitle: ["The safest way to earn up to 32.5% on your stables.", "No risk. No surprises."]
+    subtitle: ["The safest way to earn up to 32.5% on your stables.",]
   };
   const simpleSafe = {
-    title: "Simple & safe returns",
-    subtitle: ["USDB offers the safest way to earn up to 20% on your stables. No risk. No surprises."]
+    title: "Simple & Safe returns",
+    subtitle: ["USDB offers the safest way to earn up to 32.5% on your stables.","Below are some comparative yields for different market offerings"]
   };
   const getStarted = {
     title: "Get started today",
-    subtitle: ["Lorem ipsum dolor sit amet, conctetur adipiscing elit. Etiam auctor commodo."]
+    subtitle: ["TradFi bonds are suitable for long-term, savvy investors to safely park their funds and earn stable yields"]
   };
   return (
     <>

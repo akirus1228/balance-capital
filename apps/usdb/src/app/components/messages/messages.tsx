@@ -1,4 +1,10 @@
-import { Alert, AlertColor, AlertTitle, LinearProgress, Snackbar } from "@mui/material";
+import {
+  Alert,
+  AlertColor,
+  AlertTitle,
+  LinearProgress,
+  Snackbar,
+} from '@mui/material';
 import { makeStyles } from "@mui/styles";
 import { close, handle_obsolete, Message } from "@fantohm/shared-web3";
 import { memo, useEffect, useState } from "react";
@@ -9,8 +15,8 @@ import store, { RootState } from "../../store";
 const useStyles = makeStyles({
   root: {
     width: "100%",
-    marginTop: "10px"
-  }
+    marginTop: "10px",
+  },
 });
 
 interface ILinearProps {
@@ -24,7 +30,7 @@ export const Linear = (props: ILinearProps): JSX.Element => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setProgress(oldProgress => {
+      setProgress((oldProgress) => {
         if (oldProgress === 0) {
           clearInterval(timer);
           dispatch(close(props.message));
@@ -37,7 +43,7 @@ export const Linear = (props: ILinearProps): JSX.Element => {
     return () => {
       clearInterval(timer);
     };
-  }, []);
+  }, [dispatch, message]);
 
   return (
     <div className={classes.root}>
@@ -59,28 +65,30 @@ export const Messages = (): JSX.Element => {
     };
   };
   return (
-    <div>
-      <div>
-        {messages.items.map((message, index) => {
-          return (
-            <Snackbar open={message.open} key={index} anchorOrigin={{ vertical: "top", horizontal: "center" }}>
-              <Alert
-                variant="filled"
-                icon={false}
-                severity={message.severity as AlertColor}
-                onClose={handleClose(message)}
-                // NOTE (appleseed): mui includes overflow-wrap: "break-word", but word-break: "break-word" is needed for webKit browsers
-                style={{ wordBreak: "break-word", borderRadius: "10px" }}
-              >
-                <AlertTitle>{message.title}</AlertTitle>
-                {message.text}
-                <Linear message={message} />
-              </Alert>
-            </Snackbar>
-          );
-        })}
-      </div>
-    </div>
+    <>
+      {messages.items.map((message, index) => {
+        return (
+          <Snackbar
+            open={message.open}
+            key={index}
+            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          >
+            <Alert
+              variant="filled"
+              icon={false}
+              severity={message.severity as AlertColor}
+              onClose={handleClose(message)}
+              // NOTE (appleseed): mui includes overflow-wrap: "break-word", but word-break: "break-word" is needed for webKit browsers
+              style={{ wordBreak: 'break-word', borderRadius: '10px' }}
+            >
+              <AlertTitle>{message.title}</AlertTitle>
+              {message.text}
+              <Linear message={message} />
+            </Alert>
+          </Snackbar>
+        );
+      })}
+    </>
   );
 };
 // Invoke repeatedly obsolete messages deletion (should be in slice file but I cannot find a way to access the store from there)
