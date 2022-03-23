@@ -18,8 +18,6 @@ import {segmentUA} from "../helpers/user-analytic-helpers";
 
 import { getBondCalculator } from "../helpers/bond-calculator";
 import { RootState } from "../store";
-import { networks } from "../networks";
-import { waitUntilBlock } from "../helpers/NetworkHelper";
 import {calculateUserBondDetails, getBalances} from "./account-slice";
 import {BondType, PaymentToken} from "../lib/bond";
 /**
