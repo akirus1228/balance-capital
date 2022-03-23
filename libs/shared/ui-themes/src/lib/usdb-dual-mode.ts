@@ -123,9 +123,9 @@ const globalTheme: ThemeOptions = {
         },
         contained: {
           '&.closeButton': {
-            borderRadius: '50%', 
-            p: '0.5em', 
-            boxSizing: 'border-box', 
+            borderRadius: '50%',
+            p: '0.5em',
+            boxSizing: 'border-box',
             minWidth: '16px'
           }
         }
@@ -194,7 +194,9 @@ const USDBLightBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #000',
+          '&, &:hover': {
+            border: '3px solid #000'
+          }
         },
         contained: {
           '&.closeButton': {
@@ -264,7 +266,9 @@ const USDBDarkBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #FFF',
+          '&, &:hover': {
+            border: '3px solid #FFF'
+          }
         },
         contained: {
           '&.closeButton': {
