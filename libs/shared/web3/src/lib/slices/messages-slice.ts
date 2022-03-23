@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 const MESSAGES_MAX_DISPLAY_DURATION = 60000;
 let nb_messages = 0;
 
-interface Message {
+export interface Message {
   id: number;
   title: string;
   text: string;
