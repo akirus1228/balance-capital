@@ -1,9 +1,10 @@
-import { Box, Button, Grid, Paper, Typography } from "@mui/material";
+import {Box, Button, Grid, Paper, Typography} from "@mui/material";
 import css from "./deposit-choice.module.scss";
 import DAIIcon from "../../../../assets/tokens/DAI.svg";
-import { Link } from 'react-router-dom';
-import { ThemeProvider } from "@mui/material/styles";
-import { USDBLight } from "@fantohm/shared-ui-themes";
+import {Link} from 'react-router-dom';
+import {ThemeProvider} from "@mui/material/styles";
+import {USDBLight} from "@fantohm/shared-ui-themes";
+import {useWeb3Context} from "@fantohm/shared-web3";
 
 interface IDepositCardParams {
   bondType: string;
@@ -15,6 +16,7 @@ interface IDepositCardParams {
 }
 
 export const DepositCard = (params: IDepositCardParams): JSX.Element => {
+  const {provider, address, connect, disconnect, connected} = useWeb3Context();
 
   return (
     <ThemeProvider theme={USDBLight}>
@@ -57,9 +59,17 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
-                    <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button">Deposit</Button>
-                  </Link>
+                  {!connected ? (
+                    <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
+                            onClick={connect}>
+                      Connect Wallet
+                    </Button>
+                  ) : (
+                    <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
+                      <Button variant="contained" color="primary" id="bond-btn"
+                              className="paperButton transaction-button">Deposit</Button>
+                    </Link>
+                  )}
                 </Grid>
               </Grid>
             </Grid>
