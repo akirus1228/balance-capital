@@ -15,20 +15,28 @@ interface IDepositChoiceParams {
 }
 
 export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
-  const {connect, hasCachedProvider, chainId} = useWeb3Context();
+  const {connect, hasCachedProvider, chainId, connected} = useWeb3Context();
   const {bonds, allBonds} = useBonds(chainId || 250);
-  const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>()
-
+  const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
+  
   useEffect(() => {
     console.log("set bonds")
     setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI));
+    console.log(bondsUsdb);
   }, [bonds]);
 
   return (
    <Box id={params.id}>
         <Box className={style["__bond-cards"]}>
-            {bondsUsdb?.map((bond, index) => 
-              (<DepositCard key={index} bondType="3month" term={3} roi={5} apy={21.55} bond={bond} days={1}/>))}
+          {
+            bondsUsdb?.map((bond, index) => 
+            (<DepositCard key={index} bondType="3month" term={3} roi={Number(bond.roi)} apy={21.55} bond={bond} days={bond.vestingTerm}/>))
+          }
+          {
+            !bondsUsdb && connected ? (
+              <span>No available bonds on this network.</span>
+            ) : (<></>)
+          }
         </Box>
     </Box>
   );

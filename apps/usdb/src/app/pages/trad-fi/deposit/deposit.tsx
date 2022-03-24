@@ -148,7 +148,7 @@ export const TradFiDeposit = (): JSX.Element => {
                 <span>Max</span>
               </InputWrapper>
             </Grid>
-            <Grid item xs={12} md={4} sx={{pb: "3em"}}>
+            <Grid item xs={12} md={4} sx={{pb: "3em", display:'flex', justifyContent:'flex-start', alignItems:'flex-start'}}>
               {!bond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
                   Sold Out
@@ -187,7 +187,7 @@ export const TradFiDeposit = (): JSX.Element => {
                   <span>21.55%</span>
                 </Box>
             </Grid>
-            <Grid xs={0} sm={1}>
+            <Grid item xs={0} sm={1}>
               <Box style={{borderLeft: '2px solid #696C804F', height: '120%', width: '1px', marginLeft: 'auto', marginRight: 'auto', position: 'relative', top:'-0.5em'}}/>
             </Grid>
             <Grid item xs={12} sm>
