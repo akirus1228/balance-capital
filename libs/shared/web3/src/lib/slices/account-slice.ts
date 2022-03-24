@@ -332,16 +332,19 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
       fhmMarketPrice?.marketPrice || 0,
     ]);
-    const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+    const interestDue = bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
     const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
     let pendingFHM = "0";
     let iLBalance = "0";
     let lpTokenAmount = 0;
     if(bond.type === BondType.SINGLE_SIDED){
+
       const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
-      pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
+      const fhmRewards = await masterchefContract["pendingFhm"](0, address)
+
+      pendingFHM = trim(Number(ethers.utils.formatUnits(String(fhmRewards), 18)), 2);
       iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
-      lpTokenAmount = Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, paymentTokenDecimals));
+      lpTokenAmount = Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, orgPaymentTokenDecimals));
     }
     const payout = Number(ethers.utils.formatUnits(bondDetails.payout, orgPaymentTokenDecimals));
     const pricePaid = Number(ethers.utils.formatUnits(bondDetails.pricePaid, orgPaymentTokenDecimals));

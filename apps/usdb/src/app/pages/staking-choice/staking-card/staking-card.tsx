@@ -81,7 +81,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   };
   useEffect(() => {
     if (singleSidedBond?.userBonds[0]) {
-      setPayout(trim(Number(ethers.utils.formatUnits(singleSidedBond?.userBonds[0]?.interestDue, 0)), 2))
+      setPayout(trim(singleSidedBond?.userBonds[0]?.interestDue, 2))
       setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM)
     }
   }, [singleSidedBond?.userBonds])
@@ -219,7 +219,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
           </Box>
         </Grid>
-        {cardState !== "claim" ? (
+        {(cardState !== "claim" && cardState !== "ilredeem") ? (
 
           <Grid item xs={12} md={6}>
             <InputWrapper>

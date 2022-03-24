@@ -19,15 +19,16 @@ import { format } from 'date-fns';
 import style from './my-account.module.scss';
 import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {
-  Bond, 
+  Bond,
   BondType,
-  chains,
   cancelBond,
   IAllBondData,
-  isPendingTxn, 
-  IUserBondDetails, 
-  redeemAllBonds, 
+  isPendingTxn,
+  IUserBondDetails,
+  redeemAllBonds,
   redeemOneBond,
   claimSingleSidedBond,
   setWalletConnected,
@@ -36,7 +37,7 @@ import {
   useWeb3Context,
   prettifySeconds,
   secondsUntilBlock,
-  trim
+  trim, chains
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
