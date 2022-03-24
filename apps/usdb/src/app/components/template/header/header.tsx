@@ -87,8 +87,15 @@ export const Header = (): JSX.Element => {
   }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
-    dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
+    const type = themeType === 'light' ? 'dark' : 'light';
+    dispatch(setTheme(type));
+    localStorage.setItem("use-theme", type);
   }, [dispatch, themeType]);
+
+  const useTheme = localStorage.getItem("use-theme");
+  if (useTheme) {
+    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
+  }
 
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
