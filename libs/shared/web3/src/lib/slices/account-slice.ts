@@ -375,12 +375,13 @@ export const calculateUserBondDetails = createAsyncThunk(
         ]);
         let iLBalance = "0";
         let pendingFHM = "0";
+        let lpTokenAmount = "0";
         if(bond.type === BondType.SINGLE_SIDED){
           const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
           pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFHM"](0, address)))), 2);
           iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
+          lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
         }
-        const lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
         const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
         const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
         return {
