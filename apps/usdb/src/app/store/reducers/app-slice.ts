@@ -94,7 +94,7 @@ const appState = loadState();
 const initialState: IAppData = {
 	loading: false,
 	loadingMarketPrice: false,
-	theme: 'light',
+	theme: 'dark',
 	...appState?.app,
 };
 
