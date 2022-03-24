@@ -1,4 +1,4 @@
-import { useWeb3Context, setWalletConnected, getBalances } from "@fantohm/shared-web3";
+import { useWeb3Context, setWalletConnected, getBalances, useBonds, trim } from "@fantohm/shared-web3";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { SvgIcon, SxProps, Theme } from "@mui/material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import { MouseEvent, useCallback, useEffect, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
@@ -41,13 +41,17 @@ const pages: Pages[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected, address, hasCachedProvider } = useWeb3Context();
+  const { connect, disconnect, connected, address, hasCachedProvider, chainId } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElProductsMenu, setAnchorElProductsMenu] = useState<null | HTMLElement>(null);
   const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
 
   const themeType = useSelector((state: RootState) => state.app.theme);
+  const { bonds } = useBonds(chainId ?? 250);
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -88,6 +92,22 @@ export const Header = (): JSX.Element => {
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
   };
+
+  const totalBalances = useMemo(() => {
+    if (accountBonds && chainId) {
+      return bonds.reduce((prevBalance, bond) => {
+        const bondName = bond.name;
+        const accountBond = accountBonds[bondName];
+        if (accountBond) {
+          const userBonds = accountBond.userBonds;
+          console.log(bondName, userBonds);
+          return prevBalance + userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0);
+        }
+        return prevBalance;
+      }, 0);
+    }
+    return 0;
+  }, [address, JSON.stringify(accountBonds)]);
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -199,16 +219,18 @@ export const Header = (): JSX.Element => {
               </Menu>
             </Box>
           </Box>
-          <Tooltip title="My Portfolio: $88">
-            <Button className="portfolio">
-              <Box display="flex" alignItems="center">
-                <Box display="flex" alignItems="center" mr="10px">
-                  <SvgIcon component={AnalyticsIcon} fontSize="large" />
+          <Tooltip title={`My Portfolio: $${totalBalances}}`}>
+            <Link to="/my-account">
+              <Button className="portfolio">
+                <Box display="flex" alignItems="center">
+                  <Box display="flex" alignItems="center" mr="10px">
+                    <SvgIcon component={AnalyticsIcon} fontSize="large" />
+                  </Box>
+                  <Box sx={{ display: { xs: "none", lg: "flex" } }}>My Portfolio:&nbsp;</Box>
+                  <Box>${trim(totalBalances, 2)}</Box>
                 </Box>
-                <Box sx={{ display: { xs: "none", lg: "flex" } }}>My Portfolio:&nbsp;</Box>
-                <Box>$88</Box>
-              </Box>
-            </Button>
+              </Button>
+            </Link>
           </Tooltip>
           <Tooltip title="Connect Wallet">
             <Button onClick={handleConnect} sx={{ display: { xs: "none", md: "flex" } }} color="primary"
