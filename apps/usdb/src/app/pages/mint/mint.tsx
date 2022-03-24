@@ -60,17 +60,15 @@ export default function Mint() {
   const handleClick = async () => {
     console.log('clicked');
     const action = 'mint';
-    await dispatch(
-      changeMint({
-        address,
-        action,
-        value: value.toString(),
-        // @ts-ignore
-        provider,
-        // @ts-ignore
-        networkId: chainId,
-      })
-    );
+    // await dispatch(
+    //   changeMint({
+    //     address,
+    //     action,
+    //     value: value.toString(),
+    //     provider,
+    //     networkId: chainId,
+    //   })
+    // );
   };
   console.log('token: ', token);
   return (
