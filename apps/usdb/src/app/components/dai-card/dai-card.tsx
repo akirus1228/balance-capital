@@ -13,6 +13,7 @@ export interface DaiCardProps {
   children: JSX.Element | Array<JSX.Element>;
   className?: string;
   invertTheme?: boolean;
+  setTheme?: 'light' | 'dark'
   tokenImage?: string;
 }
 
@@ -22,10 +23,13 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
   const theme = useCallback(() => {
     if(props.invertTheme){
       return themeType === 'light' ? USDBDark : USDBLight;
+    } else if (props.setTheme) {
+      return props.setTheme === 'light' ? USDBLight : USDBDark;
     } else {
       return themeType === 'light' ? USDBLight : USDBDark;
     }
-  }, [themeType, props.invertTheme]);
+
+  }, [themeType, props.invertTheme, props.setTheme]);
 
   return (
     <ThemeProvider theme={theme}>

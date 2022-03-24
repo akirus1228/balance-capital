@@ -1,4 +1,9 @@
 .inputWrapper {
+    vertical-align: middle;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
     input {
         width: 100%;
         color: inherit;
@@ -9,5 +14,6 @@
         border: none;
         background: transparent;
         outline: none;
+        font-size: 24px;
     }
 }
