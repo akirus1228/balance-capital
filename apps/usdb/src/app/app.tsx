@@ -53,7 +53,6 @@ export const App = (): JSX.Element => {
     });
   }, [chainId, address, dispatch]);
 
-
   // Load account details
   useEffect(() => {
     if (address) {

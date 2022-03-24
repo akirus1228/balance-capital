@@ -200,10 +200,10 @@ export const loadAccountDetails = createAsyncThunk(
 );
 
 export interface IUserBond {
+  interestDue: number;
   amount: string;
   rewards: string;
   rewardToken: PaymentToken;
-  interestDue: number;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
   percentVestedFor: number;
