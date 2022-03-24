@@ -181,7 +181,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     <DaiCard tokenImage={DaiToken} setTheme="light">
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
-      <Box sx={{width: '100%'}}>
+      <Box className="w100">
         <hr style={{border: 'none', borderTop: '2px solid rgba(105,108,128,0.07)'}}/>
       </Box>
       <Box className={`flexCenterRow`}>
@@ -233,7 +233,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <span>{payout} DAI</span>
       </Box>
       <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
-        <span>Reward amount <Icon component={InfoOutlinedIcon}/></span>
+        <span>Estimated Rewards <Icon component={InfoOutlinedIcon}/></span>
         <span>{claimableBalance} FHM</span>
       </Box>
       <Box className={`${style["infoBox"]}`}
@@ -246,10 +246,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
                 onClick={connect}>
           Connect Wallet
         </Button>
-      ) : (<>
-        {!singleSided.isAvailable[chainId ?? 250] ? (
-          <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
-                  disabled={true}>
+      ) : (
+        !singleSided.isAvailable[chainId ?? 250] ? (
+          <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button" 
+            disabled={true}>
             Sold Out
           </Button>
         ) : hasAllowance() ? (
@@ -270,8 +270,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             onClick={onSeekApproval}>
             {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
           </Button>
-        )}
-      </>)}
+        )
+      )}
     </DaiCard>
   );
 }

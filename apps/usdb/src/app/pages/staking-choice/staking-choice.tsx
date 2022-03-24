@@ -65,7 +65,7 @@ export const StakingChoicePage = (): JSX.Element => {
       <SsInfoBlock />
       <Headline {...getStarted} />
       <Box className="flexCenterCol" sx={{marginTop: "3em", mb:'10em'}} id="deposit">
-        <StakingCard bondType="6month" term={6} roi={15} apy={32.55} />
+        <StakingCard bondType="6month" term={6} roi={15} apy={20.00} />
       </Box>
       <Faq sx={{mb: '10em'}}/>
       <Headline {...simpleSafe} sx={{mb: '2em'}}/>
