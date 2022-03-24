@@ -58,7 +58,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                 </Grid>
                 <Grid item xs={12}>
                   <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
-                    <Button variant="contained" color="primary" id="bond-btn" className="transaction-button">Deposit</Button>
+                    <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button">Deposit</Button>
                   </Link>
                 </Grid>
               </Grid>
