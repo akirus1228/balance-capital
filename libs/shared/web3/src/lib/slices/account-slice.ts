@@ -280,10 +280,13 @@ export const calculateUserBondDetails = createAsyncThunk(
           ]);
           const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
           const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+          const pricePaid = bondDetails.pricePaid / Math.pow(10, paymentTokenDecimals);
+          const amount = ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals);
+          const rewards = `${interestDue * (1 - pricePaid)}`;
           return {
-            amount: ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals),
-            rewards: '100', // TODO
-            rewardToken: PaymentToken.USDB, // TODO
+            amount,
+            rewards,
+            rewardToken: PaymentToken.USDB,
             interestDue,
             bondMaturationBlock,
             pendingPayout,
