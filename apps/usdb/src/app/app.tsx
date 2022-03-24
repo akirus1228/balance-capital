@@ -32,7 +32,7 @@ export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.app.theme);
-  const [theme, setTheme] = useState(USDBLight);
+  const [theme, setTheme] = useState(USDBDark);
   const { address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
