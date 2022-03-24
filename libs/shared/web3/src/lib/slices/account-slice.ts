@@ -342,7 +342,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
       const fhmRewards = await masterchefContract["pendingFhm"](0, address)
 
-      pendingFHM = trim(Number(ethers.utils.formatUnits(String(fhmRewards), 18)), 2);
+      pendingFHM = trim(Number(ethers.utils.formatUnits(String(fhmRewards), 9)), 2);
       iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
       lpTokenAmount = Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, orgPaymentTokenDecimals));
     }

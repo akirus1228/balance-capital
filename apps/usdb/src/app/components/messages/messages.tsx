@@ -66,7 +66,7 @@ export const Messages = (): JSX.Element => {
   };
   return (
     <>
-      {messages.items.map((message, index) => {
+      {messages.items.map((message: Message, index: any) => {
         return (
           <Snackbar
             open={message.open}
