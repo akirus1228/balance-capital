@@ -30,7 +30,7 @@ export const StakingChoicePage = (): JSX.Element => {
   };
   const simpleSafe = {
     title: "Simple & safe returns",
-    subtitle: ["To farm and earn rewards, investors only provide one side of the pair while our protocol deposits the other."]
+    subtitle: ["To earn rewards, investors only provide one side of the pair while our protocol deposits the other."]
   };
   const getStarted = {
     title: "Get started today",
