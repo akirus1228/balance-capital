@@ -1,13 +1,15 @@
-import { Box, Grid } from '@mui/material';
+import { Box, Grid, SxProps, Theme } from '@mui/material';
 import style from './faq.module.scss';
 import dots from '../../../assets/images/dots.svg';
 
 /* eslint-disable-next-line */
-export interface FaqProps {}
+export interface FaqProps {
+  sx?: SxProps<Theme>
+}
 
 export const Faq = (props: FaqProps): JSX.Element => {
   return (
-    <Box className="flexCenterCol" sx={{marginTop: '5em'}}>
+    <Box className="flexCenterCol" sx={{marginTop: '5em', ...props.sx}}>
       <Grid container columnSpacing={5}>
         <Grid item xs={12} md={6}>
           <Box className="flexCenterCol">
