@@ -8,8 +8,6 @@ import {
   IAllBondData,
   IBondAssetAsyncThunk,
   isPendingTxn,
-  redeemBond,
-  RootState,
   trim,
   txnButtonText,
   useBonds,
@@ -30,7 +28,7 @@ export default function Mint() {
   const [daiPrice, setDaiPrice] = React.useState(0);
   const [value, setValue] = React.useState('');
   const [fhmPrice, setFhmPrice] = React.useState(0);
-  const tokenBalance = useSelector((state: RootState) => {
+  const tokenBalance = useSelector((state: any) => {
     // return trim(Number(state.account.balances.dai), 2);
     return state.account.balances;
   });
