@@ -2,10 +2,10 @@ import {BigNumber, ethers} from "ethers";
 import {addresses} from "../constants";
 import {abi as ierc20Abi} from "../abi/IERC20.json";
 import {abi as usdbAbi} from "../abi/USDBContract.json";
-import {abi as sOHMv2} from "../abi/sOhmv2.json";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import {abi as daiAbi} from "../abi/reserves/DAIContract.json";
+import {abi as sOHM} from "../abi/sOHM.json";
+import {abi as sOHMv2} from "../abi/sOhmv2.json";
+import {abi as fuseProxy} from "../abi/FuseProxy.json";
 import {abi as wsOHM} from "../abi/wsOHM.json";
 import {abi as OlympusStaking} from "../abi/OlympusStakingv2.json";
 
@@ -19,7 +19,7 @@ import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
-  async ({ address, networkId }: IBaseAddressAsyncThunk) => {
+  async ({address, networkId}: IBaseAddressAsyncThunk) => {
     const provider = await chains[networkId].provider;
     // Contracts
     //  const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
@@ -85,7 +85,7 @@ interface IUserAccountDetails {
 
 export const loadAccountDetails = createAsyncThunk(
   "account/loadAccountDetails",
-  async ({ networkId, address }: IBaseAddressAsyncThunk, { dispatch }) => {
+  async ({networkId, address}: IBaseAddressAsyncThunk, {dispatch}) => {
     const provider = await chains[networkId].provider;
 
     async function loadBridgeAccountDetails() {
@@ -218,9 +218,10 @@ export interface IUserBondDetails {
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
 }
+
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
-  async ({ address, bond, networkId }: ICalcUserBondDetailsAsyncThunk) => {
+  async ({address, bond, networkId}: ICalcUserBondDetailsAsyncThunk) => {
     if (!address) {
       return {
         bond: "",
@@ -268,6 +269,47 @@ export const calculateUserBondDetails = createAsyncThunk(
       // balance should NOT be converted to a number. it loses decimal precision
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
+
+//    if (Number(bondLength) === 0) return {
+//      bond: bond.name,
+//      displayName: bond.displayName,
+//      bondIconSvg: bond.bondIconSvg,
+//      isLP: bond.isLP,
+//      allowance,
+//      balance,
+//      userBonds: [
+//        {
+//          interestDue: 0,
+//          bondMaturationBlock: 0,
+//          pendingPayout: "",
+//        },
+//      ],
+//      paymentToken: bond.paymentToken,
+//      bondAction: bond.bondAction,
+//    };
+
+    //Contract Interactions
+//    const userBonds = [];
+//    for(let i = 0; i < bondLength ; i++) {
+//      const [bondDetails, pendingPayout] = await Promise.all([
+//        bondContract["bondInfo"](address, i),
+//        bondContract["pendingPayoutFor"](address, i),
+//     ]).then(([bondDetails, pendingPayout]) => [
+//        bondDetails,
+//        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+//      ]);
+//      // eslint-disable-next-line prefer-const
+//      interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+//      // eslint-disable-next-line prefer-const
+//      bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+//      userBonds.push(
+//        {
+//            interestDue,
+//            bondMaturationBlock,
+//            pendingPayout,
+//        }
+//      )
+//    }
 
     if (Number(bondLength) === 0) {
       // Contract Interactions
@@ -384,7 +426,7 @@ interface IAccountSlice {
 const initialState: IAccountSlice = {
   loading: false,
   bonds: {},
-  balances: { ohm: "", sohm: "", dai: "", oldsohm: "" },
+  balances: {ohm: "", sohm: "", dai: "", oldsohm: ""},
 };
 
 const accountSlice = createSlice({
@@ -404,7 +446,7 @@ const accountSlice = createSlice({
         setAll(state, action.payload);
         state.loading = false;
       })
-      .addCase(loadAccountDetails.rejected, (state, { error }) => {
+      .addCase(loadAccountDetails.rejected, (state, {error}) => {
         state.loading = false;
         console.log(error);
       })
@@ -415,7 +457,7 @@ const accountSlice = createSlice({
         setAll(state, action.payload);
         state.loading = false;
       })
-      .addCase(getBalances.rejected, (state, { error }) => {
+      .addCase(getBalances.rejected, (state, {error}) => {
         state.loading = false;
         console.log(error);
       })
@@ -425,16 +467,16 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
         const bond = action.payload.bond;
-        if(bond) state.bonds[bond] = action.payload;
+        state.bonds[bond] = action.payload;
         state.loading = false;
       })
-      .addCase(calculateUserBondDetails.rejected, (state, { error }) => {
+      .addCase(calculateUserBondDetails.rejected, (state, {error}) => {
         state.loading = false;
         console.log(error);
       });
   },
 });
 
-export const accountReducer =  accountSlice.reducer;
+export const accountReducer = accountSlice.reducer;
+export const {fetchAccountSuccess} = accountSlice.actions;
 
-export const { fetchAccountSuccess } = accountSlice.actions;

@@ -13,7 +13,7 @@ export interface DaiCardProps {
   children: JSX.Element | Array<JSX.Element>;
   className?: string;
   invertTheme?: boolean;
-  tokenImage?: any;
+  tokenImage?: string;
 }
 
 export const DaiCard = (props: DaiCardProps): JSX.Element => {

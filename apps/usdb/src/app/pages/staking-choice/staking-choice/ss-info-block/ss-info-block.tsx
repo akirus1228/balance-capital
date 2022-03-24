@@ -1,12 +1,11 @@
 import { Box, Grid, Paper, Typography } from '@mui/material';
-import { LightBankIcon, LightCardsIcon, LightDoughnutChartIcon, LightLockIcon, LightShieldIcon } from '@fantohm/shared/images';
-import { ThemeImage } from 'apps/usdb/src/app/components/theme-image/theme-image';
+import { ThemeImage } from '../../../../components/theme-image/theme-image';
 import style from './ss-info-block.module.scss';
 
 
 export const SsInfoBlock = (): JSX.Element => {
   return (
-    <Box sx={{mx: {xs: '1em', md: '3em'}}} className={style['infoBlockContainer']} maxWidth="lg" alignSelf="center">
+    <Box sx={{mx: {xs: '1em', md: '3em'}, mb: '15em'}} className={style['infoBlockContainer']} maxWidth="lg" alignSelf="center">
       <Grid container spacing={4}>
         <Grid item xs={12} md={4}>
           <Box className='flexCenterCol h-full' sx={{alignItems:'flex-end'}}>
