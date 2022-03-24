@@ -5,15 +5,26 @@
     align-items: center;
 
     .imageBox {
-         .iconImage {
-            width: 100%;
+        @media (max-width:400px) {
+            height:70px;
         }
+        .iconImage {
+            width: 100%;
+            @media (max-width:400px) {
+                width:70px;
+                height: auto;
+            }
+        }
+        
     }
 
     .title {
         font-size: 20px;
         font-weight: 400;
         margin-bottom: 5px;
+        @media (max-width:600px) {
+            font-size:16px;
+        }
     }
 
     .link {
@@ -21,6 +32,7 @@
         font-weight: 400;
         color: #6DC1B9;
         margin-top: 0;
+        
     }
 
     .disabled {

@@ -179,7 +179,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/>
+            <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo" className={`${styles['usdbLogo']}`}/>
           </Typography>
           <Box
             sx={{
@@ -192,7 +192,7 @@ export const Header = (): JSX.Element => {
           >
             <Box>
               <Button
-                className="menuButton"
+                className={`menuButton ${styles['productsButton']}`}
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
                 Products

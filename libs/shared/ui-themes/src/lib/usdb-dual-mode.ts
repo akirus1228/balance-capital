@@ -93,7 +93,7 @@ const globalTheme: ThemeOptions = {
             paddingLeft: '1.25em',
             paddingRight: '1.25em',
             borderRadius: '1.5em',
-            margin: 'auto 1em',
+            margin: 'auto 0 auto 1em',
             fontSize: '1em',
           },
           '&.cardActionButton': {
@@ -103,11 +103,17 @@ const globalTheme: ThemeOptions = {
             padding: "15px 27px"
           },
           "&.portfolio": {
-            height: '1em',
-            paddingTop: '1.8em',
-            paddingBottom: '1.8em',
+            height: '38px',
+            paddingTop: '1em',
+            paddingBottom: '1em',
+            paddingRight: '1.5em',
+            fontSize: '0.8em',
             background: "#384bff",
             color: "#FFF",
+          },
+          "&.portfolio svg": {
+            height: '20px',
+            width: '20px',
           },
           "&.fill": {
             fontSize: '14px',

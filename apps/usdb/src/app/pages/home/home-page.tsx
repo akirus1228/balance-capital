@@ -36,14 +36,16 @@ export const HomePage = (): JSX.Element => {
       >
         <Grid
           container
+
+          className={style['heroWrap']}
           sx={{ marginTop: '55px' }}
           columnSpacing={2}
           rowSpacing={{ xs: 4, md: 0 }}
         >
-          <Grid item lg={6} md={12} order={{ lg: 1, xs: 2 }}>
+          <Grid item lg={6} md={12} order={{ lg: 1, xs: 2 }} className={style['iconsElement']}>
             <IconGrid />
           </Grid>
-          <Grid item lg={6} md={12} order={{ lg: 2, xs: 1 }}>
+          <Grid item lg={6} md={12} order={{ lg: 2, xs: 1 }} className={style['heroTextContent']}>
             <Box className={style['heroRight']}>
               <Box sx={{ height: { xs: '132px', md: '180px' }, display: { xs: "none", md: "flex" } }}>
                 <img
