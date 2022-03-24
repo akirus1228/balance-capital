@@ -1,30 +1,74 @@
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  bondAsset,
+  BondType,
+  changeApproval,
+  error,
+  IAllBondData,
+  IBondAssetAsyncThunk,
+  isPendingTxn,
+  trim,
+  txnButtonText,
+  useBonds,
+  useWeb3Context,
+  getTokenPrice,
+  getBalances,
+  changeMint,
+} from '@fantohm/shared-web3';
 import { Typography, Box, Grid, Button, Paper } from '@mui/material';
 import { ReactComponent as DAI } from '../../../assets/tokens/DAI.svg';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
 import style from './mint.module.scss';
 
-const token = [
-  {
-    title: 'Mint with DAI',
-    name: 'DAI',
-    total: '10,058.81',
-    value: '1800.00',
-    owned: '1799',
-  },
-  {
-    title: 'Mint with FHM',
-    name: 'FHM',
-    total: '58.81',
-    value: '18.00',
-    owned: '202.41',
-  },
-];
-
 export default function Mint() {
+  const { provider, address, connected, connect, chainId } = useWeb3Context();
+  const dispatch = useDispatch();
   const [tabState, setTabState] = React.useState(true);
+  const [daiPrice, setDaiPrice] = React.useState(0);
+  const [value, setValue] = React.useState('');
+  const [fhmPrice, setFhmPrice] = React.useState(0);
+  const tokenBalance = useSelector((state: any) => {
+    // return trim(Number(state.account.balances.dai), 2);
+    return state.account.balances;
+  });
+  console.log('tokenBalance: ', tokenBalance);
+  const token = [
+    {
+      title: 'Mint with DAI',
+      name: 'DAI',
+      total: tokenBalance.dai,
+      price: daiPrice,
+    },
+    {
+      title: 'Mint with FHM',
+      name: 'FHM',
+      total: tokenBalance.fhm,
+      price: fhmPrice,
+    },
+  ];
+  React.useEffect(() => {
+    async function fetchPrice() {
+      setDaiPrice(await getTokenPrice('dai'));
+      setFhmPrice(await getTokenPrice('fantom'));
+    }
+    fetchPrice();
+  }, []);
   const selectedToken = tabState ? token[0] : token[1];
-
+  const handleClick = async () => {
+    console.log('clicked');
+    const action = 'mint';
+    // await dispatch(
+    //   changeMint({
+    //     address,
+    //     action,
+    //     value: value.toString(),
+    //     provider,
+    //     networkId: chainId,
+    //   })
+    // );
+  };
+  console.log('token: ', token);
   return (
     <Box className={style['hero']}>
       <div className={style['tabContent']}>
@@ -54,7 +98,7 @@ export default function Mint() {
             <SettingsOutlinedIcon className={style['settingIcon']} />
             <div className={style['subTitle']}>{selectedToken.title}</div>
             <Grid container spacing={1}>
-              <Grid item md={4}>
+              <Grid item md={4} xs={6}>
                 <div className={style['roundArea']}>
                   <DAI style={{ marginRight: '10px' }} />
                   <div style={{ textAlign: 'left' }}>
@@ -67,32 +111,24 @@ export default function Mint() {
                   </div>
                 </div>
               </Grid>
-              <Grid item md={8}>
-                <div className={style['roundArea']}>
-                  <div
-                    style={{
-                      display: 'flex',
-                      justifyContent: 'flex-end',
-                      width: '100%',
-                      fontSize: '30px',
-                    }}
-                  >
-                    {selectedToken.value}
-                  </div>
-                </div>
+              <Grid item md={8} xs={6}>
+                <input
+                  className={style['inputRoundArea']}
+                  placeholder="Type here"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                />
               </Grid>
             </Grid>
             <div className={style['reward']}>
               <div>You will Get</div>
-              <div>{selectedToken.owned} USDB</div>
+              <div>{(selectedToken.price * Number(value)).toFixed(3)} USDB</div>
             </div>
             <div style={{ marginTop: '30px' }}>
               <Button
                 variant="contained"
                 disableElevation
-                onClick={() => {
-                  console.log('successfully selected');
-                }}
+                onClick={handleClick}
                 className={style['mintButton']}
               >
                 Mint USDB

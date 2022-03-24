@@ -1,5 +1,8 @@
 .hero {
   padding: 20px 80px;
+  @media screen and (max-width: 600px) {
+    padding: 20px 10px;
+  }
 }
 .tabContent {
   display: flex;
@@ -42,11 +45,15 @@
 }
 .reward {
   display: flex;
-  flex-direction: 'row';
+  flex-direction: row;
   font-size: 25px;
   justify-content: space-between;
   padding: 20px;
   margin-top: 20px;
+  @media screen and (max-width: 600px) {
+    flex-direction: column;
+    width: 100%;
+  }
 }
 .mintButton {
   width: 240px;
@@ -59,4 +66,23 @@
   right: 33px;
   top: 50px;
   cursor: pointer;
+  @media screen and (max-width: 600px) {
+    right: 10px;
+  }
+}
+.inputRoundArea {
+  border: 2px solid #e0e0ff;
+  background: none;
+  border-radius: 50px;
+  height: 58px;
+  padding: 10px 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  direction: rtl;
+  font-size: 30px;
+  @media screen and (max-width: 600px) {
+    font-size: 15px;
+  }
 }
