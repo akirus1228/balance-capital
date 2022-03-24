@@ -233,24 +233,24 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <span>Reward amount <Icon component={InfoOutlinedIcon}/></span>
         <span>{claimableBalance} FHM</span>
       </Box>
-      <Box className={`${style["infoBox"]}`} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start'}}>
+      <Box className={`${style["infoBox"]}`} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', mb: '1.5em'}}>
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
       {!connected ? (
-        <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" onClick={connect}>
+        <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button" onClick={connect}>
           Connect Wallet
         </Button>
       ) : (<>
         {!singleSided.isAvailable[chainId ?? 250] ? (
-          <Button variant="contained" color="primary" id="bond-btn" className="transaction-button" disabled={true}>
+          <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button" disabled={true}>
             Sold Out
           </Button>
         ) : hasAllowance() ? (
           <Button
             variant="contained"
             color="primary"
-            className="cardActionButton"
+            className="paperButton cardActionButton"
             disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name)}
             onClick={useBond}>
             {txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
@@ -259,7 +259,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           <Button
             variant="contained"
             color="primary"
-            className="cardActionButton"
+            className="paperButton cardActionButton"
             disabled={isPendingTxn(pendingTransactions, "approve_" + singleSided.name)}
             onClick={onSeekApproval}>
             {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
