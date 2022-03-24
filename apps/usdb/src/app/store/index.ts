@@ -15,8 +15,6 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  console.log("Updating app state");
-  console.log(store.getState().app);
   saveState(store.getState().app);
 });
 
