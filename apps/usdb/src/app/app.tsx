@@ -17,6 +17,7 @@ import {
   fetchTokenPrice,
   calculateUserBondDetails,
   loadAccountDetails,
+  getBalances,
 } from '@fantohm/shared-web3';
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
@@ -55,6 +56,7 @@ export const App = (): JSX.Element => {
   // Load account details
   useEffect(() => {
     if (address) {
+      console.log('app-chainId, address: ', chainId, address);
       dispatch(loadAccountDetails({ networkId: chainId || 250, address }));
       bonds.map((bond) => {
         dispatch(

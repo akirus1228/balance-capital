@@ -23,3 +23,4 @@ export * from './lib/hooks/web3-context';
 export * from './lib/hooks/investments';
 export * from './lib/store';
 export * from './lib/helpers/index';
+export { changeMint } from './lib/slices/stake-thunk';

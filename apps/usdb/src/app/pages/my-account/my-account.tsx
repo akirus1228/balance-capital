@@ -147,17 +147,22 @@ export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
+  console.log('provider: ', provider);
+  console.log('address: ', address);
+  console.log('chainId', chainId);
+  console.log('bonds: ', bonds);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
-
+  console.log('accountBonds: ', accountBonds);
   useEffect(() => {
     (async function () {
       if (chainId) {
         const provider = await chains[chainId].provider;
         setCurrentBlock(await provider.getBlockNumber());
+        console.log('blockNumber: ', await provider.getBlockNumber());
       }
     })();
   }, [chainId]);
