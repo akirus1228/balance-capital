@@ -46,7 +46,7 @@ export const singleSided = new StableBond({
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x0cbf1879A92143fF25AeFC489457459FE9Bd7DD5",
+      bondAddress: "0x860D498ABBfBF1e99fA907d79e2719d9636d2d77",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },

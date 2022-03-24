@@ -332,7 +332,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
     };
     try {
       redeemTx = await bondContract["redeem"](address, ethers.utils.parseUnits(value, 18), 0);
-      const pendingTxnType = "redeem_bond_" + bond.name;
+      const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
@@ -375,7 +375,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
     };
     try {
       redeemTx = await bondContract["ilProtectionRedeem"](address);
-      const pendingTxnType = "redeem_bond_" + bond.name;
+      const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
@@ -419,7 +419,7 @@ export const claimSingleSidedBond = createAsyncThunk(
     };
     try {
       redeemTx = await masterchefContract["harvest"](0, address);
-      const pendingTxnType = "redeem_bond_" + bond.name;
+      const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
