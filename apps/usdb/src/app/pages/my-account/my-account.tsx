@@ -19,21 +19,28 @@ import { format } from 'date-fns';
 import style from './my-account.module.scss';
 import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {
+  Bond,
   BondType,
   cancelBond,
   IAllBondData,
   isPendingTxn,
-  prettifySeconds,
+  IUserBondDetails,
   redeemAllBonds,
-  RootState,
-  secondsUntilBlock,
+  redeemOneBond,
+  claimSingleSidedBond,
+  setWalletConnected,
   txnButtonTextGeneralPending,
   useBonds,
   useWeb3Context,
-} from '@fantohm/shared-web3';
-import { useEffect, useMemo, useState } from 'react';
-import { chains } from 'libs/shared/web3/src/lib/providers';
+  prettifySeconds,
+  secondsUntilBlock,
+  trim, chains
+} from "@fantohm/shared-web3";
+import {useEffect, useMemo, useState} from "react";
+import { RootState } from '../../store';
 
 export interface Investment {
   id: string;
@@ -41,10 +48,14 @@ export interface Investment {
   amount: number;
   rewards: number;
   rewardToken: string;
+  rewardsInUsd: number;
+  term: number;
+  termType: string;
+  vestDate: number;
   bondName: string;
   bondIndex: number;
   displayName: string;
-  roi: number;
+  roi: string;
   secondsToVest: number;
   percentVestedFor: number;
 }
@@ -72,10 +83,14 @@ const inactiveInvestments: Investment[] = [
     type: BondType.TRADFI,
     rewards: 832.23,
     rewardToken: 'USDB',
+    rewardsInUsd: 832.23,
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 0,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -85,10 +100,14 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    rewardsInUsd: 1963.75,
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 1,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -98,10 +117,14 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    rewardsInUsd: 1963.75,
+    term: 6,
+    termType: 'months',
+    roi: "32.5",
+    vestDate: 1638507600,
     bondName: 'tradfi3month',
     bondIndex: 2,
     displayName: '6 Months',
-    roi: 32.5,
     secondsToVest: 1638507600,
     percentVestedFor: 100,
   },
@@ -174,7 +197,7 @@ export const MyAccount = (): JSX.Element => {
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
-          return userBonds.map((userBond, i) => {
+          return userBonds.map((userBond: any, i: number) => {
             const secondsToVest = secondsUntilBlock(
               chainId,
               currentBlock,
@@ -186,12 +209,16 @@ export const MyAccount = (): JSX.Element => {
               amount: Number(userBond.amount),
               rewards: Number(userBond.rewards),
               rewardToken: userBond.rewardToken,
+              rewardsInUsd: Number(userBond.rewardsInUsd),
               bondName: bond.name,
               bondIndex: i,
               displayName: bond.displayName,
-              roi: Number(bond.roi),
+              roi: bond.roi,
+              term: Number(bond.vestingTerm),
+              termType: 'months',
               secondsToVest,
               percentVestedFor: userBond.percentVestedFor,
+              vestDate: Number(userBonds[i].bondMaturationBlock),
             };
             return investment;
           });
@@ -213,16 +240,58 @@ export const MyAccount = (): JSX.Element => {
           0
         ),
         rewardsClaimed: 1247.31, // TODO
-        claimableRewards: 237.11, // TODO
+        claimableRewards: activeInvestments.reduce(
+          (rewardsInUsd, investment) => rewardsInUsd + investment.rewardsInUsd,
+          0
+        )
       };
     } else {
       return null;
     }
   }, [address, JSON.stringify(activeInvestments)]);
 
+
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
+
+  // useEffect(() => {
+  //   activeInvestments = []
+  //   if (accountBonds) {
+  //     for (let i = 0; i < bonds.length - 1; i++) {
+  //       const bond: IAllBondData = (bonds[i] as IAllBondData);
+  //       if (accountBonds[allBonds[i].name]) {
+  //         console.log(accountBonds);
+  //         const userBonds = accountBonds[allBonds[i].name].userBonds;
+  //         for (let j = 0; j < userBonds.length; j++) {
+  //           const investment: Investment = {
+  //             id: `${j}`,
+  //             amount: 29275.51,
+  //             rewards: Number(userBonds[j].pendingPayout),
+  //             rewardToken: 'USDB',
+  //             term: Number(bond.vestingTerm),
+  //             termType: 'months',
+  //             roi: bonds[i].roi,
+  //             vestDate: Number(userBonds[j].bondMaturationBlock),
+  //           }
+  //           activeInvestments.push(
+  //             investment
+  //           )
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [accountBonds]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (provider) {
+        setCurrentBlock(await provider.getBlockNumber())
+      }
+    }
+
+    fetchData()
+  }, [provider])
 
   const pendingClaim = () => {
     if (
@@ -238,37 +307,41 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     console.log('redeeming all bonds');
     if (provider && chainId) {
-      await dispatch(
-        redeemAllBonds({
-          networkId: chainId,
-          address,
-          bonds,
-          provider,
-          autostake: false,
-        })
-      );
+      for (const bond of bonds) {
+        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name);
+        if (currentInvests.length === 0) continue;
+
+        if (bond.type === BondType.TRADFI) {
+          await dispatch(redeemOneBond({ networkId: chainId!, address, bond, provider: provider!, autostake: false }));
+        } else if (bond.type === BondType.SINGLE_SIDED) {
+          const { amount } = currentInvests[0];
+          await dispatch(claimSingleSidedBond({ value: String(amount), networkId: chainId!, address, bond, provider: provider! }));
+        }
+      }
     }
 
     console.log('redeem all complete');
   };
 
-  const onRedeemOne = async (bond: IAllBondData, index: number) => {
-    console.log('redeeming bond');
-
-    // TODO
-
-    console.log('redeem complete');
-  };
-
   const onCancelBond = async (bond: IAllBondData, index: number) => {
     console.log('cancelling bond');
     if (provider && chainId) {
+      //await dispatch(redeemAllBonds({networkId: chainId, address, bonds, provider, autostake: false}));
       await dispatch(
         cancelBond({ networkId: chainId, address, bond, provider, index })
       );
     }
 
     console.log('cancelling bond complete');
+  };
+
+  const onRedeemOne = async (bond: IAllBondData, index: number) => {
+    console.log("redeeming one bonds");
+    if (provider && chainId) {
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
+    }
+
+    console.log("redeem one complete");
   };
 
   return (
@@ -306,7 +379,7 @@ export const MyAccount = (): JSX.Element => {
             style={{ backgroundColor: `${backgroundColor}` }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Portfolio value{' '}
                   <img src={Info} alt="info" className={style['infoIcon']} />{' '}
@@ -316,7 +389,8 @@ export const MyAccount = (): JSX.Element => {
                     currencyFormat.format(accountDetails.balance)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* Hide until the graph ready */}
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Total rewards claimed
                   <img
@@ -329,8 +403,8 @@ export const MyAccount = (): JSX.Element => {
                   {accountDetails &&
                     currencyFormat.format(accountDetails.rewardsClaimed)}
                 </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              </Grid> */}
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Claimable rewards
                   <img
@@ -345,7 +419,7 @@ export const MyAccount = (): JSX.Element => {
                     currencyFormat.format(accountDetails.claimableRewards)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="contained"
                   disableElevation
@@ -374,8 +448,8 @@ export const MyAccount = (): JSX.Element => {
             className={style['rowCard']}
             style={{ backgroundColor: `${backgroundColor}` }}
           >
-            {activeInvestments.map((investment) => (
-              <Grid container spacing={2}>
+            {activeInvestments.map((investment, index) => (
+              <Grid container spacing={2} key={`invests-${index}`}>
                 <Grid item xs={12} sm={4} md={2}>
                   <Typography variant="subtitle2" className={style['subTitle']}>
                     Amount
@@ -399,7 +473,7 @@ export const MyAccount = (): JSX.Element => {
                     />{' '}
                   </Typography>
                   <Typography variant="h6">
-                    {currencyFormat.format(investment.rewards)}{' '}
+                    {trim(investment.rewards, 2)}{' '}
                     {investment.rewardToken}
                   </Typography>
                 </Grid>
@@ -416,7 +490,7 @@ export const MyAccount = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={12} sm={4} md={1}>
                   <Typography variant="subtitle2" className={style['subTitle']}>
-                    ROI
+                    APY
                     <img
                       src={Info}
                       alt="info"
@@ -434,9 +508,11 @@ export const MyAccount = (): JSX.Element => {
                       className={style['infoIcon']}
                     />{' '}
                   </Typography>
+                  {currentBlock ? (
                   <Typography variant="h6">
-                    {prettifySeconds(investment.secondsToVest)}
+                    {prettifySeconds(secondsUntilBlock(chainId ?? 250, currentBlock, investment.vestDate))}
                   </Typography>
+                    ) : (<></>)}
                 </Grid>
                 <Grid item xs={12} sm={4} md={2}>
                   <ButtonGroup>
@@ -451,8 +527,8 @@ export const MyAccount = (): JSX.Element => {
                         </Button>
                       </Link>
                     )}
-                    {investment.type === BondType.TRADFI && [
-                      <Button
+                    {investment.type === BondType.TRADFI && (
+                      investment.percentVestedFor >= 100 ? (<Button
                         variant="contained"
                         disableElevation
                         disabled={investment.percentVestedFor < 100}
@@ -461,14 +537,13 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onRedeemOne(bond, investment.bondIndex);
+                          bond && onRedeemOne(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Redeem
-                      </Button>,
-                      <Button
+                      </Button>):
+                      (<Button
                         variant="contained"
-                        color="secondary"
                         disableElevation
                         disabled={investment.percentVestedFor >= 100}
                         sx={{ padding: '10px 30px' }}
@@ -476,19 +551,20 @@ export const MyAccount = (): JSX.Element => {
                           const bond = bonds.find(
                             (bond) => bond.name === investment.bondName
                           );
-                          bond && onCancelBond(bond, investment.bondIndex);
+                          bond && onCancelBond(bond as IAllBondData, investment.bondIndex);
                         }}
                       >
                         Cancel
-                      </Button>,
-                    ]}
+                      </Button>)
+                    )}
                   </ButtonGroup>
                 </Grid>
               </Grid>
             ))}
           </Paper>
         </Box>
-        <Box>
+        {/* Hide previous investments until ready on the graph */}
+        {/* <Box>
           <Typography variant="subtitle1">
             Previous Investments ({inactiveInvestments.length})
           </Typography>
@@ -545,7 +621,7 @@ export const MyAccount = (): JSX.Element => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

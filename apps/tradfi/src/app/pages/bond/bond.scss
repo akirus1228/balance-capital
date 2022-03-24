@@ -15,7 +15,7 @@
         min-height: 605px;
       }
     }
-  
+
     /* slightly transparent fallback for Firefox (not supporting backdrop-filter) */
     @supports not ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
       .MuiBackdrop-root {
@@ -33,7 +33,7 @@
     .ohm-card {
       max-width: 803px;
     }
-    
+
   }
 
 h2 {
@@ -48,7 +48,7 @@ h2 {
   padding: 1.5em;
   border-radius: 1.75em;
   font-weight: 700;
-  
+
 }
 
 .MuiButton-root:hover {

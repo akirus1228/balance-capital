@@ -23,6 +23,7 @@ export const getURI = (networkId: NetworkId): string => {
 const Web3Context = React.createContext<Web3ContextData>(null);
 
 export const useWeb3Context = () => {
+  console.log("useweb3context");
   const web3Context = useContext(Web3Context);
   if (!web3Context) {
     throw new Error(
@@ -86,6 +87,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   );
 
   const hasCachedProvider = useCallback((): boolean => {
+    console.log("hasCachedProvider");
     if (!web3Modal) return false;
     if (!web3Modal.cachedProvider) return false;
     return true;
@@ -96,6 +98,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   // ... polling to the backend providers for network changes
   const _initListeners = useCallback(
     (rawProvider) => {
+      console.log("_initListeners");
       if (!rawProvider.on) {
         return;
       }
@@ -199,6 +202,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
 
   // connect - only runs for WalletProviders
   const connect = useCallback(async () => {
+    console.log("connect called");
     // handling Ledger Live;
     let rawProvider;
     if (isIframe()) {

@@ -9,7 +9,6 @@ import { fetchAccountSuccess, getBalances } from "./account-slice";
 import { getCreditMaturationDaysAndLimitPercentage } from "../helpers/33-together";
 import { setAll } from "../helpers";
 import { error, info } from "./messages-slice";
-import { RootState } from "../store";
 import {
   IValueAsyncThunk,
   IBaseAsyncThunk,
@@ -333,9 +332,3 @@ const poolTogetherSlice = createSlice({
 });
 
 export const poolDataReducer = poolTogetherSlice.reducer;
-
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-const baseInfo = (state: RootState) => state.poolData;
-
-export const getPoolState = createSelector(baseInfo, app => app);

@@ -4,6 +4,7 @@ import DAIIcon from "../../../../assets/tokens/DAI.svg";
 import {Link} from 'react-router-dom';
 import {ThemeProvider} from "@mui/material/styles";
 import {USDBLight} from "@fantohm/shared-ui-themes";
+import {useWeb3Context} from "@fantohm/shared-web3";
 
 interface IDepositCardParams {
   bondType: string;
@@ -15,10 +16,11 @@ interface IDepositCardParams {
 }
 
 export const DepositCard = (params: IDepositCardParams): JSX.Element => {
+  const {provider, address, connect, disconnect, connected} = useWeb3Context();
 
   return (
     <ThemeProvider theme={USDBLight}>
-      <Box sx={{height: '100%', width: '100%'}} className={`${css['bondCard']} flexCenterCol`}>
+      <Box className={`${css['bondCard']} flexCenterCol`}>
         <Paper sx={{marginTop: '47px', maxWidth: '470px'}} elevation={0}>
           <Grid container rowSpacing={3}>
             <Grid item xs={12}>
@@ -57,9 +59,17 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
-                    <Button variant="contained" color="primary" id="bond-btn" className="transaction-button">Deposit</Button>
-                  </Link>
+                  {!connected ? (
+                    <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
+                            onClick={connect}>
+                      Connect Wallet
+                    </Button>
+                  ) : (
+                    <Link to={`/trad-fi/deposit/${params.bondType}`} style={{color: 'inherit'}}>
+                      <Button variant="contained" color="primary" id="bond-btn"
+                              className="paperButton transaction-button">Deposit</Button>
+                    </Link>
+                  )}
                 </Grid>
               </Grid>
             </Grid>

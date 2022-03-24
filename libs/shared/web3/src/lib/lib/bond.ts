@@ -201,6 +201,7 @@ export class StableBond extends Bond {
   readonly isRiskFree = true;
   readonly reserveContract: ethers.ContractInterface;
   readonly displayUnits: string;
+  allowance = 0;
 
   constructor(stableBondOpts: StableBondOpts) {
     super(BondAssetType.StableAsset, stableBondOpts);

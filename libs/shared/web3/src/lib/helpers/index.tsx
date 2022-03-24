@@ -8,7 +8,7 @@ import {SvgIcon} from "@mui/material";
 import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";
 import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 
-import {JsonRpcSigner} from "@ethersproject/providers";
+import {JsonRpcSigner, StaticJsonRpcProvider} from "@ethersproject/providers";
 
 import {NetworkId, networks} from "../networks";
 import { LocalStorage } from "./local-storage";
@@ -16,7 +16,18 @@ import { chains } from "../providers";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice(networkId : NetworkId) {
-	return 0;
+	// TODO For some reason this fails with multicall
+	const provider = new StaticJsonRpcProvider(chains[networkId].rpcUrls[0]);
+	const marketPriceReserveAddress = networks[networkId].addresses['MARKET_PRICE_LP_ADDRESS'];
+	const pairContract = new ethers.Contract(marketPriceReserveAddress, PairContract, provider);
+	const reserves = await pairContract['getReserves']();
+	const reserveDecimals = networks[networkId].liquidityPoolReserveDecimals;
+
+	const reserve0 = reserves[0] / Math.pow(10, reserveDecimals.token0Decimals);
+	const reserve1 = reserves[1] / Math.pow(10, reserveDecimals.token1Decimals);
+
+	const marketPrice = reserveDecimals.token1Decimals === 9 ? reserve0/reserve1 : reserve1/reserve0;
+	return marketPrice;
 }
 
 const validCacheTime = 60 * 1000;
@@ -133,7 +144,8 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		return "";
 	}
 
-	const d = Math.floor(seconds / (3600 * 24));
+  const mo = Math.floor(seconds / (3600 * 24 * 30));
+  const d = Math.floor(seconds / (3600 * 24));
 	const h = Math.floor((seconds % (3600 * 24)) / 3600);
 	const m = Math.floor((seconds % 3600) / 60);
 
@@ -141,11 +153,16 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		return d + (d == 1 ? " day" : " days");
 	}
 
-	const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+  const moDisplay = mo > 0 ? mo + (mo == 1 ? " month" : " months") : "";
+  const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
 	const hDisplay = h > 0 ? h + (h == 1 ? " hr, " : " hrs, ") : "";
 	const mDisplay = m > 0 ? m + (m == 1 ? " min" : " mins") : "";
 
+
 	let result = dDisplay + hDisplay + mDisplay;
+  if(mo > 0){
+    result = moDisplay
+  }
 	if (mDisplay === "") {
 		result = result.slice(0, result.length - 2);
 	}

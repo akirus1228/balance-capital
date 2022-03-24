@@ -2,27 +2,29 @@ import { BigNumber, ethers } from 'ethers';
 import { addresses } from '../constants';
 import { abi as ierc20Abi } from '../abi/IERC20.json';
 import { abi as usdbAbi } from '../abi/USDBContract.json';
-import { abi as sOHMv2 } from '../abi/sOhmv2.json';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { abi as daiAbi } from '../abi/reserves/DAIContract.json';
+import { abi as sOHM } from '../abi/sOHM.json';
+import { abi as sOHMv2 } from '../abi/sOhmv2.json';
+import { abi as fuseProxy } from '../abi/FuseProxy.json';
 import { abi as wsOHM } from '../abi/wsOHM.json';
 import { abi as OlympusStaking } from '../abi/OlympusStakingv2.json';
 
-import { setAll } from '../helpers';
+import { setAll, trim } from '../helpers';
 
 import {
   createAsyncThunk,
   createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
-import { RootState } from '../store';
 import {
   IBaseAddressAsyncThunk,
   ICalcUserBondDetailsAsyncThunk,
 } from './interfaces';
 import { chains } from '../providers';
 import { BondAction, BondType, PaymentToken } from '../lib/bond';
+import { abi as masterchefAbi } from '../abi/MasterChefAbi.json';
+import { abi as stablePoolAbi } from '../abi/StablePool.json';
+import { findOrLoadMarketPrice } from './bond-slice';
 
 export const getBalances = createAsyncThunk(
   'account/getBalances',
@@ -270,13 +272,18 @@ export const loadAccountDetails = createAsyncThunk(
 );
 
 export interface IUserBond {
+  interestDue: number;
   amount: string;
   rewards: string;
   rewardToken: PaymentToken;
-  interestDue: number;
+  rewardsInUsd: string;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
   percentVestedFor: number;
+  lpTokenAmount: string;
+  iLBalance: string;
+  pendingFHM: string;
+  pricePaid: number;
 }
 
 export interface IUserBondDetails {
@@ -285,22 +292,50 @@ export interface IUserBondDetails {
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
 }
+
 export const calculateUserBondDetails = createAsyncThunk(
   'account/calculateUserBondDetails',
-  async ({ address, bond, networkId }: ICalcUserBondDetailsAsyncThunk) => {
+  async (
+    { address, bond, networkId }: ICalcUserBondDetailsAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!address) {
+      return {
+        bond: '',
+        displayName: '',
+        bondIconSvg: '',
+        isLP: false,
+        allowance: 0,
+        balance: '0',
+        userBonds: [
+          {
+            amount: '0',
+            rewards: '0',
+            rewardToken: PaymentToken.USDB,
+            rewardsInUsd: '0',
+            interestDue: 0,
+            bondMaturationBlock: 0,
+            pendingPayout: '',
+            percentVestedFor: 0,
+            lpTokenAmount: '0',
+            iLBalance: '0',
+            pendingFHM: '0',
+            pricePaid: 0,
+          },
+        ],
+        paymentToken: bond.paymentToken,
+        bondAction: bond.bondAction,
+      };
+    }
     const provider = await chains[networkId].provider;
 
     // Contracts
     const bondContract = await bond.getContractForBond(networkId);
     const reserveContract = await bond.getContractForReserve(networkId);
 
+    const orgPaymentTokenDecimals = 18;
     const paymentTokenDecimals =
       bond.paymentToken === PaymentToken.USDB ? 18 : 9;
-
-    let bondLength = 0;
-    if (bond.type === BondType.TRADFI) {
-      bondLength = Number(await bondContract['bondlength'](address));
-    }
 
     const [allowance, balance] = await Promise.all([
       reserveContract['allowance'](address, bond.getAddressForBond(networkId)),
@@ -311,41 +346,50 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
 
-    if (Number(bondLength) === 0) {
-      // Contract Interactions
-      const [bondDetails, pendingPayout, allowance, balance] =
-        await Promise.all([
-          bondContract['bondInfo'](address),
-          bondContract['pendingPayoutFor'](address),
-          reserveContract['allowance'](
-            address,
-            bond.getAddressForBond(networkId)
-          ),
-          reserveContract['balanceOf'](address),
-        ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
-          bondDetails,
-          ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-          Number(allowance),
-          // balance should NOT be converted to a number. it loses decimal precision
-          ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
-        ]);
+    if (bond.type === BondType.TRADFI) {
+      const bondLength = Number(await bondContract['bondlength'](address));
+      const userBonds: IUserBond[] = await Promise.all(
+        [...Array(bondLength).keys()].map(async (bondIndex) => {
+          const [bondDetails, pendingPayout, percentVestedFor] =
+            await Promise.all([
+              bondContract['bondInfo'](address, bondIndex),
+              bondContract['pendingPayoutFor'](address, bondIndex),
+              bondContract['percentVestedFor'](address, bondIndex),
+            ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
+              bondDetails,
+              ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+              Number(percentVestedFor.div(BigNumber.from('100'))),
+            ]);
+          const interestDue =
+            bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+          const bondMaturationBlock =
+            +bondDetails.vesting + +bondDetails.lastBlock;
+          const pricePaid =
+            bondDetails.pricePaid / Math.pow(10, paymentTokenDecimals);
+          const payout = ethers.utils.formatUnits(
+            bondDetails.payout,
+            paymentTokenDecimals
+          );
+          const rewards = trim(interestDue * (1 - pricePaid), 2);
+          const amount = trim(Number(payout) * pricePaid, 2);
 
-      const interestDue =
-        bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-      const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-      const userBonds = bondDetails['payout'].gt(BigNumber.from('0'))
-        ? [
-            {
-              amount: '9999', // TODO
-              rewards: '1000', // TODO
-              rewardToken: PaymentToken.USDB, // TODO
-              interestDue,
-              bondMaturationBlock,
-              pendingPayout,
-              percentVestedFor: 50, // TODO
-            },
-          ]
-        : [];
+          return {
+            amount,
+            rewards,
+            rewardToken: PaymentToken.USDB,
+            rewardsInUsd: rewards,
+            interestDue,
+            bondMaturationBlock,
+            pendingPayout,
+            percentVestedFor,
+            lpTokenAmount: '0',
+            iLBalance: '0',
+            pendingFHM: '0',
+            pricePaid: pricePaid,
+          };
+        })
+      );
+
       return {
         bond: bond.name,
         displayName: bond.displayName,
@@ -359,37 +403,77 @@ export const calculateUserBondDetails = createAsyncThunk(
       };
     }
 
-    const userBonds: IUserBond[] = await Promise.all(
-      [...Array(bondLength).keys()].map(async (bondIndex) => {
-        const [bondDetails, pendingPayout, percentVestedFor] =
-          await Promise.all([
-            bondContract['bondInfo'](address, bondIndex),
-            bondContract['pendingPayoutFor'](address, bondIndex),
-            bondContract['percentVestedFor'](address, bondIndex),
-          ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
-            bondDetails,
-            ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-            Number(percentVestedFor.div(BigNumber.from('100'))),
-          ]);
-        const interestDue =
-          bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-        const bondMaturationBlock =
-          +bondDetails.vesting + +bondDetails.lastBlock;
-        return {
-          amount: ethers.utils.formatUnits(
-            bondDetails.payout,
-            paymentTokenDecimals
-          ),
-          rewards: '100', // TODO
-          rewardToken: PaymentToken.USDB, // TODO
-          interestDue,
-          bondMaturationBlock,
-          pendingPayout,
-          percentVestedFor,
-        };
-      })
-    );
+    // Contract Interactions
+    const [bondDetails, pendingPayout, fhmMarketPrice] = await Promise.all([
+      bondContract['bondInfo'](address),
+      bondContract['pendingPayoutFor'](address),
+      dispatch(findOrLoadMarketPrice({ networkId: networkId })).unwrap(),
+    ]).then(([bondDetails, pendingPayout, fhmMarketPrice]) => [
+      bondDetails,
+      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+      fhmMarketPrice?.marketPrice || 0,
+    ]);
+    const interestDue =
+      bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
+    const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+    let pendingFHM = '0';
+    let iLBalance = '0';
+    let lpTokenAmount = 0;
+    if (bond.type === BondType.SINGLE_SIDED) {
+      const masterchefContract = new ethers.Contract(
+        addresses[networkId]['MASTERCHEF_ADDRESS'],
+        masterchefAbi,
+        provider
+      );
+      const fhmRewards = await masterchefContract['pendingFhm'](0, address);
 
+      pendingFHM = trim(
+        Number(ethers.utils.formatUnits(String(fhmRewards), 18)),
+        2
+      );
+      iLBalance = trim(
+        Number(
+          ethers.utils.formatUnits(
+            Number(bondDetails.ilProtectionAmountInUsd),
+            9
+          )
+        ),
+        2
+      );
+      lpTokenAmount = Number(
+        ethers.utils.formatUnits(
+          bondDetails.lpTokenAmount,
+          orgPaymentTokenDecimals
+        )
+      );
+    }
+    const payout = Number(
+      ethers.utils.formatUnits(bondDetails.payout, orgPaymentTokenDecimals)
+    );
+    const pricePaid = Number(
+      ethers.utils.formatUnits(bondDetails.pricePaid, orgPaymentTokenDecimals)
+    );
+    const amount = payout * pricePaid;
+    const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
+    const userBonds =
+      amount > 0
+        ? [
+            {
+              amount: trim(amount, 2), // TODO can we just assume lp is totally balanced?
+              rewards: pendingFHM,
+              rewardToken: PaymentToken.FHM,
+              rewardsInUsd: trim(rewardsInUsd, 2),
+              interestDue,
+              bondMaturationBlock,
+              pendingPayout,
+              percentVestedFor: 0, // No such thing as percentVestedFor for single sided
+              lpTokenAmount: trim(lpTokenAmount, 2),
+              iLBalance: iLBalance,
+              pendingFHM,
+              pricePaid: 1,
+            },
+          ]
+        : [];
     return {
       bond: bond.name,
       displayName: bond.displayName,
@@ -458,7 +542,7 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
         if (!action.payload) return;
         const bond = action.payload.bond;
-        if (bond) state.bonds[bond] = action.payload;
+        state.bonds[bond] = action.payload;
         state.loading = false;
       })
       .addCase(calculateUserBondDetails.rejected, (state, { error }) => {
@@ -469,9 +553,4 @@ const accountSlice = createSlice({
 });
 
 export const accountReducer = accountSlice.reducer;
-
 export const { fetchAccountSuccess } = accountSlice.actions;
-
-const baseInfo = (state: RootState) => state.account;
-
-export const getAccountState = createSelector(baseInfo, (account) => account);

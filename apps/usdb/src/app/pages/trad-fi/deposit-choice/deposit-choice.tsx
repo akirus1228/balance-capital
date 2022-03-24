@@ -1,44 +1,43 @@
-import css from './deposit-choice.module.scss';
+import style from './deposit-choice.module.scss';
 import {
   Box,
   Grid,
   Zoom,
 } from '@mui/material';
 import {DepositCard} from './deposit-card';
-import {BondType} from "@fantohm/shared-web3";
+import {BondType, IAllBondData} from "@fantohm/shared-web3";
 import {useBonds} from "@fantohm/shared-web3";
 import {useWeb3Context} from "@fantohm/shared-web3";
+import { useEffect, useState } from 'react';
 
 interface IDepositChoiceParams {
   id?: string;
 }
 
 export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
-  const {connect, hasCachedProvider, chainId} = useWeb3Context();
+  const {connect, hasCachedProvider, chainId, connected} = useWeb3Context();
   const {bonds, allBonds} = useBonds(chainId || 250);
+  const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
 
-  const bondsUsdb = bonds.filter((bond) => bond.type === BondType.TRADFI);
-  console.log(bonds)
+  useEffect(() => {
+    console.log("set bonds")
+    setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI));
+    console.log(bondsUsdb);
+  }, [bonds]);
+
   return (
-    <Box sx={{marginTop: '3em'}} id={params.id}>
-      <Zoom in={true}>
-        <Grid container item xs={12} spacing={4} className={css['gridParent']}>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DepositCard bondType="3month" term={3} roi={5} apy={21.55} bond={bondsUsdb[0]} days={1}/>
-            <DepositCard bondType="3month" term={3} roi={5} apy={21.55} days={90} bond={bondsUsdb[0]}/>
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <DepositCard bondType="6month" term={6} roi={15} apy={32.55} bond={bondsUsdb[0]} days={1}/>
-            <DepositCard bondType="6month" term={6} roi={15} apy={32.55} days={180} bond={bondsUsdb[0]}/>
-          </Grid>
-          <Grid item xs={0} md={2}>
-            &nbsp;
-          </Grid>
-        </Grid>
-      </Zoom>
+   <Box id={params.id}>
+        <Box className={style["__bond-cards"]}>
+          {
+            bondsUsdb?.map((bond, index) =>
+            (<DepositCard key={index} bondType="3month" term={bond.name === "tradfi3month" ? 3 : 6} roi={Number(bond.roi)} apy={Number(bond.roi)} bond={bond} days={bond.vestingTerm}/>))
+          }
+          {
+            !bondsUsdb && connected ? (
+              <span>No available bonds on this network.</span>
+            ) : (<></>)
+          }
+        </Box>
     </Box>
   );
 };

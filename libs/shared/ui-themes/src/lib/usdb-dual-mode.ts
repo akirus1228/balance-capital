@@ -55,6 +55,10 @@ const globalTheme: ThemeOptions = {
           },
           "&.softGradient": {
             borderRadius: "2em",
+          },
+          "&.MuiMenu-paper":{
+            borderRadius: "10px",
+            padding: "0.5em",
           }
         }
       },
@@ -65,9 +69,9 @@ const globalTheme: ThemeOptions = {
     MuiBackdrop: {
       styleOverrides: {
         root: {
-          background: 'rgba(100, 100, 100, 0.1)',
-          backdropFilter: 'blur(33px)',
-          '-webkit-backdrop-filter': 'blur(33px)',
+          // background: 'rgba(100, 100, 100, 0.1)',
+          // backdropFilter: 'blur(33px)',
+          // '-webkit-backdrop-filter': 'blur(33px)',
         },
       },
     },
@@ -94,6 +98,13 @@ const globalTheme: ThemeOptions = {
           },
           "&.thin": {
             padding: "15px 27px"
+          },
+          "&.portfolio": {
+            height: '1em',
+            paddingTop: '1.8em',
+            paddingBottom: '1.8em',
+            background: "#384bff",
+            color: "#FFF",
           },
           "&.fill": {
             fontSize: '14px',
@@ -123,9 +134,9 @@ const globalTheme: ThemeOptions = {
         },
         contained: {
           '&.closeButton': {
-            borderRadius: '50%', 
-            p: '0.5em', 
-            boxSizing: 'border-box', 
+            borderRadius: '50%',
+            p: '0.5em',
+            boxSizing: 'border-box',
             minWidth: '16px'
           }
         }
@@ -194,7 +205,9 @@ const USDBLightBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #000',
+          '&, &:hover': {
+            border: '3px solid #000'
+          }
         },
         contained: {
           '&.closeButton': {
@@ -264,7 +277,9 @@ const USDBDarkBase: ThemeOptions = {
           },
         },
         outlined: {
-          border: '3px solid #FFF',
+          '&, &:hover': {
+            border: '3px solid #FFF'
+          }
         },
         contained: {
           '&.closeButton': {
