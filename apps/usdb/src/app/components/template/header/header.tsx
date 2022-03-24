@@ -220,7 +220,7 @@ export const Header = (): JSX.Element => {
               </Menu>
             </Box>
           </Box>
-          <Tooltip title={`My Portfolio: $${totalBalances}}`}>
+          <Tooltip title={`My Portfolio: \$${totalBalances}`}>
             <Link to="/my-account">
               <Button className="portfolio">
                 <Box display="flex" alignItems="center">
