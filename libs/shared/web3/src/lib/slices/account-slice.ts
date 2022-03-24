@@ -16,6 +16,7 @@ import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfac
 import {chains} from "../providers";
 import {BondAction, BondType, PaymentToken} from "../lib/bond";
 import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
+import {abi as stablePoolAbi} from "../abi/StablePool.json";
 import { findOrLoadMarketPrice } from "./bond-slice";
 
 export const getBalances = createAsyncThunk(
@@ -330,26 +331,26 @@ export const calculateUserBondDetails = createAsyncThunk(
     const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
     let pendingFHM = "0";
     let iLBalance = "0";
-    let lpTokenAmount = "0";
+    let lpTokenAmount = 0;
     if(bond.type === BondType.SINGLE_SIDED){
       const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
       pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
       iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
-      lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
+      lpTokenAmount = Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18));
     }
     const amount = bondDetails['payout'] / Math.pow(10, 18);
     const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
     const userBonds = amount > 0 ? [
       {
-        amount: trim(amount, 2), // TODO probably not accurate, should calc based on lpTokenValue
+        amount: trim(lpTokenAmount / 2, 2), // TODO can we just assume lp is totally balanced?
         rewards: trim(rewardsInUsd, 2),
-        rewardToken: PaymentToken.FHM, // TODO
+        rewardToken: PaymentToken.FHM,
         rewardsInUsd: trim(rewardsInUsd, 2),
         interestDue,
         bondMaturationBlock,
         pendingPayout,
-        percentVestedFor: 50, // TODO
-        lpTokenAmount: lpTokenAmount,
+        percentVestedFor: 0, // No such thing as percentVestedFor for single sided
+        lpTokenAmount: trim(lpTokenAmount, 2),
         iLBalance: iLBalance,
         pendingFHM
       }
