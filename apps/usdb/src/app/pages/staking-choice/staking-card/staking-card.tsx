@@ -14,25 +14,25 @@ import {useDispatch, useSelector} from "react-redux";
 import {
   Bond,
   bondAsset,
-  BondType, 
-  changeApproval, 
+  BondType,
+  changeApproval,
   claimSingleSidedBond,
-  error, 
-  getBalances, 
+  error,
+  getBalances,
   IAllBondData,
-  IBondAssetAsyncThunk, 
-  IRedeemBondAsyncThunk, 
-  isPendingTxn, 
-  redeemSingleSidedBond, 
+  IBondAssetAsyncThunk,
+  IRedeemBondAsyncThunk,
+  isPendingTxn,
+  redeemSingleSidedBond,
   redeemSingleSidedILProtection,
   setWalletConnected,
-  trim, 
+  trim,
   txnButtonText,
   useBonds,
   useWeb3Context
 } from "@fantohm/shared-web3";
 
-import { RootState } from '../../../store';
+import {RootState} from '../../../store';
 import {allBonds} from "@fantohm/shared-web3";
 import {ethers} from "ethers";
 import InputWrapper from "../../../components/input-wrapper/input-wrapper";
@@ -50,6 +50,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
   const [claimableBalance, setClaimableBalance] = useState("0");
+  const [payout, setPayout] = useState("0");
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
@@ -70,16 +71,19 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const setMax = () => {
     if (cardState === "deposit") {
       setQuantity(daiBalance);
-    } else if(cardState === "redeem") {
+    } else if (cardState === "redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
-    } else if(cardState === "ilredeem") {
+    } else if (cardState === "ilredeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
-    } else if(cardState === "claim") {
+    } else if (cardState === "claim") {
       setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
     }
   };
   useEffect(() => {
-    setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM)
+    if (singleSidedBond?.userBonds[0]) {
+      setPayout(trim(Number(ethers.utils.formatUnits(singleSidedBond?.userBonds[0]?.interestDue, 0)), 2))
+      setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM)
+    }
   }, [singleSidedBond?.userBonds])
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -91,19 +95,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }, [singleSidedBondData, connected, singleSidedBond]);
 
   useEffect(() => {
-    if(!address) setTokenBalance("0")
-    else if(cardState === "deposit"){
+    if (!address) setTokenBalance("0")
+    else if (cardState === "deposit") {
       setToken("DAI");
       setTokenBalance(daiBalance)
-    } else if(cardState === "redeem"){
+    } else if (cardState === "redeem") {
       setToken("LP");
-      setTokenBalance(String(singleSidedBond?.userBonds[0]?.lpTokenAmount))
-    } else if(cardState === "ilredeem"){
+      const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
+      setTokenBalance((typeof lpAmount === 'undefined') ? "0" : String(lpAmount))
+    } else if (cardState === "ilredeem") {
       setToken("USD");
-      setTokenBalance(String(singleSidedBond?.userBonds[0]?.iLBalance))
+      const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
+      setTokenBalance((typeof ilbal === 'undefined') ? "0" : String(ilbal))
     } else if (cardState === "claim") {
       setToken("FHM");
-      setTokenBalance(String(singleSidedBond?.userBonds[0]?.pendingFHM))
+      const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
+      setTokenBalance((typeof pendingClaim === 'undefined') ? "0" : String(pendingClaim))
     }
   }, [cardState, daiBalance, address]);
 
@@ -114,21 +121,16 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       dispatch(error("Please enter a value!"));
     } else if (isNaN(Number(quantity)) && cardState !== "claim") {
       dispatch(error("Please enter a valid value!"));
-    } else if (singleSidedBond.userBonds[0].interestDue > 0 || Number(singleSidedBond.userBonds[0].pendingPayout) > 0) {
-      if (cardState === "redeem") {
-        // dispatch(
-        //   redeemBond({
-        //     value: String(quantity),
-        //     slippage,
-        //     bond: singleSidedBond,
-        //     networkId: chainId || 250,
-        //     provider,
-        //     address: address,
-        //   } as IBondAssetAsyncThunk)
-        // );
-      }
-      const shouldProceed = window.confirm(
-        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
+    } else if (cardState === "redeem") {
+      dispatch(
+        redeemSingleSidedBond({
+          value: String(quantity),
+          slippage,
+          bond: singleSided,
+          networkId: chainId || 250,
+          provider,
+          address: address,
+        } as IBondAssetAsyncThunk)
       );
     } else if (cardState === "deposit") {
       dispatch(
@@ -228,23 +230,26 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Grid>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
         <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
-        <span>100.00 DAI</span>
+        <span>{payout} DAI</span>
       </Box>
       <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
         <span>Reward amount <Icon component={InfoOutlinedIcon}/></span>
         <span>{claimableBalance} FHM</span>
       </Box>
-      <Box className={`${style["infoBox"]}`} sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', mb: '1.5em'}}>
+      <Box className={`${style["infoBox"]}`}
+           sx={{display: 'flex', flexDirection: 'row', justifyContent: 'flex-start', mb: '1.5em'}}>
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
       {!connected ? (
-        <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button" onClick={connect}>
+        <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
+                onClick={connect}>
           Connect Wallet
         </Button>
       ) : (<>
         {!singleSided.isAvailable[chainId ?? 250] ? (
-          <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button" disabled={true}>
+          <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
+                  disabled={true}>
             Sold Out
           </Button>
         ) : hasAllowance() ? (

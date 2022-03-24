@@ -213,6 +213,7 @@ export interface IUserBond {
   lpTokenAmount: string;
   iLBalance: string;
   pendingFHM: string;
+  pricePaid: number;
 }
 
 export interface IUserBondDetails {
@@ -245,7 +246,8 @@ export const calculateUserBondDetails = createAsyncThunk(
             percentVestedFor: 0,
             lpTokenAmount: "0",
             iLBalance: "0",
-            pendingFHM: "0"
+            pendingFHM: "0",
+            pricePaid: 0
           },
         ],
         paymentToken: bond.paymentToken,
@@ -301,10 +303,12 @@ export const calculateUserBondDetails = createAsyncThunk(
             percentVestedFor,
             lpTokenAmount: '0',
             iLBalance: '0',
-            pendingFHM: '0'
+            pendingFHM: '0',
+            pricePaid: pricePaid
           }
         })
       );
+
       return {
         bond: bond.name,
         displayName: bond.displayName,
@@ -355,7 +359,8 @@ export const calculateUserBondDetails = createAsyncThunk(
         percentVestedFor: 0, // No such thing as percentVestedFor for single sided
         lpTokenAmount: trim(lpTokenAmount, 2),
         iLBalance: iLBalance,
-        pendingFHM
+        pendingFHM,
+        pricePaid: 1,
       }
     ] : [];
     return {
