@@ -35,6 +35,7 @@ import {
 import { RootState } from '../../../store';
 import {allBonds} from "@fantohm/shared-web3";
 import {ethers} from "ethers";
+import InputWrapper from "../../../components/input-wrapper/input-wrapper";
 
 
 interface IStakingCardParams {
@@ -175,7 +176,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   };
 
   return (
-    <DaiCard tokenImage={DaiToken}>
+    <DaiCard tokenImage={DaiToken} setTheme="light">
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box sx={{width: '100%'}}>
@@ -219,10 +220,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         {cardState !== "claim" ? (
 
           <Grid item xs={12} md={6}>
-          <Box className={`${style['currencySelector']}`} flexGrow={1}>
-            <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)}/>
-            <span className={style['amount']} onClick={setMax}>Max</span>
-          </Box>
+            <InputWrapper>
+              <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)}/>
+              <span className={style['amount']} onClick={setMax}>Max</span>
+            </InputWrapper>
         </Grid>) : <></>}
       </Grid>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
