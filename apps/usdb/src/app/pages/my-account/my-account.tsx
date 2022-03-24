@@ -370,7 +370,7 @@ export const MyAccount = (): JSX.Element => {
             style={{ backgroundColor: `${backgroundColor}` }}
           >
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Portfolio value{' '}
                   <img src={Info} alt="info" className={style['infoIcon']} />{' '}
@@ -380,7 +380,8 @@ export const MyAccount = (): JSX.Element => {
                     currencyFormat.format(accountDetails.balance)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              {/* Hide until the graph ready */}
+              {/* <Grid item xs={12} sm={6} md={3}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Total rewards claimed
                   <img
@@ -393,8 +394,8 @@ export const MyAccount = (): JSX.Element => {
                   {accountDetails &&
                     currencyFormat.format(accountDetails.rewardsClaimed)}
                 </Typography>
-              </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              </Grid> */}
+              <Grid item xs={12} sm={6} md={4}>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Claimable rewards
                   <img
@@ -409,7 +410,7 @@ export const MyAccount = (): JSX.Element => {
                     currencyFormat.format(accountDetails.claimableRewards)}
                 </Typography>
               </Grid>
-              <Grid item xs={12} sm={6} md={3}>
+              <Grid item xs={12} sm={6} md={4}>
                 <Button
                   variant="contained"
                   disableElevation
@@ -480,7 +481,7 @@ export const MyAccount = (): JSX.Element => {
                 </Grid>
                 <Grid item xs={12} sm={4} md={1}>
                   <Typography variant="subtitle2" className={style['subTitle']}>
-                    ROI
+                    APY
                     <img
                       src={Info}
                       alt="info"
@@ -554,7 +555,8 @@ export const MyAccount = (): JSX.Element => {
             ))}
           </Paper>
         </Box>
-        <Box>
+        {/* Hide previous investments until ready on the graph */}
+        {/* <Box>
           <Typography variant="subtitle1">
             Previous Investments ({inactiveInvestments.length})
           </Typography>
@@ -611,7 +613,7 @@ export const MyAccount = (): JSX.Element => {
               </TableBody>
             </Table>
           </TableContainer>
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
