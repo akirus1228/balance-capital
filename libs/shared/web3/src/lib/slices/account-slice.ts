@@ -428,7 +428,7 @@ export const calculateUserBondDetails = createAsyncThunk(
       const fhmRewards = await masterchefContract['pendingFhm'](0, address);
 
       pendingFHM = trim(
-        Number(ethers.utils.formatUnits(String(fhmRewards), 18)),
+        Number(ethers.utils.formatUnits(String(fhmRewards), 9)),
         2
       );
       iLBalance = trim(
