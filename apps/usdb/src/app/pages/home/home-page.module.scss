@@ -6,30 +6,42 @@
     
     .heroLogo {
         height: 100%;
+        max-width:325px;
     }
 
     .heroTitle {
-        font-size: 58px;
+        font-size: 42px;
+        padding: 0 2em;
         font-weight: 400;
         text-align: center;
     }
 
     .heroSubtitle {
-        font-size: 21px;
+        font-size: 18px;
         font-weight: 300;
         text-align: center;
     }
 
     .heroLink {
-        font-size: 29px;
+        font-size: 24px;
         font-weight: 400;
         color: #6DC1B9;
 
         .linkArrow{
-            transform: rotate(45deg);
-            font-size: 29px;
+            font-size: 22px;
+            transform: rotate(90deg);
+            display:inline-block;
+            margin-top:5px;
+            margin-left:15px;
         }
     }
 }
 
 
+@media (max-width:1200px) {
+
+    .heroContainer {
+        height:auto !important;
+    }
+    .productGrid {margin-top:50px;padding-bottom:50px;}
+}

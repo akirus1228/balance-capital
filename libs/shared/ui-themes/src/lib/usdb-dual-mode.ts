@@ -33,7 +33,7 @@ const globalTheme: ThemeOptions = {
     MuiAppBar: {
       styleOverrides: {
         root: {
-          fontSize: '22px',
+          fontSize: '18px',
         },
       },
     },
@@ -79,19 +79,22 @@ const globalTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           borderRadius: "30px",
-          padding: "27px",
-          fontSize: "20px",
+          padding: "1em 1.25em",
+          fontSize: "1em",
           textTransform: "unset",
           "&.paperButton": {
             width: "100%",
-            padding: "1em",
+            padding: "1em 1.25em",
           },
           '&.menuButton': {
             height: '1em',
-            paddingTop: '1.8em',
-            paddingBottom: '1.8em',
+            paddingTop: '1em',
+            paddingBottom: '1em',
+            paddingLeft: '1.25em',
+            paddingRight: '1.25em',
             borderRadius: '1.5em',
             margin: 'auto 1em',
+            fontSize: '1em',
           },
           '&.cardActionButton': {
             width: "100%"
@@ -129,8 +132,8 @@ const globalTheme: ThemeOptions = {
         },
         outlined: {
           borderRadius: '30px',
-          padding: '27px',
-          fontSize: '20px',
+          padding: '1em 1.25em',
+          fontSize: '1em',
         },
         contained: {
           '&.closeButton': {

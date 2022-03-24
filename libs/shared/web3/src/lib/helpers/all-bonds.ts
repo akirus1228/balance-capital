@@ -1,5 +1,4 @@
-import { StableBond, LPBond, CustomBond, BondAssetType, BondType, PaymentToken, BondAction, RedeemAction } from "../lib/bond";
-import { addresses } from "../constants";
+import { StableBond, BondType, PaymentToken } from "../lib/bond";
 import {NetworkIds} from "../networks";
 
 import { abi as SingleSidedBondDepository } from "../abi/bonds/SingleSidedLPBondDepository.json";

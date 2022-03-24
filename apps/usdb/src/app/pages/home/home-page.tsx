@@ -14,6 +14,8 @@ export const HomePage = (): JSX.Element => {
   return (
     <Container
       maxWidth="xl"
+
+      className={style['heroContainer']}
       sx={{
         display: 'flex',
         flexDirection: 'column',

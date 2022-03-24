@@ -1,10 +1,11 @@
 import { Grid } from '@mui/material';
 import IconLink from '../../../components/icon-link/icon-link';
+import style from './icon-grid.module.scss';
 import { WalletIcon, TradFiIcon, BankIcon, NFTsIcon, DoughnutChartIcon, ShieldIcon } from '@fantohm/shared/images';
 
 export const IconGrid = (): JSX.Element  => {
   return (
-    <Grid container rowSpacing={6}>
+    <Grid container rowSpacing={6} className={style['productGrid']}>
       <Grid item md={4} xs={6}>
         <IconLink title="Staking" icon={WalletIcon} link="/staking"/>
       </Grid>

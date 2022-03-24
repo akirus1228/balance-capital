@@ -1,13 +1,24 @@
 .comingSoonTitle {
-    font-size: 22px;
+    font-size: 18px;
     font-weight: 400;
     color: #697780;
 }
 
 .comingSoonSubtitle {
-    font-size: 16px;
+    font-size: 12px;
     font-weight: 400;
     color: rgba(106, 120, 129, 0.29);
     text-transform: uppercase;
     text-align: center;
+}
+
+.connectButton {
+
+    font-size:0.8em !important;
+    padding-top:1.2em !important;
+    padding-bottom:1.2em !important;
+
+}
+.toggleTheme {
+    svg {font-size:1.25em;}
 }

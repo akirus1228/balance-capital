@@ -1,9 +1,8 @@
-import { Box, Grid, Paper, ThemeProvider } from '@mui/material';
+import { Box, Paper, ThemeProvider } from '@mui/material';
 import { useCallback } from 'react';
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
 import { RootState } from "../../store";
-import daiToken from "../../../assets/tokens/DAI.svg";
 import style from './dai-card.module.scss';
 
 

@@ -89,7 +89,7 @@ export const Header = (): JSX.Element => {
   const toggleTheme = useCallback(() => {
     dispatch(setTheme(themeType === 'light' ? 'dark' : 'light'));
   }, [dispatch, themeType]);
-    
+
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
   };
@@ -234,15 +234,13 @@ export const Header = (): JSX.Element => {
             </Link>
           </Tooltip>
           <Tooltip title="Connect Wallet">
-            <Button onClick={handleConnect} sx={{ display: { xs: "none", md: "flex" } }} color="primary"
-                    className="menuButton">
+            <Button onClick={handleConnect} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className={`menuButton ${styles['connectButton']}`}>
               {connectButtonText}
             </Button>
           </Tooltip>
           <Tooltip title="Toggle Light/Dark Mode">
-            <Button onClick={toggleTheme} sx={{ display: { xs: "none", md: "flex" } }} color="primary"
-                    className="menuButton">
-              <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
+            <Button onClick={toggleTheme} sx={{ display: { xs: 'none', md: 'flex' }}} color="primary" className={`menuButton ${styles['toggleTheme']}`}>
+              <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
             </Button>
           </Tooltip>
         </Toolbar>
