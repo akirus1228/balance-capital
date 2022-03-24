@@ -1,13 +1,17 @@
 import { BigNumber, ethers } from 'ethers';
 import { addresses } from '../constants';
-import { abi as ierc20Abi } from '../abi/IERC20.json';
-import { abi as usdbAbi } from '../abi/USDBContract.json';
-import { abi as daiAbi } from '../abi/reserves/DAIContract.json';
-import { abi as sOHM } from '../abi/sOHM.json';
-import { abi as sOHMv2 } from '../abi/sOhmv2.json';
-import { abi as fuseProxy } from '../abi/FuseProxy.json';
-import { abi as wsOHM } from '../abi/wsOHM.json';
-import { abi as OlympusStaking } from '../abi/OlympusStakingv2.json';
+import { 
+  ierc20Abi, 
+  usdbContractAbi as usdbAbi,
+  daiContractAbi as daiAbi,
+  sOhmAbi as sOHM,
+  sOhmv2Abi as sOHMv2,
+  fuseProxyAbi as fuseProxy,
+  wsOhmAbi as wsOHM,
+  olympusStakingv2Abi as OlympusStaking,
+  masterChefAbi as masterchefAbi,
+  stablePoolAbi
+} from '../abi';
 
 import { setAll, trim } from '../helpers';
 
@@ -22,8 +26,7 @@ import {
 } from './interfaces';
 import { chains } from '../providers';
 import { BondAction, BondType, PaymentToken } from '../lib/bond';
-import { abi as masterchefAbi } from '../abi/MasterChefAbi.json';
-import { abi as stablePoolAbi } from '../abi/StablePool.json';
+
 import { findOrLoadMarketPrice } from './bond-slice';
 
 export const getBalances = createAsyncThunk(

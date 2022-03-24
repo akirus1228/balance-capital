@@ -2,7 +2,7 @@ import { BlockWithTransactions } from "@ethersproject/abstract-provider";
 import { Block, BlockTag, EventType, Filter, Listener, Log, Network, Provider, TransactionReceipt, TransactionRequest, TransactionResponse } from "@ethersproject/providers";
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { Deferrable } from "ethers/lib/utils";
-import { abi as MulticallContract } from "../abi/Multicall.json";
+import { multicallAbi as MulticallContract } from "../abi";
 import { DebugHelper } from "../helpers/debug-helper";
 
 

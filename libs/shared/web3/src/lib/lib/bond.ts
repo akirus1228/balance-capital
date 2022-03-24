@@ -1,7 +1,7 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import React from "react";
 import { ethers } from "ethers";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { ierc20Abi } from "../abi";
 import { getBondCalculator } from "../helpers/bond-calculator";
 import { addresses } from "../constants";
 import { NetworkId } from "../networks";

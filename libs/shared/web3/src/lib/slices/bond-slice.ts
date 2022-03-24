@@ -3,9 +3,7 @@ import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
+import { masterChefAbi as masterchefAbi } from "../abi";
 
 import {
   IApproveBondAsyncThunk,

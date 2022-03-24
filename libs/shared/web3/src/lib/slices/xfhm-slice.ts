@@ -18,9 +18,7 @@ import { allAssetTokens, xFhmToken } from "../helpers/asset-tokens";
 import { sleep } from "../helpers/sleep";
 import { addresses } from "../constants";
 import { networks } from "../networks";
-import { abi as sOHM } from "../abi/sOHM.json";
-import { abi as LqdrUsdbPolBondDepositoryAbi } from "../abi/LqdrUsdbPolBondDepository.json";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { lqdrUsdbPolBondDepositoryAbi, ierc20Abi, sOhmAbi } from "../abi";
 
 interface IUAData {
   address: string;
@@ -66,9 +64,9 @@ export const calcXfhmDetails = createAsyncThunk(
       };
     }
     const provider = await chains[networkId].provider;
-    const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOHM, provider);
-    const lqdrUsdbPolContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
-    const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOHM, provider);
+    const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOhmAbi, provider);
+    const lqdrUsdbPolContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, provider);
+    const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOhmAbi, provider);
     const xfhmContract = await xFhmToken.getContract(networkId);
     const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm] = await Promise.all([
       fhmContract["balanceOf"](address),
@@ -259,7 +257,7 @@ export const addLiquidity = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, signer);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, signer);
     const bondPriceInUSD = await lqdrUsdbPolBondContract["bondPriceInUSD"]();
     let addLiquidityTx;
     try {
@@ -288,7 +286,7 @@ export const calcAssetAmount = createAsyncThunk(
       return 0;
     }
 
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, provider);
     let amount = 0;
     if (action === "calculate-xfhm") {
       amount = await lqdrUsdbPolBondContract['feeInXfhm'](value);
@@ -308,7 +306,7 @@ export const payoutForUsdb = createAsyncThunk(
       return 0;
     }
 
-    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, LqdrUsdbPolBondDepositoryAbi, provider);
+    const lqdrUsdbPolBondContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, provider);
     return await lqdrUsdbPolBondContract['payoutFor'](value);
   }
 );

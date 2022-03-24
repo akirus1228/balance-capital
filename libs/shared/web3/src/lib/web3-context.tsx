@@ -23,7 +23,7 @@ export const getURI = (networkId: NetworkId): string => {
 const Web3Context = React.createContext<Web3ContextData>(null);
 
 export const useWeb3Context = () => {
-  console.log("useweb3context");
+  // console.log("useweb3context");
   const web3Context = useContext(Web3Context);
   if (!web3Context) {
     throw new Error(

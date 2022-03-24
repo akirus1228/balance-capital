@@ -1,10 +1,6 @@
 import { ethers, BigNumber } from "ethers";
 import { addresses } from "../constants";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as OlympusStaking } from "../abi/OlympusStakingv2.json";
-import { abi as StakingHelper } from "../abi/StakingHelper.json";
-import { abi as fhudAbi } from "../abi/FHUDContract.json";
-import { abi as usdbMinterAbi } from "../abi/USDBMinter.json";
+import { stakingHelperAbi, fhudContractAbi, usdbMinterAbi, olympusStakingv2Abi, ierc20Abi } from "../abi";
 import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./account-slice";
@@ -12,6 +8,7 @@ import { error, info } from "./messages-slice";
 import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";
 import { sleep } from "../helpers/sleep";
+
 
 interface IUAData {
   address: string;
@@ -122,13 +119,13 @@ export const changeFHUDApproval = createAsyncThunk(
     let approveTx;
     let fhudAllowance = 0;
     if (networkId === 250) {
-      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudAbi, signer);
+      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
       fhudAllowance = await fhudContract["allowance"](address, addresses[networkId]["USDB_MINTER"]);
     }
 
     try {
       if (networkId === 250) {
-        const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudAbi, signer);
+        const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
 
         approveTx = await fhudContract["approve"](
           addresses[networkId]["USDB_MINTER"],
@@ -153,7 +150,7 @@ export const changeFHUDApproval = createAsyncThunk(
     // go get fresh allowances
 
     if (networkId === 250) {
-      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudAbi, signer);
+      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
       fhudAllowance = await fhudContract["allowance"](address, addresses[networkId]["USDB_MINTER"]);
     }
     return dispatch(
@@ -175,10 +172,10 @@ export const changeStake = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, OlympusStaking, signer);
+    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
     const stakingHelper = new ethers.Contract(
       addresses[networkId]["STAKING_HELPER_ADDRESS"] as string,
-      StakingHelper,
+      stakingHelperAbi,
       signer,
     );
 
@@ -289,7 +286,7 @@ export const changeForfeit = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, OlympusStaking, signer);
+    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
     let forfeitTx;
 
     try {
@@ -326,7 +323,7 @@ export const changeClaim = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, OlympusStaking, signer);
+    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
     let claimTx;
 
     try {

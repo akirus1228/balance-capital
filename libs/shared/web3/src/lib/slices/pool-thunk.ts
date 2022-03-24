@@ -1,8 +1,6 @@
 import { ethers, BigNumber } from "ethers";
 import { addresses } from "../constants";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as PrizePool } from "../abi/33-together/PrizePoolAbi2.json";
-import { abi as AwardPool } from "../abi/33-together/AwardAbi2.json";
+import { ierc20Abi, prizePool2Abi as PrizePool, award2Abi as AwardPool  } from "../abi";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { fetchAccountSuccess, getBalances } from "./account-slice";

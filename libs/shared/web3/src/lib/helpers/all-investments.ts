@@ -4,16 +4,18 @@ import { getCoingeckoTokenPrice, getHistoricTokenPrice, getTokenPrice, roundToNe
 import { NetworkIds } from "../networks";
 import { chains } from "../providers";
 import { ethers } from "ethers";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
-import { abi as wMemoAbi } from "../abi/wMEMO.json";
-import { abi as gOHMAbi } from "../abi/gohm.json";
-import { abi as UniswapV2Pair } from "../abi/UniswapV2Pair.json";
-import { abi as TShareRewardPool } from "../abi/TShareRewardPool.json";
-import { abi as TombMasonry } from "../abi/TombMasonry.json";
-import { abi as MasterChefLqdr } from "../abi/MasterChefLqdr.json";
-import { abi as MasterChefBeets } from "../abi/MasterChefBeets.json";
-import { abi as BalancerVault } from "../abi/BalancerVault.json";
-import { abi as BalancerWeightedPool } from "../abi/BalancerWeightedPool.json";
+import { 
+  ierc20Abi, 
+  wMemoAbi, 
+  gohmAbi as gOHMAbi,
+  uniswapV2PairAbi as UniswapV2Pair,
+  tShareRewardPoolAbi as TShareRewardPool,
+  tombMasonryAbi as TombMasonry,
+  masterChefLqdrAbi as MasterChefLqdr,
+  masterChefBeetsAbi as MasterChefBeets,
+  balancerVaultAbi as BalancerVault,
+  balancerWeightedPoolAbi as BalancerWeightedPool
+} from "../abi";
 
 export const weth = new TokenInvestment({
   name: "weth",

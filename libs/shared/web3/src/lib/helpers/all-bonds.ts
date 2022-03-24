@@ -1,8 +1,7 @@
 import { StableBond, BondType, PaymentToken } from "../lib/bond";
 import {NetworkIds} from "../networks";
 
-import { abi as SingleSidedBondDepository } from "../abi/bonds/SingleSidedLPBondDepository.json";
-import { abi as TradFiBondDepository } from "../abi/bonds/TradFiBondDepository.json";
+import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi } from "../abi";
 
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 // //   and include that in the definition of a bond
@@ -17,7 +16,7 @@ export const tradfi3month = new StableBond({
   isAvailable: { [NetworkIds.Rinkeby]: true, [NetworkIds.FantomTestnet]: true },
   isPurchasable: true,
   bondIconSvg: null,
-  bondContractABI: TradFiBondDepository,
+  bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
     [NetworkIds.FantomTestnet]: {
@@ -41,7 +40,7 @@ export const tradfi6month = new StableBond({
   isAvailable: { [NetworkIds.Rinkeby]: true, [NetworkIds.FantomTestnet]: true },
   isPurchasable: true,
   bondIconSvg: null,
-  bondContractABI: TradFiBondDepository,
+  bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
     [NetworkIds.FantomTestnet]: {
@@ -65,7 +64,7 @@ export const singleSided = new StableBond({
   isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
-  bondContractABI: SingleSidedBondDepository,
+  bondContractABI: singleSidedLPBondDepositoryAbi,
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {

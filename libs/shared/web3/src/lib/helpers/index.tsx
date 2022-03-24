@@ -1,8 +1,7 @@
 import { addresses } from "../constants";
 import { ethers } from "ethers";
 import axios from "axios";
-import { abi as PairContract } from "../abi/PairContract.json";
-import { abi as RedeemHelperAbi } from "../abi/RedeemHelper.json";
+import { pairContractAbi as PairContract, redeemHelperAbi as RedeemHelperAbi} from "../abi";
 
 import {SvgIcon} from "@mui/material";
 import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";

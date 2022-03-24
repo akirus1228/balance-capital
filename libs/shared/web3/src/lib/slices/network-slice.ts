@@ -3,10 +3,12 @@ import { BigNumber, ethers } from "ethers";
 import { NetworkId, networks } from "../networks";
 import { chains } from "../providers";
 import { IBaseAsyncThunk } from "./interfaces";
-import { abi as OlympusStakingv2 } from "../abi/OlympusStakingv2.json";
-import { abi as sOHM } from "../abi/sOHM.json";
-import { abi as sOHMv2 } from "../abi/sOhmv2.json";
-import { abi as CirculatingSupplyContract } from "../abi/CirculatingSupplyContract.json";
+import { 
+	olympusStakingv2Abi as OlympusStakingv2,
+	sOhmAbi as sOHM,
+	sOhmv2Abi as sOHMv2,
+	circulatingSupplyContractAbi as CirculatingSupplyContract
+} from "../abi";
 import { getMarketPrice, getTokenPrice } from "../helpers";
 
 export interface INetworkDetails {

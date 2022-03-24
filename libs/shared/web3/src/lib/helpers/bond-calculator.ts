@@ -1,4 +1,4 @@
-import { abi as BondCalcContract } from "../abi/BondCalcContract.json";
+import { bondCalcContractAbi as BondCalcContract } from "../abi";
 import { ethers } from "ethers";
 import { addresses } from "../constants";
 import { NetworkId } from "../networks";

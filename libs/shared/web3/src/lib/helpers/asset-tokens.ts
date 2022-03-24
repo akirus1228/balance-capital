@@ -5,9 +5,11 @@ import { getTokenPrice} from "./index";
 import { chains } from "../providers";
 import { NetworkId, NetworkIds, networks } from "../networks";
 import { truncateDecimals } from "../../../../helpers/src/lib/base";
-import { abi as XfhmAbi } from "../abi/xFhm.json";
-import { abi as LqdrAbi } from "../abi/Lqdr.json";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import { 
+  xFhmAbi as XfhmAbi,
+  lqdrAbi as LqdrAbi,
+  ierc20Abi
+} from "../abi";
 import { ReactComponent as OhmImg } from "../../../../assets/tokens/token_OHM.svg";
 
 export interface AssetTokenAddress {
