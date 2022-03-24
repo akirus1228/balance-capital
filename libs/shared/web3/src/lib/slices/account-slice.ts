@@ -265,45 +265,36 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
     ]);
 
-    if (bond.type !== BondType.TRADFI) {
-      // Contract Interactions
-      const [bondDetails, pendingPayout, allowance, balance] = await Promise.all([
-        bondContract['bondInfo'](address),
-        bondContract['pendingPayoutFor'](address),
-        reserveContract['allowance'](address, bond.getAddressForBond(networkId)),
-        reserveContract['balanceOf'](address),
-      ]).then(([bondDetails, pendingPayout, allowance, balance]) => [
-        bondDetails,
-        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-        Number(allowance),
-        // balance should NOT be converted to a number. it loses decimal precision
-        ethers.utils.formatUnits(balance, bond.isLP ? 18 : bond.decimals),
-      ]);
-      const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-      const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-      let pendingFHM = "0";
-      let iLBalance = "0";
-      let lpTokenAmount = "0";
-      if(bond.type === BondType.SINGLE_SIDED){
-        const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
-        pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
-        iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
-        lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
-      }
-      const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
-        {
-          amount: '9999', // TODO
-          rewards: '1000', // TODO
-          rewardToken: PaymentToken.USDB, // TODO
-          interestDue,
-          bondMaturationBlock,
-          pendingPayout,
-          percentVestedFor: 50, // TODO
-          lpTokenAmount: lpTokenAmount,
-          iLBalance: iLBalance,
-          pendingFHM
-        }
-      ] : [];
+    if (bond.type === BondType.TRADFI) {
+      const bondLength = Number(await bondContract["bondlength"](address));
+      const userBonds: IUserBond[] = await Promise.all(
+        [...Array(bondLength).keys()].map(async bondIndex => {
+          const [bondDetails, pendingPayout, percentVestedFor] = await Promise.all([
+            bondContract["bondInfo"](address, bondIndex),
+            bondContract["pendingPayoutFor"](address, bondIndex),
+            bondContract["percentVestedFor"](address, bondIndex),
+          ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
+            bondDetails,
+            ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+            Number(percentVestedFor.div(BigNumber.from('100'))),
+          ]);
+          const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+          const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+          return {
+            amount: ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals),
+            rewards: '100', // TODO
+            rewardToken: PaymentToken.USDB, // TODO
+            interestDue,
+            bondMaturationBlock,
+            pendingPayout,
+            percentVestedFor,
+            lpTokenAmount: '0',
+            iLBalance: '0',
+            pendingFHM: '0'
+          }
+        })
+      );
+  
       return {
         bond: bond.name,
         displayName: bond.displayName,
@@ -317,44 +308,39 @@ export const calculateUserBondDetails = createAsyncThunk(
       };
     }
 
-    const bondLength = Number(await bondContract["bondlength"](address));
-    const userBonds: IUserBond[] = await Promise.all(
-      [...Array(bondLength).keys()].map(async bondIndex => {
-        const [bondDetails, pendingPayout, percentVestedFor] = await Promise.all([
-          bondContract["bondInfo"](address, bondIndex),
-          bondContract["pendingPayoutFor"](address, bondIndex),
-          bondContract["percentVestedFor"](address, bondIndex),
-        ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
-          bondDetails,
-          ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
-          Number(percentVestedFor.div(BigNumber.from('100'))),
-        ]);
-        let iLBalance = "0";
-        let pendingFHM = "0";
-        let lpTokenAmount = "0";
-        if(bond.type === BondType.SINGLE_SIDED){
-          const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
-          pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFHM"](0, address)))), 2);
-          iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 18)), 2);
-          lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
-        }
-        const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
-        const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-        return {
-          amount: ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals),
-          rewards: '100', // TODO
-          rewardToken: PaymentToken.USDB, // TODO
-          interestDue,
-          bondMaturationBlock,
-          pendingPayout,
-          percentVestedFor,
-          lpTokenAmount: lpTokenAmount,
-          iLBalance: iLBalance,
-          pendingFHM: pendingFHM
-        }
-      })
-    );
-
+    // Contract Interactions
+    const [bondDetails, pendingPayout] = await Promise.all([
+      bondContract['bondInfo'](address),
+      bondContract['pendingPayoutFor'](address),
+    ]).then(([bondDetails, pendingPayout]) => [
+      bondDetails,
+      ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+    ]);
+    const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
+    const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+    let pendingFHM = "0";
+    let iLBalance = "0";
+    let lpTokenAmount = "0";
+    if(bond.type === BondType.SINGLE_SIDED){
+      const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, provider);
+      pendingFHM = trim(Number(ethers.utils.formatUnits(Number(await masterchefContract["pendingFhm"](0, address)), 9)), 2);
+      iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
+      lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
+    }
+    const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
+      {
+        amount: '9999', // TODO
+        rewards: '1000', // TODO
+        rewardToken: PaymentToken.USDB, // TODO
+        interestDue,
+        bondMaturationBlock,
+        pendingPayout,
+        percentVestedFor: 50, // TODO
+        lpTokenAmount: lpTokenAmount,
+        iLBalance: iLBalance,
+        pendingFHM
+      }
+    ] : [];
     return {
       bond: bond.name,
       displayName: bond.displayName,
