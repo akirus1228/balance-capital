@@ -55,6 +55,10 @@ const globalTheme: ThemeOptions = {
           },
           "&.softGradient": {
             borderRadius: "2em",
+          },
+          "&.MuiMenu-paper":{
+            borderRadius: "10px",
+            padding: "0.5em",
           }
         }
       },
