@@ -25,3 +25,4 @@ export * from './lib/hooks/investments';
 export * from './lib/store';
 export * from './lib/helpers/all-bonds';
 export * from './lib/helpers/index';
+export { changeMint } from './lib/slices/stake-thunk';
