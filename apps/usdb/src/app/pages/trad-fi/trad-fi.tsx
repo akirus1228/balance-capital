@@ -10,7 +10,7 @@ import Logo from '../../components/logo/logo';
 import { ThemeImage } from '../../components/theme-image/theme-image';
 
 export const TradFi = (): JSX.Element => {
-  console.log("TradFi rendered");
+  //console.log("TradFi rendered");
 
   const heroContent = {
     hero: true,

@@ -1,8 +1,6 @@
 import style from './deposit-choice.module.scss';
 import {
   Box,
-  Grid,
-  Zoom,
 } from '@mui/material';
 import {DepositCard} from './deposit-card';
 import {BondType, IAllBondData} from "@fantohm/shared-web3";
@@ -15,14 +13,12 @@ interface IDepositChoiceParams {
 }
 
 export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
-  const {connect, hasCachedProvider, chainId, connected} = useWeb3Context();
-  const {bonds, allBonds} = useBonds(chainId || 250);
+  const { chainId, connected } = useWeb3Context();
+  const { bonds } = useBonds(chainId || 250);
   const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
 
   useEffect(() => {
-    console.log("set bonds")
     setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI));
-    console.log(bondsUsdb);
   }, [bonds]);
 
   return (
