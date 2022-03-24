@@ -40,8 +40,8 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: "10px",
-          padding: "0.5em",
+          borderRadius: "53px",
+          padding: "2.5em",
           "&.MuiAppBar-root": {
             padding: "0",
             marginTop: "2em"
