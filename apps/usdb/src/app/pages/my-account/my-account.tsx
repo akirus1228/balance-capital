@@ -34,7 +34,8 @@ import {
   useBonds,
   useWeb3Context,
   prettifySeconds,
-  secondsUntilBlock
+  secondsUntilBlock,
+  trim
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -45,6 +46,7 @@ export interface Investment {
   amount: number;
   rewards: number;
   rewardToken: string;
+  rewardsInUsd: number;
   term: number;
   termType: string;
   vestDate: number;
@@ -79,6 +81,7 @@ const inactiveInvestments: Investment[] = [
     type: BondType.TRADFI,
     rewards: 832.23,
     rewardToken: 'USDB',
+    rewardsInUsd: 832.23,
     term: 6,
     termType: 'months',
     roi: "32.5",
@@ -95,6 +98,7 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    rewardsInUsd: 1963.75,
     term: 6,
     termType: 'months',
     roi: "32.5",
@@ -111,6 +115,7 @@ const inactiveInvestments: Investment[] = [
     amount: 29275.51,
     rewards: 1963.75,
     rewardToken: 'USDB',
+    rewardsInUsd: 1963.75,
     term: 6,
     termType: 'months',
     roi: "32.5",
@@ -197,6 +202,7 @@ export const MyAccount = (): JSX.Element => {
               amount: Number(userBond.amount),
               rewards: Number(userBond.rewards),
               rewardToken: userBond.rewardToken,
+              rewardsInUsd: Number(userBond.rewardsInUsd),
               bondName: bond.name,
               bondIndex: i,
               displayName: bond.displayName,
@@ -227,7 +233,10 @@ export const MyAccount = (): JSX.Element => {
           0
         ),
         rewardsClaimed: 1247.31, // TODO
-        claimableRewards: 237.11, // TODO
+        claimableRewards: activeInvestments.reduce(
+          (rewardsInUsd, investment) => rewardsInUsd + investment.rewardsInUsd,
+          0
+        )
       };
     } else {
       return null;
@@ -454,7 +463,7 @@ export const MyAccount = (): JSX.Element => {
                     />{' '}
                   </Typography>
                   <Typography variant="h6">
-                    {currencyFormat.format(investment.rewards)}{' '}
+                    {trim(investment.rewards, 2)}{' '}
                     {investment.rewardToken}
                   </Typography>
                 </Grid>

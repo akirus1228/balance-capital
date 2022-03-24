@@ -16,6 +16,7 @@ import {IBaseAddressAsyncThunk, ICalcUserBondDetailsAsyncThunk} from "./interfac
 import {chains} from "../providers";
 import {BondAction, BondType, PaymentToken} from "../lib/bond";
 import {abi as masterchefAbi} from "../abi/MasterChefAbi.json";
+import { findOrLoadMarketPrice } from "./bond-slice";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -204,6 +205,7 @@ export interface IUserBond {
   amount: string;
   rewards: string;
   rewardToken: PaymentToken;
+  rewardsInUsd: string;
   bondMaturationBlock: number;
   pendingPayout: string; //Payout formatted in gwei.
   percentVestedFor: number;
@@ -221,7 +223,7 @@ export interface IUserBondDetails {
 
 export const calculateUserBondDetails = createAsyncThunk(
   "account/calculateUserBondDetails",
-  async ({address, bond, networkId}: ICalcUserBondDetailsAsyncThunk) => {
+  async ({address, bond, networkId}: ICalcUserBondDetailsAsyncThunk, { dispatch }) => {
     if (!address) {
       return {
         bond: "",
@@ -235,6 +237,7 @@ export const calculateUserBondDetails = createAsyncThunk(
             amount: "0",
             rewards: "0",
             rewardToken: PaymentToken.USDB,
+            rewardsInUsd: '0',
             interestDue: 0,
             bondMaturationBlock: 0,
             pendingPayout: "",
@@ -282,11 +285,13 @@ export const calculateUserBondDetails = createAsyncThunk(
           const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
           const pricePaid = bondDetails.pricePaid / Math.pow(10, paymentTokenDecimals);
           const amount = ethers.utils.formatUnits(bondDetails.payout, paymentTokenDecimals);
-          const rewards = `${interestDue * (1 - pricePaid)}`;
+          const rewards = trim(interestDue * (1 - pricePaid), 2);
+
           return {
             amount,
             rewards,
             rewardToken: PaymentToken.USDB,
+            rewardsInUsd: rewards,
             interestDue,
             bondMaturationBlock,
             pendingPayout,
@@ -312,12 +317,14 @@ export const calculateUserBondDetails = createAsyncThunk(
     }
 
     // Contract Interactions
-    const [bondDetails, pendingPayout] = await Promise.all([
+    const [bondDetails, pendingPayout, fhmMarketPrice] = await Promise.all([
       bondContract['bondInfo'](address),
       bondContract['pendingPayoutFor'](address),
-    ]).then(([bondDetails, pendingPayout]) => [
+      dispatch(findOrLoadMarketPrice({ networkId: networkId })).unwrap(),
+    ]).then(([bondDetails, pendingPayout, fhmMarketPrice]) => [
       bondDetails,
       ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+      fhmMarketPrice?.marketPrice || 0,
     ]);
     const interestDue = bondDetails.payout / Math.pow(10, paymentTokenDecimals);
     const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
@@ -330,11 +337,14 @@ export const calculateUserBondDetails = createAsyncThunk(
       iLBalance = trim(Number(ethers.utils.formatUnits(Number(bondDetails.ilProtectionAmountInUsd), 9)), 2);
       lpTokenAmount = trim(Number(ethers.utils.formatUnits(bondDetails.lpTokenAmount, 18)), 2)
     }
-    const userBonds = bondDetails['payout'].gt(BigNumber.from('0')) ? [
+    const amount = bondDetails['payout'] / Math.pow(10, 18);
+    const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
+    const userBonds = amount > 0 ? [
       {
-        amount: '9999', // TODO
-        rewards: '1000', // TODO
-        rewardToken: PaymentToken.USDB, // TODO
+        amount: trim(amount, 2), // TODO probably not accurate, should calc based on lpTokenValue
+        rewards: trim(rewardsInUsd, 2),
+        rewardToken: PaymentToken.FHM, // TODO
+        rewardsInUsd: trim(rewardsInUsd, 2),
         interestDue,
         bondMaturationBlock,
         pendingPayout,
