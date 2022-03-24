@@ -19,23 +19,25 @@ import { format } from 'date-fns';
 import style from './my-account.module.scss';
 import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
 import {
-  Bond, 
+  Bond,
   BondType,
-  chains,
   cancelBond,
   IAllBondData,
-  isPendingTxn, 
-  IUserBondDetails, 
-  redeemAllBonds, 
+  isPendingTxn,
+  IUserBondDetails,
+  redeemAllBonds,
   redeemOneBond,
+  claimSingleSidedBond,
   setWalletConnected,
   txnButtonTextGeneralPending,
   useBonds,
   useWeb3Context,
   prettifySeconds,
   secondsUntilBlock,
-  trim
+  trim, chains
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -300,15 +302,17 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     console.log('redeeming all bonds');
     if (provider && chainId) {
-      await dispatch(
-        redeemAllBonds({
-          networkId: chainId,
-          address,
-          bonds,
-          provider,
-          autostake: false,
-        })
-      );
+      for (const bond of bonds) {
+        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name);
+        if (currentInvests.length === 0) continue;
+
+        if (bond.type === BondType.TRADFI) {
+          await dispatch(redeemOneBond({ networkId: chainId!, address, bond, provider: provider!, autostake: false }));
+        } else if (bond.type === BondType.SINGLE_SIDED) {
+          const { amount } = currentInvests[0];
+          await dispatch(claimSingleSidedBond({ value: String(amount), networkId: chainId!, address, bond, provider: provider! }));
+        }
+      }
     }
 
     console.log('redeem all complete');
@@ -439,8 +443,8 @@ export const MyAccount = (): JSX.Element => {
             className={style['rowCard']}
             style={{ backgroundColor: `${backgroundColor}` }}
           >
-            {activeInvestments.map((investment) => (
-              <Grid container spacing={2}>
+            {activeInvestments.map((investment, index) => (
+              <Grid container spacing={2} key={`invests-${index}`}>
                 <Grid item xs={12} sm={4} md={2}>
                   <Typography variant="subtitle2" className={style['subTitle']}>
                     Amount
@@ -518,8 +522,8 @@ export const MyAccount = (): JSX.Element => {
                         </Button>
                       </Link>
                     )}
-                    {investment.type === BondType.TRADFI && [
-                      <Button
+                    {investment.type === BondType.TRADFI && (
+                      investment.percentVestedFor >= 100 ? (<Button
                         variant="contained"
                         disableElevation
                         disabled={investment.percentVestedFor < 100}
@@ -532,10 +536,9 @@ export const MyAccount = (): JSX.Element => {
                         }}
                       >
                         Redeem
-                      </Button>,
-                      <Button
+                      </Button>):
+                      (<Button
                         variant="contained"
-                        color="secondary"
                         disableElevation
                         disabled={investment.percentVestedFor >= 100}
                         sx={{ padding: '10px 30px' }}
@@ -547,8 +550,8 @@ export const MyAccount = (): JSX.Element => {
                         }}
                       >
                         Cancel
-                      </Button>,
-                    ]}
+                      </Button>)
+                    )}
                   </ButtonGroup>
                 </Grid>
               </Grid>

@@ -18,7 +18,7 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const {connect, hasCachedProvider, chainId, connected} = useWeb3Context();
   const {bonds, allBonds} = useBonds(chainId || 250);
   const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
-  
+
   useEffect(() => {
     console.log("set bonds")
     setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI));
@@ -29,8 +29,8 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
    <Box id={params.id}>
         <Box className={style["__bond-cards"]}>
           {
-            bondsUsdb?.map((bond, index) => 
-            (<DepositCard key={index} bondType="3month" term={3} roi={Number(bond.roi)} apy={21.55} bond={bond} days={bond.vestingTerm}/>))
+            bondsUsdb?.map((bond, index) =>
+            (<DepositCard key={index} bondType="3month" term={bond.name === "tradfi3month" ? 3 : 6} roi={Number(bond.roi)} apy={Number(bond.roi)} bond={bond} days={bond.vestingTerm}/>))
           }
           {
             !bondsUsdb && connected ? (

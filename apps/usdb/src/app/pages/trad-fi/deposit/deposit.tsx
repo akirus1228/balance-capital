@@ -4,7 +4,17 @@ import {useCallback, useEffect, useState} from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import style from './deposit.module.scss';
 import CloseIcon from '@mui/icons-material/Close';
-import {Available, isPendingTxn, StableBond, txnButtonText, useBonds, useWeb3Context} from "@fantohm/shared-web3";
+import {
+  allBonds,
+  Available, Bond,
+  BondType, IAllBondData,
+  isPendingTxn,
+  StableBond,
+  trim,
+  txnButtonText,
+  useBonds,
+  useWeb3Context
+} from "@fantohm/shared-web3";
 import { error } from "@fantohm/shared-web3";
 import {useDispatch, useSelector} from "react-redux";
 import {getAccountState, RootState} from "../../../store";
@@ -15,6 +25,7 @@ import {
 } from "@fantohm/shared-web3";
 import WalletBallance from '../../../components/wallet-ballance/wallet-ballance';
 import InputWrapper from '../../../components/input-wrapper/input-wrapper';
+import {ethers} from "ethers";
 
 export interface IBond {
   title: string;
@@ -28,13 +39,11 @@ export const TradFiDeposit = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { bondType } = useParams();
-  const [bond, setBond] = useState<StableBond>({
-    displayName: '',
-    allowance: 0,
-    isAvailable: {'250': false} as Available
-  } as StableBond);
+  const [bond, setBond] = useState<StableBond>();
   const [isDeposit, setIsDeposit] = useState(true);
   const accountSlice = useSelector(getAccountState);
+  const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI)[0] as IAllBondData
+  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI)[0] as Bond
 
   const bondTypes: IBondType = {
     '3month': {
@@ -44,24 +53,37 @@ export const TradFiDeposit = (): JSX.Element => {
       title: '6 Month'
     }
   };
-  
+
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch();
-  
+
   const [quantity, setQuantity] = useState(0);
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
-
+  const [claimableBalance, setClaimableBalance] = useState("0");
+  const [payout, setPayout] = useState("0");
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
+
+  const daiBalance = useSelector((state: RootState) => {
+    return trim(Number(state.account.balances.dai), 2);
+  });
+
+  useEffect(() => {
+    if (tradfiBondData?.userBonds[0]) {
+      setPayout(trim(Number(ethers.utils.formatUnits(tradfiBondData?.userBonds[0]?.interestDue * tradfiBondData?.userBonds[0]?.pricePaid)), 2))
+      console.log(payout)
+      setClaimableBalance(tradfiBondData?.userBonds[0]?.pendingFHM)
+    }
+  }, [tradfiBondData?.userBonds])
 
   useEffect(() => {
     setBond(allBonds[0]);
   }, [bondType, allBonds]);
 
   const hasAllowance = useCallback(() => {
-    return bond && bond.allowance && bond.allowance > 0;
-  }, [bond]);
+    return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
+  }, [tradfiBondData]);
 
   const isBondLoading = useSelector((state: RootState) => state?.bonding["loading"] ?? true);
 
@@ -75,25 +97,8 @@ export const TradFiDeposit = (): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
-    } else if (accountSlice && accountSlice.bonds && accountSlice.bonds['tradfi3month']) {
-      const shouldProceed = window.confirm(
-        "You have an existing bond. Bonding will reset your vesting period and forfeit rewards. We recommend claiming rewards first or using a fresh wallet. Do you still want to proceed?",
-      );
-      const slippage = 0;
-      if (shouldProceed) {
-        dispatch(
-          bondAsset({
-            value: String(quantity),
-            slippage,
-            bond: bond,
-            networkId: chainId || 250,
-            provider,
-            address: address,
-          } as IBondAssetAsyncThunk)
-        );
-      }
     } else {
-      const slippage = 0.005;
+      const slippage = 0;
       dispatch(
         bondAsset({
           value: String(quantity),
@@ -104,7 +109,6 @@ export const TradFiDeposit = (): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-      clearInput();
     }
   }
 
@@ -121,6 +125,10 @@ export const TradFiDeposit = (): JSX.Element => {
     navigate('/trad-fi#get-started');
   }
 
+  const setMax = () => {
+    setQuantity(Number(daiBalance));
+  }
+
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
       <Backdrop open={true}>
@@ -134,22 +142,22 @@ export const TradFiDeposit = (): JSX.Element => {
             <Box sx={{backgroundColor: "primary.main"}} className={style['typeContainer']}>
               <Typography className={style['type']} color="primary.contrastText">Fixed Deposit</Typography>
             </Box>
-            <h1 className={style['title']}>{bond.displayName}</h1>
+            <h1 className={style['title']}>{tradfiBond.displayName}</h1>
             <h2 className={style['subtitle']}>90 days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
             <Grid item xs={12} md={4}>
-              <WalletBallance sx={{ml: 'auto'}} balance="4000.00"/>
+              <WalletBallance sx={{ml: 'auto'}} balance={daiBalance}/>
             </Grid>
             <Grid item xs={12} md={4}>
               <InputWrapper>
                 <span>Amount</span>
                 <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
-                <span>Max</span>
+                <span onClick={setMax}>Max</span>
               </InputWrapper>
             </Grid>
             <Grid item xs={12} md={4} sx={{pb: "3em", display:'flex', justifyContent:'flex-start', alignItems:'flex-start'}}>
-              {!bond.isAvailable[chainId ?? 250] ? (
+              {!tradfiBond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
                   Sold Out
                 </Button>
@@ -159,10 +167,10 @@ export const TradFiDeposit = (): JSX.Element => {
                   color="primary"
                   id="bond-btn"
                   className="transaction-button inputButton"
-                  disabled={isPendingTxn(pendingTransactions, "bond_" + bond.name)}
+                  disabled={isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)}
                   onClick={useBond}
                 >
-                  {txnButtonText(pendingTransactions, "bond_" + bond.name, bond.bondAction)}
+                  {txnButtonText(pendingTransactions, "bond_" + tradfiBond.name, tradfiBond.bondAction)}
                 </Button>
               ) : (
                 <Button
@@ -170,10 +178,10 @@ export const TradFiDeposit = (): JSX.Element => {
                   color="primary"
                   id="bond-approve-btn"
                   className="transaction-button inputButton"
-                  disabled={isPendingTxn(pendingTransactions, "approve_" + bond.name)}
+                  disabled={isPendingTxn(pendingTransactions, "approve_" + tradfiBond.name)}
                   onClick={onSeekApproval}
                 >
-                  {txnButtonText(pendingTransactions, "approve_" + bond.name, "Approve")}
+                  {txnButtonText(pendingTransactions, "approve_" + tradfiBond.name, "Approve")}
                 </Button>
               )}
             </Grid>
@@ -193,7 +201,7 @@ export const TradFiDeposit = (): JSX.Element => {
             <Grid item xs={12} sm>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Your deposit</span>
-                  <span>4,000.00 DAI</span>
+                  <span>{payout} DAI</span>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Reward amount</span>

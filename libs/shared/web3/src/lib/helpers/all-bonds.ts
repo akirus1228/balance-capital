@@ -32,6 +32,30 @@ export const tradfi3month = new StableBond({
   },
 });
 
+export const tradfi6month = new StableBond({
+  name: "tradfi6month",
+  type: BondType.TRADFI,
+  displayName: "TradFi 6 Month",
+  bondToken: "tradfi6month",
+  decimals: 18,
+  roi: "32.5",
+  isAvailable: { [NetworkIds.Rinkeby]: true, [NetworkIds.FantomTestnet]: true },
+  isPurchasable: true,
+  bondIconSvg: null,
+  bondContractABI: TradFiBondDepository,
+  paymentToken: PaymentToken.USDB,
+  networkAddrs: {
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "0x38F0e4B286127AEbA6eC76B8466628030301Fb84",
+      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x52b27846dd773C8E16Fc8e75E2d1D6abd4e8C48A",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+  },
+});
+
 export const singleSided = new StableBond({
   name: "singleSided",
   type: BondType.SINGLE_SIDED,
@@ -46,7 +70,7 @@ export const singleSided = new StableBond({
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x0cbf1879A92143fF25AeFC489457459FE9Bd7DD5",
+      bondAddress: "0x49a14bDD5b232F727C147d94976680671D9c5B53",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
@@ -60,6 +84,7 @@ export const allBonds = [
   /// 1,1 stablecoin bonds
   // FTM
   tradfi3month,
+  tradfi6month,
   singleSided
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
