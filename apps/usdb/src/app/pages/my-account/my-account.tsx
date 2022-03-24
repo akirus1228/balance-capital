@@ -170,22 +170,22 @@ export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
-  console.log('provider: ', provider);
-  console.log('address: ', address);
-  console.log('chainId', chainId);
-  console.log('bonds: ', bonds);
+  // console.log('provider: ', provider);
+  // console.log('address: ', address);
+  // console.log('chainId', chainId);
+  // console.log('bonds: ', bonds);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
-  console.log('accountBonds: ', accountBonds);
+  // console.log('accountBonds: ', accountBonds);
   useEffect(() => {
     (async function () {
       if (chainId) {
         const provider = await chains[chainId].provider;
         setCurrentBlock(await provider.getBlockNumber());
-        console.log('blockNumber: ', await provider.getBlockNumber());
+        // console.log('blockNumber: ', await provider.getBlockNumber());
       }
     })();
   }, [chainId]);
@@ -305,7 +305,7 @@ export const MyAccount = (): JSX.Element => {
   };
 
   const onRedeemAll = async () => {
-    console.log('redeeming all bonds');
+    // console.log('redeeming all bonds');
     if (provider && chainId) {
       for (const bond of bonds) {
         const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name);
@@ -320,11 +320,11 @@ export const MyAccount = (): JSX.Element => {
       }
     }
 
-    console.log('redeem all complete');
+    // console.log('redeem all complete');
   };
 
   const onCancelBond = async (bond: IAllBondData, index: number) => {
-    console.log('cancelling bond');
+    // console.log('cancelling bond');
     if (provider && chainId) {
       //await dispatch(redeemAllBonds({networkId: chainId, address, bonds, provider, autostake: false}));
       await dispatch(
@@ -332,7 +332,7 @@ export const MyAccount = (): JSX.Element => {
       );
     }
 
-    console.log('cancelling bond complete');
+    // console.log('cancelling bond complete');
   };
 
   const onRedeemOne = async (bond: IAllBondData, index: number) => {
@@ -341,7 +341,7 @@ export const MyAccount = (): JSX.Element => {
       await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
     }
 
-    console.log("redeem one complete");
+    // console.log("redeem one complete");
   };
 
   return (
