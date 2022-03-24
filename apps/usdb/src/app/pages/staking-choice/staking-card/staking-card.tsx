@@ -78,8 +78,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     }
   };
   useEffect(() => {
-    setClaimableBalance(singleSidedBond?.userBonds[0].pendingFHM)
-  }, [singleSidedBond?.userBonds[0].pendingFHM])
+    setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM)
+  }, [singleSidedBond?.userBonds])
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
