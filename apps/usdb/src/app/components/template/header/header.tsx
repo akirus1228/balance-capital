@@ -21,6 +21,7 @@ import { RootState } from "../../../store";
 import { setTheme } from "../../../store/reducers/app-slice";
 import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
 import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
+import styles from './header.module.scss';
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -118,7 +119,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ mr: 2, display: { xs: "none", md: "flex" }, alignItems: "center" }}
           >
-            <Link to="/"><img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo" /></Link>
+            <Link to="/"><img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/></Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -178,7 +179,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo" />
+            <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/>
           </Typography>
           <Box
             sx={{
