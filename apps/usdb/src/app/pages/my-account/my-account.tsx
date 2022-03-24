@@ -439,8 +439,8 @@ export const MyAccount = (): JSX.Element => {
             className={style['rowCard']}
             style={{ backgroundColor: `${backgroundColor}` }}
           >
-            {activeInvestments.map((investment) => (
-              <Grid container spacing={2}>
+            {activeInvestments.map((investment, index) => (
+              <Grid container spacing={2} key={`invests-${index}`}>
                 <Grid item xs={12} sm={4} md={2}>
                   <Typography variant="subtitle2" className={style['subTitle']}>
                     Amount
@@ -518,8 +518,8 @@ export const MyAccount = (): JSX.Element => {
                         </Button>
                       </Link>
                     )}
-                    {investment.type === BondType.TRADFI && [
-                      <Button
+                    {investment.type === BondType.TRADFI && (
+                      investment.percentVestedFor >= 100 ? (<Button
                         variant="contained"
                         disableElevation
                         disabled={investment.percentVestedFor < 100}
@@ -532,8 +532,8 @@ export const MyAccount = (): JSX.Element => {
                         }}
                       >
                         Redeem
-                      </Button>,
-                      <Button
+                      </Button>):
+                      (<Button
                         variant="contained"
                         color="secondary"
                         disableElevation
@@ -547,8 +547,8 @@ export const MyAccount = (): JSX.Element => {
                         }}
                       >
                         Cancel
-                      </Button>,
-                    ]}
+                      </Button>)
+                    )}
                   </ButtonGroup>
                 </Grid>
               </Grid>
