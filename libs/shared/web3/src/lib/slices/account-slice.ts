@@ -48,7 +48,6 @@ export const getBalances = createAsyncThunk(
       ierc20Abi,
       provider
     );
-    console.log(`after contracts`);
     // let daiBalance: any;
     // let fhmBalance: any;
     // const getDai = new Promise((resolve, reject) => {
