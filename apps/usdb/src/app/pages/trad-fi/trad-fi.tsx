@@ -53,7 +53,7 @@ export const TradFi = (): JSX.Element => {
   return (
     <>
       <Box className={style["__heading"]}>
-        <Headline hero={heroContent.hero}  title={heroContent.title} subtitle={heroContent.subtitle} />
+        <Headline {...heroContent} />
         <a href="/trad-fi#get-started">
           <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined" className={style["getStarted"]}>
             Get started
@@ -62,7 +62,7 @@ export const TradFi = (): JSX.Element => {
         </a>
       </Box>
       <Box className={style["__section"]}>
-        <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
+        <Headline {...simpleSafe} />
         <Graph style={{margin: "auto"}} />
         <Box className={style["__icons"]}>
           <Grid item xs={12} md={4}>
@@ -86,7 +86,7 @@ export const TradFi = (): JSX.Element => {
         </Box>
       </Box>
       <Box className={style["__section"]}>
-        <Headline title={getStarted.title} subtitle={getStarted.subtitle} />
+        <Headline {...getStarted} />
         <DepositChoice id="get-started"/>
         <Outlet />
         <Faq faqItems={faqItems} />

@@ -1,8 +1,7 @@
 .bondCard {
-    padding: 3vw;
+    padding: 3vw 2em;
     justify-content: center;
     text-align: center;
-    flex:0 0 50%;
 
     @media (max-width:480px) {
         flex:0 0 100%;
