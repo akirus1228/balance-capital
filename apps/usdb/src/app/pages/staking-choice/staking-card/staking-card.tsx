@@ -209,25 +209,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       <Box className={`flexCenterRow`}>
         <h1>{params.apy}% APR</h1>
       </Box>
-      <Grid container spacing={2}>
-        <Grid item xs={12} md={6}>
-          <Box className={`flexCenterRow ${style['currencySelector']}`}>
+      <Box className="flexCenterRow">
+          <Box className={`flexCenterRow ${style['currencySelector']}`} sx={{width: '245px'}}>
             <img src={DaiToken} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
               <span className={style['name']}>{token} balance</span>
               <span className={style['amount']}>{tokenBalance} {token}</span>
             </Box>
           </Box>
-        </Grid>
-        {(cardState !== "Claim" && cardState !== "ILredeem") ? (
 
-          <Grid item xs={12} md={6}>
-            <InputWrapper>
-              <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)}/>
+        {(cardState !== "Claim" && cardState !== "ILredeem") ? (
+            <InputWrapper sx={{maxWidth: '245px', ml: '1em'}}>
+              <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)} />
               <span className={style['amount']} onClick={setMax}>Max</span>
             </InputWrapper>
-        </Grid>) : <></>}
-      </Grid>
+        ) : <></>}
+      </Box>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
         <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
         <span>{trim(Number(payout), 2)} DAI</span>
