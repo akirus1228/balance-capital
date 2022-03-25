@@ -132,6 +132,9 @@ const globalTheme: ThemeOptions = {
           "&.thin": {
             padding: "15px 27px"
           },
+          "&.ultraThin": {
+            padding: "5px 27px"
+          },
           "&.portfolio": {
             height: '38px',
             paddingTop: '1em',

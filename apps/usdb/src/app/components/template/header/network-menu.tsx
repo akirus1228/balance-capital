@@ -25,7 +25,7 @@ export const NetworkMenu = (): JSX.Element => {
   });
 
   const open = Boolean(anchorEl);
-  const isSmallScreen = useMediaQuery("(max-width: 600px)");
+  const isMediumScreen = useMediaQuery("(max-width: 980px)");
 
   const availableNetworkIds = [NetworkIds.FantomOpera, NetworkIds.Ethereum];
 
@@ -68,10 +68,11 @@ export const NetworkMenu = (): JSX.Element => {
 
   return (
     <Box onClick={(e: any) => handleClick(e)} id="network-menu-button-hover">
-      <Button className="menuButton" color="primary" title="Network"
+      <Button className="menuButton" sx={{ margin: "0 !important", width: { xs: "75px", sm: "170px" } }} color="primary"
+              title="Network"
               aria-describedby="network-popper" disableElevation={false}>
         <SvgIcon component={currentNetwork.icon} color="primary" viewBox="0 0 32 32" />
-        <Typography hidden={isSmallScreen} style={{ paddingLeft: "8px" }}>{currentNetwork.name}</Typography>
+        <Typography hidden={isMediumScreen} style={{ paddingLeft: "8px" }}>{currentNetwork.name}</Typography>
       </Button>
 
       <Popper id="network-popper" open={open} anchorEl={anchorEl} placement="bottom-end" transition
@@ -79,15 +80,17 @@ export const NetworkMenu = (): JSX.Element => {
         {({ TransitionProps }) => {
           return (
             <Fade {...TransitionProps} timeout={100}>
-              <Paper className="MuiMenu-paper" sx={{ maxWidth: "170px" }} elevation={1}>
+              <Paper className="MuiMenu-paper" sx={{ width: { xs: "75px", sm: "170px" } }} elevation={1}>
                 <Box className="select-network">
                   {availableNetworks?.map(network => {
                     return (
-                      <Button className="thin"
-                              startIcon={<SvgIcon component={network.icon} color="primary" viewBox="0 0 32 32" />}
+                      <Button className="ultraThin"
                               key={`${network.name}-btn`} size="large" color="primary"
                               fullWidth onClick={() => changeNetworks(network.id)} disableElevation={true}>
-                        <Typography>{network.name}</Typography>
+                        <Box display="flex" justifyContent="center">
+                          <SvgIcon component={network.icon} color="primary" viewBox="0 0 32 32" />
+                          <Typography hidden={isMediumScreen} sx={{marginLeft: "1rem"}}>{network.name}</Typography>
+                        </Box>
                       </Button>
                     );
                   })}
