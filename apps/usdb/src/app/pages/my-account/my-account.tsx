@@ -15,7 +15,8 @@ import {
   secondsUntilBlock,
   chains,
   IAllBondData,
-  cancelBond
+  cancelBond,
+  IUserBond
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -122,12 +123,12 @@ export const MyAccount = (): JSX.Element => {
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
-          return userBonds.map((userBond: any, i: number) => {
-            const secondsToVest = secondsUntilBlock(
-              chainId,
-              currentBlock,
-              userBond.bondMaturationBlock
-            );
+          return userBonds.map((userBond: IUserBond, i: number) => {
+            // const secondsToVest = secondsUntilBlock(
+            //   chainId,
+            //   currentBlock,
+            //   userBond.bondMaturationBlock
+            // );
             const investment: Investment = {
               id: `investment-${bond.name}-${i}`,
               type: bond.type,
@@ -141,7 +142,7 @@ export const MyAccount = (): JSX.Element => {
               roi: bond.roi+"",
               term: Number(bond.vestingTerm),
               termType: 'months',
-              secondsToVest,
+              secondsToVest: userBond.secondsToVest,
               percentVestedFor: userBond.percentVestedFor,
               vestDate: Number(userBonds[i].bondMaturationBlock),
             };

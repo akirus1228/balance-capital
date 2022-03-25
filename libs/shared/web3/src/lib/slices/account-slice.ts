@@ -15,6 +15,7 @@ import { setAll, trim } from '../helpers';
 import {
   createAsyncThunk,
   createSlice,
+  PayloadAction,
 } from '@reduxjs/toolkit';
 import {
   IBaseAddressAsyncThunk,
@@ -287,6 +288,8 @@ export interface IUserBond {
   rewardToken: PaymentToken;
   rewardsInUsd: string;
   bondMaturationBlock: number;
+  maturationSeconds: number;
+  secondsToVest: number;
   pendingPayout: string; //Payout formatted in gwei.
   percentVestedFor: number;
   lpTokenAmount: string;
@@ -324,6 +327,8 @@ export const calculateUserBondDetails = createAsyncThunk(
             rewardsInUsd: '0',
             interestDue: 0,
             bondMaturationBlock: 0,
+            maturationSeconds: 0,
+            secondsToVest: 0,
             pendingPayout: '',
             percentVestedFor: 0,
             lpTokenAmount: '0',
@@ -384,6 +389,14 @@ export const calculateUserBondDetails = createAsyncThunk(
           );
           const rewards = trim(interestDue * (1 - pricePaid), 2);
           const amount = trim(Number(payout) * pricePaid, 2);
+          
+          const latestBlockNumber = await provider.getBlockNumber();
+          const latestBlock = await provider.getBlock(latestBlockNumber);
+          const latestBlockTimestamp = latestBlock.timestamp;
+          const maturationSeconds = Number(bondDetails['vestingSeconds']) + Number(bondDetails['lastTimestamp']);
+          const secondsToVest = maturationSeconds - latestBlockTimestamp;
+          // console.log(`maturationSeconds ${maturationSeconds}`);
+          // console.log(`vestingSeconds ${secondsToVest}`);
 
           return {
             amount,
@@ -392,6 +405,8 @@ export const calculateUserBondDetails = createAsyncThunk(
             rewardsInUsd: rewards,
             interestDue,
             bondMaturationBlock,
+            maturationSeconds,
+            secondsToVest,
             pendingPayout,
             percentVestedFor,
             lpTokenAmount: '0',
@@ -425,9 +440,9 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
       fhmMarketPrice?.marketPrice || 0,
     ]);
-    console.log(`bondDetails ${bondDetails}`);
-    console.log(`pendingPayout ${pendingPayout}`);
-    console.log(`fhmMarketPrice ${fhmMarketPrice}`);
+    // console.log(`bondDetails ${bondDetails}`);
+    // console.log(`pendingPayout ${pendingPayout}`);
+    // console.log(`fhmMarketPrice ${fhmMarketPrice}`);
     const interestDue =
       bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
     console.log(`interestDue ${interestDue}`);
@@ -483,6 +498,8 @@ export const calculateUserBondDetails = createAsyncThunk(
               interestDue,
               bondMaturationBlock,
               pendingPayout,
+              secondsToVest: 999999999999, // TODO, how do we calculate this seconds until vested
+              maturationSeconds: 999999999999999, //TODO,  how do we calculate seconds until maturation
               percentVestedFor: 0, // No such thing as percentVestedFor for single sided
               lpTokenAmount: trim(lpTokenAmount, 2),
               iLBalance: iLBalance,
@@ -556,7 +573,7 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.pending, (state) => {
         state.loading = true;
       })
-      .addCase(calculateUserBondDetails.fulfilled, (state, action) => {
+      .addCase(calculateUserBondDetails.fulfilled, (state, action) => {  //PayloadAction<IBondDetails>
         if (!action.payload) return;
         const bond = action.payload.bond;
         state.bonds[bond] = action.payload;
