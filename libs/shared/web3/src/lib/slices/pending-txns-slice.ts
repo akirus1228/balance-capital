@@ -42,7 +42,7 @@ export const isClaimable = (bond: IUserBondDetails) => {
 }
 
 export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], type: string, defaultText: string) => {
-  return pendingTransactions.length >= 1 ? "Pending..." : defaultText;
+  return isPendingTxn(pendingTransactions, type) ? "Pending..." : defaultText;
 };
 
 export const { fetchPendingTxns, clearPendingTxn } = pendingTxnsSlice.actions;

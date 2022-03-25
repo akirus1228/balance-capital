@@ -533,11 +533,25 @@ export const cancelBond = createAsyncThunk(
     const signer = provider.getSigner();
     const contract = bond.getContractForBondForWrite(networkId, signer);
 
+    let cancelTx;
+
     try {
-      await contract["cancelBond"](address, index);
+      cancelTx = await contract["cancelBond"](address, index);
+      const pendingCancelTxnType = `cancel_bond_${bond.name}_${index}`;
+
+      await dispatch(
+        fetchPendingTxns({ txnHash: cancelTx.hash, text: "Cancelling " + bond.displayName, type: pendingCancelTxnType }),
+      );
+
+      await cancelTx.wait();
+
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
     } catch (e: unknown) {
       dispatch(error((e as IJsonRPCError).message));
+    } finally {
+      if (cancelTx) {
+        dispatch(clearPendingTxn(cancelTx.hash));
+      }
     }
   },
 );
