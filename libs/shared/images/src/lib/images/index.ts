@@ -5,6 +5,8 @@ import DoughnutChartIcon from "./USDB_stablecoin_piechart_icon.png";
 import ShieldIcon from "./USDB_stablecoin_shield_icon.png";
 import StakingIcon from "./USDB_stablecoin_staking_icon.png";
 import WalletIcon from "./USDB_stablecoin_wallet_icon.png";
+import MintIcon from "./USDB_Mint_Icon.png";
+import xFhmIcon from "./USDB_xFHM_Icon.png";
 
 export { 
     NFTsIcon, 
@@ -13,5 +15,7 @@ export {
     DoughnutChartIcon,
     ShieldIcon,
     StakingIcon,
-    WalletIcon
+    WalletIcon,
+    MintIcon,
+    xFhmIcon
 }
