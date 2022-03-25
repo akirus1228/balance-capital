@@ -1,27 +1,20 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-  bondAsset,
-  BondType,
-  changeApproval,
-  error,
-  IAllBondData,
-  IBondAssetAsyncThunk,
-  isPendingTxn,
-  trim,
-  txnButtonText,
-  useBonds,
   useWeb3Context,
   getTokenPrice,
-  getBalances,
-  changeMint,
 } from '@fantohm/shared-web3';
-import { Typography, Box, Grid, Button, Paper } from '@mui/material';
-import { ReactComponent as DAI } from '../../../assets/tokens/DAI.svg';
+import { noBorderOutlinedInputStyles } from '@fantohm/shared-ui-themes';
+import { Box, Grid, Button, Paper, FormControl, OutlinedInput } from "@mui/material";
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
+
+import { ReactComponent as DAI } from '../../../assets/tokens/DAI.svg';
 import style from './mint.module.scss';
 
 export default function Mint() {
+
+  const outlinedInputClasses = noBorderOutlinedInputStyles();
+
   const { provider, address, connected, connect, chainId } = useWeb3Context();
   const dispatch = useDispatch();
   const [tabState, setTabState] = React.useState(true);
@@ -52,7 +45,7 @@ export default function Mint() {
       setDaiPrice(await getTokenPrice('dai'));
       setFhmPrice(await getTokenPrice('fantom'));
     }
-    fetchPrice();
+    fetchPrice().then();
   }, []);
   const selectedToken = tabState ? token[0] : token[1];
   const handleClick = async () => {
@@ -112,12 +105,19 @@ export default function Mint() {
                 </div>
               </Grid>
               <Grid item md={8} xs={6}>
-                <input
-                  className={style['inputRoundArea']}
-                  placeholder="Type here"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                />
+                <Box className={style['roundArea']}>
+                  <FormControl className='w100 ohm-input' variant='outlined'
+                               color='primary'>
+                    <OutlinedInput
+                      id='amount-input'
+                      type='number'
+                      placeholder='Enter an amount'
+                      classes={ outlinedInputClasses }
+                      value={ value }
+                      onChange={ e => setValue(e.target.value) }
+                    />
+                  </FormControl>
+                </Box>
               </Grid>
             </Grid>
             <div className={style['reward']}>
