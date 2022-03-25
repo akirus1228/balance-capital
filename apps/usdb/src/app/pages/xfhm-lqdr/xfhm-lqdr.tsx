@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs } from "@mui/material";
+import { Box, Paper, Tab, Tabs } from "@mui/material";
 import { a11yProps } from "@fantohm/shared-helpers";
 import { memo, SyntheticEvent, useEffect, useState } from "react";
 
@@ -40,11 +40,12 @@ export const XfhmLqdrPage = (): JSX.Element => {
         <Tab label="xFHM" {...a11yProps(0)} />
         <Tab label="Add Liquidity" {...a11yProps(1)} />
       </Tabs>
-      <Box className="w-full" maxWidth="500px" bgcolor="#fff" mt="30px" py="30px" px="20px" borderRadius="1.5rem">
+      <Paper className="w100"
+             sx={{ maxWidth: "500px", mt: "2rem", py: "2rem", px: "1.25rem", borderRadius: "1.5rem" }}>
         {
           xfhmView === 0 ? (<XfhmPage />) : (<LqdrPage />)
         }
-      </Box>
+      </Paper>
     </Box>
   );
 };
