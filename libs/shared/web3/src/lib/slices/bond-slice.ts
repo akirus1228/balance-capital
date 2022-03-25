@@ -304,7 +304,8 @@ export const bondAsset = createAsyncThunk(
     } finally {
       if (bondTx) {
         segmentUA(uaData);
-        dispatch(clearPendingTxn(bondTx.hash));
+        await dispatch(clearPendingTxn(bondTx.hash));
+        await dispatch(getBalances({ address, networkId }));
       }
     }
   },
