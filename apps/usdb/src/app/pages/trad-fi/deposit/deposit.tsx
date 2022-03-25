@@ -44,6 +44,7 @@ export interface IBondType {
 // route: /trad-fi/deposit/:bondType
 export const TradFiDeposit = (): JSX.Element => {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
+  const navigate = useNavigate();
 
   const { provider, address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
@@ -132,6 +133,7 @@ export const TradFiDeposit = (): JSX.Element => {
           address: address
         } as IBondAssetAsyncThunk)
       );
+      setTimeout(() => navigate("/my-account"), 2000);
     }
     clearInput();
   }
@@ -144,7 +146,6 @@ export const TradFiDeposit = (): JSX.Element => {
     setQuantity("");
   };
 
-  const navigate = useNavigate();
   const goBack = () => {
     navigate("/trad-fi#get-started");
   };
