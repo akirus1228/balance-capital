@@ -15,8 +15,7 @@ import {
   useInvestments,
   fetchTokenPrice,
   calculateUserBondDetails,
-  loadAccountDetails,
-  getBalances,
+  loadAccountDetails
 } from '@fantohm/shared-web3';
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
@@ -34,7 +33,7 @@ export const App = (): JSX.Element => {
 
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBDark);
-  const { address, chainId } = useWeb3Context();
+  const { address, chainId, connected } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
 
@@ -52,7 +51,7 @@ export const App = (): JSX.Element => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainId, address, dispatch]);
+  }, [chainId, address, dispatch, connected]);
 
   // Load account details
   useEffect(() => {
