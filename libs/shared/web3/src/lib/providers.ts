@@ -1,6 +1,6 @@
 import { Provider, StaticJsonRpcProvider } from '@ethersproject/providers';
 import { NetworkIds } from './networks';
-import { NodeHelper } from '@fantohm/shared-helpers';
+import { NodeHelper } from './helpers/node-helper';
 import { MulticallProvider } from './lib/multicall-provider';
 
 interface ChainDetailsOpts {
