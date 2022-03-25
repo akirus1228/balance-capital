@@ -20,7 +20,7 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
 
   useEffect(() => {
-    setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI));
+    setBondsUsdb(bonds.filter((bond) => bond.type === BondType.TRADFI).sort((a, b) => (a.days > b.days) ? 1 : -1));
   }, [bonds]);
 
   return (
@@ -28,7 +28,7 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
         <Box className={style["__bond-cards"]}>
           {
             bondsUsdb?.map((bond, index) =>
-            (<DepositCard key={index} bondType={bond.name} months={bond.name === TRADFI_3M ? 3 : 6} roi={Number(bond.roi)} apr={Number(bond.apr)} bond={bond} vestingTermPretty={prettifySeconds(bond.vestingTermSeconds)}/>))
+            (<DepositCard key={index} bondType={bond.name} months={bond.name === "tradfi3month" ? 3 : 6} roi={Number(bond.roi)} apr={Number(bond.roi)} bond={bond} vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}/>))
           }
           {
             !bondsUsdb && connected ? (
