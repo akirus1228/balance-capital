@@ -395,8 +395,8 @@ export const calculateUserBondDetails = createAsyncThunk(
           const latestBlockTimestamp = latestBlock.timestamp;
           const maturationSeconds = Number(bondDetails['vestingSeconds']) + Number(bondDetails['lastTimestamp']);
           const secondsToVest = maturationSeconds - latestBlockTimestamp;
-          console.log(`maturationSeconds ${maturationSeconds}`);
-          console.log(`vestingSeconds ${secondsToVest}`);
+          // console.log(`maturationSeconds ${maturationSeconds}`);
+          // console.log(`vestingSeconds ${secondsToVest}`);
 
           return {
             amount,
@@ -440,9 +440,9 @@ export const calculateUserBondDetails = createAsyncThunk(
       ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
       fhmMarketPrice?.marketPrice || 0,
     ]);
-    console.log(`bondDetails ${bondDetails}`);
-    console.log(`pendingPayout ${pendingPayout}`);
-    console.log(`fhmMarketPrice ${fhmMarketPrice}`);
+    // console.log(`bondDetails ${bondDetails}`);
+    // console.log(`pendingPayout ${pendingPayout}`);
+    // console.log(`fhmMarketPrice ${fhmMarketPrice}`);
     const interestDue =
       bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
     console.log(`interestDue ${interestDue}`);

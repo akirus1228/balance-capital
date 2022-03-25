@@ -159,7 +159,7 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 
 	let result = dDisplay + hDisplay + mDisplay;
 	if(mo > 0){
-		result = moDisplay
+		result = "> " + moDisplay;
 	}
 	if (mDisplay === "") {
 		result = result.slice(0, result.length - 2);
