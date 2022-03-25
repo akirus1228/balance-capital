@@ -30,8 +30,8 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import WalletBalance from "../../../components/wallet-balance/wallet-balance";
 import InputWrapper from "../../../components/input-wrapper/input-wrapper";
-import style from "./deposit.module.scss";
 import { getAccountState, RootState } from "../../../store";
+import style from "./deposit.module.scss";
 
 export interface IBond {
   title: string;
