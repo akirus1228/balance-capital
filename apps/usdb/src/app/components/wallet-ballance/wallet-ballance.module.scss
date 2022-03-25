@@ -7,7 +7,9 @@
     flex-direction: row;
     justify-content: left;
     max-width: 245px;
-
+    @media (max-width:900px) {
+        max-width:100%;
+    }
     .name {
         font-size: 15px;
     }

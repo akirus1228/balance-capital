@@ -132,7 +132,7 @@ export const TradFiDeposit = (): JSX.Element => {
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
-      <Backdrop open={true}>
+      <Backdrop open={true} className={` ${style['backdropElement']}`}>
         <Paper className={` ${style['paperContainer']}`}>
           <Box sx={{display: 'flex', justifyContent:'flex-end'}}>
             <Button variant="contained" className="closeButton" onClick={goBack} disableElevation>
@@ -147,17 +147,17 @@ export const TradFiDeposit = (): JSX.Element => {
             <h2 className={style['subtitle']}>{tradfiBond.days} days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
-            <Grid item xs={12} md={4}>
-              <WalletBallance sx={{ml: 'auto'}} balance={daiBalance}/>
+            <Grid item xs={12} md={4} className={` ${style['walletField']}`}>
+              <WalletBallance sx={{ml: 'auto'}} balance={daiBalance} />
             </Grid>
-            <Grid item xs={12} md={4}>
+            <Grid item xs={12} md={4} className={` ${style['amountField']}`}>
               <InputWrapper>
                 <span>Amount</span>
                 <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
                 <span onClick={setMax}>Max</span>
               </InputWrapper>
             </Grid>
-            <Grid item xs={12} md={4} sx={{pb: "3em", display:'flex', justifyContent:'flex-start', alignItems:'flex-start'}}>
+            <Grid item xs={12} md={4} sx={{pb: "3em", display:'flex', justifyContent:'flex-start', alignItems:'flex-start'}} className={` ${style['approveField']}`}>
               {!tradfiBond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
                   Sold Out
@@ -186,7 +186,7 @@ export const TradFiDeposit = (): JSX.Element => {
                 </Button>
               )}
             </Grid>
-            <Grid item xs={12} sm>
+            <Grid item className={` ${style['infoElement']}`} xs={12} sm>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
                   <span>ROI</span>
                   <span>5%</span>
@@ -199,7 +199,7 @@ export const TradFiDeposit = (): JSX.Element => {
             <Grid item xs={0} sm={1}>
               <Box style={{borderLeft: '2px solid #696C804F', height: '120%', width: '1px', marginLeft: 'auto', marginRight: 'auto', position: 'relative', top:'-0.5em'}}/>
             </Grid>
-            <Grid item xs={12} sm>
+            <Grid item className={` ${style['infoElement']}`} xs={12} sm>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Your deposit</span>
                   <span>{payout} DAI</span>
