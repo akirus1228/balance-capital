@@ -37,7 +37,7 @@ export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
                 apr={Number(bond.apr)} 
                 bond={bond} 
                 vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}
-                {/*vestingTermPretty={prettifySeconds(bond.vestingTermSeconds)}*/}
+                //vestingTermPretty={prettifySeconds(bond.vestingTermSeconds)}
               />
             ))
           }
