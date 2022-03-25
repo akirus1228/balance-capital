@@ -3,6 +3,7 @@ const nrwlConfig = require("@nrwl/react/plugins/webpack.js");
 
 module.exports = (config, context) => {
   nrwlConfig(config);
+  console.log(config);
   return {
     ...config,
     plugins: [
