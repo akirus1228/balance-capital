@@ -15,6 +15,7 @@ import {
 } from "@fantohm/shared-web3";
 import { RootState } from '../../store';
 import AccountDetails from './my-account-details';
+import { useState } from 'react';
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -26,22 +27,18 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
 export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { accountDetails: AccountDetails, onRedeemAll: () => void }): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
+  const [pendingClaim, setPendingClaim] = useState(false);
 
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
 
-  const pendingClaim = () => {
-    if (
-      isPendingTxn(pendingTransactions, 'redeem_all_bonds') ||
-      isPendingTxn(pendingTransactions, 'redeem_all_bonds_autostake')
-    ) {
-      return true;
-    }
-
-    return false;
-  };
+  const onRedeemAllInternal = async () => {
+    setPendingClaim(true);
+    await onRedeemAll();
+    setPendingClaim(false);
+  }
 
   return (
     <Paper
@@ -95,16 +92,12 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
           <Button
             variant="contained"
             disableElevation
-            disabled={pendingClaim()}
+            disabled={pendingClaim}
             onClick={() => {
-              onRedeemAll();
+              onRedeemAllInternal();
             }}
           >
-            {txnButtonTextGeneralPending(
-              pendingTransactions,
-              'redeem_all_bonds',
-              'Claim all'
-            )}
+            {pendingClaim ? '...Pending' : 'Claim all'}
           </Button>
         </Grid>
       </Grid>
