@@ -44,7 +44,7 @@ interface IStakingCardParams {
   roi: number;
   apy: number;
 }
-type CardStates = 'Deposit' | 'Redeem' | 'ILredeem' | 'Claim';
+type CardStates = 'Deposit' | 'Redeem' | 'IL Redeem' | 'Claim';
 
 export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [cardState, setCardState] = useState<CardStates>("Deposit");
@@ -189,6 +189,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   };
 
   const isOverBalance: boolean = useMemo(() => {
+    console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
+    if(['IL Redeem','Claim'].includes(cardState))
+      return false;
+
     if(Number(tokenBalance) < Number(quantity))
       return true;
 
@@ -196,6 +200,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }, [
     tokenBalance, 
     quantity,
+    cardState,
   ]);
 
 
