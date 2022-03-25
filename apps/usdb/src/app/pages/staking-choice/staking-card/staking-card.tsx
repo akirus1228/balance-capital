@@ -205,7 +205,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
 
   return (
-    <DaiCard tokenImage={DaiToken} setTheme="light">
+    <DaiCard tokenImage={DaiToken} setTheme="light" sx={{minWidth: {xs: '300px', sm: '587px'}}}>
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box className="w100">

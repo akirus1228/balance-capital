@@ -9,3 +9,34 @@
     font-size: 21;
     font-weight: 400;
 }
+
+%section {
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+}
+
+.__heading {
+    @extend %section;
+    padding: 15vmin 5vw 0 5vw;
+}
+
+
+.__section {
+    @extend %section;
+    padding: calc(15vmin + 3rem) 5vw 0 5vw;
+}
+
+.__icons {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: auto;
+
+    > * {
+        width: 16rem;
+    }
+}
+  
