@@ -1,5 +1,5 @@
 import {
-  Typography,
+  Typography, useMediaQuery,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box } from '@mui/system';
@@ -13,7 +13,9 @@ import {
   useBonds,
   useWeb3Context,
   secondsUntilBlock,
-  chains
+  chains,
+  IAllBondData,
+  cancelBond
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -22,6 +24,7 @@ import MyAccountInactiveInvestmentsTable from './my-account-inactive-investments
 import MyAccountDetailsTable from './my-account-details-table';
 import Investment from './my-account-investments';
 import AccountDetails from './my-account-details';
+import MyAccountActiveInvestmentsCards from './my-account-active-investments-cards';
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -95,6 +98,8 @@ export const MyAccount = (): JSX.Element => {
   const { bonds } = useBonds(chainId ?? 250);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
+  const isMediumScreen = useMediaQuery("(max-width: 1000px)");
+
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
@@ -132,7 +137,7 @@ export const MyAccount = (): JSX.Element => {
               bondName: bond.name,
               bondIndex: i,
               displayName: bond.displayName,
-              roi: bond.roi,
+              roi: bond.roi+"",
               term: Number(bond.vestingTerm),
               termType: 'months',
               secondsToVest,
@@ -168,6 +173,21 @@ export const MyAccount = (): JSX.Element => {
       return null;
     }
   }, [address, JSON.stringify(activeInvestments)]);
+
+  const onCancelBond = async (bond: IAllBondData, index: number) => {
+    const shouldProceed = window.confirm(
+      "Cancelling a bond incurs a 5% loss. Do you still want to proceed?",
+    );
+    if (provider && chainId && shouldProceed) {
+      await dispatch(cancelBond({ networkId: chainId, address, bond, provider, index }));
+    }
+  };
+
+  const onRedeemBond = async (bond: IAllBondData, index: number) => {
+    if (provider && chainId) {
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
+    }
+  };
 
   const onRedeemAll = async () => {
     if (provider && chainId) {
@@ -219,7 +239,8 @@ export const MyAccount = (): JSX.Element => {
           <Typography variant="subtitle1">
             Active Investments ({activeInvestments.length})
           </Typography>
-          <MyAccountActiveInvestmentsTable investments={activeInvestments} />
+          {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} /> ||
+          <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} />}
         </Box>
         {/* Hide previous investments until ready on the graph */}
         {/* <Box>

@@ -4,6 +4,7 @@ import {
   getBalances,
   useBonds,
   trim,
+  defaultNetworkId,
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,12 +23,13 @@ import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import MenuLink from './MenuLink';
+import MenuLink from './menu-link';
 import { RootState } from '../../../store';
 import { setTheme } from '../../../store/reducers/app-slice';
 import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
 import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
+import { NetworkMenu } from './network-menu';
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -41,10 +43,10 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Staking', href: '/staking' },
+  // { title: 'Staking', href: '/staking' },
   { title: 'Traditional Finance', href: '/trad-fi' },
-  { title: 'Mint USDB', href: '/mint' },
-  { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
+  // { title: 'Mint USDB', href: '/mint' },
+  // { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
   {
     title: 'Synapse Bridge',
     href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
@@ -68,7 +70,7 @@ export const Header = (): JSX.Element => {
     useState<string>('Connect Wallet');
 
   const themeType = useSelector((state: RootState) => state.app.theme);
-  const { bonds } = useBonds(chainId ?? 250);
+  const { bonds } = useBonds(chainId ?? defaultNetworkId);
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
@@ -91,7 +93,9 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || 250}));
+    dispatch(
+      getBalances({ address: address, networkId: chainId || defaultNetworkId })
+    );
     if (connected) {
       setConnectButtonText('Disconnect');
     } else {
@@ -127,7 +131,6 @@ export const Header = (): JSX.Element => {
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
-          console.log(bondName, userBonds);
           return (
             prevBalance +
             userBonds.reduce(
@@ -198,13 +201,15 @@ export const Header = (): JSX.Element => {
               }}
             >
               {pages.map((page: Pages) => (
-                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
+                <MenuLink
+                  href={page.href ? page.href : '#'}
+                  onClick={handleCloseNavMenu}
+                  key={page.title}
+                >
                   <Typography textAlign="center">
-                    <MenuLink href={page.href ? page.href : '#'} >
-                      <Button>{page.title}</Button>
-                    </MenuLink>
+                    <Button style={{ width: '100%' }}>{page.title}</Button>
                   </Typography>
-                </MenuItem>
+                </MenuLink>
               ))}
 
               <MenuItem onClick={handleCloseNavMenu}>
@@ -215,8 +220,29 @@ export const Header = (): JSX.Element => {
               <MenuItem onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
-                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
+                    <SvgIcon
+                      component={WbSunnyOutlinedIcon}
+                      fontSize="medium"
+                    />
                   </Button>
+                </Typography>
+              </MenuItem>
+
+              <MenuItem onClick={handleCloseNavMenu}>
+                <Typography textAlign="center">
+                  <Link to="/my-account">
+                    <Button className="portfolio">
+                      <Box display="flex" alignItems="center" mr="10px">
+                        <SvgIcon component={AnalyticsIcon} fontSize="large" />
+                      </Box>
+                      <Box display="flex" alignItems="center" mt="2px">
+                        My Portfolio:&nbsp;
+                      </Box>
+                      <Box display="flex" alignItems="center" mt="2px">
+                        ${trim(totalBalances, 2)}
+                      </Box>
+                    </Button>
+                  </Link>
                 </Typography>
               </MenuItem>
             </Menu>
@@ -258,42 +284,56 @@ export const Header = (): JSX.Element => {
               >
                 {pages.map((page: any) => {
                   return (
-                    <MenuItem
+                    <MenuLink
+                      href={page.href ? page.href : '#'}
+                      onClick={handleCloseNavMenu}
                       key={page.title}
-                      onClick={handleCloseProductsMenu}
                     >
                       <Typography textAlign="center">
-                        <MenuLink href={page.href ? page.href : '#'}>
-                          <Button className="thin">{page.title}</Button>
-                        </MenuLink>
+                        <Button style={{ width: '100%' }}>{page.title}</Button>
                       </Typography>
-                    </MenuItem>
+                    </MenuLink>
                   );
                 })}
               </Menu>
             </Box>
           </Box>
-          <Tooltip title={`My Portfolio: $${totalBalances}`}>
-            <Link to="/my-account">
-              <Button className="portfolio">
-                <Box display="flex" alignItems="center">
+
+          <Box mr="1em">
+            <NetworkMenu />
+          </Box>
+          {connected && (
+            <Tooltip title={`My Portfolio: $${totalBalances}`}>
+              <Link to="/my-account">
+                <Button
+                  className="portfolio"
+                  sx={{ display: { xs: 'none', md: 'flex' } }}
+                >
                   <Box display="flex" alignItems="center" mr="10px">
                     <SvgIcon component={AnalyticsIcon} fontSize="large" />
                   </Box>
-                  <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    mt="2px"
+                    sx={{ display: { xs: 'none', lg: 'flex' } }}
+                  >
                     My Portfolio:&nbsp;
                   </Box>
-                  <Box>${trim(totalBalances, 2)}</Box>
-                </Box>
-              </Button>
-            </Link>
-          </Tooltip>
+                  <Box display="flex" alignItems="center" mt="2px">
+                    ${trim(totalBalances, 2)}
+                  </Box>
+                </Button>
+              </Link>
+            </Tooltip>
+          )}
+
           <Tooltip title="Connect Wallet">
             <Button
               onClick={handleConnect}
               sx={{ px: '3em', display: { xs: 'none', md: 'flex' } }}
               color="primary"
-              className={`menuButton ${styles['connectButton']}`}
+              className="menuButton"
             >
               {connectButtonText}
             </Button>

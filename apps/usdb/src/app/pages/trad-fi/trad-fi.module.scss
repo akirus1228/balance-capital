@@ -17,8 +17,21 @@
 
 .__heading {
   @extend %section;
-  padding: 15vmin 5vw 0 5vw;
+  padding: 19vmin 5vw 4vmin 5vw;
+  max-width:800px;
+  margin:0 auto;
 }
+  h1 {
+    @media (max-width:600px) {
+      font-size:30px;
+      padding:0;
+  }
+  @media (max-width:600px) {
+      font-size:27px;
+      padding:0;
+  }
+  }
+
 
 
 .__section {
@@ -32,8 +45,20 @@
   flex-wrap: wrap;
   gap: 1rem;
   margin: auto;
-
-  > * {
-    width: 16rem;
+  img {
+    height:100px;
+    width:auto;
+    margin-bottom:20px;
   }
+  > * {
+    width: 18rem;
+  }
+}
+.getStarted {
+    @media (max-width:600px) {
+      padding: 1em 1.5em !important;
+    }
+    img {width:30px;
+      margin-left:10px !important;
+    }
 }

@@ -1,13 +1,32 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
-import { shadows } from '@mui/system';
+
+export const noBorderOutlinedInputStyles = makeStyles(theme => ({
+  root: {
+    "& $notchedOutline": {
+      border: "none"
+    },
+    "&:hover $notchedOutline": {
+      border: "none"
+    },
+    "&$focused $notchedOutline": {
+      border: "none"
+    }
+  },
+  focused: {},
+  notchedOutline: {}
+}));
+
 
 // light color pallet for use in themes
 const usdbLightColors = {
   color: '#000',
   invertedColor: '#FFF',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
@@ -18,6 +37,8 @@ const usdbLightColors = {
 const usdbDarkColors = {
   color: '#FFF',
   invertedColor: '#000',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#000',
   paperBg: '#0E0F10',
   gray: '#929BA0',
@@ -26,6 +47,15 @@ const usdbDarkColors = {
 
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
+  palette: {
+    action: {
+      disabledBackground: "#696C8029",
+      disabled: "#696C80",
+    },
+    text: {
+      disabled: "#696C80"
+    }
+  },
   typography: {
     fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
@@ -102,6 +132,9 @@ const globalTheme: ThemeOptions = {
           "&.thin": {
             padding: "15px 27px"
           },
+          "&.ultraThin": {
+            padding: "5px 27px"
+          },
           "&.portfolio": {
             height: '38px',
             paddingTop: '1em',
@@ -134,7 +167,10 @@ const globalTheme: ThemeOptions = {
             height: "3em",
             borderRadius: "2em",
             width: "245px",
-          }
+          },
+          '&.Mui-disabled': {
+            backgroundColor: "rgba(0, 0, 0, 0.25)",
+          },
         },
         outlined: {
           borderRadius: '30px',
@@ -147,8 +183,20 @@ const globalTheme: ThemeOptions = {
             p: '0.5em',
             boxSizing: 'border-box',
             minWidth: '16px'
+          },
+          "&.MuiButton-containedError": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          "&.MuiButton-containedError:disabled": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          "&:disabled":{
+            background: "#696C8029",
+            color: "#696C80",
           }
-        }
+        },
       },
       defaultProps: {
         autoCapitalize: 'none',
@@ -192,6 +240,10 @@ const USDBLightBase: ThemeOptions = {
     text: {
       primary: usdbLightColors.color,
       secondary: usdbLightColors.gray,
+    },
+    error: {
+      main: usdbLightColors.errorColor,
+      light: usdbLightColors.errorBackground,
     },
   },
   components: {
@@ -265,6 +317,10 @@ const USDBDarkBase: ThemeOptions = {
       primary: usdbDarkColors.color,
       secondary: usdbDarkColors.gray,
     },
+    error: {
+      main: usdbDarkColors.errorColor,
+      light: usdbDarkColors.errorBackground,
+    }
   },
   components: {
     MuiToolbar: {
@@ -283,6 +339,9 @@ const USDBDarkBase: ThemeOptions = {
           },
           '&.menuButton': {
             border: '1px solid #FFF',
+          },
+          '&.Mui-disabled': {
+            color: usdbDarkColors.gray,
           },
         },
         outlined: {

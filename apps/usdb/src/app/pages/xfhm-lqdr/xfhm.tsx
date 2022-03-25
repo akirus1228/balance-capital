@@ -36,7 +36,6 @@ export const XfhmPage = (): JSX.Element => {
   const details = useSelector((state: RootState) => {
     return state?.xfhm?.details;
   });
-  console.log('details: ', details);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -115,9 +114,9 @@ export const XfhmPage = (): JSX.Element => {
   return (
     <Box className="flexCenterCol">
       <Box mb="20px">
-        <Typography variant="h4" color="textPrimary" className="font-weight-bold">xFHM</Typography>
+        <Typography variant="h4" color="primary" className="font-weight-bold">xFHM</Typography>
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
         <Box>
           {details ? <Typography variant="h4" color="textPrimary">{
               formatAmount(details.claimableXfhm, xFhmToken.decimals, 9, true)
@@ -126,12 +125,12 @@ export const XfhmPage = (): JSX.Element => {
           <Typography variant="body2" color="textPrimary">Claimable xFHM</Typography>
         </Box>
         <Button className="thin" color="primary" variant="contained"
-                disabled={isPendingTxn(pendingTransactions, "claiming") || formatAmount(details?.claimableXfhm, xFhmToken.decimals, 9) <= 0}
+                disabled={!address || isPendingTxn(pendingTransactions, "claiming") || formatAmount(details?.claimableXfhm, xFhmToken.decimals, 9) <= 0}
                 onClick={() => onClaim().then()}>
           {txnButtonText(pendingTransactions, "claiming", "Claim xFHM")}
         </Button>
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
         <Typography variant="body2" color="textPrimary">FHM Balance</Typography>
         {details ?
           <Typography variant="body2" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -139,7 +138,7 @@ export const XfhmPage = (): JSX.Element => {
           }</Typography> :
           <Skeleton width="100px" />}
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
         <Typography variant="body2" color="textPrimary">Staked FHM</Typography>
         {details ?
           <Typography variant="body2" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -147,7 +146,7 @@ export const XfhmPage = (): JSX.Element => {
           }</Typography> :
           <Skeleton width="100px" />}
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
         <Typography variant="body2" color="textPrimary">xFHM / hour</Typography>
         {details ?
           <Typography variant="body2" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -155,7 +154,7 @@ export const XfhmPage = (): JSX.Element => {
           }</Typography> :
           <Skeleton width="100px" />}
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="5px">
         <Typography variant="body2" color="textPrimary">Max xFHM to Earn</Typography>
         {details ?
           <Typography variant="body2" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -163,7 +162,7 @@ export const XfhmPage = (): JSX.Element => {
           }</Typography> :
           <Skeleton width="100px" />}
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
         <Typography variant="body2" color="textPrimary">Total xFHM Supply</Typography>
         {details ?
           <Typography variant="body2" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -171,7 +170,7 @@ export const XfhmPage = (): JSX.Element => {
           }</Typography> :
           <Skeleton width="100px" />}
       </Box>
-      <Box className="w-full" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
+      <Box className="w100" display="flex" justifyContent="space-between" alignItems="center" mb="20px">
         <Typography variant="h6" color="textPrimary" style={{ fontWeight: "bolder" }}>My Balance</Typography>
         {details ?
           <Typography variant="h6" color="textPrimary" style={{ fontWeight: "bolder" }}>{
@@ -205,13 +204,12 @@ export const XfhmPage = (): JSX.Element => {
                         id="amount-input"
                         type="number"
                         placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
-                        className="stake-input"
                         value={stakeQuantity}
                         onChange={e => setStakeQuantity(e.target.value)}
                         endAdornment={
                           <InputAdornment position="end">
                             <Button className={style["no-padding"]} variant="text" onClick={() => setMax(stakeView)}
-                                    color="inherit">
+                                    color="primary">
                               Max
                             </Button>
                           </InputAdornment>
@@ -220,7 +218,7 @@ export const XfhmPage = (): JSX.Element => {
                     </FormControl>
                     <Box mt="20px">
                       <Button
-                        className="w-full thin"
+                        className="w100 thin"
                         color="primary"
                         variant="contained"
                         disabled={isPendingTxn(pendingTransactions, "staking")}
@@ -238,14 +236,13 @@ export const XfhmPage = (): JSX.Element => {
                         id="amount-input"
                         type="number"
                         placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
-                        className="stake-input"
                         color="primary"
                         value={unstakeQuantity}
                         onChange={e => setUnStakeQuantity(e.target.value)}
                         endAdornment={
                           <InputAdornment position="end">
                             <Button className={style["no-padding"]} variant="text" onClick={() => setMax(stakeView)}
-                                    color="inherit">
+                                    color="primary">
                               Max
                             </Button>
                           </InputAdornment>
@@ -254,7 +251,7 @@ export const XfhmPage = (): JSX.Element => {
                     </FormControl>
                     <Box mt="20px">
                       <Button
-                        className="w-full thin"
+                        className="w100 thin"
                         variant="contained"
                         disabled={isPendingTxn(pendingTransactions, "unstaking")}
                         onClick={() => onChangeStake("unstake").then()}
@@ -270,7 +267,7 @@ export const XfhmPage = (): JSX.Element => {
         ) : (
           <Box display="flex" justifyContent="center">
             <Button className="thin" color="primary" variant="contained"
-                    disabled={isPendingTxn(pendingTransactions, "approve-fhm")}
+                    disabled={!address || isPendingTxn(pendingTransactions, "approve-fhm")}
                     onClick={() => onSeekApproval()}>
               {txnButtonText(pendingTransactions, "approve-fhm", "Approve FHM")}
             </Button>

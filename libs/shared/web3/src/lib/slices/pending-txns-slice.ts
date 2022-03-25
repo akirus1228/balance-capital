@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { IUserBondDetails } from "./account-slice";
 
-interface IPendingTxn {
+export interface IPendingTxn {
   readonly txnHash: string;
   readonly text: string;
   readonly type: string;
@@ -42,7 +42,7 @@ export const isClaimable = (bond: IUserBondDetails) => {
 }
 
 export const txnButtonTextGeneralPending = (pendingTransactions: IPendingTxn[], type: string, defaultText: string) => {
-  return pendingTransactions.length >= 1 ? "Pending..." : defaultText;
+  return isPendingTxn(pendingTransactions, type) ? "Pending..." : defaultText;
 };
 
 export const { fetchPendingTxns, clearPendingTxn } = pendingTxnsSlice.actions;

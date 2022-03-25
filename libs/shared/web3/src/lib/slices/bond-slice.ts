@@ -129,6 +129,7 @@ export interface IBondDetails {
   bondQuote: number;
   purchased: number;
   vestingTerm: number;
+  vestingTermSeconds: number;
   maxBondPrice: number;
   bondPrice: number;
   marketPrice: number;
@@ -237,6 +238,7 @@ export const calcBondDetails = createAsyncThunk(
       bondQuote,
       purchased,
       vestingTerm: Number(terms.vestingTerm),
+      vestingTermSeconds: terms["vestingTermSeconds"] ? Number(terms.vestingTermSeconds) : 0,
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,
@@ -302,7 +304,8 @@ export const bondAsset = createAsyncThunk(
     } finally {
       if (bondTx) {
         segmentUA(uaData);
-        dispatch(clearPendingTxn(bondTx.hash));
+        await dispatch(clearPendingTxn(bondTx.hash));
+        await dispatch(getBalances({ address, networkId }));
       }
     }
   },
@@ -533,11 +536,25 @@ export const cancelBond = createAsyncThunk(
     const signer = provider.getSigner();
     const contract = bond.getContractForBondForWrite(networkId, signer);
 
+    let cancelTx;
+
     try {
-      await contract["cancelBond"](address, index);
+      cancelTx = await contract["cancelBond"](address, index);
+      const pendingCancelTxnType = `cancel_bond_${bond.name}_${index}`;
+
+      await dispatch(
+        fetchPendingTxns({ txnHash: cancelTx.hash, text: "Cancelling " + bond.displayName, type: pendingCancelTxnType }),
+      );
+
+      await cancelTx.wait();
+
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
     } catch (e: unknown) {
       dispatch(error((e as IJsonRPCError).message));
+    } finally {
+      if (cancelTx) {
+        dispatch(clearPendingTxn(cancelTx.hash));
+      }
     }
   },
 );

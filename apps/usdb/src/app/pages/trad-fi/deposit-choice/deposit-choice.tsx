@@ -3,14 +3,16 @@ import {
   Box,
 } from '@mui/material';
 import {DepositCard} from './deposit-card';
-import {BondType, IAllBondData} from "@fantohm/shared-web3";
+import {BondType, IAllBondData, TRADFI_3M} from "@fantohm/shared-web3";
 import {useBonds} from "@fantohm/shared-web3";
 import {useWeb3Context} from "@fantohm/shared-web3";
 import { useEffect, useState } from 'react';
+import {prettifySeconds} from "../../../helper";
 
 interface IDepositChoiceParams {
   id?: string;
 }
+
 
 export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
   const { chainId, connected } = useWeb3Context();
