@@ -14,7 +14,6 @@ export const HomePage = (): JSX.Element => {
   return (
     <Container
       maxWidth="xl"
-
       className={style['heroContainer']}
       sx={{
         display: 'flex',
@@ -30,31 +29,45 @@ export const HomePage = (): JSX.Element => {
           justifyContent: 'center',
           flexDirection: 'column',
           alignItems: 'center',
-          paddingTop: { xs: '52px', md: '112px' }
+          paddingTop: { xs: '52px', md: '112px' },
         }}
         className={style['hero']}
       >
         <Grid
           container
-
           className={style['heroWrap']}
           sx={{ marginTop: '55px' }}
           columnSpacing={2}
           rowSpacing={{ xs: 4, md: 0 }}
         >
-          <Grid item lg={6} md={12} order={{ lg: 1, xs: 2 }} className={style['iconsElement']}>
+          <Grid
+            item
+            lg={6}
+            md={12}
+            order={{ lg: 1, xs: 2 }}
+            className={style['iconsElement']}
+          >
             <IconGrid />
           </Grid>
-          <Grid item lg={6} md={12} order={{ lg: 2, xs: 1 }} className={style['heroTextContent']}>
+          <Grid
+            item
+            lg={6}
+            md={12}
+            order={{ lg: 2, xs: 1 }}
+            className={style['heroTextContent']}
+          >
             <Box className={style['heroRight']}>
-              <Box sx={{ height: { xs: '132px', md: '180px' }, display: { xs: "none", md: "flex" } }}>
-                <Link to="/">
-                  <img
-                    src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-                    alt="USDB Logo"
-                    className={style['heroLogo']}
-                  />
-                </Link>
+              <Box
+                sx={{
+                  height: { xs: '132px', md: '180px' },
+                  display: { xs: 'none', md: 'flex' },
+                }}
+              >
+                <img
+                  src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                  alt="USDB Logo"
+                  className={style['heroLogo']}
+                />
               </Box>
               <h1 className={style['heroTitle']}>
                 Where traditional finance meets DeFi
@@ -63,13 +76,18 @@ export const HomePage = (): JSX.Element => {
                 USDB provides a wide range of financial tools and services to
                 individuals and institutions
               </h3>
-              <Link to="/staking" className={style['heroLink']}>
+              <a
+                href="https://test.usdbalance.com/trad-fi"
+                className={style['heroLink']}
+                target="_blank"
+                rel="noreferrer"
+              >
                 Learn more
                 <Icon
                   component={ArrowUpwardIcon}
                   className={style['linkArrow']}
                 />
-              </Link>
+              </a>
             </Box>
           </Grid>
         </Grid>
