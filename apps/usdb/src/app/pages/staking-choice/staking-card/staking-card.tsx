@@ -5,7 +5,7 @@ import style from "./staking-card.module.scss";
 import DaiCard from "../../../components/dai-card/dai-card";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {DaiToken} from "@fantohm/shared/images";
+import {DaiToken, FHMToken, USDBToken} from "@fantohm/shared/images";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {USDCToken} from "@fantohm/shared/images";
@@ -51,6 +51,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
   const [claimableBalance, setClaimableBalance] = useState("0");
+  const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState("0");
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
@@ -74,7 +75,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setQuantity(daiBalance);
     } else if (cardState === "Redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
-    } else if (cardState === "ILredeem") {
+    } else if (cardState === "IL Redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
     } else if (cardState === "Claim") {
       setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
@@ -101,28 +102,36 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     else if (cardState === "Deposit") {
       setToken("DAI");
       setTokenBalance(daiBalance)
+      setImage(DaiToken)
     } else if (cardState === "Redeem") {
       setToken("LP");
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
       setTokenBalance((typeof lpAmount === 'undefined') ? "0" : String(lpAmount))
-    } else if (cardState === "ILredeem") {
+      setImage(DaiToken)
+    } else if (cardState === "IL Redeem") {
       setToken("USD");
       const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
       setTokenBalance((typeof ilbal === 'undefined') ? "0" : String(ilbal))
+      setImage(USDBToken)
     } else if (cardState === "Claim") {
       setToken("FHM");
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
       setTokenBalance((typeof pendingClaim === 'undefined') ? "0" : String(pendingClaim))
+      setImage(FHMToken)
+
     }
   }, [cardState, daiBalance, address]);
 
   async function useBond() {
     const slippage = 0;
 
-    if (Number(quantity) === 0 && cardState !== "Claim") {
+    if (Number(quantity) === 0 && cardState !== "Claim" && cardState !== "IL Redeem") {
       dispatch(error("Please enter a value!"));
-    } else if (isNaN(Number(quantity)) && cardState !== "Claim") {
+    } else if (isNaN(Number(quantity)) && cardState !== "Claim"  && cardState !== "IL Redeem") {
       dispatch(error("Please enter a valid value!"));
+    } else if((cardState === "IL Redeem" && Number(singleSidedBond?.userBonds[0]?.iLBalance) <= 0) ||
+      (cardState === "Claim" && Number(singleSidedBond?.userBonds[0]?.pendingFHM) <= 0)) {
+      dispatch(error("Nothing to redeem!"));
     } else if (cardState === "Redeem") {
       dispatch(
         redeemSingleSidedBond({
@@ -156,7 +165,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-    } else if (cardState === "ILredeem") {
+    } else if (cardState === "IL Redeem") {
       dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
@@ -213,8 +222,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           <div className={style['dot']}/>
           <span>Claim</span>
         </Box>
-        <Box className={`${style['smokeyToggle']} ${cardState === "ILredeem" ? style['active'] : ""}`}
-             onClick={() => setCardState("ILredeem")}>
+        <Box className={`${style['smokeyToggle']} ${cardState === "IL Redeem" ? style['active'] : ""}`}
+             onClick={() => setCardState("IL Redeem")}>
           <div className={style['dot']}/>
           <span>ILRedeem</span>
         </Box>
@@ -224,20 +233,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Box>
       <Box className="flexCenterRow">
           <Box className={`flexCenterRow ${style['currencySelector']}`} sx={{width: '245px'}}>
-            <img src={DaiToken} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
+            <img src={image} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
               <span className={style['name']}>{token} balance</span>
               <span className={style['amount']}>{tokenBalance} {token}</span>
             </Box>
           </Box>
 
-        {(cardState !== "Claim" && cardState !== "ILredeem") ? (
+        {(cardState !== "Claim" && cardState !== "IL Redeem") ? (
             <InputWrapper sx={{maxWidth: '245px', ml: '1em'}}>
               <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)} />
               <span className={style['amount']} onClick={setMax}>Max</span>
             </InputWrapper>
         ) : <></>}
       </Box>
+      {(cardState !== "Claim" && cardState !== "IL Redeem") ? (
+        <>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
         <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
         <span>{trim(Number(payout), 2)} DAI</span>
@@ -251,6 +262,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
+        </> ) : (
+        <Box className={`flexSBRow w100`} sx={{mb: '2em'}}>
+        </Box>
+      )}
       {!connected ? (
         <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
                 onClick={connect}>
