@@ -42,7 +42,13 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 });
 
-export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onCancelBond }: { investments: Investment[], onRedeemBond: (bond: IAllBondData, index: number) => void, onCancelBond: (bond: IAllBondData, index: number) => void }): JSX.Element => {
+export const MyAccountActiveInvestmentsTable = (
+  { investments, onRedeemBond, onCancelBond }: 
+  { 
+    investments: Investment[], 
+    onRedeemBond: (bond: IAllBondData, index: number) => void, 
+    onCancelBond: (bond: IAllBondData, index: number) => void 
+}): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
 
@@ -130,7 +136,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onC
             </TableRow>
           </TableHead>
           <TableBody>
-            {investments.map((investment, index) => (
+            {investments.map((investment: Investment, index) => (
               <TableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
                 <TableCell>
                   <Typography variant="h6">
@@ -155,7 +161,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onC
                 <TableCell>
                   {currentBlock ? (
                     <Typography variant="h6">
-                      {prettifySeconds(secondsUntilBlock(chainId ?? 250, currentBlock, investment.vestDate))}
+                      {prettifySeconds(investment.secondsToVest)}
                     </Typography>
                   ) : (<></>)}
                 </TableCell>
