@@ -28,7 +28,7 @@ export const tradfi3month = new StableBond({
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
+      bondAddress: "0xd7686f04D8c72054Bbc934ED951C919A87833C49",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
@@ -54,7 +54,7 @@ export const tradfi6month = new StableBond({
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
+      bondAddress: "0xD3e73Cc8C42dAfAB204d1F2ef3C7b853AaF0B094",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
