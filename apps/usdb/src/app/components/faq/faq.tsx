@@ -1,10 +1,17 @@
-import { Box, Grid, SxProps, Theme } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, Box, Grid, SxProps, Theme, Typography } from '@mui/material';
 import style from './faq.module.scss';
 import dots from '../../../assets/images/dots.svg';
+import { ExpandMore } from '@mui/icons-material';
 
 /* eslint-disable-next-line */
 export interface FaqProps {
-  sx?: SxProps<Theme>
+  faqItems: FaqItem[];
+  sx?: SxProps<Theme>;
+}
+
+export type FaqItem = {
+  title: string;
+  content: string;
 }
 
 export const Faq = (props: FaqProps): JSX.Element => {
@@ -21,12 +28,21 @@ export const Faq = (props: FaqProps): JSX.Element => {
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
-          <span className={style['faqTitle']}>What is USDB?</span>
-          <hr />
-          <span className={style['faqTitle']}>How do I add liquidity?</span>
-          <hr />
-          <span className={style['faqTitle']}>What's the minimum or maximum I can deposit?</span>
-          <hr />
+          
+            {props.faqItems.map((faqItem: FaqItem, key: number) => (
+              <Accordion key={`faq-acc-${key}`} square={false}>
+                <AccordionSummary
+                  expandIcon={<ExpandMore color="primary"/>}
+                >
+                  {faqItem.title}
+                </AccordionSummary>
+                <AccordionDetails>
+                  <Typography>
+                    {faqItem.content}
+                  </Typography>
+                </AccordionDetails>
+                </Accordion>
+            ))}
         </Grid>
       </Grid>
     </Box>

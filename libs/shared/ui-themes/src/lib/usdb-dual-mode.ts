@@ -89,6 +89,10 @@ const globalTheme: ThemeOptions = {
           "&.MuiMenu-paper":{
             borderRadius: "10px",
             padding: "0.5em",
+          },
+          "&.MuiAccordion-root, &.MuiAccordion-root:last-of-type": {
+            padding: "1.75em 0 1em 0",
+            borderRadius: '0'
           }
         }
       },
@@ -202,10 +206,43 @@ const globalTheme: ThemeOptions = {
         autoCapitalize: 'none',
       },
     },
+    MuiButtonBase: {
+      styleOverrides: { 
+        root: {
+          "&.MuiAccordionSummary-root": {
+            paddingLeft: '0'
+          }
+        }
+      }
+    },
     MuiTab: {
       styleOverrides: {
         root: {
           textTransform: "unset",
+        }
+      }
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          background: 'transparent',
+          "&.Mui-expanded": {
+            margin: '0',
+          }
+        }
+      }
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          fontSize: '2em',
+        }
+      }
+    },
+    MuiAccordionDetails: {
+      styleOverrides: {
+        root: {
+          textAlign: 'left'
         }
       }
     },
@@ -284,6 +321,9 @@ const USDBLightBase: ThemeOptions = {
           color: usdbLightColors.color,
           "&.softGradient": {
             background: "linear-gradient(45deg, rgba(229,229,235,1) 15%, rgba(229,229,235,0.42) 90%)"
+          },
+          "&.MuiAccordion-root": {
+            borderBottom: "2px solid #00000040"
           }
         },
       },
@@ -363,6 +403,9 @@ const USDBDarkBase: ThemeOptions = {
           color: usdbDarkColors.color,
           "&.softGradient": {
             background: "linear-gradient(45deg, rgba(8,9,10,1) 0%, rgba(8,9,10,0.62) 5%, rgba(14,15,16,1) 90%)"
+          },
+          "&.MuiAccordion-root": {
+            borderBottom: "2px solid #FFFFFF40"
           }
         },
       },
