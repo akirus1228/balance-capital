@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useHref } from 'react-router-dom';
 import style from './icon-link.module.scss';
 import { useCallback } from 'react';
 
@@ -12,12 +12,15 @@ export interface IconLinkProps {
 
 export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
   const navigate = useNavigate();
-  const handleOnClick = useCallback(() => {
-    if (link) navigate(link);
-  }, [navigate, link]);
 
+  const handleOnClick = useCallback(() => {
+    const isHttpLink = link?.startsWith('http');
+    if (isHttpLink) window.open(link, '_blank');
+    else if (link) navigate(link);
+  }, [navigate, link]);
+  const setOpacity = link ? {} : { opacity: '0.4' };
   return (
-    <Box className={style['iconLinkContainer']}>
+    <Box className={style['iconLinkContainer']} style={setOpacity}>
       <Box
         textAlign="center"
         sx={link ? { cursor: 'pointer' } : {}}
