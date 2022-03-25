@@ -58,7 +58,7 @@ const pages: Pages[] = [
     href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
   },
 ];
-
+const allowedChainIds: any = [1, 4, 250, 4002];
 export const Header = (): JSX.Element => {
   const {
     connect,
@@ -69,6 +69,7 @@ export const Header = (): JSX.Element => {
     chainId,
   } = useWeb3Context();
   const dispatch = useDispatch();
+  const allowedChain = allowedChainIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElProductsMenu, setAnchorElProductsMenu] =
     useState<null | HTMLElement>(null);
@@ -82,13 +83,14 @@ export const Header = (): JSX.Element => {
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
-
+  console.log('anchorElNav', anchorElNav);
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    console.log('hereClicked');
   };
 
   const handleConnect = useCallback(async () => {
@@ -330,7 +332,7 @@ export const Header = (): JSX.Element => {
                     <MenuLink
                       // href={page.href ? page.href : '#'}
                       href="#"
-                      onClick={handleCloseNavMenu}
+                      onClick={handleCloseProductsMenu}
                       key={page.title}
                     >
                       <Typography textAlign="center" style={{ opacity: 0.2 }}>
@@ -398,6 +400,11 @@ export const Header = (): JSX.Element => {
           </Tooltip>
         </Toolbar>
       </Container>
+      {!allowedChain && connected && (
+        <div className={styles['errorNav']}>
+          Test text here, change your network to Rinkeby/Ethereum etc etc
+        </div>
+      )}
     </AppBar>
   );
 };
