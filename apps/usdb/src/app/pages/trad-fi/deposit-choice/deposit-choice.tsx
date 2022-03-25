@@ -30,7 +30,7 @@ export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
             bondsUsdb?.map((bond, index) =>
             (
               <DepositCard 
-                key={index}
+                key={`dc-${index}`}
                 bondType={bond.name} 
                 months={bond.name === TRADFI_3M ? 3 : 6} 
                 roi={Number(bond.roi)} 
