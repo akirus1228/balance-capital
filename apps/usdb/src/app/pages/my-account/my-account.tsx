@@ -13,7 +13,9 @@ import {
   useBonds,
   useWeb3Context,
   secondsUntilBlock,
-  chains
+  chains,
+  IAllBondData,
+  cancelBond
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -169,6 +171,21 @@ export const MyAccount = (): JSX.Element => {
     }
   }, [address, JSON.stringify(activeInvestments)]);
 
+  const onCancelBond = async (bond: IAllBondData, index: number) => {
+    const shouldProceed = window.confirm(
+      "Cancelling a bond incurs a 5% loss. Do you still want to proceed?",
+    );
+    if (provider && chainId && shouldProceed) {
+      await dispatch(cancelBond({ networkId: chainId, address, bond, provider, index }));
+    }
+  };
+
+  const onRedeemBond = async (bond: IAllBondData, index: number) => {
+    if (provider && chainId) {
+      await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
+    }
+  };
+
   const onRedeemAll = async () => {
     if (provider && chainId) {
       for (const bond of bonds) {
@@ -219,7 +236,7 @@ export const MyAccount = (): JSX.Element => {
           <Typography variant="subtitle1">
             Active Investments ({activeInvestments.length})
           </Typography>
-          <MyAccountActiveInvestmentsTable investments={activeInvestments} />
+          <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} />
         </Box>
         {/* Hide previous investments until ready on the graph */}
         {/* <Box>

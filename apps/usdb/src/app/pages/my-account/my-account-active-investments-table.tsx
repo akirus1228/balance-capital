@@ -37,7 +37,7 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
   minimumFractionDigits: 2,
 });
 
-export const MyAccountActiveInvestmentsTable = ({ investments }: { investments: Investment[] }): JSX.Element => {
+export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onCancelBond }: { investments: Investment[], onRedeemBond: (bond: IAllBondData, index: number) => void, onCancelBond: (bond: IAllBondData, index: number) => void }): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
 
@@ -55,18 +55,6 @@ export const MyAccountActiveInvestmentsTable = ({ investments }: { investments: 
       }
     })();
   }, [chainId]);
-
-  const onCancelBond = async (bond: IAllBondData, index: number) => {
-    if (provider && chainId) {
-      await dispatch(cancelBond({ networkId: chainId, address, bond, provider, index }));
-    }
-  };
-
-  const onRedeemOne = async (bond: IAllBondData, index: number) => {
-    if (provider && chainId) {
-      await dispatch(redeemOneBond({networkId: chainId, address, bond: bond, provider, autostake: false}));
-    }
-  };
 
   return (
     <Paper
@@ -184,7 +172,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments }: { investments: 
                         const bond = bonds.find(
                           (bond) => bond.name === investment.bondName
                         );
-                        bond && onRedeemOne(bond as IAllBondData, investment.bondIndex);
+                        bond && onRedeemBond(bond as IAllBondData, investment.bondIndex);
                       }}
                     >
                       Redeem
