@@ -13,7 +13,7 @@ interface IDepositCardParams {
   roi: number;
   apr: number;
   vestingTermPretty: string;
-  bond: IAllBondData;
+  bond: IAllBondData | Bond;
 }
 
 export const DepositCard = (params: IDepositCardParams): JSX.Element => {
