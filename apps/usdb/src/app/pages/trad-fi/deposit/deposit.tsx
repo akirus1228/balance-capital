@@ -214,7 +214,7 @@ export const TradFiDeposit = (): JSX.Element => {
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Reward amount</span>
-                  <span>{payout} USDB</span>
+                  <span>{trim(tradfiBondData?.userBonds[0]?.interestDue, 2)} USDB</span>
                 </Box>
             </Grid>
           </Grid>
