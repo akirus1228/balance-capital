@@ -189,11 +189,11 @@ export const TradFiDeposit = (): JSX.Element => {
             <Grid item className={` ${style['infoElement']}`} xs={12} sm>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
                   <span>ROI</span>
-                  <span>5%</span>
+                  <span>{tradfiBond.roi}%</span>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
-                  <span>APY</span>
-                  <span>21.55%</span>
+                  <span>APR</span>
+                  <span>{tradfiBond.apr}%</span>
                 </Box>
             </Grid>
             <Grid item xs={0} sm={1}>
