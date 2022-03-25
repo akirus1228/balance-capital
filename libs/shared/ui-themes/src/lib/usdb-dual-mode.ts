@@ -1,7 +1,25 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
+
+export const noBorderOutlinedInputStyles = makeStyles(theme => ({
+  root: {
+    "& $notchedOutline": {
+      border: "none"
+    },
+    "&:hover $notchedOutline": {
+      border: "none"
+    },
+    "&$focused $notchedOutline": {
+      border: "none"
+    }
+  },
+  focused: {},
+  notchedOutline: {}
+}));
+
 
 // light color pallet for use in themes
 const usdbLightColors = {
