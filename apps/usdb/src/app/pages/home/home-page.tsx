@@ -48,11 +48,13 @@ export const HomePage = (): JSX.Element => {
           <Grid item lg={6} md={12} order={{ lg: 2, xs: 1 }} className={style['heroTextContent']}>
             <Box className={style['heroRight']}>
               <Box sx={{ height: { xs: '132px', md: '180px' }, display: { xs: "none", md: "flex" } }}>
-                <img
-                  src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-                  alt="USDB Logo"
-                  className={style['heroLogo']}
-                />
+                <Link to="/">
+                  <img
+                    src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                    alt="USDB Logo"
+                    className={style['heroLogo']}
+                  />
+                </Link>
               </Box>
               <h1 className={style['heroTitle']}>
                 Where traditional finance meets DeFi
