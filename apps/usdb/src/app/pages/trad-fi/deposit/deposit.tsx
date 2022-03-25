@@ -87,9 +87,9 @@ export const TradFiDeposit = (): JSX.Element => {
   }
   const totalInterestDue = sum(tradfiBondData?.userBonds)
 
-  useEffect(() => {
-    navigate("/trad-fi#get-started")
-  }, [ chainId]);
+  // useEffect(() => {
+  //   navigate("/trad-fi#get-started")
+  // }, [ chainId]);
 
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
@@ -116,7 +116,7 @@ export const TradFiDeposit = (): JSX.Element => {
     } else if(deposited){
       navigate("/my-account");
     }
-  }, [pendingTransactions])
+  }, [tradfiBondData?.userBonds])
 
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
