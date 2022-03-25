@@ -22,7 +22,7 @@ import {
   bondAsset,
   changeApproval,
   IApproveBondAsyncThunk,
-  IBondAssetAsyncThunk
+  IBondAssetAsyncThunk, Bond
 } from "@fantohm/shared-web3";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,11 +48,11 @@ export const TradFiDeposit = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { bondType } = useParams();
-  const [bond, setBond] = useState<StableBond>();
+  const [bond, setBond] = useState<Bond>();
   const [isDeposit, setIsDeposit] = useState(true);
   const accountSlice = useSelector(getAccountState);
   const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as IAllBondData;
-  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as StableBond;
+  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as Bond;
 
   const bondTypes: IBondType = {
     "3month": {
@@ -122,7 +122,7 @@ export const TradFiDeposit = (): JSX.Element => {
       dispatch(error("Please enter a valid value!"));
     } else {
       const slippage = 0;
-      dispatch(
+      await dispatch(
         bondAsset({
           value: String(quantity),
           slippage,
@@ -133,6 +133,7 @@ export const TradFiDeposit = (): JSX.Element => {
         } as IBondAssetAsyncThunk)
       );
     }
+    clearInput();
   }
 
   const onSeekApproval = async () => {
