@@ -17,12 +17,16 @@ export const tradfi3month = new StableBond({
   apr: 21.5,
   roi: 5,
   days: 90,
-  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
+  isAvailable: { [NetworkIds.Ethereum]: true, [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
+    [NetworkIds.Ethereum]: {
+      bondAddress: "0xCD8A46dC7EE4488b441Ae1CD3b5BCa48d5389C12",
+      reserveAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    },
     [NetworkIds.FantomOpera]: {
       bondAddress: "0xEFbe7fe9E8b407a3F0C0451E7669E70cDD0C4C77",
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
@@ -43,12 +47,16 @@ export const tradfi6month = new StableBond({
   apr: 32.5,
   roi: 15,
   days: 180,
-  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
+  isAvailable: { [NetworkIds.Ethereum]: true, [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
+    [NetworkIds.Ethereum]: {
+      bondAddress: "0xD9fDd86ecc03e34DAf9c645C40DF670406836816",
+      reserveAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F",
+    },
     [NetworkIds.FantomOpera]: {
       bondAddress: "0xB1c77436BC180009709Be00C9e852246476321A3",
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
