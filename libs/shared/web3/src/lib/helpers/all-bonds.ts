@@ -6,7 +6,7 @@ import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi, lqdrUsdbPolBon
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 // //   and include that in the definition of a bond
 
-export const TRADFI_3M:string = "tradfi3month";
+export const TRADFI_3M = "tradfi3month";
 
 export const tradfi3month = new StableBond({
   name: TRADFI_3M,
@@ -17,12 +17,16 @@ export const tradfi3month = new StableBond({
   apr: 21.5,
   roi: 5,
   days: 90,
-  isAvailable: { [NetworkIds.Rinkeby]: true },
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x3D107C1d16a2c0C3c5AAc3Eb54D05B5d6209152E",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
@@ -39,12 +43,16 @@ export const tradfi6month = new StableBond({
   apr: 32.5,
   roi: 15,
   days: 180,
-  isAvailable: { [NetworkIds.Rinkeby]: true },
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: tradFiBondDepositoryAbi,
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x055eFae609a05b92F6793b81bD489ab9C8a49d4B",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",

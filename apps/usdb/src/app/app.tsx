@@ -43,6 +43,8 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
+    if(!connected)
+      return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
     bonds.map((bond) => {
       dispatch(calcBondDetails({ bond, value: '', networkId: chainId || defaultNetworkId }));
@@ -84,7 +86,7 @@ export const App = (): JSX.Element => {
           </Route>
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
-          <Route path="/my-account" element={address ? <MyAccount /> : <Navigate replace to="/" />} />
+          <Route path="/my-account" element={<MyAccount />} />
           <Route
             path="*"
             element={
