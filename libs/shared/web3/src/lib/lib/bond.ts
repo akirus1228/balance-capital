@@ -66,7 +66,8 @@ interface BondOpts {
   paymentToken?: PaymentToken; // The token that is returned by this bond
   bondAction?: BondAction; // What to display in the bond button
   redeemAction?: RedeemAction; // What to displat in the redeeom button
-  roi: string;
+  apr: number;
+  roi: number;
 }
 
 // Technically only exporting for the interface
@@ -86,7 +87,8 @@ export abstract class Bond {
   readonly paymentToken: PaymentToken; // Defaults to FHM
   readonly bondAction: BondAction;
   readonly redeemAction: RedeemAction;
-  readonly roi: string;
+  readonly apr: number;
+  readonly roi: number;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: boolean;
@@ -113,6 +115,7 @@ export abstract class Bond {
     this.bondAction = bondOpts.bondAction || BondAction.Bond;
     this.redeemAction = bondOpts.redeemAction || RedeemAction.Redeem;
     this.roi = bondOpts.roi;
+    this.apr = bondOpts.apr;
   }
 
   hasBond(networkId: NetworkId): boolean {

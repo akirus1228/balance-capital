@@ -8,10 +8,10 @@ import {useWeb3Context} from "@fantohm/shared-web3";
 
 interface IDepositCardParams {
   bondType: string;
-  term: number;
+  months: number;
   roi: number;
-  apy: number;
-  days: number;
+  apr: number;
+  vestingTermPretty: string;
   bond: any;
 }
 
@@ -40,8 +40,8 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                   <Box className={css['titleWrapper']}>
                     <h3>Fixed deposit</h3>
                   </Box>
-                  <Typography variant="h1">{params.term} months</Typography>
-                  <span style={{color: '#696C80'}}>{params.days} days</span>
+                  <Typography variant="h1">{params.months} months</Typography>
+                  <span style={{color: '#696C80'}}>{params.vestingTermPretty}</span>
                 </Grid>
                 <Grid item xs={12}>
                   <hr/>
@@ -54,8 +54,8 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box className={css['lowerStats']}>
-                    <Typography variant="h2">{params.apy}%</Typography>
-                    <span>APY</span>
+                    <Typography variant="h2">{params.apr}%</Typography>
+                    <span>APR</span>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>

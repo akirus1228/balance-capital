@@ -6,13 +6,16 @@ import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi, lqdrUsdbPolBon
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 // //   and include that in the definition of a bond
 
+export const TRADFI_3M:string = "tradfi3month";
+
 export const tradfi3month = new StableBond({
-  name: "tradfi3month",
+  name: TRADFI_3M,
   type: BondType.TRADFI,
   displayName: "TradFi 3 Month",
   bondToken: "tradfi3month",
   decimals: 18,
-  roi: "21.5",
+  apr: 21.5,
+  roi: 5,
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
@@ -32,7 +35,8 @@ export const tradfi6month = new StableBond({
   displayName: "TradFi 6 Month",
   bondToken: "tradfi6month",
   decimals: 18,
-  roi: "32.5",
+  apr: 32.5,
+  roi: 15,
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
@@ -52,7 +56,8 @@ export const singleSided = new StableBond({
   displayName: "Staking",
   bondToken: "singleSided",
   decimals: 18,
-  roi: "32.5",
+  apr: 0,
+  roi: 0,
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
@@ -72,7 +77,8 @@ export const lqdrUsdbPol = new StableBond({
   displayName: "LQDR USDB Pol",
   bondToken: "lqdrUsdbPol",
   decimals: 18,
-  roi: "0",
+  apr: 0,
+  roi: 0,
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,

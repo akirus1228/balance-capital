@@ -137,7 +137,7 @@ export const MyAccount = (): JSX.Element => {
               bondName: bond.name,
               bondIndex: i,
               displayName: bond.displayName,
-              roi: bond.roi,
+              roi: bond.roi+"",
               term: Number(bond.vestingTerm),
               termType: 'months',
               secondsToVest,
