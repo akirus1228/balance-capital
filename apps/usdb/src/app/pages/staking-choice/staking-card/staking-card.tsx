@@ -234,6 +234,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </InputWrapper>
         ) : <></>}
       </Box>
+      {(cardState !== "Claim" && cardState !== "IL Redeem") ? (
+        <>
       <Box className={`flexSBRow w100`} sx={{mt: '1em'}}>
         <span>Your deposit <Icon component={InfoOutlinedIcon}/></span>
         <span>{trim(Number(payout), 2)} DAI</span>
@@ -247,6 +249,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <Icon component={InfoOutlinedIcon} sx={{mr: "0.5em"}}/>
         <span>Deposit DAI into this pool for FHM rewards with no impermanent loss or deposit fees</span>
       </Box>
+        </> ) : (
+        <Box className={`flexSBRow w100`} sx={{mb: '2em'}}>
+        </Box>
+      )}
       {!connected ? (
         <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
                 onClick={connect}>
