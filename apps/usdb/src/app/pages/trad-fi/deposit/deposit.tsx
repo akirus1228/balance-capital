@@ -22,7 +22,7 @@ import {
   bondAsset,
   changeApproval,
   IApproveBondAsyncThunk,
-  IBondAssetAsyncThunk
+  IBondAssetAsyncThunk, Bond
 } from "@fantohm/shared-web3";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -48,11 +48,11 @@ export const TradFiDeposit = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { bondType } = useParams();
-  const [bond, setBond] = useState<StableBond>();
+  const [bond, setBond] = useState<Bond>();
   const [isDeposit, setIsDeposit] = useState(true);
   const accountSlice = useSelector(getAccountState);
   const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as IAllBondData;
-  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as StableBond;
+  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as Bond;
 
   const bondTypes: IBondType = {
     "3month": {
@@ -70,6 +70,8 @@ export const TradFiDeposit = (): JSX.Element => {
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [payout, setPayout] = useState("0");
+  const [deposited, setDeposited] = useState(false);
+
   const [pendingPayout, setPendingPayout] = useState("0");
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -94,6 +96,14 @@ export const TradFiDeposit = (): JSX.Element => {
     setBond(tradfiBond);
   }, [bondType, allBonds, tradfiBond]);
 
+  useEffect(() => {
+    if(isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)){
+      setDeposited(true)
+    } else if(deposited){
+      navigate("/my-account");
+    }
+  }, [pendingTransactions])
+
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
   }, [tradfiBondData]);
@@ -112,7 +122,7 @@ export const TradFiDeposit = (): JSX.Element => {
       dispatch(error("Please enter a valid value!"));
     } else {
       const slippage = 0;
-      dispatch(
+      await dispatch(
         bondAsset({
           value: String(quantity),
           slippage,
@@ -123,6 +133,7 @@ export const TradFiDeposit = (): JSX.Element => {
         } as IBondAssetAsyncThunk)
       );
     }
+    clearInput();
   }
 
   const onSeekApproval = async () => {
@@ -229,7 +240,7 @@ export const TradFiDeposit = (): JSX.Element => {
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
                 <span>Payout amount</span>
-                <span>{pendingPayout} USDB</span>
+                <span>{trim(tradfiBondData?.userBonds[0]?.interestDue, 2)} USDB</span>
               </Box>
             </Grid>
           </Grid>

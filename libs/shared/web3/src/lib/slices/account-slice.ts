@@ -1,7 +1,7 @@
 import { BigNumber, ethers } from 'ethers';
 import { addresses } from '../constants';
-import { 
-  ierc20Abi, 
+import {
+  ierc20Abi,
   usdbContractAbi as usdbAbi,
   daiContractAbi as daiAbi,
   sOhmv2Abi as sOHMv2,
