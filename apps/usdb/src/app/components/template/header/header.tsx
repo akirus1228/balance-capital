@@ -3,7 +3,8 @@ import {
   setWalletConnected,
   getBalances,
   useBonds,
-  trim
+  trim,
+  defaultNetworkId
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -22,12 +23,13 @@ import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
 import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import MenuLink from './MenuLink';
+import MenuLink from './menu-link';
 import { RootState } from '../../../store';
 import { setTheme } from '../../../store/reducers/app-slice';
 import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
 import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
+import { NetworkMenu } from "./network-menu";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -68,7 +70,7 @@ export const Header = (): JSX.Element => {
     useState<string>('Connect Wallet');
 
   const themeType = useSelector((state: RootState) => state.app.theme);
-  const { bonds } = useBonds(chainId ?? 250);
+  const { bonds } = useBonds(chainId ?? defaultNetworkId);
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
@@ -91,7 +93,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || 250 }));
+    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
     if (connected) {
       setConnectButtonText('Disconnect');
     } else {
@@ -267,6 +269,10 @@ export const Header = (): JSX.Element => {
               </Menu>
             </Box>
           </Box>
+
+          <Box mr="1em">
+            <NetworkMenu />
+          </Box>
           {
             connected && <Tooltip title={ `My Portfolio: $${ totalBalances }` }>
               <Link to='/my-account'>
@@ -282,11 +288,12 @@ export const Header = (): JSX.Element => {
               </Link>
             </Tooltip>
           }
+
           <Tooltip title='Connect Wallet'>
             <Button
               onClick={ handleConnect }
               sx={ { px: '3em', display: { xs: 'none', md: 'flex' } } } color='primary'
-              className={ `menuButton ${ styles['connectButton'] }` }
+              className="menuButton"
             >
               { connectButtonText }
             </Button>
