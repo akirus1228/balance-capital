@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Grid, Icon} from "@mui/material";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {Box, Button, Icon} from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import style from "./staking-card.module.scss";
 import DaiCard from "../../../components/dai-card/dai-card";
@@ -45,15 +45,17 @@ interface IStakingCardParams {
   roi: number;
   apy: number;
 }
+type CardStates = 'Deposit' | 'Redeem' | 'IL Redeem' | 'Claim';
 
 export const StakingCard = (params: IStakingCardParams): JSX.Element => {
-  const [cardState, setCardState] = useState("Deposit");
+  const [cardState, setCardState] = useState<CardStates>("Deposit");
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState("0");
   const [deposited, setDeposited] = useState(false);
+  const [stdButtonColor, setStdButtonColor] = useState<'primary' | 'error'>('primary');
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
@@ -65,7 +67,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     return state.account.bonds;
   });
 
-  const singleSidedBond = accountBonds[singleSidedBondData?.name]
+  const singleSidedBond = accountBonds[singleSidedBondData?.name];
 
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
@@ -83,6 +85,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
     }
   };
+
   useEffect(() => {
     if (singleSidedBond?.userBonds[0]) {
       setPayout(String(singleSidedBond?.userBonds[0]?.interestDue))
@@ -189,16 +192,40 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     }
   };
 
+  const isOverBalance: boolean = useMemo(() => {
+    console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
+    if(['IL Redeem','Claim'].includes(cardState))
+      return false;
+
+    if(Number(tokenBalance) < Number(quantity))
+      return true;
+
+    return false;
+  }, [
+    tokenBalance, 
+    quantity,
+    cardState,
+  ]);
+
   useEffect(() => {
     if(isPendingTxn(pendingTransactions, "bond_" + singleSided.name) && cardState === "Deposit"){
       setDeposited(true)
     } else if(deposited && cardState === "Deposit"){
       navigate("/my-account");
     }
-  }, [pendingTransactions])
+  }, [pendingTransactions]);
+
+  useEffect(() => {
+    if(isOverBalance){
+      setStdButtonColor('error');
+      return;
+    }
+    setStdButtonColor('primary');
+  }, [isOverBalance, quantity]);
+  
 
   return (
-    <DaiCard tokenImage={DaiToken} setTheme="light">
+    <DaiCard tokenImage={DaiToken} setTheme="light" sx={{minWidth: {xs: '300px', sm: '587px'}}}>
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box className="w100">
@@ -278,11 +305,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         ) : hasAllowance() ? (
           <Button
             variant="contained"
-            color="primary"
+            color={stdButtonColor} 
             className="paperButton cardActionButton"
-            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name)}
+            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name) || isOverBalance || quantity === '' || quantity === '0'}
             onClick={useBond}>
-            {txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
+            {isOverBalance ? "Insufficiant Balance" : txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
           </Button>
         ) : (
           <Button
