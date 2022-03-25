@@ -76,8 +76,9 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
         sx={{ marginTop: '10px' }}
         className={style['rowCard']}
         style={{ backgroundColor: `${backgroundColor}` }}
+        key={`invests-${index}`}
         >
-          <Grid container spacing={2} key={`invests-${index}`}>
+          <Grid container spacing={2}>
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
                 Amount
