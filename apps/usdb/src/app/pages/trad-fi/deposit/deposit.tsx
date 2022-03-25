@@ -19,6 +19,7 @@ import {
   useBonds,
   useWeb3Context,
   error,
+  info,
   bondAsset,
   changeApproval,
   IApproveBondAsyncThunk,
@@ -114,7 +115,7 @@ export const TradFiDeposit = (): JSX.Element => {
     if(isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)){
       setDeposited(true)
     } else if(deposited){
-      navigate("/my-account");
+      // navigate("/my-account");
     }
   }, [tradfiBondData?.userBonds])
 
@@ -146,6 +147,8 @@ export const TradFiDeposit = (): JSX.Element => {
           address: address
         } as IBondAssetAsyncThunk)
       );
+
+      dispatch(info("Bond is completed."));
       setTimeout(() => navigate("/my-account"), 2000);
     }
     clearInput();
