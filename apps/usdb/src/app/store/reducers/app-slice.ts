@@ -57,6 +57,7 @@ export const loadAppDetails = createAsyncThunk(
 );
 
 interface IAppData {
+	readonly checkedConnection: boolean;
 	readonly circSupply: number;
 	readonly currentIndex: string;
 	readonly currentBlock: number;
@@ -91,7 +92,8 @@ interface IAppData {
 // load cached application state
 const appState = loadState();
 const initialState: IAppData = {
-	loading: false,
+	checkedConnection: false,
+	loading: true,
 	loadingMarketPrice: false,
 	theme: 'dark',
 	...appState?.app,
@@ -104,12 +106,18 @@ const appSlice = createSlice({
 		fetchAppSuccess(state, action) {
 			setAll(state, action.payload);
 		},
-		setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
-			state.theme = action.payload;
-		},
 		selectBondType: (state, action) => {
 			state.bondType = action.payload;
 		},
+		setCheckedConnection: (state, action: PayloadAction<boolean>) => {
+			state.checkedConnection = action.payload;
+		},
+		setLoading: (state, action: PayloadAction<boolean>) => {
+			state.loading = action.payload;
+		},
+		setTheme: (state, action: PayloadAction<'light' | 'dark'>) => {
+			state.theme = action.payload;
+		}
 	},
 });
 
@@ -119,7 +127,7 @@ const baseInfo = (state: RootState) => state.app;
 
 export const appReducer = appSlice.reducer;
 
-export const {selectBondType, setTheme} = appSlice.actions;
+export const {selectBondType, setTheme, setLoading, setCheckedConnection} = appSlice.actions;
 
 export const getAppState = createSelector(baseInfo, app => app);
 

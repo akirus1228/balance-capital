@@ -100,6 +100,7 @@ export const MyAccount = (): JSX.Element => {
 
   const isMediumScreen = useMediaQuery("(max-width: 1000px)");
 
+  const hasCheckedConnection = useSelector((state: RootState) => state.app.checkedConnection);
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
@@ -205,6 +206,8 @@ export const MyAccount = (): JSX.Element => {
     }
   };
 
+  if(!address)
+    return(<h1 style={{textAlign: 'center'}}>{hasCheckedConnection ? "Connect your wallet to view My Account" : "Loading..."}</h1>);
   return (
     <Box
       sx={{
