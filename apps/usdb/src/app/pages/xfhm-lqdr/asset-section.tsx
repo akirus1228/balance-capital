@@ -82,7 +82,6 @@ export const AssetSection = (props: any): JSX.Element => {
                 id='amount-input-lqdr'
                 type='number'
                 placeholder='Enter an amount'
-                className={ `stake-input ${ style["no-padding"] }` }
                 classes={ outlinedInputClasses }
                 value={ props?.amount }
                 onChange={ e => changeAmount(e) }

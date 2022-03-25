@@ -1,4 +1,5 @@
 import {
+  allBonds,
   useWeb3Context,
   setWalletConnected,
   getBalances,
@@ -8,6 +9,7 @@ import {
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
+import { Skeleton } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -69,6 +71,8 @@ export const Header = (): JSX.Element => {
     useState<null | HTMLElement>(null);
   const [connectButtonText, setConnectButtonText] =
     useState<string>('Connect Wallet');
+  const [accountBondsLoading, setAccountBondsLoading] = useState<boolean>(true);
+  const [totalBalances, setTotalBalances] = useState<number>(0);
 
   const themeType = useSelector((state: RootState) => state.app.theme);
   const { bonds } = useBonds(chainId ?? defaultNetworkId);
@@ -125,26 +129,25 @@ export const Header = (): JSX.Element => {
     setAnchorElProductsMenu(null);
   };
 
-  const totalBalances = useMemo(() => {
-    if (accountBonds && chainId) {
-      return bonds.reduce((prevBalance, bond) => {
-        const bondName = bond.name;
-        const accountBond = accountBonds[bondName];
-        if (accountBond) {
-          const userBonds = accountBond.userBonds;
-          return (
-            prevBalance +
-            userBonds.reduce(
-              (balance, bond) => balance + Number(bond.amount),
-              0
-            )
-          );
-        }
-        return prevBalance;
-      }, 0);
+  useEffect(() => {
+    if (Object.keys(accountBonds).length < allBonds.length) {
+      return;
     }
-    return 0;
-  }, [address, JSON.stringify(accountBonds)]);
+    const balances = bonds.reduce((prevBalance, bond) => {
+      const bondName = bond.name;
+      const accountBond = accountBonds[bondName];
+      if (accountBond) {
+        const userBonds = accountBond.userBonds;
+        return (
+          prevBalance +
+          userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
+        );
+      }
+      return prevBalance;
+    }, 0);
+    setTotalBalances(balances);
+    setAccountBondsLoading(false);
+  }, [address, accountBonds]);
 
   return (
     <AppBar
@@ -202,18 +205,16 @@ export const Header = (): JSX.Element => {
               }}
             >
               {pages.map((page: Pages) => (
-                <MenuItem
-                  key={page.title}
+                <MenuLink
+                  // href={page.href ? page.href : '#'}
+                  href="#"
                   onClick={handleCloseNavMenu}
-                  style={{ opacity: 0.2 }}
-                  disabled
+                  key={page.title}
                 >
-                  <Typography textAlign="center">
-                    <MenuLink href={page.href ? page.href : '#'}>
-                      <Button>{page.title}</Button>
-                    </MenuLink>
+                  <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                    <Button style={{ width: '100%' }}>{page.title}</Button>
                   </Typography>
-                </MenuItem>
+                </MenuLink>
               ))}
 
               <MenuItem onClick={handleCloseNavMenu}>
@@ -242,9 +243,13 @@ export const Header = (): JSX.Element => {
                       <Box display="flex" alignItems="center" mt="2px">
                         My Portfolio:&nbsp;
                       </Box>
-                      <Box display="flex" alignItems="center" mt="2px">
-                        ${trim(totalBalances, 2)}
-                      </Box>
+                      {!accountBondsLoading ? (
+                        <Box display="flex" alignItems="center" mt="2px">
+                          ${trim(totalBalances, 2)}
+                        </Box>
+                      ) : (
+                        <Skeleton width="100px" />
+                      )}
                     </Button>
                   </Link>
                 </Typography>
@@ -255,11 +260,13 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img
-              src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-              alt="USDB logo"
-              className={`${styles['usdbLogo']}`}
-            />
+            <Link to="/">
+              <img
+                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                alt="USDB logo"
+                className={`${styles['usdbLogo']}`}
+              />
+            </Link>
           </Typography>
           <Box
             sx={{
@@ -288,18 +295,16 @@ export const Header = (): JSX.Element => {
               >
                 {pages.map((page: any) => {
                   return (
-                    <MenuItem
+                    <MenuLink
+                      // href={page.href ? page.href : '#'}
+                      href="#"
+                      onClick={handleCloseNavMenu}
                       key={page.title}
-                      onClick={handleCloseProductsMenu}
-                      style={{ opacity: 0.2 }}
-                      disabled
                     >
-                      <Typography textAlign="center">
-                        <MenuLink href={page.href ? page.href : '#'}>
-                          <Button className="thin">{page.title}</Button>
-                        </MenuLink>
+                      <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                        <Button style={{ width: '100%' }}>{page.title}</Button>
                       </Typography>
-                    </MenuItem>
+                    </MenuLink>
                   );
                 })}
               </Menu>
@@ -327,9 +332,13 @@ export const Header = (): JSX.Element => {
                   >
                     My Portfolio:&nbsp;
                   </Box>
-                  <Box display="flex" alignItems="center" mt="2px">
-                    ${trim(totalBalances, 2)}
-                  </Box>
+                  {!accountBondsLoading ? (
+                    <Box display="flex" alignItems="center" mt="2px">
+                      ${trim(totalBalances, 2)}
+                    </Box>
+                  ) : (
+                    <Skeleton width="100px" />
+                  )}
                 </Button>
               </Link>
             </Tooltip>
