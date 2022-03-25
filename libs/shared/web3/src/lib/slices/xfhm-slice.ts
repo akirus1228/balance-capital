@@ -12,13 +12,13 @@ import {
   IXfhmClaimAsyncThunk,
   IXfhmValueAsyncThunk
 } from "./interfaces";
-import { setAll } from "../helpers";
-import { AssetToken } from "../helpers/asset-tokens";
-import { allAssetTokens, xFhmToken } from "../helpers/asset-tokens";
+import { getMarketPrice, getTokenPrice, setAll } from '../helpers';
+import { allAssetTokens, AssetToken, xFhmToken } from "../helpers/asset-tokens";
 import { sleep } from "../helpers/sleep";
 import { addresses } from "../constants";
 import { networks } from "../networks";
-import { lqdrUsdbPolBondDepositoryAbi, ierc20Abi, sOhmAbi } from "../abi";
+import { sOhmAbi, lqdrUsdbPolBondDepositoryAbi, ierc20Abi} from '../abi';
+import { scientificToDecimal } from '@fantohm/shared-helpers';
 
 interface IUAData {
   address: string;
@@ -41,6 +41,9 @@ export interface IXfhmDetails {
   totalXfhmSupply: number;
   maxXfhmToEarn: number;
   claimableXfhm: number;
+  lqdrPrice: number;
+  usdbPrice: number;
+  lqdrUsdbLpPrice: number
 }
 
 export const calcXfhmDetails = createAsyncThunk(
@@ -60,15 +63,21 @@ export const calcXfhmDetails = createAsyncThunk(
         stakedFhm: 0,
         totalXfhmSupply: 0,
         maxXfhmToEarn: 0,
-        claimableXfhm: 0
+        claimableXfhm: 0,
+        lqdrPrice: 0,
+        usdbPrice: 0,
+        lqdrUsdbLpPrice: 0,
       };
     }
     const provider = await chains[networkId].provider;
+    const lqdrUsdbLpAddress = networks[networkId].addresses["LQDR_USDB_LP_ADDRESS"];
+    const lqdrUsdbLpContract = new ethers.Contract(lqdrUsdbLpAddress, ierc20Abi, provider);
     const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOhmAbi, provider);
     const lqdrUsdbPolContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, provider);
     const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOhmAbi, provider);
+    const usdbContract = new ethers.Contract(networks[networkId].addresses["USDB_ADDRESS"], ierc20Abi, provider);
     const xfhmContract = await xFhmToken.getContract(networkId);
-    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm] = await Promise.all([
+    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice, lqdrUsdbLpTotalSupply] = await Promise.all([
       fhmContract["balanceOf"](address),
       xfhmContract["balanceOf"](address),
       lqdrUsdbPolContract["bondInfo"](address),
@@ -80,21 +89,38 @@ export const calcXfhmDetails = createAsyncThunk(
       xfhmContract["getStakedFhm"](address),
       xfhmContract["totalSupply"](),
       xfhmContract["maxCap"](),
-      xfhmContract["claimable"](address)
-    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm]) => [
-      fhmBalance,
-      xfhmBalance,
-      lqdrUsdbLpBalance[1],
-      allowance,
-      xfhmForLqdrUsdbPolAllowance,
-      lqdrAllowance,
-      depositAmount[0],
-      (xfhmPerHour * 3600 * depositAmount[0] + Math.pow(10, 18) / 2) / Math.pow(10, 18),
-      stakedFhm,
-      totalXfhmSupply,
-      maxXfhmToEarn * depositAmount[0],
-      claimableXfhm
+      xfhmContract["claimable"](address),
+      lqdrContract["balanceOf"](lqdrUsdbLpAddress),
+      usdbContract["balanceOf"](lqdrUsdbLpAddress),
+      getTokenPrice('liquiddriver'),
+      lqdrUsdbLpContract["totalSupply"](),
+    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice, lqdrUsdbLpTotalSupply]) => [
+      Number(fhmBalance.toString()),
+      Number(xfhmBalance.toString()),
+      Number(lqdrUsdbLpBalance[1].toString()),
+      Number(allowance.toString()),
+      Number(xfhmForLqdrUsdbPolAllowance.toString()),
+      Number(lqdrAllowance.toString()),
+      Number(depositAmount[0].toString()),
+      Math.ceil(Number((xfhmPerHour * 3600 * depositAmount[0] + Math.pow(10, 18) / 2) / Math.pow(10, 18))),
+      Number(stakedFhm.toString()),
+      Number(totalXfhmSupply.toString()),
+      Number(maxXfhmToEarn * depositAmount[0]),
+      Number(claimableXfhm.toString()),
+      Number(lqdrBalance.toString()),
+      Number(usdbBalance.toString()),
+      Number(lqdrPrice.toString()),
+      Number(lqdrUsdbLpTotalSupply.toString()),
     ]);
+
+    let usdbPrice = 1;
+
+    if (usdbBalance && lqdrBalance) {
+      usdbPrice = lqdrPrice * lqdrBalance / usdbBalance;
+    }
+
+    const totalValueLocked = usdbPrice * usdbBalance + lqdrPrice * lqdrBalance;
+    const lqdrUsdbLpPrice = totalValueLocked / lqdrUsdbLpTotalSupply;
 
     return {
       fhmBalance,
@@ -108,7 +134,10 @@ export const calcXfhmDetails = createAsyncThunk(
       stakedFhm,
       totalXfhmSupply,
       maxXfhmToEarn,
-      claimableXfhm
+      claimableXfhm,
+      lqdrPrice,
+      usdbPrice: Number(Number(usdbPrice).toFixed(2)),
+      lqdrUsdbLpPrice
     };
 
   }
@@ -118,14 +147,12 @@ export const calcAllAssetTokenDetails = createAsyncThunk(
   "xfhm-lqdr/calcAllAssetTokenDetails",
   async ({ address, networkId }: IBaseAddressAsyncThunk): Promise<AssetToken[]> => {
 
-    const assetTokens = await Promise.all(allAssetTokens.map(async (token: AssetToken) => {
+    return await Promise.all(allAssetTokens.map(async (token: AssetToken) => {
       const tokenContract = await token.getContract(networkId);
       const balance = await tokenContract["balanceOf"](address);
       token.setBalance(balance);
       return token;
     }));
-
-    return assetTokens;
   }
 );
 

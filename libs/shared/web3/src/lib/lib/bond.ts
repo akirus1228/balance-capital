@@ -12,6 +12,7 @@ export enum PaymentToken {
   sFHM = "sFHM",
   USDB = "USDB",
   DAI = "DAI",
+  LQDR = "LQDR",
 }
 
 export enum BondAssetType {
@@ -24,7 +25,8 @@ export enum BondType {
   Bond_44,
   Bond_USDB,
   TRADFI,
-  SINGLE_SIDED
+  SINGLE_SIDED,
+  LQDR_USDB_POL = 5
 }
 
 export enum BondAction {
@@ -64,7 +66,9 @@ interface BondOpts {
   paymentToken?: PaymentToken; // The token that is returned by this bond
   bondAction?: BondAction; // What to display in the bond button
   redeemAction?: RedeemAction; // What to displat in the redeeom button
-  roi: string;
+  apr: number;
+  roi: number;
+  days: number;
 }
 
 // Technically only exporting for the interface
@@ -84,7 +88,9 @@ export abstract class Bond {
   readonly paymentToken: PaymentToken; // Defaults to FHM
   readonly bondAction: BondAction;
   readonly redeemAction: RedeemAction;
-  readonly roi: string;
+  readonly apr: number;
+  readonly roi: number;
+  readonly days: number; // FIXME read from vestingTermSeconds
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: boolean;
@@ -111,6 +117,8 @@ export abstract class Bond {
     this.bondAction = bondOpts.bondAction || BondAction.Bond;
     this.redeemAction = bondOpts.redeemAction || RedeemAction.Redeem;
     this.roi = bondOpts.roi;
+    this.apr = bondOpts.apr;
+    this.days = bondOpts.days;
   }
 
   hasBond(networkId: NetworkId): boolean {

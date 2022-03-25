@@ -129,6 +129,7 @@ export interface IBondDetails {
   bondQuote: number;
   purchased: number;
   vestingTerm: number;
+  vestingTermSeconds: number;
   maxBondPrice: number;
   bondPrice: number;
   marketPrice: number;
@@ -237,6 +238,7 @@ export const calcBondDetails = createAsyncThunk(
       bondQuote,
       purchased,
       vestingTerm: Number(terms.vestingTerm),
+      vestingTermSeconds: terms["vestingTermSeconds"] ? Number(terms.vestingTermSeconds) : 0,
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,

@@ -1,8 +1,25 @@
 import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
+import { makeStyles } from '@mui/styles';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
-import { shadows } from '@mui/system';
+
+export const noBorderOutlinedInputStyles = makeStyles(theme => ({
+  root: {
+    "& $notchedOutline": {
+      border: "none"
+    },
+    "&:hover $notchedOutline": {
+      border: "none"
+    },
+    "&$focused $notchedOutline": {
+      border: "none"
+    }
+  },
+  focused: {},
+  notchedOutline: {}
+}));
+
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -115,6 +132,9 @@ const globalTheme: ThemeOptions = {
           "&.thin": {
             padding: "15px 27px"
           },
+          "&.ultraThin": {
+            padding: "5px 27px"
+          },
           "&.portfolio": {
             height: '38px',
             paddingTop: '1em',
@@ -147,7 +167,10 @@ const globalTheme: ThemeOptions = {
             height: "3em",
             borderRadius: "2em",
             width: "245px",
-          }
+          },
+          '&.Mui-disabled': {
+            backgroundColor: "rgba(0, 0, 0, 0.25)",
+          },
         },
         outlined: {
           borderRadius: '30px',
@@ -316,6 +339,9 @@ const USDBDarkBase: ThemeOptions = {
           },
           '&.menuButton': {
             border: '1px solid #FFF',
+          },
+          '&.Mui-disabled': {
+            color: usdbDarkColors.gray,
           },
         },
         outlined: {

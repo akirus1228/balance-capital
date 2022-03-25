@@ -36,6 +36,7 @@ import {
   txnButtonText,
   useBonds,
   useWeb3Context,
+  defaultNetworkId,
 } from '@fantohm/shared-web3';
 
 import { RootState } from '../../../store';
@@ -66,7 +67,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainId, connect, disconnect, connected } =
     useWeb3Context();
-  const { bonds } = useBonds(chainId || 250);
+  const { bonds } = useBonds(chainId || defaultNetworkId);
   const singleSidedBondData = bonds.filter(
     (bond) => bond.type === BondType.SINGLE_SIDED
   )[0] as IAllBondData;
@@ -167,7 +168,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -178,7 +179,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -189,7 +190,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -198,7 +199,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IRedeemBondAsyncThunk)
@@ -218,7 +219,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address,
           bond: singleSided,
           provider,
-          networkId: chainId ?? 250,
+          networkId: chainId ?? defaultNetworkId,
         })
       );
     }
@@ -440,6 +441,37 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           )}
         </Button>
       ) : !singleSided.isAvailable[chainId ?? 250] ? (
+        <Button
+          variant="contained"
+          color="primary"
+          id="bond-btn"
+          className="paperButton transaction-button"
+          disabled={true}
+        >
+          Sold Out
+        </Button>
+      ) : hasAllowance() ? (
+        <Button
+          variant="contained"
+          color={stdButtonColor}
+          className="paperButton cardActionButton"
+          disabled={
+            isPendingTxn(pendingTransactions, 'bond_' + singleSided.name) ||
+            isOverBalance ||
+            quantity === '' ||
+            quantity === '0'
+          }
+          onClick={useBond}
+        >
+          {isOverBalance
+            ? 'Insufficiant Balance'
+            : txnButtonText(
+                pendingTransactions,
+                'bond_' + singleSided.name,
+                cardState
+              )}
+        </Button>
+      ) : !singleSided.isAvailable[chainId ?? defaultNetworkId] ? (
         <Button
           variant="contained"
           color="primary"

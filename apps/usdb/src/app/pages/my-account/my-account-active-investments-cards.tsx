@@ -28,6 +28,7 @@ import {
   secondsUntilBlock,
   trim,
   chains,
+  defaultNetworkId
 } from "@fantohm/shared-web3";
 import { useEffect, useState } from 'react';
 import Investment from './my-account-investments';
@@ -51,7 +52,7 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
 
   const dispatch = useDispatch();
   const { provider, address, chainId } = useWeb3Context();
-  const { bonds } = useBonds(chainId ?? 250);
+  const { bonds } = useBonds(chainId ?? defaultNetworkId);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -139,7 +140,7 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
               </Typography>
               {currentBlock ? (
               <Typography variant="h6">
-                {prettifySeconds(secondsUntilBlock(chainId ?? 250, currentBlock, investment.vestDate))}
+                {prettifySeconds(secondsUntilBlock(chainId ?? defaultNetworkId, currentBlock, investment.vestDate))}
               </Typography>
                 ) : (<></>)}
             </Grid>
