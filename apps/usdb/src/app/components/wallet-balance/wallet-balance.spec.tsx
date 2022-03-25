@@ -1,10 +1,10 @@
 import { render } from '@testing-library/react';
 
-import WalletBallance from './wallet-ballance';
+import WalletBalance from './wallet-balance';
 
-describe('WalletBallance', () => {
+describe('WalletBalance', () => {
   it('should render successfully', () => {
-    const { baseElement } = render(<WalletBallance />);
+    const { baseElement } = render(<WalletBalance />);
     expect(baseElement).toBeTruthy();
   });
 });

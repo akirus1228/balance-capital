@@ -1,7 +1,7 @@
 import { DaiToken } from '@fantohm/shared/images';
 import { Box, SxProps, Theme } from '@mui/material';
 import { useEffect, useState } from 'react';
-import style from './wallet-ballance.module.scss';
+import style from './wallet-balance.module.scss';
 
 /* eslint-disable-next-line */
 export interface WalletBalanceProps {

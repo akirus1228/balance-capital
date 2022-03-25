@@ -1,63 +1,72 @@
-import {Backdrop, Button, Fade, Grid, Icon, Paper, Typography} from '@mui/material';
-import { Box } from '@mui/system';
-import {useCallback, useEffect, useState} from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import style from './deposit.module.scss';
-import CloseIcon from '@mui/icons-material/Close';
 import {
-  allBonds,
-  Available, Bond,
+  Backdrop,
+  Button,
+  Fade,
+  Grid,
+  Icon,
+  Paper,
+  Typography
+} from "@mui/material";
+import { Box } from "@mui/system";
+import CloseIcon from "@mui/icons-material/Close";
+import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
+import {
   BondType, IAllBondData,
   isPendingTxn,
   StableBond,
   trim,
   txnButtonText,
   useBonds,
-  useWeb3Context
-} from "@fantohm/shared-web3";
-import { error } from "@fantohm/shared-web3";
-import {useDispatch, useSelector} from "react-redux";
-import {getAccountState, RootState} from "../../../store";
-import {bondAsset, changeApproval} from "@fantohm/shared-web3";
-import {
+  useWeb3Context,
+  error,
+  bondAsset,
+  changeApproval,
   IApproveBondAsyncThunk,
   IBondAssetAsyncThunk
 } from "@fantohm/shared-web3";
-import WalletBallance from '../../../components/wallet-ballance/wallet-ballance';
-import InputWrapper from '../../../components/input-wrapper/input-wrapper';
-import {ethers} from "ethers";
+import { useCallback, useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useParams } from "react-router-dom";
+
+import WalletBalance from "../../../components/wallet-balance/wallet-balance";
+import InputWrapper from "../../../components/input-wrapper/input-wrapper";
+import { getAccountState, RootState } from "../../../store";
+import style from "./deposit.module.scss";
 
 export interface IBond {
   title: string;
 }
+
 export interface IBondType {
   [key: string]: IBond
 }
 
 // route: /trad-fi/deposit/:bondType
 export const TradFiDeposit = (): JSX.Element => {
+  const outlinedInputClasses = noBorderOutlinedInputStyles();
+
   const { provider, address, chainId } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { bondType } = useParams();
   const [bond, setBond] = useState<StableBond>();
   const [isDeposit, setIsDeposit] = useState(true);
   const accountSlice = useSelector(getAccountState);
-  const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as IAllBondData
-  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as Bond
+  const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as IAllBondData;
+  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as StableBond;
 
   const bondTypes: IBondType = {
-    '3month': {
-      title: '3 Month'
+    "3month": {
+      title: "3 Month"
     },
-    '6month': {
-      title: '6 Month'
+    "6month": {
+      title: "6 Month"
     }
   };
 
   const SECONDS_TO_REFRESH = 60;
   const dispatch = useDispatch();
 
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState<string>("");
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [payout, setPayout] = useState("0");
@@ -76,11 +85,14 @@ export const TradFiDeposit = (): JSX.Element => {
       setPendingPayout(tradfiBondData?.userBonds.reduce((total, userBond) => total + Number(userBond?.pendingPayout), 0).toFixed(2));
       setClaimableBalance(tradfiBondData?.userBonds[0]?.pendingFHM);
     }
-  }, [tradfiBondData?.userBonds])
+  }, [tradfiBondData?.userBonds]);
 
   useEffect(() => {
-    setBond(allBonds[0]);
-  }, [bondType, allBonds]);
+    if (!tradfiBond) {
+      return;
+    }
+    setBond(tradfiBond);
+  }, [bondType, allBonds, tradfiBond]);
 
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
@@ -90,7 +102,7 @@ export const TradFiDeposit = (): JSX.Element => {
 
   async function useBond() {
 
-    if (quantity === 0) {
+    if (quantity === "") {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a value!"));
@@ -107,59 +119,62 @@ export const TradFiDeposit = (): JSX.Element => {
           bond: bond,
           networkId: chainId || 250,
           provider,
-          address: address,
+          address: address
         } as IBondAssetAsyncThunk)
       );
     }
   }
 
   const onSeekApproval = async () => {
-    dispatch(changeApproval({address, provider, bond: bond, networkId: chainId} as IApproveBondAsyncThunk));
+    dispatch(changeApproval({ address, provider, bond: bond, networkId: chainId } as IApproveBondAsyncThunk));
   };
 
   const clearInput = () => {
-    setQuantity(0);
+    setQuantity("");
   };
 
   const navigate = useNavigate();
   const goBack = () => {
-    navigate('/trad-fi#get-started');
-  }
+    navigate("/trad-fi#get-started");
+  };
 
   const setMax = () => {
-    setQuantity(Number(daiBalance));
-  }
+    setQuantity(daiBalance);
+  };
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
-      <Backdrop open={true} className={` ${style['backdropElement']}`}>
-        <Paper className={` ${style['paperContainer']}`}>
-          <Box sx={{display: 'flex', justifyContent:'flex-end'}}>
+      <Backdrop open={true} className={` ${style["backdropElement"]}`}>
+        <Paper className={` ${style["paperContainer"]}`}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
             <Button variant="contained" className="closeButton" onClick={goBack} disableElevation>
               <Icon component={CloseIcon} />
             </Button>
           </Box>
-          <Box className={`flexCenterCol ${style['titleBlock']}`}>
-            <Box sx={{backgroundColor: "primary.main"}} className={style['typeContainer']}>
-              <Typography className={style['type']} color="primary.contrastText">Fixed Deposit</Typography>
+          <Box className={`flexCenterCol ${style["titleBlock"]}`}>
+            <Box sx={{ backgroundColor: "primary.main" }} className={style["typeContainer"]}>
+              <Typography className={style["type"]} color="primary.contrastText">Fixed Deposit</Typography>
             </Box>
-            <h1 className={style['title']}>{tradfiBond.displayName}</h1>
-            <h2 className={style['subtitle']}>{tradfiBond.days} days</h2>
+            <h1 className={style["title"]}>{tradfiBond.displayName}</h1>
+            <h2 className={style["subtitle"]}>{tradfiBond.days} days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
-            <Grid item xs={12} md={4} className={` ${style['walletField']}`}>
-              <WalletBallance sx={{ml: 'auto'}} balance={daiBalance} />
+            <Grid item xs={12} md={4} className={` ${style["walletField"]}`}>
+              <WalletBalance sx={{ ml: "auto" }} balance={daiBalance} />
             </Grid>
-            <Grid item xs={12} md={4} className={` ${style['amountField']}`}>
+            <Grid item xs={12} md={4} className={` ${style["amountField"]}`}>
               <InputWrapper>
                 <span>Amount</span>
-                <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(Number(e.target.value))}/>
-                <span onClick={setMax}>Max</span>
+                <input type="number" placeholder="Enter an amount" value={quantity} onChange={e => setQuantity(e.target.value)}/>
+                <span className="cursor-pointer" onClick={setMax}>Max</span>
               </InputWrapper>
             </Grid>
-            <Grid item xs={12} md={4} sx={{pb: "3em", display:'flex', justifyContent:'flex-start', alignItems:'flex-start'}} className={` ${style['approveField']}`}>
+            <Grid item xs={12} md={4}
+                  sx={{ pb: "3em", display: "flex", justifyContent: "flex-start", alignItems: "flex-start" }}
+                  className={` ${style["approveField"]}`}>
               {!tradfiBond.isAvailable[chainId ?? 250] ? (
-                <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton" disabled={true}>
+                <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton"
+                        disabled={true}>
                   Sold Out
                 </Button>
               ) : hasAllowance() ? (
@@ -186,34 +201,42 @@ export const TradFiDeposit = (): JSX.Element => {
                 </Button>
               )}
             </Grid>
-            <Grid item className={` ${style['infoElement']}`} xs={12} sm>
-                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
-                  <span>ROI</span>
-                  <span>5%</span>
-                </Box>
-                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px', ml: 'auto'}}>
-                  <span>APY</span>
-                  <span>21.55%</span>
-                </Box>
+            <Grid item className={` ${style["infoElement"]}`} xs={12} sm>
+              <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px", ml: "auto" }}>
+                <span>ROI</span>
+                <span>{tradfiBond.roi}%</span>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px", ml: "auto" }}>
+                <span>APR</span>
+                <span>{tradfiBond.apr}%</span>
+              </Box>
             </Grid>
             <Grid item xs={0} sm={1}>
-              <Box style={{borderLeft: '2px solid #696C804F', height: '120%', width: '1px', marginLeft: 'auto', marginRight: 'auto', position: 'relative', top:'-0.5em'}}/>
+              <Box style={{
+                borderLeft: "2px solid #696C804F",
+                height: "120%",
+                width: "1px",
+                marginLeft: "auto",
+                marginRight: "auto",
+                position: "relative",
+                top: "-0.5em"
+              }} />
             </Grid>
-            <Grid item className={` ${style['infoElement']}`} xs={12} sm>
-                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
-                  <span>Your deposit</span>
-                  <span>{payout} DAI</span>
-                </Box>
-                <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
-                  <span>Payout amount</span>
-                  <span>{pendingPayout} USDB</span>
-                </Box>
+            <Grid item className={` ${style["infoElement"]}`} xs={12} sm>
+              <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
+                <span>Your deposit</span>
+                <span>{payout} DAI</span>
+              </Box>
+              <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
+                <span>Payout amount</span>
+                <span>{pendingPayout} USDB</span>
+              </Box>
             </Grid>
           </Grid>
         </Paper>
       </Backdrop>
     </Fade>
   );
-}
+};
 
 export default TradFiDeposit;

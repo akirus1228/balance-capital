@@ -204,7 +204,6 @@ export const XfhmPage = (): JSX.Element => {
                         id="amount-input"
                         type="number"
                         placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
-                        className="stake-input"
                         value={stakeQuantity}
                         onChange={e => setStakeQuantity(e.target.value)}
                         endAdornment={
@@ -237,7 +236,6 @@ export const XfhmPage = (): JSX.Element => {
                         id="amount-input"
                         type="number"
                         placeholder={`Enter an ${stakeView === 0 ? "stake" : "unstake"} amount`}
-                        className="stake-input"
                         color="primary"
                         value={unstakeQuantity}
                         onChange={e => setUnStakeQuantity(e.target.value)}
