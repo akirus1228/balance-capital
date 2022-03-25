@@ -108,7 +108,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onC
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
-                  APY
+                  ROI
                   <img
                     src={Info}
                     alt="info"
