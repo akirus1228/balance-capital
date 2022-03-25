@@ -68,6 +68,7 @@ interface BondOpts {
   redeemAction?: RedeemAction; // What to displat in the redeeom button
   apr: number;
   roi: number;
+  days: number;
 }
 
 // Technically only exporting for the interface
@@ -89,6 +90,7 @@ export abstract class Bond {
   readonly redeemAction: RedeemAction;
   readonly apr: number;
   readonly roi: number;
+  readonly days: number; // FIXME read from vestingTermSeconds
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: boolean;
@@ -116,6 +118,7 @@ export abstract class Bond {
     this.redeemAction = bondOpts.redeemAction || RedeemAction.Redeem;
     this.roi = bondOpts.roi;
     this.apr = bondOpts.apr;
+    this.days = bondOpts.days;
   }
 
   hasBond(networkId: NetworkId): boolean {

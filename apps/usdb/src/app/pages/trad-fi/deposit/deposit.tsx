@@ -42,8 +42,8 @@ export const TradFiDeposit = (): JSX.Element => {
   const [bond, setBond] = useState<StableBond>();
   const [isDeposit, setIsDeposit] = useState(true);
   const accountSlice = useSelector(getAccountState);
-  const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI)[0] as IAllBondData
-  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI)[0] as Bond
+  const tradfiBondData = bonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as IAllBondData
+  const tradfiBond = allBonds.filter(bond => bond.type === BondType.TRADFI && bond.name === bondType)[0] as Bond
 
   const bondTypes: IBondType = {
     '3month': {
@@ -144,7 +144,7 @@ export const TradFiDeposit = (): JSX.Element => {
               <Typography className={style['type']} color="primary.contrastText">Fixed Deposit</Typography>
             </Box>
             <h1 className={style['title']}>{tradfiBond.displayName}</h1>
-            <h2 className={style['subtitle']}>90 days</h2>
+            <h2 className={style['subtitle']}>{tradfiBond.days} days</h2>
           </Box>
           <Grid container maxWidth="lg" columnSpacing={3}>
             <Grid item xs={12} md={4}>
