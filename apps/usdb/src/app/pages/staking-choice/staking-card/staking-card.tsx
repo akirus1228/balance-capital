@@ -5,7 +5,7 @@ import style from "./staking-card.module.scss";
 import DaiCard from "../../../components/dai-card/dai-card";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import {DaiToken} from "@fantohm/shared/images";
+import {DaiToken, FHMToken, USDBToken} from "@fantohm/shared/images";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import {USDCToken} from "@fantohm/shared/images";
@@ -50,6 +50,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
   const [claimableBalance, setClaimableBalance] = useState("0");
+  const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState("0");
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
@@ -99,18 +100,23 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     else if (cardState === "Deposit") {
       setToken("DAI");
       setTokenBalance(daiBalance)
+      setImage(DaiToken)
     } else if (cardState === "Redeem") {
       setToken("LP");
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
       setTokenBalance((typeof lpAmount === 'undefined') ? "0" : String(lpAmount))
+      setImage(DaiToken)
     } else if (cardState === "ILredeem") {
       setToken("USD");
       const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
       setTokenBalance((typeof ilbal === 'undefined') ? "0" : String(ilbal))
+      setImage(USDBToken)
     } else if (cardState === "Claim") {
       setToken("FHM");
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
       setTokenBalance((typeof pendingClaim === 'undefined') ? "0" : String(pendingClaim))
+      setImage(FHMToken)
+
     }
   }, [cardState, daiBalance, address]);
 
@@ -211,7 +217,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Box>
       <Box className="flexCenterRow">
           <Box className={`flexCenterRow ${style['currencySelector']}`} sx={{width: '245px'}}>
-            <img src={DaiToken} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
+            <img src={image} style={{height: '31px', marginRight: "1em"}} alt="DAI Token Symbol"/>
             <Box sx={{display: "flex", flexDirection: "column", justifyContent: "left"}}>
               <span className={style['name']}>{token} balance</span>
               <span className={style['amount']}>{tokenBalance} {token}</span>
