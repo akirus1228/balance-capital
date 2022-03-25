@@ -36,6 +36,7 @@ import {RootState} from '../../../store';
 import {allBonds} from "@fantohm/shared-web3";
 import {ethers} from "ethers";
 import InputWrapper from "../../../components/input-wrapper/input-wrapper";
+import {Link, Route, useNavigate} from "react-router-dom";
 
 
 interface IStakingCardParams {
@@ -53,11 +54,14 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState("0");
+  const [deposited, setDeposited] = useState(false);
+  const [stdButtonColor, setStdButtonColor] = useState<'primary' | 'error'>('primary');
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
   const singleSidedBondData = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
   const singleSided = allBonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as Bond
+  const navigate = useNavigate()
 
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
@@ -203,6 +207,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     cardState,
   ]);
 
+  useEffect(() => {
+    if(isPendingTxn(pendingTransactions, "bond_" + singleSided.name) && cardState === "Deposit"){
+      setDeposited(true)
+    } else if(deposited && cardState === "Deposit"){
+      navigate("/my-account");
+    }
+  }, [pendingTransactions]);
+
+  useEffect(() => {
+    if(isOverBalance){
+      setStdButtonColor('error');
+      return;
+    }
+    setStdButtonColor('primary');
+  }, [isOverBalance, quantity]);
+  
 
   return (
     <DaiCard tokenImage={DaiToken} setTheme="light" sx={{minWidth: {xs: '300px', sm: '587px'}}}>
@@ -285,9 +305,9 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         ) : hasAllowance() ? (
           <Button
             variant="contained"
-            color={!isOverBalance ? "primary" : "error"} 
+            color={stdButtonColor} 
             className="paperButton cardActionButton"
-            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name) || isOverBalance}
+            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name) || isOverBalance || quantity === '' || quantity === '0'}
             onClick={useBond}>
             {isOverBalance ? "Insufficiant Balance" : txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
           </Button>

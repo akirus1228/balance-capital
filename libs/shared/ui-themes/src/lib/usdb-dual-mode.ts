@@ -30,6 +30,15 @@ const usdbDarkColors = {
 
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
+  palette: {
+    action: {
+      disabledBackground: "#696C8029",
+      disabled: "#696C80",
+    },
+    text: {
+      disabled: "#696C80"
+    }
+  },
   typography: {
     fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
@@ -156,9 +165,13 @@ const globalTheme: ThemeOptions = {
             color: '#CC335C',
             background: '#CC335C40',
           },
-          '&.MuiDisabled': {
+          "&.MuiButton-containedError:disabled": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          "&:disabled":{
+            background: "#696C8029",
             color: "#696C80",
-            background: "#696C8029"
           }
         },
       },
@@ -208,7 +221,7 @@ const USDBLightBase: ThemeOptions = {
     error: {
       main: usdbLightColors.errorColor,
       light: usdbLightColors.errorBackground,
-    }
+    },
   },
   components: {
     MuiToolbar: {
