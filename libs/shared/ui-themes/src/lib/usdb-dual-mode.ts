@@ -8,6 +8,8 @@ import { shadows } from '@mui/system';
 const usdbLightColors = {
   color: '#000',
   invertedColor: '#FFF',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
@@ -18,6 +20,8 @@ const usdbLightColors = {
 const usdbDarkColors = {
   color: '#FFF',
   invertedColor: '#000',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#000',
   paperBg: '#0E0F10',
   gray: '#929BA0',
@@ -147,8 +151,16 @@ const globalTheme: ThemeOptions = {
             p: '0.5em',
             boxSizing: 'border-box',
             minWidth: '16px'
+          },
+          "&.MuiButton-containedError": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          '&.MuiDisabled': {
+            color: "#696C80",
+            background: "#696C8029"
           }
-        }
+        },
       },
       defaultProps: {
         autoCapitalize: 'none',
@@ -193,6 +205,10 @@ const USDBLightBase: ThemeOptions = {
       primary: usdbLightColors.color,
       secondary: usdbLightColors.gray,
     },
+    error: {
+      main: usdbLightColors.errorColor,
+      light: usdbLightColors.errorBackground,
+    }
   },
   components: {
     MuiToolbar: {
@@ -265,6 +281,10 @@ const USDBDarkBase: ThemeOptions = {
       primary: usdbDarkColors.color,
       secondary: usdbDarkColors.gray,
     },
+    error: {
+      main: usdbDarkColors.errorColor,
+      light: usdbDarkColors.errorBackground,
+    }
   },
   components: {
     MuiToolbar: {

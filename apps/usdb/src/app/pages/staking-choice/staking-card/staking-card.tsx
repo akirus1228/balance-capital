@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from "react";
-import {Box, Button, Grid, Icon} from "@mui/material";
+import {useCallback, useEffect, useMemo, useState} from "react";
+import {Box, Button, Icon} from "@mui/material";
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import style from "./staking-card.module.scss";
 import DaiCard from "../../../components/dai-card/dai-card";
@@ -44,9 +44,10 @@ interface IStakingCardParams {
   roi: number;
   apy: number;
 }
+type CardStates = 'Deposit' | 'Redeem' | 'ILredeem' | 'Claim';
 
 export const StakingCard = (params: IStakingCardParams): JSX.Element => {
-  const [cardState, setCardState] = useState("Deposit");
+  const [cardState, setCardState] = useState<CardStates>("Deposit");
   const [quantity, setQuantity] = useState("");
   const [token, setToken] = useState("DAI");
   const [claimableBalance, setClaimableBalance] = useState("0");
@@ -61,7 +62,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     return state.account.bonds;
   });
 
-  const singleSidedBond = accountBonds[singleSidedBondData?.name]
+  const singleSidedBond = accountBonds[singleSidedBondData?.name];
 
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
@@ -79,6 +80,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
     }
   };
+
   useEffect(() => {
     if (singleSidedBond?.userBonds[0]) {
       setPayout(String(singleSidedBond?.userBonds[0]?.interestDue))
@@ -177,6 +179,17 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     }
   };
 
+  const isOverBalance: boolean = useMemo(() => {
+    if(Number(tokenBalance) < Number(quantity))
+      return true;
+
+    return false;
+  }, [
+    tokenBalance, 
+    quantity,
+  ]);
+
+
   return (
     <DaiCard tokenImage={DaiToken} setTheme="light">
       <h3 className={style['titleWrapper']}>Single</h3>
@@ -252,11 +265,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         ) : hasAllowance() ? (
           <Button
             variant="contained"
-            color="primary"
+            color={!isOverBalance ? "primary" : "error"} 
             className="paperButton cardActionButton"
-            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name)}
+            disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name) || isOverBalance}
             onClick={useBond}>
-            {txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
+            {isOverBalance ? "Insufficiant Balance" : txnButtonText(pendingTransactions, "bond_" + singleSided.name, cardState)}
           </Button>
         ) : (
           <Button
