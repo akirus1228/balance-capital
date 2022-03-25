@@ -27,7 +27,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import MenuLink from './menu-link';
 import { RootState } from '../../../store';
-import { setTheme } from '../../../store/reducers/app-slice';
+import {
+  setCheckedConnection,
+  setTheme,
+} from '../../../store/reducers/app-slice';
 import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
 import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
@@ -92,7 +95,11 @@ export const Header = (): JSX.Element => {
     if (connected) {
       await disconnect();
     } else {
-      await connect();
+      try {
+        await connect();
+      } catch (e) {
+        console.log('Connection metamask error', e);
+      }
     }
   }, [connected, disconnect, connect]);
 
@@ -109,9 +116,21 @@ export const Header = (): JSX.Element => {
   }, [connected, address, dispatch]);
 
   useEffect(() => {
+    // if there's a cached provider, try and connect
     if (hasCachedProvider && hasCachedProvider() && !connected) {
-      connect();
+      try {
+        connect();
+      } catch (e) {
+        console.log('Connection metamask error', e);
+      }
     }
+    // if there's a cached provider and it has connected, connection check is good.
+    if (hasCachedProvider && hasCachedProvider && connected)
+      dispatch(setCheckedConnection(true));
+
+    // if there's not a cached provider and we're not connected, connection check is good
+    if (hasCachedProvider && !hasCachedProvider() && !connected)
+      dispatch(setCheckedConnection(true));
   }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
@@ -217,12 +236,18 @@ export const Header = (): JSX.Element => {
                 </MenuLink>
               ))}
 
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Button onClick={handleConnect}>{connectButtonText}</Button>
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
                     <SvgIcon
@@ -233,7 +258,14 @@ export const Header = (): JSX.Element => {
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'start',
+                  paddingLeft: '20px',
+                }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Link to="/my-account">
                     <Button className="portfolio">
