@@ -6,7 +6,7 @@ import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi, lqdrUsdbPolBon
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 // //   and include that in the definition of a bond
 
-export const TRADFI_3M:string = "tradfi3month";
+export const TRADFI_3M = "tradfi3month";
 
 export const tradfi3month = new StableBond({
   name: TRADFI_3M,

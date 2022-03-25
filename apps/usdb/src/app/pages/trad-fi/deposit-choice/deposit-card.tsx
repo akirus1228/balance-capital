@@ -4,7 +4,7 @@ import DAIIcon from "../../../../assets/tokens/DAI.svg";
 import {Link} from 'react-router-dom';
 import {ThemeProvider} from "@mui/material/styles";
 import {USDBLight} from "@fantohm/shared-ui-themes";
-import {useWeb3Context} from "@fantohm/shared-web3";
+import {IAllBondData, useWeb3Context} from "@fantohm/shared-web3";
 
 interface IDepositCardParams {
   bondType: string;
@@ -12,7 +12,7 @@ interface IDepositCardParams {
   roi: number;
   apr: number;
   vestingTermPretty: string;
-  bond: any;
+  bond: IAllBondData;
 }
 
 export const DepositCard = (params: IDepositCardParams): JSX.Element => {
