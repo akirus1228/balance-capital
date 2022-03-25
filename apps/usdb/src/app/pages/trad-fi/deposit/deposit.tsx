@@ -61,6 +61,8 @@ export const TradFiDeposit = (): JSX.Element => {
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [payout, setPayout] = useState("0");
+  const [deposited, setDeposited] = useState(false);
+
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
@@ -79,6 +81,14 @@ export const TradFiDeposit = (): JSX.Element => {
   useEffect(() => {
     setBond(allBonds[0]);
   }, [bondType, allBonds]);
+
+  useEffect(() => {
+    if(isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)){
+      setDeposited(true)
+    } else if(deposited){
+      navigate("/my-account");
+    }
+  }, [pendingTransactions])
 
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
@@ -204,7 +214,7 @@ export const TradFiDeposit = (): JSX.Element => {
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
                   <span>Reward amount</span>
-                  <span>200.52 USDB</span>
+                  <span>{payout} USDB</span>
                 </Box>
             </Grid>
           </Grid>
