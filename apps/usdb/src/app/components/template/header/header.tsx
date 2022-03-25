@@ -9,7 +9,7 @@ import {
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
-import { Skeleton } from "@mui/material";
+import { Skeleton } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -27,7 +27,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import MenuLink from './menu-link';
 import { RootState } from '../../../store';
-import { setCheckedConnection, setTheme } from '../../../store/reducers/app-slice';
+import {
+  setCheckedConnection,
+  setTheme,
+} from '../../../store/reducers/app-slice';
 import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
 import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
@@ -45,16 +48,17 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  // { title: 'Staking', href: '/staking' },
+  { title: 'Staking', href: '/staking' },
   { title: 'Traditional Finance', href: '/trad-fi' },
-  // { title: 'Mint USDB', href: '/mint' },
-  // { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
+  { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
+  { title: 'Mint USDB', href: '/mint' },
+  { title: 'USDB bank', href: '' },
   {
-    title: 'Synapse Bridge',
+    title: 'Bridge',
     href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
   },
 ];
-
+const allowedChainIds: any = [1, 4, 250, 4002];
 export const Header = (): JSX.Element => {
   const {
     connect,
@@ -65,9 +69,12 @@ export const Header = (): JSX.Element => {
     chainId,
   } = useWeb3Context();
   const dispatch = useDispatch();
+  const allowedChain = allowedChainIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElProductsMenu, setAnchorElProductsMenu] = useState<null | HTMLElement>(null);
-  const [connectButtonText, setConnectButtonText] = useState<string>('Connect Wallet');
+  const [anchorElProductsMenu, setAnchorElProductsMenu] =
+    useState<null | HTMLElement>(null);
+  const [connectButtonText, setConnectButtonText] =
+    useState<string>('Connect Wallet');
   const [accountBondsLoading, setAccountBondsLoading] = useState<boolean>(true);
   const [totalBalances, setTotalBalances] = useState<number>(0);
 
@@ -76,13 +83,14 @@ export const Header = (): JSX.Element => {
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
-
+  console.log('anchorElNav', anchorElNav);
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
+    console.log('hereClicked');
   };
 
   const handleConnect = useCallback(async () => {
@@ -90,8 +98,8 @@ export const Header = (): JSX.Element => {
       await disconnect();
     } else {
       try {
-        await connect()
-      } catch(e) {
+        await connect();
+      } catch (e) {
         console.log('Connection metamask error', e);
       }
     }
@@ -113,17 +121,17 @@ export const Header = (): JSX.Element => {
     // if there's a cached provider, try and connect
     if (hasCachedProvider && hasCachedProvider() && !connected) {
       try {
-        connect()
-      } catch(e) {
+        connect();
+      } catch (e) {
         console.log('Connection metamask error', e);
       }
     }
     // if there's a cached provider and it has connected, connection check is good.
     if (hasCachedProvider && hasCachedProvider && connected)
       dispatch(setCheckedConnection(true));
-    
+
     // if there's not a cached provider and we're not connected, connection check is good
-    if(hasCachedProvider && !hasCachedProvider() && !connected)
+    if (hasCachedProvider && !hasCachedProvider() && !connected)
       dispatch(setCheckedConnection(true));
   }, [connected, hasCachedProvider, connect]);
 
@@ -135,7 +143,7 @@ export const Header = (): JSX.Element => {
 
   const useTheme = localStorage.getItem('use-theme');
   if (useTheme) {
-    dispatch(setTheme(useTheme === "dark" ? "dark" : "light"));
+    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
   }
 
   const handleCloseProductsMenu = () => {
@@ -153,13 +161,10 @@ export const Header = (): JSX.Element => {
         const userBonds = accountBond.userBonds;
         return (
           prevBalance +
-          userBonds.reduce(
-            (balance, bond) => balance + Number(bond.amount),
-            0
-          )
+          userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
         );
       }
-    return prevBalance;
+      return prevBalance;
     }, 0);
     setTotalBalances(balances);
     setAccountBondsLoading(false);
@@ -206,38 +211,45 @@ export const Header = (): JSX.Element => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left"
+                vertical: 'bottom',
+                horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "left"
+                vertical: 'top',
+                horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" }
+                display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page: Pages) => (
                 <MenuLink
-                  href={page.href ? page.href : "#"}
+                  // href={page.href ? page.href : '#'}
+                  href="#"
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
-                  <Typography>
-                    <Button sx={{justifyContent: "start"}} style={{ width: "100%" }}>{page.title}</Button>
+                  <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                    <Button style={{ width: '100%' }}>{page.title}</Button>
                   </Typography>
                 </MenuLink>
               ))}
 
-              <MenuItem sx={{display: "flex", justifyContent: "start", padding: "0"}} onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Button onClick={handleConnect}>{connectButtonText}</Button>
                 </Typography>
               </MenuItem>
-              <MenuItem sx={{display: "flex", justifyContent: "start", padding: "0"}} onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
                     <SvgIcon
@@ -248,7 +260,14 @@ export const Header = (): JSX.Element => {
                 </Typography>
               </MenuItem>
 
-              <MenuItem sx={{display: "flex", justifyContent: "start", paddingLeft: "20px"}} onClick={handleCloseNavMenu}>
+              <MenuItem
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'start',
+                  paddingLeft: '20px',
+                }}
+                onClick={handleCloseNavMenu}
+              >
                 <Typography textAlign="center">
                   <Link to="/my-account">
                     <Button className="portfolio">
@@ -258,11 +277,13 @@ export const Header = (): JSX.Element => {
                       <Box display="flex" alignItems="center" mt="2px">
                         My Portfolio:&nbsp;
                       </Box>
-                      {!accountBondsLoading ?
+                      {!accountBondsLoading ? (
                         <Box display="flex" alignItems="center" mt="2px">
                           ${trim(totalBalances, 2)}
-                        </Box> :
-                        <Skeleton width="100px" />}
+                        </Box>
+                      ) : (
+                        <Skeleton width="100px" />
+                      )}
                     </Button>
                   </Link>
                 </Typography>
@@ -271,28 +292,28 @@ export const Header = (): JSX.Element => {
           </Box>
           <Typography
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
             <Link to="/">
               <img
-                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
+                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
                 alt="USDB logo"
-                className={`${styles["usdbLogo"]}`}
+                className={`${styles['usdbLogo']}`}
               />
             </Link>
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "flex-start",
-              alignItems: "center",
-              flexDirection: "row"
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              flexDirection: 'row',
             }}
           >
             <Box>
               <Button
-                className={`menuButton ${styles["productsButton"]}`}
+                className={`menuButton ${styles['productsButton']}`}
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
                 Products
@@ -303,18 +324,19 @@ export const Header = (): JSX.Element => {
                 open={Boolean(anchorElProductsMenu)}
                 onClose={handleCloseProductsMenu}
                 MenuListProps={{
-                  "aria-labelledby": "products-button"
+                  'aria-labelledby': 'products-button',
                 }}
               >
                 {pages.map((page: any) => {
                   return (
                     <MenuLink
-                      href={page.href ? page.href : "#"}
-                      onClick={handleCloseNavMenu}
+                      // href={page.href ? page.href : '#'}
+                      href="#"
+                      onClick={handleCloseProductsMenu}
                       key={page.title}
                     >
-                      <Typography textAlign="center">
-                        <Button style={{ width: "100%" }}>{page.title}</Button>
+                      <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                        <Button style={{ width: '100%' }}>{page.title}</Button>
                       </Typography>
                     </MenuLink>
                   );
@@ -331,7 +353,7 @@ export const Header = (): JSX.Element => {
               <Link to="/my-account">
                 <Button
                   className="portfolio"
-                  sx={{ display: { xs: "none", md: "flex" } }}
+                  sx={{ display: { xs: 'none', md: 'flex' } }}
                 >
                   <Box display="flex" alignItems="center" mr="10px">
                     <SvgIcon component={AnalyticsIcon} fontSize="large" />
@@ -340,14 +362,17 @@ export const Header = (): JSX.Element => {
                     display="flex"
                     alignItems="center"
                     mt="2px"
-                    sx={{ display: { xs: "none", lg: "flex" } }}
+                    sx={{ display: { xs: 'none', lg: 'flex' } }}
                   >
                     My Portfolio:&nbsp;
                   </Box>
-                  {!accountBondsLoading ? <Box display="flex" alignItems="center" mt="2px">
+                  {!accountBondsLoading ? (
+                    <Box display="flex" alignItems="center" mt="2px">
                       ${trim(totalBalances, 2)}
-                    </Box> :
-                    <Skeleton width="100px" />}
+                    </Box>
+                  ) : (
+                    <Skeleton width="100px" />
+                  )}
                 </Button>
               </Link>
             </Tooltip>
@@ -356,7 +381,7 @@ export const Header = (): JSX.Element => {
           <Tooltip title="Connect Wallet">
             <Button
               onClick={handleConnect}
-              sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+              sx={{ px: '3em', display: { xs: 'none', md: 'flex' } }}
               color="primary"
               className="menuButton"
             >
@@ -366,15 +391,20 @@ export const Header = (): JSX.Element => {
           <Tooltip title="Toggle Light/Dark Mode">
             <Button
               onClick={toggleTheme}
-              sx={{ display: { xs: "none", md: "flex" } }}
+              sx={{ display: { xs: 'none', md: 'flex' } }}
               color="primary"
-              className={`menuButton ${styles["toggleTheme"]}`}
+              className={`menuButton ${styles['toggleTheme']}`}
             >
               <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
             </Button>
           </Tooltip>
         </Toolbar>
       </Container>
+      {!allowedChain && connected && (
+        <div className={styles['errorNav']}>
+          Test text here, change your network to Rinkeby/Ethereum etc etc
+        </div>
+      )}
     </AppBar>
   );
 };

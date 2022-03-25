@@ -1,5 +1,5 @@
 import { Box } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useHref } from 'react-router-dom';
 import style from './icon-link.module.scss';
 import { useCallback } from 'react';
 
@@ -12,16 +12,20 @@ export interface IconLinkProps {
 
 export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
   const navigate = useNavigate();
-  const handleOnClick = useCallback(() => {
-    if (link) navigate(link);
-  }, [navigate, link]);
 
+  const handleOnClick = useCallback(() => {
+    const isHttpLink = link?.startsWith('http');
+    if (isHttpLink) window.open(link, '_blank');
+    else if (link) navigate(link);
+  }, [navigate, link]);
+  const setOpacity = link ? {} : { opacity: '0.4' };
   return (
     <Box className={style['iconLinkContainer']}>
       <Box
         textAlign="center"
         sx={link ? { cursor: 'pointer' } : {}}
         onClick={handleOnClick}
+        style={setOpacity}
       >
         <Box
           className={style['imageBox']}
@@ -37,12 +41,8 @@ export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
           />
         </Box>
         <h1 className={style['title']}>{title}</h1>
-        {!link && (
-          <h2 className={`${style['link']} ${style['disabled']}`}>
-            Coming Soon
-          </h2>
-        )}
       </Box>
+      {!link && <h2 className={`${style['link']}`}>Coming Soon</h2>}
     </Box>
   );
 }
