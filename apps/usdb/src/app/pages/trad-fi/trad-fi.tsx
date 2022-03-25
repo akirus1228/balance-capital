@@ -35,7 +35,7 @@ export const TradFi = (): JSX.Element => {
       <Box className={style["__heading"]}>
         <Headline hero={heroContent.hero}  title={heroContent.title} subtitle={heroContent.subtitle} />
         <a href="/trad-fi#get-started">
-          <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined">
+          <Button sx={{marginTop: '55px', px: '3em', py: '1em'}} variant="outlined" className={style["getStarted"]}>
             Get started
             <img src={LongArrowRight} alt="Arrow to the right" style={{marginLeft: '2em', filter: 'invert('+invert()+')'}}/>
           </Button>

@@ -9,7 +9,7 @@ export interface FaqProps {
 
 export const Faq = (props: FaqProps): JSX.Element => {
   return (
-    <Box className="flexCenterCol" sx={{marginTop: '5em', ...props.sx}}>
+    <Box className={`${style['faqSection']} flexCenterCol`} sx={{marginTop: '5em', ...props.sx}}>
       <Grid container columnSpacing={5}>
         <Grid item xs={12} md={6}>
           <Box className="flexCenterCol">
