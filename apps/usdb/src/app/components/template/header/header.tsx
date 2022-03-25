@@ -91,7 +91,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || 250}));
+    dispatch(getBalances({ address: address, networkId: chainId || 250 }));
     if (connected) {
       setConnectButtonText('Disconnect');
     } else {
@@ -198,13 +198,15 @@ export const Header = (): JSX.Element => {
               }}
             >
               {pages.map((page: Pages) => (
-                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
+                <MenuLink
+                  href={page.href ? page.href : '#'}
+                  onClick={handleCloseNavMenu}
+                  key={page.title}
+                >
                   <Typography textAlign="center">
-                    <MenuLink href={page.href ? page.href : '#'} >
-                      <Button>{page.title}</Button>
-                    </MenuLink>
+                    <Button style={{ width: '100%' }}>{page.title}</Button>
                   </Typography>
-                </MenuItem>
+                </MenuLink>
               ))}
 
               <MenuItem onClick={handleCloseNavMenu}>
@@ -258,16 +260,15 @@ export const Header = (): JSX.Element => {
               >
                 {pages.map((page: any) => {
                   return (
-                    <MenuItem
+                    <MenuLink
+                      href={page.href ? page.href : '#'}
+                      onClick={handleCloseNavMenu}
                       key={page.title}
-                      onClick={handleCloseProductsMenu}
                     >
                       <Typography textAlign="center">
-                        <MenuLink href={page.href ? page.href : '#'}>
-                          <Button className="thin">{page.title}</Button>
-                        </MenuLink>
+                        <Button style={{ width: '100%' }}>{page.title}</Button>
                       </Typography>
-                    </MenuItem>
+                    </MenuLink>
                   );
                 })}
               </Menu>
