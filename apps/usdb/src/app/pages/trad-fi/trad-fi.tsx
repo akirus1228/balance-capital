@@ -21,6 +21,10 @@ export const TradFi = (): JSX.Element => {
     title: "Simple & Safe returns",
     subtitle: ["USDB offers the safest way to earn up to 32.5% on your stables.","Below are some comparative yields for different market offerings"]
   };
+  const bSimpleSafe = {
+    title: "Simple & Safe returns",
+    subtitle: ["USDB offers the safest way to earn up to 32.5% on your stables."]
+  };
   const getStarted = {
     title: "Get started today",
     subtitle: ["TradFi bonds are suitable for long-term, savvy investors to safely park their funds and earn stable yields"]
@@ -48,19 +52,19 @@ export const TradFi = (): JSX.Element => {
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <ThemeImage image="CardsIcon" />
-              <span>no investment fee</span>
+              <span>No investment fee</span>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <ThemeImage image="DoughnutChartIcon" />
-              <span>no management fee</span>
+              <span>No management fee</span>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <ThemeImage image="ShieldIcon" />
-              <span>no risk of capital loss</span>
+              <span>No risk of capital loss</span>
             </Paper>
           </Grid>
         </Box>
@@ -72,7 +76,7 @@ export const TradFi = (): JSX.Element => {
         <Faq />
         <Box className={`${style['tradFiBlock']} flexCenterCol`}>
           <Box sx={{height: '10em'}}/>
-          <Headline title={simpleSafe.title} subtitle={simpleSafe.subtitle} />
+          <Headline {...bSimpleSafe} />
         </Box>
         <Box className={`${style['tradFiBlock']} flexCenterCol`} sx={{paddingBottom: '4em'}}>
           <Logo />

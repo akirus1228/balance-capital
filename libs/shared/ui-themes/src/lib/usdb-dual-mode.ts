@@ -89,6 +89,10 @@ const globalTheme: ThemeOptions = {
           "&.MuiMenu-paper":{
             borderRadius: "10px",
             padding: "0.5em",
+          },
+          "&.MuiAccordion-root": {
+            padding: "1em 0 2em 0",
+            borderBottom: "2px solid #FFF"
           }
         }
       },
@@ -206,6 +210,20 @@ const globalTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           textTransform: "unset",
+        }
+      }
+    },
+    MuiAccordion: {
+      styleOverrides: {
+        root: {
+          background: 'transparent',
+        }
+      }
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          fontSize: '2em',
         }
       }
     },
