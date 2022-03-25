@@ -41,10 +41,10 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Staking', href: '/staking' },
+  // { title: 'Staking', href: '/staking' },
   { title: 'Traditional Finance', href: '/trad-fi' },
-  { title: 'Mint USDB', href: '/mint' },
-  { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
+  // { title: 'Mint USDB', href: '/mint' },
+  // { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
   {
     title: 'Synapse Bridge',
     href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161'
