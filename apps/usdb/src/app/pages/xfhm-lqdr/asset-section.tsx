@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { formatAmount } from "@fantohm/shared-helpers";
-import { parseFixed } from '@ethersproject/bignumber'
 import { memo } from "react";
 import { ethers } from "ethers";
 
