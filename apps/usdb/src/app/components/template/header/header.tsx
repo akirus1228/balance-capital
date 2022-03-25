@@ -91,7 +91,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: 250 }));
+    dispatch(getBalances({ address: address, networkId: chainId || 250}));
     if (connected) {
       setConnectButtonText('Disconnect');
     } else {

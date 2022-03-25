@@ -23,7 +23,6 @@ export const getURI = (networkId: NetworkId): string => {
 const Web3Context = React.createContext<Web3ContextData>(null);
 
 export const useWeb3Context = () => {
-  // console.log("useweb3context");
   const web3Context = useContext(Web3Context);
   if (!web3Context) {
     throw new Error(
@@ -61,7 +60,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   const [connected, setConnected] = useState(false);
 
   const defaultNetworkId = getSavedNetworkId() || NetworkIds.FantomOpera;
-  const [chainId, setChainID] = useState(defaultNetworkId);
+  const [chainId, setChainId] = useState(defaultNetworkId);
   const [address, setAddress] = useState('');
   const [provider, setProvider] = useState<JsonRpcProvider | null>(null);
 
@@ -87,7 +86,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   );
 
   const hasCachedProvider = useCallback((): boolean => {
-    console.log("hasCachedProvider");
     if (!web3Modal) return false;
     if (!web3Modal.cachedProvider) return false;
     return true;
@@ -98,7 +96,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
   // ... polling to the backend providers for network changes
   const _initListeners = useCallback(
     (rawProvider) => {
-      console.log("_initListeners");
       if (!rawProvider.on) {
         return;
       }
@@ -107,15 +104,15 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       });
 
       rawProvider.on('chainChanged', async (chain: string) => {
-        let chainId;
+        let newChainId;
         // On mobile chain comes in as a number but on web it comes in as a hex string
         if (typeof chain === 'number') {
-          chainId = chain;
+          newChainId = chain;
         } else {
-          chainId = parseInt(chain, 16);
+          newChainId = parseInt(chain, 16);
         }
-        setChainID(chainId);
-        if (!_checkNetwork(chainId)) {
+        setChainId(newChainId);
+        if (!_checkNetwork(newChainId)) {
           disconnect();
         }
         setTimeout(() => window.location.reload(), 1);
@@ -136,7 +133,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     if (chainId !== otherChainID) {
       console.warn('You are switching networks');
       if (enabledNetworkIds.includes(otherChainID)) {
-        setChainID(otherChainID);
+        setChainId(otherChainID);
         saveNetworkId(otherChainID);
         return true;
       }
@@ -154,7 +151,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: chainId }],
+          params: [{ chainId }],
         });
         return true;
       } catch (e: any) {
@@ -202,7 +199,6 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
 
   // connect - only runs for WalletProviders
   const connect = useCallback(async () => {
-    console.log("connect called");
     // handling Ledger Live;
     let rawProvider;
     if (isIframe()) {
@@ -233,6 +229,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     }
     // Save everything after we've validated the right network.
     // Eventually we'll be fine without doing network validations.
+    setChainId(chainId);
     setAddress(connectedAddress);
     setProvider(connectedProvider);
 

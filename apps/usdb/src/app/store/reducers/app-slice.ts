@@ -6,7 +6,6 @@ import { RootState } from "..";
 export const loadAppDetails = createAsyncThunk(
 	"app/loadAppDetails",
 	async ({ networkId }: IBaseAsyncThunk, {dispatch}) => {
-
 		const networkDetailsList = await Promise.all(enabledNetworkIdsExceptBscAndEth.map((enabledNetworkId: any) => dispatch(loadNetworkDetails({ networkId: enabledNetworkId })).unwrap()));
 		const localNetworkDetails = networkDetailsList.find((networkDetails: { networkId: any; }) => networkDetails.networkId === networkId);
 		if (localNetworkDetails === undefined) {

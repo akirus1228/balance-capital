@@ -4,20 +4,16 @@ import {
   ierc20Abi, 
   usdbContractAbi as usdbAbi,
   daiContractAbi as daiAbi,
-  sOhmAbi as sOHM,
   sOhmv2Abi as sOHMv2,
-  fuseProxyAbi as fuseProxy,
   wsOhmAbi as wsOHM,
   olympusStakingv2Abi as OlympusStaking,
   masterChefAbi as masterchefAbi,
-  stablePoolAbi
 } from '../abi';
 
 import { setAll, trim } from '../helpers';
 
 import {
   createAsyncThunk,
-  createSelector,
   createSlice,
 } from '@reduxjs/toolkit';
 import {
@@ -32,6 +28,15 @@ import { findOrLoadMarketPrice } from './bond-slice';
 export const getBalances = createAsyncThunk(
   'account/getBalances',
   async ({ address, networkId }: IBaseAddressAsyncThunk) => {
+    if(!address || !networkId){
+      return {
+        balances: {
+          dai: 0,
+          fhm: 0,
+          usdb: 0,
+        },
+      }
+    }
     const provider = await chains[networkId].provider;
     const daiContract = new ethers.Contract(
       addresses[networkId]['DAI_ADDRESS'] as string,
@@ -39,8 +44,8 @@ export const getBalances = createAsyncThunk(
       provider
     );
     const fhmContract = new ethers.Contract(
-      addresses[networkId]['DAI_ADDRESS'] as string,
-      daiAbi,
+      addresses[networkId]['OHM_ADDRESS'] as string,
+      ierc20Abi,
       provider
     );
     // let daiBalance: any;
@@ -59,7 +64,8 @@ export const getBalances = createAsyncThunk(
     //   })
     //   .catch((err) => console.log(err));
     const daiBalance = await daiContract['balanceOf'](address);
-    const fhmBalance = daiBalance;
+    const fhmBalance = await fhmContract['balanceOf'](address);
+
     let usdbBalance = 0;
     if (networkId === 250) {
       const usdbContract = new ethers.Contract(
