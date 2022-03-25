@@ -57,7 +57,7 @@
     "serve": {
       "executor": "@nrwl/web:dev-server",
       "options": {
-        "buildTarget": "usdb:build",
+        "buildTarget": "usdb:build:development",
         "hmr": true
       },
       "configurations": {
