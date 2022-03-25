@@ -39,7 +39,7 @@ export const IconGrid = (): JSX.Element => {
         <IconLink
           title="Bridge"
           icon={BridgeIcon}
-          link=" https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
+          link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
         />
       </Grid>
     </Grid>

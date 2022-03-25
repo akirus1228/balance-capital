@@ -77,9 +77,8 @@ export const HomePage = (): JSX.Element => {
                 individuals and institutions
               </h3>
               <a
-                href="https://test.usdbalance.com/trad-fi"
+                href="/trad-fi"
                 className={style['heroLink']}
-                target="_blank"
                 rel="noreferrer"
               >
                 Learn more
