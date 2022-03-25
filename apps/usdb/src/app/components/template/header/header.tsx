@@ -25,7 +25,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import MenuLink from './menu-link';
 import { RootState } from '../../../store';
-import { setTheme } from '../../../store/reducers/app-slice';
+import { setCheckedConnection, setTheme } from '../../../store/reducers/app-slice';
 import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
 import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
@@ -104,9 +104,17 @@ export const Header = (): JSX.Element => {
   }, [connected, address, dispatch]);
 
   useEffect(() => {
+    // if there's a cached provider, try and connect
     if (hasCachedProvider && hasCachedProvider() && !connected) {
       connect();
     }
+    // if there's a cached provider and it has connected, connection check is good.
+    if (hasCachedProvider && hasCachedProvider && connected)
+      dispatch(setCheckedConnection(true));
+    
+    // if there's not a cached provider and we're not connected, connection check is good
+    if(hasCachedProvider && !hasCachedProvider() && !connected)
+      dispatch(setCheckedConnection(true));
   }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
