@@ -103,13 +103,6 @@ export const AssetSection = (props: any): JSX.Element => {
                 classes={outlinedInputClasses}
                 value={props?.amount}
                 onChange={e => changeAmount(e)}
-                inputProps={{
-                  classes: {
-                    notchedOutline: {
-                      border: "none"
-                    }
-                  }
-                }}
                 startAdornment={
                   <InputAdornment position="end">
                     <Button className={style["no-padding"]} variant="text"
