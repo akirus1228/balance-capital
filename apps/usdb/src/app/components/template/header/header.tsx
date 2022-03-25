@@ -218,18 +218,18 @@ export const Header = (): JSX.Element => {
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
-                  <Typography textAlign="center">
-                    <Button style={{ width: "100%" }}>{page.title}</Button>
+                  <Typography>
+                    <Button sx={{justifyContent: "start"}} style={{ width: "100%" }}>{page.title}</Button>
                   </Typography>
                 </MenuLink>
               ))}
 
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem sx={{display: "flex", justifyContent: "start", padding: "0"}} onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Button onClick={handleConnect}>{connectButtonText}</Button>
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem sx={{display: "flex", justifyContent: "start", padding: "0"}} onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
                     <SvgIcon
@@ -240,7 +240,7 @@ export const Header = (): JSX.Element => {
                 </Typography>
               </MenuItem>
 
-              <MenuItem onClick={handleCloseNavMenu}>
+              <MenuItem sx={{display: "flex", justifyContent: "start", paddingLeft: "20px"}} onClick={handleCloseNavMenu}>
                 <Typography textAlign="center">
                   <Link to="/my-account">
                     <Button className="portfolio">
