@@ -7,6 +7,8 @@ import darkBG from './images/USDB_gradient_dark.png';
 const usdbLightColors = {
   color: '#000',
   invertedColor: '#FFF',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#ECECF4',
   paperBg: '#FFF',
   gray: '#696C80',
@@ -17,6 +19,8 @@ const usdbLightColors = {
 const usdbDarkColors = {
   color: '#FFF',
   invertedColor: '#000',
+  errorColor: '#CC335C',
+  errorBackground: '#CC335C40',
   backgroundColor: '#000',
   paperBg: '#0E0F10',
   gray: '#929BA0',
@@ -25,6 +29,15 @@ const usdbDarkColors = {
 
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
+  palette: {
+    action: {
+      disabledBackground: "#696C8029",
+      disabled: "#696C80",
+    },
+    text: {
+      disabled: "#696C80"
+    }
+  },
   typography: {
     fontFamily: ['Sora', 'Roboto', 'sans-serif'].join(','),
   },
@@ -149,8 +162,20 @@ const globalTheme: ThemeOptions = {
             p: '0.5em',
             boxSizing: 'border-box',
             minWidth: '16px'
+          },
+          "&.MuiButton-containedError": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          "&.MuiButton-containedError:disabled": {
+            color: '#CC335C',
+            background: '#CC335C40',
+          },
+          "&:disabled":{
+            background: "#696C8029",
+            color: "#696C80",
           }
-        }
+        },
       },
       defaultProps: {
         autoCapitalize: 'none',
@@ -194,6 +219,10 @@ const USDBLightBase: ThemeOptions = {
     text: {
       primary: usdbLightColors.color,
       secondary: usdbLightColors.gray,
+    },
+    error: {
+      main: usdbLightColors.errorColor,
+      light: usdbLightColors.errorBackground,
     },
   },
   components: {
@@ -267,6 +296,10 @@ const USDBDarkBase: ThemeOptions = {
       primary: usdbDarkColors.color,
       secondary: usdbDarkColors.gray,
     },
+    error: {
+      main: usdbDarkColors.errorColor,
+      light: usdbDarkColors.errorBackground,
+    }
   },
   components: {
     MuiToolbar: {
