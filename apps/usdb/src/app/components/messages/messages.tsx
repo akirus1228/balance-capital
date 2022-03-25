@@ -29,18 +29,22 @@ export const Linear = (props: ILinearProps): JSX.Element => {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    let isSubscribed = true;
     const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 0) {
-          clearInterval(timer);
-          dispatch(close(props.message));
-          return 0;
-        }
-        return oldProgress - 5;
-      });
+      if (isSubscribed) {
+        setProgress((oldProgress) => {
+          if (oldProgress === 0) {
+            clearInterval(timer);
+            dispatch(close(props.message));
+            return 0;
+          }
+          return oldProgress - 5;
+        });
+      }
     }, 333);
 
     return () => {
+      isSubscribed = false;
       clearInterval(timer);
     };
   }, [dispatch, props?.message]);
