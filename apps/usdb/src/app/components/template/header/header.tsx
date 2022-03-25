@@ -89,7 +89,11 @@ export const Header = (): JSX.Element => {
     if (connected) {
       await disconnect();
     } else {
-      await connect();
+      try {
+        await connect()
+      } catch(e) {
+        console.log('Connection metamask error', e);
+      }
     }
   }, [connected, disconnect, connect]);
 
@@ -107,7 +111,11 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     if (hasCachedProvider && hasCachedProvider() && !connected) {
-      connect();
+      try {
+        connect()
+      } catch(e) {
+        console.log('Connection metamask error', e);
+      }
     }
   }, [connected, hasCachedProvider, connect]);
 

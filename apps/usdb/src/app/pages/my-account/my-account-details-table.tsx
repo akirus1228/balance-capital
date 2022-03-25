@@ -88,7 +88,7 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
               currencyFormat.format(accountDetails.claimableRewards)}
           </Typography>
         </Grid>
-        <Grid item xs={12} sm={6} md={4}>
+        {/* <Grid item xs={12} sm={6} md={4}>
           <Button
             variant="contained"
             disableElevation
@@ -99,7 +99,7 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
           >
             {pendingClaim ? '...Pending' : 'Claim all'}
           </Button>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Paper>
   );
