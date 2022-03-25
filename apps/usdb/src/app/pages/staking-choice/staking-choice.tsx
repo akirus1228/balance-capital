@@ -38,39 +38,47 @@ export const StakingChoicePage = (): JSX.Element => {
   };
 
   return (
-    <Box className="flexCenterCol">
-      <Headline {...heroContent} />
-      <Box sx={{marginTop: "3em", mb: '20em'}} className="flexCenterCol">
-        <DaiCard className="dai" tokenImage={DaiToken}>
-          <h2 className={style['daiAPR']}>20.00% APR</h2>
-          <Grid container>
-            <Grid item xs={6} sx={{justifyContent:'left'}}>
-              <span className={style['tvlInfo']}>Staked TVL</span>
+    <>
+      <Box className={style["__heading"]}>
+        <Headline {...heroContent} />
+        <Box sx={{marginTop: "3em", mb: '20em'}} className="flexCenterCol">
+          <DaiCard className="dai" tokenImage={DaiToken}>
+            <h2 className={style['daiAPR']}>20.00% APR</h2>
+            <Grid container>
+              <Grid item xs={6} sx={{justifyContent:'left'}}>
+                <span className={style['tvlInfo']}>Staked TVL</span>
+              </Grid>
+              <Grid item xs={6} sx={{display:'flex', justifyContent: 'flex-end'}}>
+                <span className={style['tvlInfo']}>$1,562,063</span>
+              </Grid>
             </Grid>
-            <Grid item xs={6} sx={{display:'flex', justifyContent: 'flex-end'}}>
-              <span className={style['tvlInfo']}>$1,562,063</span>
+          </DaiCard>
+          <Grid container sx={{my: '2em'}} columnSpacing={2}>
+            <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
+              <Button variant="contained" color="primary" sx={{width: '255px'}} href="staking#deposit">Deposit</Button>
+            </Grid>
+            <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}, mt: {xs: '1em', md: '0'}}}>
+              <Button variant="outlined" sx={{width: '255px'}} href="staking#learn-more">Learn More</Button>
             </Grid>
           </Grid>
-        </DaiCard>
-        <Grid container sx={{my: '2em'}} columnSpacing={2}>
-          <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
-            <Button variant="contained" color="primary" sx={{width: '255px'}} href="staking#deposit">Deposit</Button>
-          </Grid>
-          <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}, mt: {xs: '1em', md: '0'}}}>
-            <Button variant="outlined" sx={{width: '255px'}} href="staking#learn-more">Learn More</Button>
-          </Grid>
-        </Grid>
+        </Box>
       </Box>
-      <Headline {...simpleSafe} id="learn-more" sx={{mb: '5em'}} />
-      <SsInfoBlock />
-      <Headline {...getStarted} />
-      <Box className="flexCenterCol" sx={{marginTop: "3em", mb:'10em'}} id="deposit">
-        <StakingCard bondType="6month" term={6} roi={15} apy={20.00} />
+      <Box className={style["__section"]}>
+        <Headline {...simpleSafe} id="learn-more" sx={{mb: '5em'}} />
+        <SsInfoBlock />
       </Box>
-      <Faq sx={{mb: '10em'}}/>
-      <Headline {...simpleSafe} sx={{mb: '2em'}}/>
-      <Logo />
-    </Box>
+      <Box className={style["__section"]}>
+        <Headline {...getStarted} />
+        <Box className="flexCenterCol" sx={{marginTop: "3em", mb:'10em'}} id="deposit">
+          <StakingCard bondType="6month" term={6} roi={15} apy={20.00} />
+        </Box>
+        <Faq sx={{mb: '10em'}}/>
+      </Box>
+      <Box className={style["__section"]}>
+        <Headline {...simpleSafe} sx={{mb: '2em'}}/>
+        <Logo />
+      </Box>
+    </>
   );
 };
 

@@ -1,4 +1,4 @@
-import { Box, Paper, ThemeProvider } from '@mui/material';
+import { Box, Paper, SxProps, Theme, ThemeProvider } from '@mui/material';
 import { useCallback } from 'react';
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
@@ -14,6 +14,7 @@ export interface DaiCardProps {
   invertTheme?: boolean;
   setTheme?: 'light' | 'dark'
   tokenImage?: string;
+  sx?: SxProps<Theme>;
 }
 
 export const DaiCard = (props: DaiCardProps): JSX.Element => {
@@ -32,7 +33,7 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Paper sx={{marginTop: '47px'}} className={`daiCard ${style['cardWrapper']} ${props.className} flexCenterCol`}>
+      <Paper sx={{marginTop: '47px', ...props.sx}} className={`daiCard ${style['cardWrapper']} ${props.className} flexCenterCol`}>
           <Box className={`flexCenterCol`}>
               <div className={`${style['iconWrapper']}`}>
                   <img src={props.tokenImage} alt="DAI token" className={style['daiIcon']}/>

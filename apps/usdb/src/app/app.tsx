@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Box, CssBaseline } from '@mui/material';
@@ -83,7 +83,7 @@ export const App = (): JSX.Element => {
           </Route>
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
-          <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/my-account" element={address ? <MyAccount /> : <Navigate replace to="/" />} />
           <Route
             path="*"
             element={
