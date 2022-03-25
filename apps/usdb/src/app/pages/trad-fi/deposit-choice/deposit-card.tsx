@@ -4,7 +4,8 @@ import DAIIcon from "../../../../assets/tokens/DAI.svg";
 import {Link} from 'react-router-dom';
 import {ThemeProvider} from "@mui/material/styles";
 import {USDBLight} from "@fantohm/shared-ui-themes";
-import {useWeb3Context} from "@fantohm/shared-web3";
+import {BondType, useWeb3Context} from "@fantohm/shared-web3";
+import {useEffect} from "react";
 
 interface IDepositCardParams {
   bondType: string;
