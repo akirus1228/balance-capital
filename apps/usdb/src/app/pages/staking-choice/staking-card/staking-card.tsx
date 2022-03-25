@@ -36,6 +36,7 @@ import {RootState} from '../../../store';
 import {allBonds} from "@fantohm/shared-web3";
 import {ethers} from "ethers";
 import InputWrapper from "../../../components/input-wrapper/input-wrapper";
+import {Link, Route, useNavigate} from "react-router-dom";
 
 
 interface IStakingCardParams {
@@ -52,11 +53,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState("0");
+  const [deposited, setDeposited] = useState(false);
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
   const {bonds} = useBonds(chainId || 250);
   const singleSidedBondData = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
   const singleSided = allBonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as Bond
+  const navigate = useNavigate()
 
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
@@ -185,6 +188,14 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       dispatch(changeApproval({address, bond: singleSided, provider, networkId: chainId ?? 250}));
     }
   };
+
+  useEffect(() => {
+    if(isPendingTxn(pendingTransactions, "bond_" + singleSided.name) && cardState === "Deposit"){
+      setDeposited(true)
+    } else if(deposited && cardState === "Deposit"){
+      navigate("/my-account");
+    }
+  }, [pendingTransactions])
 
   return (
     <DaiCard tokenImage={DaiToken} setTheme="light">
