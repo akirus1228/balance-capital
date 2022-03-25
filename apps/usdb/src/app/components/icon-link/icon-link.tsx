@@ -20,11 +20,12 @@ export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
   }, [navigate, link]);
   const setOpacity = link ? {} : { opacity: '0.4' };
   return (
-    <Box className={style['iconLinkContainer']} style={setOpacity}>
+    <Box className={style['iconLinkContainer']}>
       <Box
         textAlign="center"
         sx={link ? { cursor: 'pointer' } : {}}
         onClick={handleOnClick}
+        style={setOpacity}
       >
         <Box
           className={style['imageBox']}
@@ -40,12 +41,8 @@ export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
           />
         </Box>
         <h1 className={style['title']}>{title}</h1>
-        {!link && (
-          <h2 className={`${style['link']} ${style['disabled']}`}>
-            Coming Soon
-          </h2>
-        )}
       </Box>
+      {!link && <h2 className={`${style['link']}`}>Coming Soon</h2>}
     </Box>
   );
 }
