@@ -1,26 +1,32 @@
-import { useWeb3Context, setWalletConnected, getBalances, useBonds, trim } from "@fantohm/shared-web3";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { SvgIcon, SxProps, Theme } from "@mui/material";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
-
-import { RootState } from "../../../store";
-import { setTheme } from "../../../store/reducers/app-slice";
-import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
+import {
+  useWeb3Context,
+  setWalletConnected,
+  getBalances,
+  useBonds,
+  trim,
+} from '@fantohm/shared-web3';
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Toolbar from '@mui/material/Toolbar';
+import IconButton from '@mui/material/IconButton';
+import Typography from '@mui/material/Typography';
+import Menu from '@mui/material/Menu';
+import MenuIcon from '@mui/icons-material/Menu';
+import Container from '@mui/material/Container';
+import Button from '@mui/material/Button';
+import Tooltip from '@mui/material/Tooltip';
+import MenuItem from '@mui/material/MenuItem';
+import { SvgIcon, SxProps, Theme } from '@mui/material';
+import AnalyticsIcon from '@mui/icons-material/Analytics';
+import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import MenuLink from './MenuLink';
+import { RootState } from '../../../store';
+import { setTheme } from '../../../store/reducers/app-slice';
+import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
+import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
 import styles from './header.module.scss';
 
 type PageParams = {
@@ -35,18 +41,31 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: "Staking", href: "/staking" },
-  { title: "Traditional Finance", href: "/trad-fi" },
-  { title: "Mint USDB", href: "/mint" },
-  { title: "xFHM", href: "/xfhm?enable-testnet=true" },
+  { title: 'Staking', href: '/staking' },
+  { title: 'Traditional Finance', href: '/trad-fi' },
+  { title: 'Mint USDB', href: '/mint' },
+  { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
+  {
+    title: 'Synapse Bridge',
+    href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
+  },
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected, address, hasCachedProvider, chainId } = useWeb3Context();
+  const {
+    connect,
+    disconnect,
+    connected,
+    address,
+    hasCachedProvider,
+    chainId,
+  } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElProductsMenu, setAnchorElProductsMenu] = useState<null | HTMLElement>(null);
-  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
+  const [anchorElProductsMenu, setAnchorElProductsMenu] =
+    useState<null | HTMLElement>(null);
+  const [connectButtonText, setConnectButtonText] =
+    useState<string>('Connect Wallet');
 
   const themeType = useSelector((state: RootState) => state.app.theme);
   const { bonds } = useBonds(chainId ?? 250);
@@ -74,9 +93,9 @@ export const Header = (): JSX.Element => {
     dispatch(setWalletConnected(connected));
     dispatch(getBalances({ address: address, networkId: chainId || 250}));
     if (connected) {
-      setConnectButtonText("Disconnect");
+      setConnectButtonText('Disconnect');
     } else {
-      setConnectButtonText("Connect Wallet");
+      setConnectButtonText('Connect Wallet');
     }
   }, [connected, address, dispatch]);
 
@@ -89,10 +108,10 @@ export const Header = (): JSX.Element => {
   const toggleTheme = useCallback(() => {
     const type = themeType === 'light' ? 'dark' : 'light';
     dispatch(setTheme(type));
-    localStorage.setItem("use-theme", type);
+    localStorage.setItem('use-theme', type);
   }, [dispatch, themeType]);
 
-  const useTheme = localStorage.getItem("use-theme");
+  const useTheme = localStorage.getItem('use-theme');
   if (useTheme) {
     dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
   }
@@ -109,7 +128,13 @@ export const Header = (): JSX.Element => {
         if (accountBond) {
           const userBonds = accountBond.userBonds;
           console.log(bondName, userBonds);
-          return prevBalance + userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0);
+          return (
+            prevBalance +
+            userBonds.reduce(
+              (balance, bond) => balance + Number(bond.amount),
+              0
+            )
+          );
         }
         return prevBalance;
       }, 0);
@@ -118,18 +143,32 @@ export const Header = (): JSX.Element => {
   }, [address, JSON.stringify(accountBonds)]);
 
   return (
-    <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      style={{ margin: 0 }}
+    >
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
             noWrap
             component="div"
-            sx={{ mr: 2, display: { xs: "none", md: "flex" }, alignItems: "center" }}
+            sx={{
+              mr: 2,
+              display: { xs: 'none', md: 'flex' },
+              alignItems: 'center',
+            }}
           >
-            <Link to="/"><img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo"/></Link>
+            <Link to="/">
+              <img
+                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                alt="USDB logo"
+              />
+            </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -144,26 +183,26 @@ export const Header = (): JSX.Element => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left"
+                vertical: 'bottom',
+                horizontal: 'left',
               }}
               keepMounted
               transformOrigin={{
-                vertical: "top",
-                horizontal: "left"
+                vertical: 'top',
+                horizontal: 'left',
               }}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: "block", md: "none" }
+                display: { xs: 'block', md: 'none' },
               }}
             >
               {pages.map((page: Pages) => (
                 <MenuItem key={page.title} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">
-                    <Link to={page.href ? page.href : "#"}>
+                    <MenuLink href={page.href ? page.href : '#'} >
                       <Button>{page.title}</Button>
-                    </Link>
+                    </MenuLink>
                   </Typography>
                 </MenuItem>
               ))}
@@ -184,17 +223,21 @@ export const Header = (): JSX.Element => {
           </Box>
           <Typography
             component="div"
-            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
+            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
           >
-            <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="USDB logo" className={`${styles['usdbLogo']}`}/>
+            <img
+              src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+              alt="USDB logo"
+              className={`${styles['usdbLogo']}`}
+            />
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
-              display: { xs: "none", md: "flex" },
-              justifyContent: "flex-start",
-              alignItems: "center",
-              flexDirection: "row"
+              display: { xs: 'none', md: 'flex' },
+              justifyContent: 'flex-start',
+              alignItems: 'center',
+              flexDirection: 'row',
             }}
           >
             <Box>
@@ -210,16 +253,19 @@ export const Header = (): JSX.Element => {
                 open={Boolean(anchorElProductsMenu)}
                 onClose={handleCloseProductsMenu}
                 MenuListProps={{
-                  "aria-labelledby": "products-button"
+                  'aria-labelledby': 'products-button',
                 }}
               >
                 {pages.map((page: any) => {
                   return (
-                    <MenuItem key={page.title} onClick={handleCloseProductsMenu}>
+                    <MenuItem
+                      key={page.title}
+                      onClick={handleCloseProductsMenu}
+                    >
                       <Typography textAlign="center">
-                        <Link to={page.href ? page.href : "#"}>
+                        <MenuLink href={page.href ? page.href : '#'}>
                           <Button className="thin">{page.title}</Button>
-                        </Link>
+                        </MenuLink>
                       </Typography>
                     </MenuItem>
                   );
@@ -227,27 +273,39 @@ export const Header = (): JSX.Element => {
               </Menu>
             </Box>
           </Box>
-          <Tooltip title={`My Portfolio: \$${totalBalances}`}>
+          <Tooltip title={`My Portfolio: $${totalBalances}`}>
             <Link to="/my-account">
               <Button className="portfolio">
                 <Box display="flex" alignItems="center">
                   <Box display="flex" alignItems="center" mr="10px">
                     <SvgIcon component={AnalyticsIcon} fontSize="large" />
                   </Box>
-                  <Box sx={{ display: { xs: "none", lg: "flex" } }}>My Portfolio:&nbsp;</Box>
+                  <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                    My Portfolio:&nbsp;
+                  </Box>
                   <Box>${trim(totalBalances, 2)}</Box>
                 </Box>
               </Button>
             </Link>
           </Tooltip>
           <Tooltip title="Connect Wallet">
-            <Button onClick={handleConnect} sx={{ px: '3em', display: { xs: 'none', md: 'flex' }}} color="primary" className={`menuButton ${styles['connectButton']}`}>
+            <Button
+              onClick={handleConnect}
+              sx={{ px: '3em', display: { xs: 'none', md: 'flex' } }}
+              color="primary"
+              className={`menuButton ${styles['connectButton']}`}
+            >
               {connectButtonText}
             </Button>
           </Tooltip>
           <Tooltip title="Toggle Light/Dark Mode">
-            <Button onClick={toggleTheme} sx={{ display: { xs: 'none', md: 'flex' }}} color="primary" className={`menuButton ${styles['toggleTheme']}`}>
-              <SvgIcon component={WbSunnyOutlinedIcon} fontSize='large' />
+            <Button
+              onClick={toggleTheme}
+              sx={{ display: { xs: 'none', md: 'flex' } }}
+              color="primary"
+              className={`menuButton ${styles['toggleTheme']}`}
+            >
+              <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
             </Button>
           </Tooltip>
         </Toolbar>
