@@ -31,6 +31,14 @@ export const tradfi3month = new StableBond({
       bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
+    [NetworkIds.Ethereum]: {
+      bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    }
   },
 });
 
@@ -57,6 +65,14 @@ export const tradfi6month = new StableBond({
       bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
+    [NetworkIds.Ethereum]: {
+      bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    }
   },
 });
 
