@@ -20,7 +20,7 @@ export const tradfi3month = new StableBond({
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x5E2cb12824acb8c7FbD40846bBd596AD98Cae7C6",
+      bondAddress: "0x65C0cA99697E1746A55DE416f7642234FCcDF778",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
@@ -40,7 +40,7 @@ export const tradfi6month = new StableBond({
   paymentToken: PaymentToken.USDB,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x9D7a9a25Ad0C3ee7Cd8f36Ce7935FD9C208A809E",
+      bondAddress: "0xE12f6082D3137521a6098A9114309FA9Fd95C4dF",
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
     },
   },
