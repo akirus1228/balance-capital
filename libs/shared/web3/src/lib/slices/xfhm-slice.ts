@@ -12,12 +12,13 @@ import {
   IXfhmClaimAsyncThunk,
   IXfhmValueAsyncThunk
 } from "./interfaces";
-import { getTokenPrice, setAll } from "../helpers";
+import { getMarketPrice, getTokenPrice, setAll } from '../helpers';
 import { allAssetTokens, AssetToken, xFhmToken } from "../helpers/asset-tokens";
 import { sleep } from "../helpers/sleep";
 import { addresses } from "../constants";
 import { networks } from "../networks";
 import { sOhmAbi, lqdrUsdbPolBondDepositoryAbi, ierc20Abi} from '../abi';
+import { scientificToDecimal } from '@fantohm/shared-helpers';
 
 interface IUAData {
   address: string;
@@ -42,6 +43,7 @@ export interface IXfhmDetails {
   claimableXfhm: number;
   lqdrPrice: number;
   usdbPrice: number;
+  lqdrUsdbLpPrice: number
 }
 
 export const calcXfhmDetails = createAsyncThunk(
@@ -63,17 +65,19 @@ export const calcXfhmDetails = createAsyncThunk(
         maxXfhmToEarn: 0,
         claimableXfhm: 0,
         lqdrPrice: 0,
-        usdbPrice: 0
+        usdbPrice: 0,
+        lqdrUsdbLpPrice: 0,
       };
     }
     const provider = await chains[networkId].provider;
-    const lpAddress = networks[networkId].addresses["LQDR_USDB_LP_ADDRESS"];
+    const lqdrUsdbLpAddress = networks[networkId].addresses["LQDR_USDB_LP_ADDRESS"];
+    const lqdrUsdbLpContract = new ethers.Contract(lqdrUsdbLpAddress, ierc20Abi, provider);
     const fhmContract = new ethers.Contract(networks[networkId].addresses["OHM_ADDRESS"] as string, sOhmAbi, provider);
     const lqdrUsdbPolContract = new ethers.Contract(networks[networkId].addresses["LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS"] as string, lqdrUsdbPolBondDepositoryAbi, provider);
     const lqdrContract = new ethers.Contract(networks[networkId].addresses["LQDR_ADDRESS"] as string, sOhmAbi, provider);
     const usdbContract = new ethers.Contract(networks[networkId].addresses["USDB_ADDRESS"], ierc20Abi, provider);
     const xfhmContract = await xFhmToken.getContract(networkId);
-    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice] = await Promise.all([
+    const [fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice, lqdrUsdbLpTotalSupply] = await Promise.all([
       fhmContract["balanceOf"](address),
       xfhmContract["balanceOf"](address),
       lqdrUsdbPolContract["bondInfo"](address),
@@ -86,10 +90,11 @@ export const calcXfhmDetails = createAsyncThunk(
       xfhmContract["totalSupply"](),
       xfhmContract["maxCap"](),
       xfhmContract["claimable"](address),
-      lqdrContract["balanceOf"](lpAddress),
-      usdbContract["balanceOf"](lpAddress),
-      getTokenPrice('liquiddriver')
-    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice]) => [
+      lqdrContract["balanceOf"](lqdrUsdbLpAddress),
+      usdbContract["balanceOf"](lqdrUsdbLpAddress),
+      getTokenPrice('liquiddriver'),
+      lqdrUsdbLpContract["totalSupply"](),
+    ]).then(([fhmBalance, xfhmBalance, lqdrUsdbLpBalance, allowance, xfhmForLqdrUsdbPolAllowance, lqdrAllowance, depositAmount, xfhmPerHour, stakedFhm, totalXfhmSupply, maxXfhmToEarn, claimableXfhm, lqdrBalance, usdbBalance, lqdrPrice, lqdrUsdbLpTotalSupply]) => [
       Number(fhmBalance.toString()),
       Number(xfhmBalance.toString()),
       Number(lqdrUsdbLpBalance[1].toString()),
@@ -97,21 +102,25 @@ export const calcXfhmDetails = createAsyncThunk(
       Number(xfhmForLqdrUsdbPolAllowance.toString()),
       Number(lqdrAllowance.toString()),
       Number(depositAmount[0].toString()),
-      Number((xfhmPerHour * 3600 * depositAmount[0] + Math.pow(10, 18) / 2) / Math.pow(10, 18)),
+      Math.ceil(Number((xfhmPerHour * 3600 * depositAmount[0] + Math.pow(10, 18) / 2) / Math.pow(10, 18))),
       Number(stakedFhm.toString()),
       Number(totalXfhmSupply.toString()),
       Number(maxXfhmToEarn * depositAmount[0]),
       Number(claimableXfhm.toString()),
       Number(lqdrBalance.toString()),
       Number(usdbBalance.toString()),
-      lqdrPrice
+      Number(lqdrPrice.toString()),
+      Number(lqdrUsdbLpTotalSupply.toString()),
     ]);
 
-    let usdbPrice = 0;
+    let usdbPrice = 1;
 
     if (usdbBalance && lqdrBalance) {
-      usdbPrice = Number(Number(lqdrPrice * usdbBalance / lqdrBalance).toFixed(2));
+      usdbPrice = lqdrPrice * lqdrBalance / usdbBalance;
     }
+
+    const totalValueLocked = usdbPrice * usdbBalance + lqdrPrice * lqdrBalance;
+    const lqdrUsdbLpPrice = totalValueLocked / lqdrUsdbLpTotalSupply;
 
     return {
       fhmBalance,
@@ -127,7 +136,8 @@ export const calcXfhmDetails = createAsyncThunk(
       maxXfhmToEarn,
       claimableXfhm,
       lqdrPrice,
-      usdbPrice
+      usdbPrice: Number(Number(usdbPrice).toFixed(2)),
+      lqdrUsdbLpPrice
     };
 
   }

@@ -42,12 +42,12 @@ export const AssetSection = (props: any): JSX.Element => {
     try {
       if (props?.isMulti) {
         props?.setBTokenAmount(e.target.value);
-        const bTokenAmount = ethers.utils.parseUnits(parseFixed(e.target.value || "0", props?.token.decimals).toString(), props?.token.decimals);
+        const bTokenAmount = ethers.utils.parseUnits(e.target.value || "0", props?.token.decimals);
         const maxAmount = await props?.calcATokenAmount(bTokenAmount);
         props?.setATokenAmount(formatAmount(maxAmount || 0, props?.pairToken.decimals, 9));
       } else {
         props?.setATokenAmount(e.target.value);
-        const aTokenAmount = ethers.utils.parseUnits(parseFixed(e.target.value || "0", props?.token.decimals).toString(), props?.token.decimals);
+        const aTokenAmount = ethers.utils.parseUnits(e.target.value || "0", props?.token.decimals);
         const maxAmount = await props?.calcBTokenAmount(aTokenAmount);
         props?.setBTokenAmount(formatAmount(maxAmount || 0, props?.pairToken.decimals, 9));
       }

@@ -47,7 +47,7 @@ export const formatAmount = (amount: any, decimals: any, length = 2, truncate = 
   if (!amount || !decimals || amount === NaN) {
     return 0;
   }
-  const result = ethers.utils.formatUnits(scientificToDecimal(parseInt(amount, 10)).toString(), decimals);
+  const result = ethers.utils.formatUnits(scientificToDecimal(amount).toString(), decimals);
   if (truncate) {
     return truncateDecimals(result, length);
   } else {

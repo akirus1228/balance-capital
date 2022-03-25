@@ -139,7 +139,7 @@ export const LqdrPage = (): JSX.Element => {
         // @ts-ignore
         setUsdbAmount(usdbAmount?.payload.toString());
         // @ts-ignore
-        setUsdbAmountInUsd(Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString()) / Math.pow(10, 9));
+        setUsdbAmountInUsd(Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString()) / Math.pow(10, 18));
       }
     } catch (e: any) {
       console.log(e);
@@ -154,8 +154,15 @@ export const LqdrPage = (): JSX.Element => {
     if (!provider || !chainId) {
       return;
     }
+    let bTokenMaxAmount = await calcBTokenAmount(aToken?.balance || 0);
+    // @ts-ignore
+    bTokenMaxAmount = formatAmount(bTokenMaxAmount, bToken.decimals, 2, true);
     if (Number(bTokenAmount) > formatAmount(bToken.balance, bToken.decimals)) {
       dispatch(error(`You cannot deposit more than your ${bToken?.name} balance.`));
+      return;
+    }
+    if (Number(bTokenAmount) > bTokenMaxAmount) {
+      dispatch(error(`You cannot deposit more than ${bTokenMaxAmount} ${bToken.name}.`));
       return;
     }
     await dispatch(addLiquidity({
@@ -175,11 +182,15 @@ export const LqdrPage = (): JSX.Element => {
   };
 
   useEffect(() => {
+    let isSubscribed = true;
     if (!assetTokens || !assetTokens?.length) {
       return;
     }
     setAToken(assetTokens[0]);
     setBToken(assetTokens[1]);
+    return () => {
+      isSubscribed = false;
+    }
   }, [assetTokens]);
 
   useEffect(() => {
@@ -188,7 +199,6 @@ export const LqdrPage = (): JSX.Element => {
       setUsdbAmount("0");
       return;
     }
-    console.log('bTokenAmount: ', bTokenAmount);
     calcUsdbAmount(isSubscribed).then();
     return () => {
       isSubscribed = false;
@@ -221,7 +231,7 @@ export const LqdrPage = (): JSX.Element => {
             <Box maxWidth="100%" display="flex" justifyContent="center">
               {!usdbLoading ? <Typography noWrap variant="h5" color="textPrimary"
                                           className="font-weight-bolder"
-                                          textAlign="center">{formatAmount(usdbAmount, 9, 4, true)}</Typography> :
+                                          textAlign="center">{formatAmount(usdbAmount, 18, 4, true)}</Typography> :
                 <Skeleton width="100px" />}
               <Typography variant="h5" color="textPrimary"
                           className="font-weight-bolder" textAlign="center">&nbsp;USDB</Typography>
@@ -258,9 +268,14 @@ export const LqdrPage = (): JSX.Element => {
         </Box>
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center">
           {details ? <Typography noWrap variant="h5" color="textPrimary" className="font-weight-bolder">{
-              formatAmount(details.lqdrUsdbLpBalance, 18, 9, true)
+              formatAmount(details?.lqdrUsdbLpBalance, 18, 4, true)
             } LP</Typography> :
             <Skeleton width="100px" />}
+          <Box maxWidth="100%" display="flex" justifyContent="center">
+            {details ? <Typography noWrap variant="body2" color="textPrimary"
+                                        textAlign="center">≈ {formatCurrency(details?.lqdrUsdbLpBalance * details?.lqdrUsdbLpPrice / Math.pow(10, 18), 2)}</Typography> :
+              <Skeleton width="100px" />}
+          </Box>
         </Box>
       </Box>
 
