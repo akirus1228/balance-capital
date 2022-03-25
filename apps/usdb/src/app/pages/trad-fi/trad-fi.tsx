@@ -5,9 +5,24 @@ import style from './trad-fi.module.scss';
 import DepositChoice from './deposit-choice/deposit-choice';
 import Graph from './graph/graph';
 import Headline from '../../components/headline/headline';
-import Faq from '../../components/faq/faq';
+import { Faq, FaqItem } from '../../components/faq/faq';
 import Logo from '../../components/logo/logo';
 import { ThemeImage } from '../../components/theme-image/theme-image';
+
+const faqItems: FaqItem[] = [
+  {
+    title: "What is USDB?",
+    content: "USDB is a truly decentralised stablecoin backed by FHM. It uses a method known as proof of burn to cement its value at $1. Proof of burn is a concept in which a coin is destroyed at a specific point in time and value.  At that moment it is recorded in a blockchain transaction. USDB is valued and maintained at $1 through its relationship with FHM, a decentralised reserve asset and an arbitrage mechanism that anyone can participate in."
+  },
+  {
+    title: "How to use TradFi Bonds",
+    content: "Connect your wallet using the button in the upper right corner of this page and use the interface just above these FAQs. Deposit your DAI and return in 3-6 months for your returns. The interface will only appear on the ETH and FTM networks."
+  },
+  {
+    title: "Is it really only 2 steps?",
+    content: "Yes! We've streamlined this process for your convenience."
+  }
+];
 
 export const TradFi = (): JSX.Element => {
   //console.log("TradFi rendered");
@@ -29,6 +44,7 @@ export const TradFi = (): JSX.Element => {
     title: "Get started today",
     subtitle: ["TradFi bonds are suitable for long-term, savvy investors to safely park their funds and earn stable yields"]
   };
+
   const invert = () => {
     if (localStorage.getItem('use-theme') === 'dark') return 1;
     return 0;
@@ -73,7 +89,7 @@ export const TradFi = (): JSX.Element => {
         <Headline title={getStarted.title} subtitle={getStarted.subtitle} />
         <DepositChoice id="get-started"/>
         <Outlet />
-        <Faq />
+        <Faq faqItems={faqItems} />
         <Box className={`${style['tradFiBlock']} flexCenterCol`}>
           <Box sx={{height: '10em'}}/>
           <Headline {...bSimpleSafe} />
