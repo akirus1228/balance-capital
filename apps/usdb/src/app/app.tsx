@@ -15,7 +15,8 @@ import {
   useInvestments,
   fetchTokenPrice,
   calculateUserBondDetails,
-  loadAccountDetails
+  loadAccountDetails,
+  defaultNetworkId
 } from '@fantohm/shared-web3';
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
@@ -34,7 +35,7 @@ export const App = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBDark);
   const { address, chainId, connected } = useWeb3Context();
-  const { bonds, allBonds } = useBonds(chainId || 250);
+  const { bonds, allBonds } = useBonds(chainId || defaultNetworkId);
   const { investments } = useInvestments();
 
   useEffect(() => {
@@ -42,9 +43,9 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
-    dispatch(loadAppDetails({ networkId: chainId || 250 }));
+    dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
     bonds.map((bond) => {
-      dispatch(calcBondDetails({ bond, value: '', networkId: chainId || 250 }));
+      dispatch(calcBondDetails({ bond, value: '', networkId: chainId || defaultNetworkId }));
     });
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map((investment) => {
@@ -57,10 +58,10 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     if (address) {
       console.log('app-chainId, address: ', chainId, address);
-      dispatch(loadAccountDetails({ networkId: chainId || 250, address }));
+      dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
       bonds.map((bond) => {
         dispatch(
-          calculateUserBondDetails({ address, bond, networkId: chainId || 250 })
+          calculateUserBondDetails({ address, bond, networkId: chainId || defaultNetworkId })
         );
       });
     }

@@ -1,6 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 import { DebugHelper } from "./helpers/debug-helper";
+import { FantomIcon, RinkebyIcon, EthereumIcon, MoonriverIcon, BscIcon, MoonBaseAlphaIcon} from "@fantohm/shared-ui-themes";
 
 export type NetworkId = number;
 
@@ -16,13 +17,15 @@ export enum NetworkIds {
   Avalanche = 43114,
 }
 
+export const defaultNetworkId = NetworkIds.FantomOpera;
+
 // TODO once for a while update block times, use yesterday's value as today is not complete day
 // https://ftmscan.com/chart/blocktime
 // https://moonscan.io/chart/blocktime
 
 interface INetwork {
   name: string,
-  logo: React.ReactNode,
+  logo: any,
   isEnabled: boolean,
   isTestNet: boolean,
   blocktime: number, // NOTE could get this from an outside source since it changes slightly over time
@@ -46,7 +49,7 @@ interface INetworks {
 export const networks: INetworks = {
   [NetworkIds.FantomOpera]: {
     name: 'Fantom',
-    logo: null,
+    logo: FantomIcon,
     isEnabled: true,
     isTestNet: false,
     epochBlock: 20187783,
@@ -95,7 +98,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.FantomTestnet]: {
     name: 'Fantom Testnet',
-    logo: null,
+    logo: FantomIcon,
     isEnabled: true,
     isTestNet: true,
     blocktime: 3.589,
@@ -144,7 +147,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.Moonriver]: {
     name: 'Moonriver',
-    logo: null,
+    logo: MoonriverIcon,
     isEnabled: true,
     isTestNet: false,
     blocktime: 21.46, // https://moonriver.moonscan.io/chart/blocktime
@@ -188,7 +191,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.MoonbaseAlpha]: {
     name: 'Moonbase Alpha',
-    logo: null,
+    logo: MoonBaseAlphaIcon,
     isEnabled: DebugHelper.isActive('enable-testnet'),
     isTestNet: true,
     blocktime: 21.46,
@@ -245,7 +248,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.Rinkeby]: {
     name: 'Rinkeby Testnet',
-    logo: null,
+    logo: RinkebyIcon,
     isEnabled: true,
     isTestNet: true,
     blocktime: 15.01,
@@ -290,7 +293,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.Ethereum]: {
     name: 'Ethereum',
-    logo: null,
+    logo: EthereumIcon,
     isEnabled: true,
     isTestNet: true,
     blocktime: 14,
@@ -327,7 +330,7 @@ export const networks: INetworks = {
   },
   [NetworkIds.Bsc]: {
     name: 'BSC',
-    logo: null,
+    logo: BscIcon,
     isEnabled: true,
     isTestNet: true,
     blocktime: 3,

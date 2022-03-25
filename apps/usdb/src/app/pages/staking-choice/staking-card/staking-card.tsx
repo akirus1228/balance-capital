@@ -29,7 +29,8 @@ import {
   trim,
   txnButtonText,
   useBonds,
-  useWeb3Context
+  useWeb3Context,
+  defaultNetworkId
 } from "@fantohm/shared-web3";
 
 import {RootState} from '../../../store';
@@ -58,7 +59,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [stdButtonColor, setStdButtonColor] = useState<'primary' | 'error'>('primary');
   const dispatch = useDispatch();
   const {provider, address, chainId, connect, disconnect, connected} = useWeb3Context();
-  const {bonds} = useBonds(chainId || 250);
+  const {bonds} = useBonds(chainId || defaultNetworkId);
   const singleSidedBondData = bonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as IAllBondData
   const singleSided = allBonds.filter(bond => bond.type === BondType.SINGLE_SIDED)[0] as Bond
   const navigate = useNavigate()
@@ -142,7 +143,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -153,7 +154,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -164,7 +165,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           value: String(quantity),
           slippage,
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IBondAssetAsyncThunk)
@@ -173,7 +174,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
-          networkId: chainId || 250,
+          networkId: chainId || defaultNetworkId,
           provider,
           address: address,
         } as IRedeemBondAsyncThunk)
@@ -188,7 +189,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const onSeekApproval = async () => {
     if (provider) {
-      dispatch(changeApproval({address, bond: singleSided, provider, networkId: chainId ?? 250}));
+      dispatch(changeApproval({address, bond: singleSided, provider, networkId: chainId ?? defaultNetworkId}));
     }
   };
 
@@ -202,7 +203,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
     return false;
   }, [
-    tokenBalance, 
+    tokenBalance,
     quantity,
     cardState,
   ]);
@@ -222,7 +223,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     }
     setStdButtonColor('primary');
   }, [isOverBalance, quantity]);
-  
+
 
   return (
     <DaiCard tokenImage={DaiToken} setTheme="light" sx={{minWidth: {xs: '300px', sm: '587px'}}}>
@@ -297,7 +298,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           Connect Wallet
         </Button>
       ) : (
-        !singleSided.isAvailable[chainId ?? 250] ? (
+        !singleSided.isAvailable[chainId ?? defaultNetworkId] ? (
           <Button variant="contained" color="primary" id="bond-btn" className="paperButton transaction-button"
             disabled={true}>
             Sold Out
@@ -305,7 +306,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         ) : hasAllowance() ? (
           <Button
             variant="contained"
-            color={stdButtonColor} 
+            color={stdButtonColor}
             className="paperButton cardActionButton"
             disabled={isPendingTxn(pendingTransactions, "bond_" + singleSided.name) || isOverBalance || quantity === '' || quantity === '0'}
             onClick={useBond}>
