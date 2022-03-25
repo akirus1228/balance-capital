@@ -3,7 +3,7 @@ import {
   setWalletConnected,
   getBalances,
   useBonds,
-  trim,
+  trim
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -47,8 +47,8 @@ const pages: Pages[] = [
   { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
   {
     title: 'Synapse Bridge',
-    href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
-  },
+    href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161'
+  }
 ];
 
 export const Header = (): JSX.Element => {
@@ -58,7 +58,7 @@ export const Header = (): JSX.Element => {
     connected,
     address,
     hasCachedProvider,
-    chainId,
+    chainId
   } = useWeb3Context();
   const dispatch = useDispatch();
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -91,7 +91,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || 250}));
+    dispatch(getBalances({ address: address, networkId: chainId || 250 }));
     if (connected) {
       setConnectButtonText('Disconnect');
     } else {
@@ -127,7 +127,6 @@ export const Header = (): JSX.Element => {
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
-          console.log(bondName, userBonds);
           return (
             prevBalance +
             userBonds.reduce(
@@ -144,168 +143,161 @@ export const Header = (): JSX.Element => {
 
   return (
     <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      style={{ margin: 0 }}
+      position='static'
+      color='transparent'
+      elevation={ 0 }
+      style={ { margin: 0 } }
     >
-      <Container maxWidth="xl">
+      <Container maxWidth='xl'>
         <Toolbar disableGutters>
           <Typography
             noWrap
-            component="div"
-            sx={{
+            component='div'
+            sx={ {
               mr: 2,
               display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-            }}
+              alignItems: 'center'
+            } }
           >
-            <Link to="/">
+            <Link to='/'>
               <img
-                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-                alt="USDB logo"
-              />
-            </Link>
+                src={ themeType === 'light' ? USDBLogoLight : USDBLogoDark } alt='USDB logo' /></Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={ { flexGrow: 1, display: { xs: 'flex', md: 'none' } } }>
             <IconButton
-              size="large"
-              aria-label="account of current user"
-              aria-controls="menu-appbar"
-              aria-haspopup="true"
-              onClick={handleOpenNavMenu}
-              color="inherit"
+              size='large'
+              aria-label='account of current user'
+              aria-controls='menu-appbar'
+              aria-haspopup='true'
+              onClick={ handleOpenNavMenu }
+              color='inherit'
             >
               <MenuIcon />
             </IconButton>
             <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
+              id='menu-appbar'
+              anchorEl={ anchorElNav }
+              anchorOrigin={ {
                 vertical: 'bottom',
-                horizontal: 'left',
-              }}
+                horizontal: 'left'
+              } }
               keepMounted
-              transformOrigin={{
+              transformOrigin={ {
                 vertical: 'top',
-                horizontal: 'left',
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: 'block', md: 'none' },
-              }}
+                horizontal: 'left'
+              } }
+              open={ Boolean(anchorElNav) }
+              onClose={ handleCloseNavMenu }
+              sx={ {
+                display: { xs: 'block', md: 'none' }
+              } }
             >
-              {pages.map((page: Pages) => (
-                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">
-                    <MenuLink href={page.href ? page.href : '#'} >
-                      <Button>{page.title}</Button>
+              { pages.map((page: Pages) => (
+                <MenuItem key={ page.title } onClick={ handleCloseNavMenu }>
+                  <Typography textAlign='center'>
+                    <MenuLink href={ page.href ? page.href : '#' }>
+                      <Button>{ page.title }</Button>
                     </MenuLink>
                   </Typography>
                 </MenuItem>
-              ))}
+              )) }
 
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">
-                  <Button onClick={handleConnect}>{connectButtonText}</Button>
+              <MenuItem onClick={ handleCloseNavMenu }>
+                <Typography textAlign='center'>
+                  <Button onClick={ handleConnect }>{ connectButtonText }</Button>
                 </Typography>
               </MenuItem>
-              <MenuItem onClick={handleCloseNavMenu}>
-                <Typography textAlign="center">
-                  <Button onClick={toggleTheme}>
-                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
+              <MenuItem onClick={ handleCloseNavMenu }>
+                <Typography textAlign='center'>
+                  <Button onClick={ toggleTheme }>
+                    <SvgIcon component={ WbSunnyOutlinedIcon } fontSize='large' />
                   </Button>
                 </Typography>
               </MenuItem>
             </Menu>
           </Box>
           <Typography
-            component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            component='div'
+            sx={ { flexGrow: 1, display: { xs: 'flex', md: 'none' } } }
           >
             <img
-              src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
-              alt="USDB logo"
-              className={`${styles['usdbLogo']}`}
-            />
+              src={ themeType === 'light' ? USDBLogoLight : USDBLogoDark } alt='USDB logo'
+              className={ `${ styles['usdbLogo'] }` } />
           </Typography>
           <Box
-            sx={{
+            sx={ {
               flexGrow: 1,
               display: { xs: 'none', md: 'flex' },
               justifyContent: 'flex-start',
               alignItems: 'center',
-              flexDirection: 'row',
-            }}
+              flexDirection: 'row'
+            } }
           >
             <Box>
               <Button
-                className={`menuButton ${styles['productsButton']}`}
-                onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
+                className={ `menuButton ${ styles['productsButton'] }` }
+                onClick={ (e) => setAnchorElProductsMenu(e.currentTarget) }
               >
                 Products
               </Button>
               <Menu
-                id="products-menu"
-                anchorEl={anchorElProductsMenu}
-                open={Boolean(anchorElProductsMenu)}
-                onClose={handleCloseProductsMenu}
-                MenuListProps={{
-                  'aria-labelledby': 'products-button',
-                }}
+                id='products-menu'
+                anchorEl={ anchorElProductsMenu }
+                open={ Boolean(anchorElProductsMenu) }
+                onClose={ handleCloseProductsMenu }
+                MenuListProps={ {
+                  'aria-labelledby': 'products-button'
+                } }
               >
-                {pages.map((page: any) => {
+                { pages.map((page: any) => {
                   return (
                     <MenuItem
-                      key={page.title}
-                      onClick={handleCloseProductsMenu}
+                      key={ page.title }
+                      onClick={ handleCloseProductsMenu }
                     >
-                      <Typography textAlign="center">
-                        <MenuLink href={page.href ? page.href : '#'}>
-                          <Button className="thin">{page.title}</Button>
+                      <Typography textAlign='center'>
+                        <MenuLink href={ page.href ? page.href : '#' }>
+                          <Button className='thin'>{ page.title }</Button>
                         </MenuLink>
                       </Typography>
                     </MenuItem>
                   );
-                })}
+                }) }
               </Menu>
             </Box>
           </Box>
-          <Tooltip title={`My Portfolio: $${totalBalances}`}>
-            <Link to="/my-account">
-              <Button className="portfolio">
-                <Box display="flex" alignItems="center">
-                  <Box display="flex" alignItems="center" mr="10px">
-                    <SvgIcon component={AnalyticsIcon} fontSize="large" />
+          {
+            connected && <Tooltip title={ `My Portfolio: $${ totalBalances }` }>
+              <Link to='/my-account'>
+                <Button className='portfolio'>
+                  <Box display='flex' alignItems='center' mr='10px'>
+                    <SvgIcon component={ AnalyticsIcon } fontSize='large' />
                   </Box>
-                  <Box sx={{ display: { xs: 'none', lg: 'flex' } }}>
+                  <Box display='flex' alignItems='center' mt="2px" sx={ { display: { xs: 'none', lg: 'flex' } } }>
                     My Portfolio:&nbsp;
                   </Box>
-                  <Box>${trim(totalBalances, 2)}</Box>
-                </Box>
-              </Button>
-            </Link>
-          </Tooltip>
-          <Tooltip title="Connect Wallet">
+                  <Box display='flex' alignItems='center' mt="2px">${ trim(totalBalances, 2) }</Box>
+                </Button>
+              </Link>
+            </Tooltip>
+          }
+          <Tooltip title='Connect Wallet'>
             <Button
-              onClick={handleConnect}
-              sx={{ px: '3em', display: { xs: 'none', md: 'flex' } }}
-              color="primary"
-              className={`menuButton ${styles['connectButton']}`}
+              onClick={ handleConnect }
+              sx={ { px: '3em', display: { xs: 'none', md: 'flex' } } } color='primary'
+              className={ `menuButton ${ styles['connectButton'] }` }
             >
-              {connectButtonText}
+              { connectButtonText }
             </Button>
           </Tooltip>
-          <Tooltip title="Toggle Light/Dark Mode">
+          <Tooltip title='Toggle Light/Dark Mode'>
             <Button
-              onClick={toggleTheme}
-              sx={{ display: { xs: 'none', md: 'flex' } }}
-              color="primary"
-              className={`menuButton ${styles['toggleTheme']}`}
+              onClick={ toggleTheme }
+              sx={ { display: { xs: 'none', md: 'flex' } } } color='primary'
+              className={ `menuButton ${ styles['toggleTheme'] }` }
             >
-              <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
+              <SvgIcon component={ WbSunnyOutlinedIcon } fontSize='large' />
             </Button>
           </Tooltip>
         </Toolbar>
