@@ -464,7 +464,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           onClick={useBond}
         >
           {isOverBalance
-            ? 'Insufficiant Balance'
+            ? 'Insufficient Balance'
             : txnButtonText(
                 pendingTransactions,
                 'bond_' + singleSided.name,
@@ -495,7 +495,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           onClick={useBond}
         >
           {isOverBalance
-            ? 'Insufficiant Balance'
+            ? 'Insufficient Balance'
             : txnButtonText(
                 pendingTransactions,
                 'bond_' + singleSided.name,

@@ -19,10 +19,11 @@ import {
   useBonds,
   useWeb3Context,
   error,
+  info,
   bondAsset,
   changeApproval,
   IApproveBondAsyncThunk,
-  IBondAssetAsyncThunk, Bond
+  IBondAssetAsyncThunk, Bond, IUserBond
 } from "@fantohm/shared-web3";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -78,6 +79,19 @@ export const TradFiDeposit = (): JSX.Element => {
     return state?.pendingTransactions;
   });
 
+  function sum( obj: IUserBond[] ) {
+    let sum = 0;
+    for(let i = 0; i < obj?.length ?? 0; i++ ) {
+        sum += obj[i]?.interestDue ?? 0;
+    }
+    return sum;
+  }
+  const totalInterestDue = sum(tradfiBondData?.userBonds)
+
+  // useEffect(() => {
+  //   navigate("/trad-fi#get-started")
+  // }, [ chainId]);
+
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
   });
@@ -101,9 +115,9 @@ export const TradFiDeposit = (): JSX.Element => {
     if(isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)){
       setDeposited(true)
     } else if(deposited){
-      navigate("/my-account");
+      // navigate("/my-account");
     }
-  }, [pendingTransactions])
+  }, [tradfiBondData?.userBonds])
 
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
@@ -133,6 +147,8 @@ export const TradFiDeposit = (): JSX.Element => {
           address: address
         } as IBondAssetAsyncThunk)
       );
+
+      dispatch(info("Bond is completed."));
       setTimeout(() => navigate("/my-account"), 2000);
     }
     clearInput();
@@ -187,7 +203,7 @@ export const TradFiDeposit = (): JSX.Element => {
               {!tradfiBond.isAvailable[chainId ?? 250] ? (
                 <Button variant="contained" color="primary" id="bond-btn" className="transaction-button inputButton"
                         disabled={true}>
-                  Sold Out
+                  Unavailable
                 </Button>
               ) : hasAllowance() ? (
                 <Button
@@ -241,7 +257,7 @@ export const TradFiDeposit = (): JSX.Element => {
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
                 <span>Payout amount</span>
-                <span>{trim(tradfiBondData?.userBonds[0]?.interestDue, 2)} USDB</span>
+                <span>{trim(totalInterestDue, 2) ?? 0} USDB</span>
               </Box>
             </Grid>
           </Grid>

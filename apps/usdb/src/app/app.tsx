@@ -43,6 +43,8 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
+    if(!connected)
+      return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
     bonds.map((bond) => {
       dispatch(calcBondDetails({ bond, value: '', networkId: chainId || defaultNetworkId }));

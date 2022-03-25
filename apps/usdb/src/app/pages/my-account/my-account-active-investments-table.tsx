@@ -108,7 +108,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onC
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
-                  APY
+                  ROI
                   <img
                     src={Info}
                     alt="info"
@@ -131,7 +131,7 @@ export const MyAccountActiveInvestmentsTable = ({ investments, onRedeemBond, onC
           </TableHead>
           <TableBody>
             {investments.map((investment, index) => (
-              <TableRow key={`invests-${index}`}>
+              <TableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
                 <TableCell>
                   <Typography variant="h6">
                     {currencyFormat.format(investment.amount)}
