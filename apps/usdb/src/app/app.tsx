@@ -34,7 +34,7 @@ export const App = (): JSX.Element => {
 
   const themeType = useSelector((state: RootState) => state.app.theme);
   const [theme, setTheme] = useState(USDBDark);
-  const { address, chainId } = useWeb3Context();
+  const { address, chainId, connected } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || 250);
   const { investments } = useInvestments();
 
@@ -43,6 +43,7 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
+    console.log("loadAppDetails chainId: " + chainId);
     dispatch(loadAppDetails({ networkId: chainId || 250 }));
     bonds.map((bond) => {
       dispatch(calcBondDetails({ bond, value: '', networkId: chainId || 250 }));
@@ -52,7 +53,7 @@ export const App = (): JSX.Element => {
       dispatch(calcInvestmentDetails({ investment }));
       dispatch(fetchTokenPrice({ investment }));
     });
-  }, [chainId, address, dispatch]);
+  }, [chainId, address, dispatch, connected]);
 
   // Load account details
   useEffect(() => {
