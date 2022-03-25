@@ -9,12 +9,12 @@ import {useWeb3Context} from "@fantohm/shared-web3";
 import { useEffect, useState } from 'react';
 import {prettifySeconds} from "../../../helper";
 
-interface IDepositChoiceParams {
+interface DepositChoiceParams {
   id?: string;
 }
 
 
-export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
+export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
   const { chainId, connected } = useWeb3Context();
   const { bonds } = useBonds(chainId || 250);
   const [bondsUsdb, setBondsUsdb] = useState<Array<IAllBondData>>();
@@ -28,7 +28,18 @@ export const DepositChoice = (params: IDepositChoiceParams): JSX.Element => {
         <Box className={style["__bond-cards"]}>
           {
             bondsUsdb?.map((bond, index) =>
-            (<DepositCard key={index} bondType={bond.name} months={bond.name === "tradfi3month" ? 3 : 6} roi={Number(bond.roi)} apr={Number(bond.roi)} bond={bond} vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}/>))
+            (
+              <DepositCard 
+                key={`dc-${index}`}
+                bondType={bond.name} 
+                months={bond.name === TRADFI_3M ? 3 : 6} 
+                roi={Number(bond.roi)} 
+                apr={Number(bond.apr)} 
+                bond={bond} 
+                vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}
+                //vestingTermPretty={prettifySeconds(bond.vestingTermSeconds)}
+              />
+            ))
           }
           {
             !bondsUsdb && connected ? (
