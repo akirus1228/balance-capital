@@ -12,6 +12,7 @@ export enum PaymentToken {
   sFHM = "sFHM",
   USDB = "USDB",
   DAI = "DAI",
+  LQDR = "LQDR",
 }
 
 export enum BondAssetType {
@@ -24,7 +25,8 @@ export enum BondType {
   Bond_44,
   Bond_USDB,
   TRADFI,
-  SINGLE_SIDED
+  SINGLE_SIDED,
+  LQDR_USDB_POL = 5
 }
 
 export enum BondAction {
