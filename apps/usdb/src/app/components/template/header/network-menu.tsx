@@ -72,7 +72,7 @@ export const NetworkMenu = (): JSX.Element => {
               title="Network"
               aria-describedby="network-popper" disableElevation={false}>
         <SvgIcon component={currentNetwork.icon} color="primary" viewBox="0 0 32 32" />
-        <Typography hidden={isMediumScreen} style={{ paddingLeft: "8px" }}>{currentNetwork.name}</Typography>
+        <Typography noWrap hidden={isMediumScreen} style={{ paddingLeft: "8px" }}>{currentNetwork.name}</Typography>
       </Button>
 
       <Popper id="network-popper" open={open} anchorEl={anchorEl} placement="bottom-end" transition
