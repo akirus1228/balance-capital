@@ -2,7 +2,6 @@ import { createTheme } from '@mui/material/styles';
 import { ThemeOptions } from '@mui/material';
 import lightBG from './images/USDB_gradient_light.png';
 import darkBG from './images/USDB_gradient_dark.png';
-import { shadows } from '@mui/system';
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -134,7 +133,10 @@ const globalTheme: ThemeOptions = {
             height: "3em",
             borderRadius: "2em",
             width: "245px",
-          }
+          },
+          '&.Mui-disabled': {
+            backgroundColor: "rgba(0, 0, 0, 0.25)",
+          },
         },
         outlined: {
           borderRadius: '30px',
@@ -283,6 +285,9 @@ const USDBDarkBase: ThemeOptions = {
           },
           '&.menuButton': {
             border: '1px solid #FFF',
+          },
+          '&.Mui-disabled': {
+            color: usdbDarkColors.gray,
           },
         },
         outlined: {

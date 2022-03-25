@@ -9,15 +9,34 @@ import {
   SvgIcon,
   Typography
 } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { formatAmount } from "@fantohm/shared-helpers";
+import { parseFixed } from '@ethersproject/bignumber'
 import { memo } from "react";
 import { ethers } from "ethers";
-import { parseFixed } from '@ethersproject/bignumber'
 
 import { ReactComponent as ArrowDown } from "../../../assets/icons/arrow-down.svg";
 import style from "./xfhm-lqdr.module.scss";
 
+const useOutlinedInputStyles = makeStyles(theme => ({
+  root: {
+    "& $notchedOutline": {
+      border: "none"
+    },
+    "&:hover $notchedOutline": {
+      border: "none"
+    },
+    "&$focused $notchedOutline": {
+      border: "none"
+    }
+  },
+  focused: {},
+  notchedOutline: {}
+}));
+
 export const AssetSection = (props: any): JSX.Element => {
+
+  const outlinedInputClasses = useOutlinedInputStyles();
 
   const changeAmount = async (e: any) => {
     try {
@@ -38,13 +57,13 @@ export const AssetSection = (props: any): JSX.Element => {
   };
 
   return (
-    <Box className="w-full" mt="20px">
+    <Box className="w100" mt="20px">
       <Box mb="5px">
         <Typography variant="h6" color="textPrimary" className="font-weight-bold">{props?.title}</Typography>
       </Box>
       <Grid container spacing={1}>
         <Grid item xs={4}>
-          <Box className={`w-full h-full ${style["line-border"]}`} style={{ padding: "0 10px" }} display="flex"
+          <Box className={`w100 h100 ${style["line-border"]}`} style={{ padding: "0 10px" }} display="flex"
                alignItems="center" justifyContent="space-between" onClick={() => {
             if (props?.isMulti) {
               props?.openAssetTokenModal();
@@ -66,21 +85,22 @@ export const AssetSection = (props: any): JSX.Element => {
             {
               props?.isMulti && (
                 <Box display="flex" alignItems="center" mt="15px" ml="15px">
-                  <SvgIcon viewBox="0 0 32 32" component={ArrowDown} />
+                  <SvgIcon viewBox="0 0 32 32" color="primary" component={ArrowDown} />
                 </Box>
               )
             }
           </Box>
         </Grid>
         <Grid item xs={8}>
-          <Box className={`w-full h-full ${style["line-border"]}`} display="flex" alignItems="center">
-            <FormControl className={`ohm-input ${style["line-border"]}`} style={{ width: "100%" }} variant="outlined"
+          <Box className={`w100 h100 ${style["line-border"]}`} display="flex" alignItems="center">
+            <FormControl className="w100 ohm-input" variant="outlined"
                          color="primary">
               <OutlinedInput
                 id="amount-input-lqdr"
                 type="number"
                 placeholder="Enter an amount"
                 className={`stake-input ${style["no-padding"]}`}
+                classes={outlinedInputClasses}
                 value={props?.amount}
                 onChange={e => changeAmount(e)}
                 inputProps={{
@@ -94,7 +114,7 @@ export const AssetSection = (props: any): JSX.Element => {
                   <InputAdornment position="end">
                     <Button className={style["no-padding"]} variant="text"
                             onClick={() => props?.setMax(props?.title)}
-                            color="inherit">
+                            color="primary">
                       Max
                     </Button>
                   </InputAdornment>

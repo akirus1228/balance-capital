@@ -21,7 +21,7 @@ export const AssetTokenModal = (props: any): JSX.Element => {
                   <SvgIcon viewBox="0 0 32 32" component={ token?.iconSvg } />
                 </Box>
                 <Typography variant="h5" mr="20px">{token.name}</Typography>
-                <Typography noWrap className="w-full" variant="h5">{formatAmount(token.balance, token.decimals, 9, true)}</Typography>
+                <Typography noWrap className="w100" variant="h5">{formatAmount(token.balance, token.decimals, 9, true)}</Typography>
               </Box>)
             })
           }
