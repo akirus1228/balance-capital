@@ -61,6 +61,7 @@ export const TradFiDeposit = (): JSX.Element => {
   const [secondsToRefresh, setSecondsToRefresh] = useState(SECONDS_TO_REFRESH);
   const [claimableBalance, setClaimableBalance] = useState("0");
   const [payout, setPayout] = useState("0");
+  const [pendingPayout, setPendingPayout] = useState("0");
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
   });
@@ -72,6 +73,7 @@ export const TradFiDeposit = (): JSX.Element => {
   useEffect(() => {
     if (tradfiBondData?.userBonds[0]) {
       setPayout(tradfiBondData?.userBonds.reduce((total, userBond) => total + userBond?.interestDue * userBond?.pricePaid, 0).toFixed(2));
+      setPendingPayout(tradfiBondData?.userBonds.reduce((total, userBond) => total + Number(userBond?.pendingPayout), 0).toFixed(2));
       setClaimableBalance(tradfiBondData?.userBonds[0]?.pendingFHM);
     }
   }, [tradfiBondData?.userBonds])
@@ -203,8 +205,8 @@ export const TradFiDeposit = (): JSX.Element => {
                   <span>{payout} DAI</span>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', maxWidth: '361px'}}>
-                  <span>Reward amount</span>
-                  <span>200.52 USDB</span>
+                  <span>Payout amount</span>
+                  <span>{pendingPayout} USDB</span>
                 </Box>
             </Grid>
           </Grid>
