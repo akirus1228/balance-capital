@@ -74,7 +74,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setQuantity(daiBalance);
     } else if (cardState === "Redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
-    } else if (cardState === "ILredeem") {
+    } else if (cardState === "IL Redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
     } else if (cardState === "Claim") {
       setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
@@ -106,7 +106,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
       setTokenBalance((typeof lpAmount === 'undefined') ? "0" : String(lpAmount))
       setImage(DaiToken)
-    } else if (cardState === "ILredeem") {
+    } else if (cardState === "IL Redeem") {
       setToken("USD");
       const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
       setTokenBalance((typeof ilbal === 'undefined') ? "0" : String(ilbal))
@@ -123,10 +123,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   async function useBond() {
     const slippage = 0;
 
-    if (Number(quantity) === 0 && cardState !== "Claim") {
+    if (Number(quantity) === 0 && cardState !== "Claim" && cardState !== "IL Redeem") {
       dispatch(error("Please enter a value!"));
-    } else if (isNaN(Number(quantity)) && cardState !== "Claim") {
+    } else if (isNaN(Number(quantity)) && cardState !== "Claim"  && cardState !== "IL Redeem") {
       dispatch(error("Please enter a valid value!"));
+    } else if((cardState === "IL Redeem" && Number(singleSidedBond?.userBonds[0]?.iLBalance) <= 0) ||
+      (cardState === "Claim" && Number(singleSidedBond?.userBonds[0]?.pendingFHM) <= 0)) {
+      dispatch(error("Nothing to redeem!"));
     } else if (cardState === "Redeem") {
       dispatch(
         redeemSingleSidedBond({
@@ -160,7 +163,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-    } else if (cardState === "ILredeem") {
+    } else if (cardState === "IL Redeem") {
       dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
@@ -206,8 +209,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           <div className={style['dot']}/>
           <span>Claim</span>
         </Box>
-        <Box className={`${style['smokeyToggle']} ${cardState === "ILredeem" ? style['active'] : ""}`}
-             onClick={() => setCardState("ILredeem")}>
+        <Box className={`${style['smokeyToggle']} ${cardState === "IL Redeem" ? style['active'] : ""}`}
+             onClick={() => setCardState("IL Redeem")}>
           <div className={style['dot']}/>
           <span>ILRedeem</span>
         </Box>
@@ -224,7 +227,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
           </Box>
 
-        {(cardState !== "Claim" && cardState !== "ILredeem") ? (
+        {(cardState !== "Claim" && cardState !== "IL Redeem") ? (
             <InputWrapper sx={{maxWidth: '245px', ml: '1em'}}>
               <input type="number" placeholder="0.00" min="0" value={quantity} onChange={e => setQuantity(e.target.value)} />
               <span className={style['amount']} onClick={setMax}>Max</span>
