@@ -71,7 +71,7 @@ export const TradFiDeposit = (): JSX.Element => {
 
   useEffect(() => {
     if (tradfiBondData?.userBonds[0]) {
-      setPayout(((tradfiBondData?.userBonds[0]?.interestDue * tradfiBondData?.userBonds[0]?.pricePaid) / 10e18).toFixed(2));
+      setPayout(tradfiBondData?.userBonds.reduce((total, userBond) => total + userBond?.interestDue * userBond?.pricePaid, 0).toFixed(2));
       setClaimableBalance(tradfiBondData?.userBonds[0]?.pendingFHM);
     }
   }, [tradfiBondData?.userBonds])
