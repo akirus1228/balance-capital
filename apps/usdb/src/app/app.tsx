@@ -44,7 +44,8 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
-    if(!connected)
+    // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
+    if(!connected || !chainId)
       return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
     bonds.map((bond) => {
