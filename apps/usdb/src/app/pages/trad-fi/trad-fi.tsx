@@ -30,11 +30,11 @@ export const TradFi = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Take your investing to the next level",
-    subtitle: ["The safest way to earn up to 32.5% on your stables.",]
+    subtitle: ["The most streamlined way to earn up to 32.5% on your stables.",]
   };
   const simpleSafe = {
-    title: "Simple & Safe returns",
-    subtitle: ["USDB offers the safest way to earn up to 32.5% on your stables.","Below are some comparative yields for different market offerings"]
+    title: "Simple Returns",
+    subtitle: ["USDB offers the most convenient way to earn up to 32.5% on your stables.","Below are some comparative yields for different market offerings"]
   };
   const bSimpleSafe = {
     title: "Simple & Safe returns",
