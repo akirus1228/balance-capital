@@ -84,6 +84,12 @@ export const Header = (): JSX.Element => {
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
   });
+  const allBondsLoaded = useSelector((state: RootState) => {
+    return state.account.allBondsLoaded;
+  });
+  const accountLoading = useSelector((state: RootState) => {
+    return state.account.loading;
+  });
   console.log('anchorElNav', anchorElNav);
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -156,23 +162,23 @@ export const Header = (): JSX.Element => {
     // if (Object.keys(accountBonds).length < allBonds.length) {
     //   return;
     // }
-
-    const balances = bonds.reduce((prevBalance, bond) => {
-      const bondName = bond.name;
-      const accountBond = accountBonds[bondName];
-      if (accountBond) {
-        const userBonds = accountBond.userBonds;
-        return (
-          prevBalance +
-          userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
-        );
-      }
-      return prevBalance;
-    }, 0);
-    if (balances == 0) return;
-    setTotalBalances(balances);
-    setAccountBondsLoading(false);
-  }, [address, accountBonds]);
+    if (allBondsLoaded) {
+      const balances = bonds.reduce((prevBalance, bond) => {
+        const bondName = bond.name;
+        const accountBond = accountBonds[bondName];
+        if (accountBond) {
+          const userBonds = accountBond.userBonds;
+          return (
+            prevBalance +
+            userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
+          );
+        }
+        return prevBalance;
+      }, 0);
+      setTotalBalances(balances);
+      setAccountBondsLoading(false);
+    }
+  }, [address, allBondsLoaded, accountLoading]);
 
   return (
     <AppBar

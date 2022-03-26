@@ -43,6 +43,7 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 // Account Slice
 
 export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
+export interface ICalcAllUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseAllBondsAsyncThunk {}
 
 // Bond Slice
 
@@ -91,7 +92,7 @@ export interface ICalcTokenPriceAsyncThunk {
   readonly investment: Investment;
 }
 
-export interface ICalcGlobalBondDetailsAsyncThunk {
+export interface IBaseAllBondsAsyncThunk {
   readonly allBonds: Bond[];
 }
 

@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
-import { ICalcGlobalBondDetailsAsyncThunk } from "./interfaces";
+import { IBaseAllBondsAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIds, NetworkId } from "../networks";
 import { Bond } from "../lib/bond";
 
@@ -16,7 +16,7 @@ interface GlobalBond {
 export const calcGlobalBondDetails = createAsyncThunk(
   "globalbonding/calcGlobalBondDetails",
   // eslint-disable-next-line no-empty-pattern
-  async ({ allBonds }: ICalcGlobalBondDetailsAsyncThunk, { }): Promise<IGlobalBondDetails> => {
+  async ({ allBonds }: IBaseAllBondsAsyncThunk, { }): Promise<IGlobalBondDetails> => {
 
     const includedReserveAddresses = new Set<string>();
     const globalBonds: GlobalBond[] = []
