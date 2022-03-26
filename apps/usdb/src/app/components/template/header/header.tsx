@@ -6,6 +6,7 @@ import {
   useBonds,
   trim,
   defaultNetworkId,
+  enabledNetworkIds,
 } from '@fantohm/shared-web3';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
@@ -59,7 +60,6 @@ const pages: Pages[] = [
     params:{comingSoon:false}
   },
 ];
-const allowedChainIds: any = [1, 4, 250, 4002];
 export const Header = (): JSX.Element => {
   const {
     connect,
@@ -70,7 +70,7 @@ export const Header = (): JSX.Element => {
     chainId,
   } = useWeb3Context();
   const dispatch = useDispatch();
-  const allowedChain = allowedChainIds.includes(chainId);
+  const allowedChain = chainId && enabledNetworkIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
   const [anchorElProductsMenu, setAnchorElProductsMenu] =
     useState<null | HTMLElement>(null);
@@ -412,7 +412,7 @@ export const Header = (): JSX.Element => {
       </Container>
       {!allowedChain && connected && (
         <div className={styles['errorNav']}>
-          Test text here, change your network to Rinkeby/Ethereum etc etc
+          Network unsupported. Please change to one of: [Fantom, Ethereum]
         </div>
       )}
     </AppBar>

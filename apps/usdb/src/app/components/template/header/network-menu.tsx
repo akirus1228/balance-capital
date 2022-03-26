@@ -27,9 +27,7 @@ export const NetworkMenu = (): JSX.Element => {
   const open = Boolean(anchorEl);
   const isMediumScreen = useMediaQuery("(max-width: 980px)");
 
-  const availableNetworkIds = [NetworkIds.FantomOpera, NetworkIds.Ethereum];
-
-  let availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId && availableNetworkIds.indexOf(networkId) >= 0).map(networkId => ({
+  let availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId).map(networkId => ({
     id: networkId,
     name: networks[networkId].name,
     icon: networks[networkId].logo
@@ -58,7 +56,7 @@ export const NetworkMenu = (): JSX.Element => {
       name: networks[chainId].name,
       icon: networks[chainId].logo
     });
-    availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId && availableNetworkIds.indexOf(networkId) >= 0).map(networkId => ({
+    availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId).map(networkId => ({
       id: networkId,
       name: networks[networkId].name,
       icon: networks[networkId].logo
