@@ -152,9 +152,11 @@ export const Header = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (Object.keys(accountBonds).length < allBonds.length) {
-      return;
-    }
+    // FIXME hack
+    // if (Object.keys(accountBonds).length < allBonds.length) {
+    //   return;
+    // }
+
     const balances = bonds.reduce((prevBalance, bond) => {
       const bondName = bond.name;
       const accountBond = accountBonds[bondName];
@@ -167,6 +169,7 @@ export const Header = (): JSX.Element => {
       }
       return prevBalance;
     }, 0);
+    if (balances == 0) return;
     setTotalBalances(balances);
     setAccountBondsLoading(false);
   }, [address, accountBonds]);
