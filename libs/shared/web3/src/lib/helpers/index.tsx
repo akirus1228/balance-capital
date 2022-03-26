@@ -169,6 +169,10 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 	return result;
 }
 
+export function numberWithCommas(x: any) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function getSohmTokenImage() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

@@ -541,6 +541,22 @@ export const usdb_dai_lp = new TokenInvestment({
       getPrice: (_: number) => 1 // FHUD is always $1
     };
   },
+  customAssetBalanceFunc: async function (this: TokenInvestment) {
+    const ftmProvider = await chains[NetworkIds.FantomOpera].provider;
+
+    // Contracts
+    const masterAddress = "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3";
+    const pool = new ethers.Contract("0x5E02aB5699549675A6d3BEEb92A62782712D0509", BalancerWeightedPool, ftmProvider);
+    // Balances
+    const balance = await Promise.all([
+      pool["balanceOf"](masterAddress),
+    ]).then(([masterBalance]) => {
+      const balance = ethers.utils.formatUnits(masterBalance, 18);
+      return Math.floor(Number(balance)) * 2;
+    });
+
+    return Number(balance);
+  }
 });
 
 // this is original 5m MIM for FHUD LP and 150k from wMEMO
@@ -566,7 +582,8 @@ export const fhud_dai_lp2 = new TokenInvestment({
 // Does it need custom balance function? use `new CustomInvestment`
 // Add new investments to this array!!
 export const allInvestments = [
-    boba
+    boba,
+    usdb_dai_lp
 ];
 export const allInvestmentsMap = allInvestments.reduce((prevVal, investment) => {
   return { ...prevVal, [investment.name]: investment };
