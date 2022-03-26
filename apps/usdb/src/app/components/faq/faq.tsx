@@ -32,11 +32,13 @@ export const Faq = (props: FaqProps): JSX.Element => {
             {props.faqItems.map((faqItem: FaqItem, key: number) => (
               <Accordion key={`faq-acc-${key}`} square={false}>
                 <AccordionSummary
+                  className={style['faqTitle']}
                   expandIcon={<ExpandMore color="primary"/>}
                 >
                   {faqItem.title}
                 </AccordionSummary>
-                <AccordionDetails>
+                <AccordionDetails
+                  className={style['faqContent']}>
                   <Typography>
                     {faqItem.content}
                   </Typography>
