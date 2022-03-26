@@ -1,5 +1,5 @@
 # Fantohm Product Ecosystem
-Fantohm product ecosystem monorepo.
+Fantohm product ecosystem monorepo
 
 ## Development server
 
