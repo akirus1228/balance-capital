@@ -161,7 +161,7 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 	}
 	
 	if(d > 0){
-		result = "> " + dDisplay.slice(0, dDisplay.length - 2);
+		result = dDisplay.slice(0, dDisplay.length - 2);
 	}
 
 	if (result === "") result = "Instant";
