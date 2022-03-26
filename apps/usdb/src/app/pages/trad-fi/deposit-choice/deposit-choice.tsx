@@ -28,26 +28,26 @@ export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
       <Box className={style["__bond-cards"]}>
         {
           bondsUsdb?.map((bond, index) =>
-            (<DepositCard 
-              key={`dc-${index}`} 
-              bondType={bond.name} 
+            (<DepositCard
+              key={`dc-${index}`}
+              bondType={bond.name}
               months={bond.name === "tradfi3month" ? 3 : 6}
-              roi={Number(bond.roi)} apr={Number(bond.apr)} 
+              roi={Number(bond.roi)} apr={Number(bond.apr)}
               bond={bond}
-              vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}
+              vestingTermPretty={bond.name === "tradfi3month" ? "90 days" : "180 days"}
             />))
         }
         {
           (!bondsUsdb || bondsUsdb.length === 0 ) ? (
                 allTradfiBonds?.map((bond, index) =>
-                  (<DepositCard 
-                    key={index} 
-                    bondType={bond.name} 
+                  (<DepositCard
+                    key={index}
+                    bondType={bond.name}
                     months={bond.name === "tradfi3month" ? 3 : 6}
-                    roi={Number(bond.roi)} 
-                    apr={Number(bond.roi)} 
+                    roi={Number(bond.roi)}
+                    apr={Number(bond.roi)}
                     bond={bond}
-                    vestingTermPretty={bond.name === "tradfi3month" ? "30 days" : "90 days"}
+                    vestingTermPretty={bond.name === "tradfi3month" ? "90 days" : "180 days"}
                   />))
             ) :
             (<></>)
