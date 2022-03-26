@@ -1,3 +1,21 @@
+h1 {
+  font-size: 35px;
+  margin-top: 0.5em;
+  @media (max-width:900px) {
+      font-size:30px;
+  }
+  @media (max-width:600px) {
+      font-size:22px;
+  }
+}
+
+.amountField {
+  
+  width:100%;
+}
+.currencyField {
+  width:100%;
+}
 .titleWrapper {
   background-color: #000;
   padding: 0.5em 2em;
@@ -5,12 +23,26 @@
   color: #fff;
   display: inline;
 
-  h3 {
-    margin: 0.5em;
-  }
+  
+    margin: 4px 0;
+    font-size:13px;
+    @media (max-width:900px) {
+        font-size:12px;
+    }
+    @media (max-width:600px) {
+        font-size:10px;
+    }
+
+
 }
 .no-padding {
   padding: 0 !important;
+}
+.amountElement {
+  @media (max-width:600px) {
+    width:100%;
+    max-width:100%;
+  }
 }
 .smokeyToggle {
   padding: 0.5em;
@@ -18,7 +50,9 @@
   color: #000;
   border-radius: 2em;
   cursor: pointer;
-
+  @media (max-width:600px) {
+    font-size:12px;
+  }
   .dot {
     height: 12.5px;
     width: 12.5px;
@@ -26,6 +60,10 @@
     border-radius: 50%;
     display: inline-block;
     margin-right: 0.5em;
+    @media (max-width:600px) {
+      height:9px;
+      width:9px;
+    }
   }
 }
 
@@ -57,7 +95,9 @@
   display: flex;
   flex-direction: row;
   justify-content: left;
-
+  text-align:left;
+  width:100% !important;
+  max-width:100%;
   .name {
     font-size: 15px;
   }
@@ -82,9 +122,41 @@
   color: #be8824;
   padding: 1em;
   max-width: 500px;
+  @media (max-width:600px) {
+    font-size:13px;
+    text-align:left;
+  }
+  @media (max-width:420px) {
+    font-size:11px;
+    text-align:left;
+  }
 }
+
+.tooltipElement {
+  @media (max-width:600px) {
+    font-size:13px;
+    svg {
+      height:16px;
+    }
+  }
+}
+
+.maxButton {order:2;}
+
 .styledInput {
   border-radius: 30px !important;
   height: 60px;
-  margin-left: 15px;
+  margin-left: 0px;
+  width:100% !important;
+  max-width:100%;
+  padding-left:1.5em !important;
+  padding-right:1em;
+  margin-top:10px;
+  @media (max-width:600px) {
+    width:100%;
+    margin-left:0;
+
+  }
 }
+
+.daiCard {text-align:left;}

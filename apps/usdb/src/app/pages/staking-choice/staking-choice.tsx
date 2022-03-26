@@ -40,8 +40,7 @@ export const StakingChoicePage = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
-    subtitle: ["The safest way to earn yeilds on your Dai"],
-    sx: {marginTop: "10em"}
+    subtitle: ["The safest way to earn yeilds on your Dai"]
   };
   const simpleSafe = {
     title: "Simple & safe returns",
@@ -55,9 +54,9 @@ export const StakingChoicePage = (): JSX.Element => {
   return (
     <>
       <Box className={style["__heading"]}>
-        <Headline {...heroContent} />
-        <Box sx={{marginTop: "3em", mb: '20em'}} className="flexCenterCol">
-          <DaiCard className="dai" tokenImage={DaiToken}>
+        <Headline {...heroContent}/>
+        <Box className={`${style['depositBox']} flexCenterCol`}>
+          <DaiCard className={`${style['daiIcon']} dai`} tokenImage={DaiToken}>
             <h2 className={style['daiAPR']}>20.00% APR</h2>
             <Grid container>
               <Grid item xs={6} sx={{justifyContent:'left'}}>
@@ -69,11 +68,11 @@ export const StakingChoicePage = (): JSX.Element => {
             </Grid>
           </DaiCard>
           <Grid container sx={{my: '2em'}} columnSpacing={2}>
-            <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}}>
-              <Button variant="contained" color="primary" sx={{width: '255px'}} href="staking#deposit">Deposit</Button>
+            <Grid item xs={12} sm={6}  sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-end'}}} className={style['buttonArea']}>
+              <Button variant="contained" color="primary" sx={{width: '255px'}} href="staking#deposit" className={style['depositButton']}>Deposit</Button>
             </Grid>
-            <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}, mt: {xs: '1em', md: '0'}}}>
-              <Button variant="outlined" sx={{width: '255px'}} href="staking#learn-more">Learn More</Button>
+            <Grid item xs={12} sm={6} sx={{display: 'flex', justifyContent: {xs: 'center', sm: 'flex-start'}}} className={style['buttonArea']}>
+              <Button variant="outlined" sx={{width: '255px'}} href="staking#learn-more" className={style['learnMore']}>Learn More</Button>
             </Grid>
           </Grid>
         </Box>
