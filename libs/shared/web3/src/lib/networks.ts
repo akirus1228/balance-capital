@@ -101,7 +101,7 @@ export const networks: INetworks = {
   [NetworkIds.FantomTestnet]: {
     name: 'Fantom Testnet',
     logo: FantomIcon,
-    isEnabled: true,
+    isEnabled: DebugHelper.isActive('enable-testnet'),
     isTestNet: true,
     blocktime: 3.589,
     epochBlock: 6617987,
@@ -151,7 +151,7 @@ export const networks: INetworks = {
   [NetworkIds.Moonriver]: {
     name: 'Moonriver',
     logo: MoonriverIcon,
-    isEnabled: true,
+    isEnabled: false,
     isTestNet: false,
     blocktime: 21.46, // https://moonriver.moonscan.io/chart/blocktime
     epochBlock: 979500,
@@ -254,7 +254,7 @@ export const networks: INetworks = {
   [NetworkIds.Rinkeby]: {
     name: 'Rinkeby Testnet',
     logo: RinkebyIcon,
-    isEnabled: true,
+    isEnabled: DebugHelper.isActive('enable-testnet'),
     isTestNet: true,
     blocktime: 15.01,
     epochBlock: 10112184,
@@ -300,7 +300,7 @@ export const networks: INetworks = {
     name: 'Ethereum',
     logo: EthereumIcon,
     isEnabled: true,
-    isTestNet: true,
+    isTestNet: false,
     blocktime: 14,
     epochBlock: 10112184,
     epochInterval: 687,
@@ -338,8 +338,8 @@ export const networks: INetworks = {
   [NetworkIds.Bsc]: {
     name: 'BSC',
     logo: BscIcon,
-    isEnabled: true,
-    isTestNet: true,
+    isEnabled: false,
+    isTestNet: false,
     blocktime: 3,
     epochBlock: 10112184,
     epochInterval: 687,
