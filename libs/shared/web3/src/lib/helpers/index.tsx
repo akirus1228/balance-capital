@@ -143,7 +143,6 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		return "";
 	}
 
-	const mo = Math.floor(seconds / (3600 * 24 * 30));
 	const d = Math.floor(seconds / (3600 * 24));
 	const h = Math.floor((seconds % (3600 * 24)) / 3600);
 	const m = Math.floor((seconds % 3600) / 60);
@@ -152,7 +151,6 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		return d + (d == 1 ? " day" : " days");
 	}
 
-	const moDisplay = mo > 0 ? mo + (mo == 1 ? " month" : " months") : "";
 	const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
 	const hDisplay = h > 0 ? h + (h == 1 ? " hr, " : " hrs, ") : "";
 	const mDisplay = m > 0 ? m + (m == 1 ? " min" : " mins") : "";
@@ -162,8 +160,8 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		result = result.slice(0, result.length - 2);
 	}
 	
-	if(mo > 0){
-		result = "> " + moDisplay;
+	if(d > 0){
+		result = dDisplay.slice(0, dDisplay.length - 2);
 	}
 
 	if (result === "") result = "Instant";
