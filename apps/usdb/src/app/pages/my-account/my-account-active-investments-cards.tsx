@@ -140,7 +140,7 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
               </Typography>
               {currentBlock ? (
               <Typography variant="h6">
-                {prettifySeconds(secondsUntilBlock(chainId ?? defaultNetworkId, currentBlock, investment.vestDate))}
+                {prettifySeconds(investment.secondsToVest)}
               </Typography>
                 ) : (<></>)}
             </Grid>
