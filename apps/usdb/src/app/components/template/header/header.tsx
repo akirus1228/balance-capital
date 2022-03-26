@@ -169,7 +169,7 @@ export const Header = (): JSX.Element => {
       }
       return prevBalance;
     }, 0);
-    if (balances == 0) return;
+    // if (balances == 0) return;
     setTotalBalances(balances);
     setAccountBondsLoading(false);
   }, [address, accountBonds]);

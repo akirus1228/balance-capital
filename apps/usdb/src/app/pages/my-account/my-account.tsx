@@ -1,4 +1,5 @@
 import {
+  Paper,
   Typography, useMediaQuery,
 } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
@@ -243,8 +244,21 @@ export const MyAccount = (): JSX.Element => {
           <Typography variant="subtitle1">
             Active Investments ({activeInvestments.length})
           </Typography>
-          {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} /> ||
-          <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} />}
+          {activeInvestments.length > 0 ? <Box>
+            {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} /> ||
+            <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} />}
+            </Box> : <Box>
+              <Paper
+                elevation={0}
+                sx={{ marginTop: '10px' }}
+                className={style['rowCard']}
+              >
+                <Typography variant="h6">
+                  You have no active investments
+                </Typography>
+              </Paper>
+            </Box>
+            }
         </Box>
         {/* Hide previous investments until ready on the graph */}
         {/* <Box>
