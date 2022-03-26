@@ -23,19 +23,27 @@
 }
 
 .faqTitle {
-    font-size: 2em;
+    font-size: 2em !important;
     font-weight: 500;
     margin-bottom: 1em;
     margin-top: 1.25em;
     display: block;
     text-align:left;
     @media (max-width:800px) {
-        font-size:1.5em;
+        font-size:1.5em !important;
     }
     @media (max-width:600px) {
-        font-size:17px;
+        font-size:18px !important;
     }
 }
+
+.faqContent {
+    @media (max-width:600px) {
+        padding:0 !important;
+        p {font-size:13px !important;}
+    }
+}
+
 
 .dots {
     overflow: hidden;
