@@ -68,7 +68,7 @@ export const getBalances = createAsyncThunk(
     const fhmBalance = await fhmContract['balanceOf'](address);
 
     let usdbBalance = 0;
-    if (networkId === 250) {
+    if (addresses[networkId]['USDB_ADDRESS']) {
       const usdbContract = new ethers.Contract(
         addresses[networkId]['USDB_ADDRESS'] as string,
         usdbAbi,
@@ -391,7 +391,23 @@ export const calculateUserBondDetails = createAsyncThunk(
           const amount = trim(Number(payout) * pricePaid, 2);
           
           const latestBlockNumber = await provider.getBlockNumber();
-          const latestBlock = await provider.getBlock(latestBlockNumber);
+          //console.log(`latesBlockNumber ${latestBlockNumber}`);
+          
+          const getLatestBlock = async ():Promise<ethers.providers.Block> => {
+            let block = undefined;
+              block = await provider.getBlock(latestBlockNumber);
+              if(block){
+                return block;
+              }else{
+                //console.log("~~~~~RETRYING GETLATESTBLOCK~~~~~");
+                await new Promise(r => setTimeout(r, 500));
+                return getLatestBlock();
+              }
+          }
+          const latestBlock = await getLatestBlock();
+
+          // console.log(bondDetails);
+          // console.log(latestBlock);
           const latestBlockTimestamp = latestBlock.timestamp;
           const maturationSeconds = Number(bondDetails['vestingSeconds']) + Number(bondDetails['lastTimestamp']);
           const secondsToVest = maturationSeconds - latestBlockTimestamp;
