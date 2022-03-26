@@ -19,6 +19,7 @@ import {
 } from '@reduxjs/toolkit';
 import {
   IBaseAddressAsyncThunk,
+  ICalcAllUserBondDetailsAsyncThunk,
   ICalcUserBondDetailsAsyncThunk,
 } from './interfaces';
 import { chains } from '../providers';
@@ -305,6 +306,16 @@ export interface IUserBondDetails {
   readonly bondAction: BondAction;
 }
 
+export const calculateAllUserBondDetails = createAsyncThunk(
+  'account/calculateAllUserBondDetails',
+  async (
+    { address, allBonds, networkId }: ICalcAllUserBondDetailsAsyncThunk,
+    { dispatch }
+  ) => {
+    await Promise.allSettled(allBonds.map((bond) => dispatch(calculateUserBondDetails({ address, bond, networkId }))));
+  }
+)
+
 export const calculateUserBondDetails = createAsyncThunk(
   'account/calculateUserBondDetails',
   async (
@@ -530,10 +541,12 @@ interface IAccountSlice {
     fhm: string;
   };
   loading: boolean;
+  allBondsLoaded: boolean;
 }
 
 const initialState: IAccountSlice = {
   loading: false,
+  allBondsLoaded: false,
   bonds: {},
   balances: { usdb: '', dai: '', fhm: '' },
 };
@@ -582,6 +595,9 @@ const accountSlice = createSlice({
       .addCase(calculateUserBondDetails.rejected, (state, { error }) => {
         state.loading = false;
         console.log(error);
+      })
+      .addCase(calculateAllUserBondDetails.fulfilled, (state, action) => {
+        state.allBondsLoaded = true;
       });
   },
 });

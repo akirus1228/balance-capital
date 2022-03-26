@@ -16,7 +16,8 @@ import {
   fetchTokenPrice,
   calculateUserBondDetails,
   loadAccountDetails,
-  defaultNetworkId
+  defaultNetworkId,
+  calculateAllUserBondDetails
 } from '@fantohm/shared-web3';
 import { StakingChoicePage } from './pages/staking-choice/staking-choice';
 import { Header } from './components/template';
@@ -61,11 +62,7 @@ export const App = (): JSX.Element => {
     if (address) {
       console.log('app-chainId, address: ', chainId, address);
       dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
-      bonds.map((bond) => {
-        dispatch(
-          calculateUserBondDetails({ address, bond, networkId: chainId || defaultNetworkId })
-        );
-      });
+      dispatch(calculateAllUserBondDetails({ address, allBonds: bonds, networkId: chainId || defaultNetworkId }));
     }
   }, [chainId, address, dispatch]);
 
