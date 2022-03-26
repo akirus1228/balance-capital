@@ -391,8 +391,9 @@ export const calculateUserBondDetails = createAsyncThunk(
           const amount = trim(Number(payout) * pricePaid, 2);
           
           const latestBlockNumber = await provider.getBlockNumber();
-          //console.log(`latesBlockNumber ${latestBlockNumber}`);
           
+          // TODO: Move this function to a helper or other.
+          // sometimes getBlock fails
           const getLatestBlock = async ():Promise<ethers.providers.Block> => {
             let block = undefined;
               block = await provider.getBlock(latestBlockNumber);
