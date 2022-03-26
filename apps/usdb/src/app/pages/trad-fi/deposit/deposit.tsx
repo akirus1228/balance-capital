@@ -118,7 +118,7 @@ export const TradFiDeposit = (): JSX.Element => {
       dispatch(info("Bond is completed."));
       setTimeout(() => navigate("/my-account"), 2000);
     }
-  }, [tradfiBondData?.userBonds])
+  }, [pendingTransactions])
 
   const hasAllowance = useCallback(() => {
     return tradfiBondData && tradfiBondData.allowance && tradfiBondData.allowance > 0;
