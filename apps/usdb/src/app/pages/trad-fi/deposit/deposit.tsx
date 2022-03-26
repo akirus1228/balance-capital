@@ -174,7 +174,7 @@ export const TradFiDeposit = (): JSX.Element => {
     <Fade in={true} mountOnEnter unmountOnExit>
       <Backdrop open={true} className={` ${style["backdropElement"]}`}>
         <Paper className={` ${style["paperContainer"]}`}>
-          <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+          <Box sx={{ display: "flex", justifyContent: "flex-end" }} className={style["closeDeposit"]}>
             <Button variant="contained" className="closeButton" onClick={goBack} disableElevation>
               <Icon component={CloseIcon} />
             </Button>

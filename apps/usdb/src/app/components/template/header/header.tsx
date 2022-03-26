@@ -43,19 +43,20 @@ type PageParams = {
 
 type Pages = {
   title: string;
-  params?: PageParams;
+  params: PageParams;
   href?: string;
 };
 
 const pages: Pages[] = [
-  { title: 'Staking', href: '/staking' },
-  { title: 'Traditional Finance', href: '/trad-fi' },
-  { title: 'xFHM', href: '/xfhm?enable-testnet=true' },
-  { title: 'Mint USDB', href: '/mint' },
-  { title: 'USDB bank', href: '' },
+  { title: 'Traditional Finance', href: '/trad-fi', params:{comingSoon:false}},
+  { title: 'Staking', href: '/staking', params:{comingSoon:true} },
+  { title: 'xFHM', href: '/xfhm?enable-testnet=true', params:{comingSoon:true} },
+  { title: 'Mint USDB', href: '/mint', params:{comingSoon:true} },
+  { title: 'USDB bank', href: '', params:{comingSoon:true} },
   {
     title: 'Bridge',
-    href: 'https://synapseprotocol.com/?inputCurrency=USDT&outputCurrency=USDC&outputChain=42161',
+    href: 'https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1',
+    params:{comingSoon:false}
   },
 ];
 const allowedChainIds: any = [1, 4, 250, 4002];
@@ -151,9 +152,11 @@ export const Header = (): JSX.Element => {
   };
 
   useEffect(() => {
-    if (Object.keys(accountBonds).length < allBonds.length) {
-      return;
-    }
+    // FIXME hack
+    // if (Object.keys(accountBonds).length < allBonds.length) {
+    //   return;
+    // }
+
     const balances = bonds.reduce((prevBalance, bond) => {
       const bondName = bond.name;
       const accountBond = accountBonds[bondName];
@@ -166,6 +169,7 @@ export const Header = (): JSX.Element => {
       }
       return prevBalance;
     }, 0);
+    if (balances == 0) return;
     setTotalBalances(balances);
     setAccountBondsLoading(false);
   }, [address, accountBonds]);
@@ -228,11 +232,11 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Pages) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
-                  href="#"
+                  href={page.params.comingSoon ? "#" : page.href}
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
-                  <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                  <Typography textAlign="center" style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}>
                     <Button style={{ width: '100%' }}>{page.title}</Button>
                   </Typography>
                 </MenuLink>
@@ -331,11 +335,11 @@ export const Header = (): JSX.Element => {
                   return (
                     <MenuLink
                       // href={page.href ? page.href : '#'}
-                      href="#"
+                      href={page.params.comingSoon ? "#" : page.href}
                       onClick={handleCloseProductsMenu}
                       key={page.title}
                     >
-                      <Typography textAlign="center" style={{ opacity: 0.2 }}>
+                      <Typography textAlign="center" style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}>
                         <Button style={{ width: '100%' }}>{page.title}</Button>
                       </Typography>
                     </MenuLink>

@@ -32,10 +32,36 @@
         color: #696C80;
         @media (max-width:600px) {
             font-size:14px;
+            margin-top:0;
         }
     }
 }
+.approveField {
+    button {
+        height:4em !important;
+        @media (max-width:600px) {
+            height:3em !important;
+        }
+    }
+}
+.amountField {
 
+    & > div {
+        height:4em !important;
+        @media (max-width:480px) {
+            font-size:14px;
+
+            input {
+                font-size:20px;
+            }
+        }
+    }
+}
+.walletField {
+    & > div {
+        height:4em !important;
+    }
+}
 @media (max-width:900px) {
     .walletField, .amountField {
         flex: 0 0 50%;
@@ -84,4 +110,6 @@
     .infoElement {font-size:12px;
     div {max-width:100%;}
     }
+    .paperContainer {position:relative; padding:2.5em 1.5em 1.5em 1.5em !important;}
+    .closeDeposit {position:absolute;top:1.5em;right:1.5em;}
 }
