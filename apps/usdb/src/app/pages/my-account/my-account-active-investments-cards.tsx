@@ -1,16 +1,16 @@
 import {
   Button,
   ButtonGroup,
-  Grid,
+  Grid, Icon,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
+  TableRow, Tooltip,
+  Typography
+} from "@mui/material";
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './my-account.module.scss';
@@ -38,6 +38,7 @@ import {
 } from "@fantohm/shared-web3";
 import { RootState } from '../../store';
 import { Box } from '@mui/system';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -83,11 +84,9 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
                 Amount
-                <img
-                  src={Info}
-                  alt="info"
-                  className={style['infoIcon']}
-                />{' '}
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="List of active investments">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </Typography>
               <Typography variant="h6">
                 {currencyFormat.format(investment.amount)}
@@ -96,11 +95,9 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
                 Rewards
-                <img
-                  src={Info}
-                  alt="info"
-                  className={style['infoIcon']}
-                />{' '}
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Projected reward per investment">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </Typography>
               <Typography variant="h6">
                 {trim(investment.rewards, 2)}{' '}
@@ -110,33 +107,27 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
                 Investment
-                <img
-                  src={Info}
-                  alt="info"
-                  className={style['infoIcon']}
-                />{' '}
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Product invested in">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </Typography>
               <Typography variant="h6">{investment.displayName}</Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
-                APY
-                <img
-                  src={Info}
-                  alt="info"
-                  className={style['infoIcon']}
-                />{' '}
+                ROI
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Return on investment over vesting period">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </Typography>
               <Typography variant="h6">{investment.roi}%</Typography>
             </Grid>
             <Grid item xs={12} sm={4}>
               <Typography variant="subtitle2" className={style['subTitle']}>
                 Time remaining
-                <img
-                  src={Info}
-                  alt="info"
-                  className={style['infoIcon']}
-                />{' '}
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Time remaining in vesting period">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </Typography>
               {currentBlock ? (
               <Typography variant="h6">

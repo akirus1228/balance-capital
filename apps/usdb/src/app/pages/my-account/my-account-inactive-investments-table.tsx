@@ -1,12 +1,13 @@
 import {
+  Icon,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-} from '@mui/material';
+  TableRow, Tooltip
+} from "@mui/material";
 import { tableCellClasses } from '@mui/material/TableCell';
 import { format } from 'date-fns';
 import style from './my-account.module.scss';
@@ -14,6 +15,7 @@ import { styled } from '@mui/material/styles';
 import Info from '../../../assets/icons/info.svg';
 import Investment from './my-account-investments';
 import { useSelector } from 'react-redux';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -62,24 +64,34 @@ export const MyAccountInactiveInvestmentsTable = ({ investments }: { investments
           <TableHead>
             <TableRow sx={{ backgroundColor: '#000', color: '#FFF' }}>
               <StyledTableCell className={style['leftEdge']}>
-                Amount{' '}
-                <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                Amount
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="List of active investments">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </StyledTableCell>
               <StyledTableCell>
-                Rewards{' '}
-                <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                Rewards
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Projected reward per investment">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </StyledTableCell>
               <StyledTableCell>
-                Investment{' '}
-                <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                Investment
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Product invested in">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </StyledTableCell>
               <StyledTableCell>
-                ROI{' '}
-                <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                ROI
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Return on investment over vesting period">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </StyledTableCell>
               <StyledTableCell className={style['rightEdge']}>
-                Lock up period{' '}
-                <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+                Time remaining
+                <Tooltip sx={{marginLeft: "5px"}} arrow title="Time remaining in vesting period">
+                  <Icon component={InfoOutlinedIcon} fontSize="small" />
+                </Tooltip>
               </StyledTableCell>
             </TableRow>
           </TableHead>
