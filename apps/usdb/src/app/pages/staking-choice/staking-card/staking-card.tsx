@@ -5,6 +5,7 @@ import {
   Icon,
   InputAdornment,
   OutlinedInput,
+  Tooltip
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import style from './staking-card.module.scss';
@@ -311,7 +312,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       <Box className={`flexCenterRow`}>
         <h1>{params.apy}% APR</h1>
       </Box>
-      <Box className="flexCenterRow">
+      <Box className="flexCenterRow" mb="20px">
         <Box
           className={`flexCenterRow ${style['currencySelector']}`}
           sx={{ width: '245px' }}
@@ -372,16 +373,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       )}
       {cardState !== 'Claim' && cardState !== 'IL Redeem' ? (
         <>
-          <Box className={`flexSBRow w100`} sx={{ mt: '1em' }}>
-            <span>
-              Your deposit <Icon component={InfoOutlinedIcon} />
-            </span>
+          <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
+            <Box className="flexCenterRow">
+              <span>Your deposit&nbsp;</span>
+              <Tooltip arrow title="Your deposit means...">
+                <Icon component={InfoOutlinedIcon} />
+              </Tooltip>
+            </Box>
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
           <Box className={`flexSBRow w100`} sx={{ mb: '1em' }}>
-            <span>
-              Estimated Rewards <Icon component={InfoOutlinedIcon} />
-            </span>
+            <Box className="flexCenterRow">
+              <span>Estimated Rewards&nbsp;</span>
+              <Tooltip arrow title="Estimated Rewards means...">
+                <Icon component={InfoOutlinedIcon} />
+              </Tooltip>
+            </Box>
             <span>{claimableBalance} FHM</span>
           </Box>
           <Box

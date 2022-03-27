@@ -26,6 +26,9 @@
     border-radius: 50%;
     display: inline-block;
     margin-right: 0.5em;
+    @media screen and (max-width: 600px) {
+      margin-right: 0;
+    }
   }
 }
 
@@ -55,8 +58,6 @@
   border-radius: 3em;
   height: 60px;
   display: flex;
-  flex-direction: row;
-  justify-content: left;
 
   .name {
     font-size: 15px;
