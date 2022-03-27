@@ -38,7 +38,7 @@ export const Faq = (props: FaqProps): JSX.Element => {
                   {faqItem.title}
                 </AccordionSummary>
                 <AccordionDetails
-                  className={style['faqContent']}>
+                  className={style['faqContent']} >
                   <Typography>
                     {faqItem.content}
                   </Typography>

@@ -337,7 +337,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         </Box>
       </Box>
 
+
       {cardState !== 'Claim' && cardState !== 'IL Redeem' ? (
+        <Box
+        className={style['amountField']}
+      >
         <OutlinedInput
           id="amount-input-lqdr"
           type="number"
@@ -356,7 +360,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             },
           }}
           startAdornment={
-            <InputAdornment position="end">
+            <InputAdornment position="end" className={style['maxButton']}>
               <Button
                 className={style['no-padding']}
                 variant="text"
@@ -368,11 +372,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </InputAdornment>
           }
         />
+        </Box>
       ) : (
         <></>
       )}
       {cardState !== 'Claim' && cardState !== 'IL Redeem' ? (
         <>
+        <Box className={style['tooltipElement']}>
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
             <Box className="flexCenterRow">
               <span>Your deposit&nbsp;</span>
@@ -405,6 +411,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
             </span>
+          </Box>
           </Box>
         </>
       ) : (
