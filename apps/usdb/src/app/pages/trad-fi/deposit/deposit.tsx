@@ -33,6 +33,7 @@ import WalletBalance from "../../../components/wallet-balance/wallet-balance";
 import InputWrapper from "../../../components/input-wrapper/input-wrapper";
 import { getAccountState, RootState } from "../../../store";
 import style from "./deposit.module.scss";
+import { truncateDecimals } from "@fantohm/shared-helpers";
 
 export interface IBond {
   title: string;
@@ -93,7 +94,7 @@ export const TradFiDeposit = (): JSX.Element => {
   // }, [ chainId]);
 
   const daiBalance = useSelector((state: RootState) => {
-    return trim(Number(state.account.balances.dai), 2);
+    return truncateDecimals(Number(state.account.balances.dai), 4).toString();
   });
 
   useEffect(() => {
@@ -136,6 +137,8 @@ export const TradFiDeposit = (): JSX.Element => {
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       dispatch(error("Please enter a valid value!"));
+    } else if (Number(quantity) > Number(daiBalance)) {
+      dispatch(error("You're trying to bond more than your balance."));
     } else {
       const slippage = 0;
       await dispatch(
@@ -148,8 +151,8 @@ export const TradFiDeposit = (): JSX.Element => {
           address: address
         } as IBondAssetAsyncThunk)
       );
+      clearInput();
     }
-    clearInput();
   }
 
   const onSeekApproval = async () => {
