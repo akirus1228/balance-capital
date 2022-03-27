@@ -10,7 +10,7 @@ h1 {
 }
 
 .amountField {
-  
+
   width:100%;
 }
 .currencyField {
@@ -23,7 +23,7 @@ h1 {
   color: #fff;
   display: inline;
 
-  
+
     margin: 4px 0;
     font-size:13px;
     @media (max-width:900px) {
@@ -60,9 +60,10 @@ h1 {
     border-radius: 50%;
     display: inline-block;
     margin-right: 0.5em;
-    @media (max-width:600px) {
+    @media screen and (max-width: 600px) {
       height:9px;
       width:9px;
+      margin-right: 0;
     }
   }
 }
