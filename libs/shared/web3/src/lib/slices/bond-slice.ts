@@ -296,7 +296,6 @@ export const bondAsset = createAsyncThunk(
       }
 
     } catch (e: any) {
-      console.log(e.error.message);
       if (e.error.code === -32603 && e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0) {
         dispatch(
           error("Maximum daily limit for bond reached."),
