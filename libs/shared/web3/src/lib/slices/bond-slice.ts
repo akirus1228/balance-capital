@@ -259,6 +259,7 @@ export const bondAsset = createAsyncThunk(
     const depositorAddress = address;
     const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
     // parseUnits takes String => BigNumber
+    console.log('bond: ', bond);
     const valueInWei = ethers.utils.parseUnits(value.toString(), bond.isLP ? 18 : bond.decimals);
     let balance;
     // Calculate maxPremium based on premium and slippage.
@@ -294,13 +295,15 @@ export const bondAsset = createAsyncThunk(
         waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
       }
 
-    } catch (e: unknown) {
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
+    } catch (e: any) {
+      console.log(e.error.message);
+      if (e.error.code === -32603 && e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0) {
         dispatch(
-          error("You may be trying to bond more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
+          error("Maximum daily limit for bond reached."),
         );
-      } else dispatch(error(rpcError.message));
+      } else {
+        dispatch(error(e.error.message));
+      }
     } finally {
       if (bondTx) {
         segmentUA(uaData);
