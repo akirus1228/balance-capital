@@ -521,7 +521,7 @@ export const calculateUserBondDetails = createAsyncThunk(
     const amount = payout * pricePaid;
     const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
     const userBonds =
-      amount > 0
+      Number(amount) > 0.01
         ? [
             {
               amount: trim(amount, 2), // TODO can we just assume lp is totally balanced?
