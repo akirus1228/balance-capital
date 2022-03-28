@@ -24,7 +24,7 @@ const faqItems: FaqItem[] = [
   },
   {
     title: "What happens if I want my money back?",
-    content: "You can withdraw your funds early, but you will receive your original value but in USDB and will be subject to a fee of 5%. "
+    content: "You can withdraw your funds early, but you will receive your original value in USDB and will be subject to a fee of 5%."
   },
   {
     title: "What happens at the end of the term of my Deposit?",
