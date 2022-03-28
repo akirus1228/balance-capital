@@ -127,6 +127,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     } else if (cardState === 'Redeem') {
       setToken('DAI-USDB LP');
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
+      console.log('lpAmount: ', lpAmount);
       setTokenBalance(typeof lpAmount === 'undefined' ? '0' : String(lpAmount));
       setImage(DaiUSDBLP);
     } else if (cardState === 'IL Redeem') {
@@ -142,7 +143,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       );
       setImage(FHMToken);
     }
-  }, [cardState, daiBalance, address]);
+  }, [cardState, daiBalance, address, singleSidedBond]);
 
   async function useBond() {
     const slippage = 0;
@@ -152,22 +153,22 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       cardState !== 'Claim' &&
       cardState !== 'IL Redeem'
     ) {
-      dispatch(error('Please enter a value!'));
+      await dispatch(error('Please enter a value!'));
     } else if (
       isNaN(Number(quantity)) &&
       cardState !== 'Claim' &&
       cardState !== 'IL Redeem'
     ) {
-      dispatch(error('Please enter a valid value!'));
+      await dispatch(error('Please enter a valid value!'));
     } else if (
       (cardState === 'IL Redeem' &&
         Number(singleSidedBond?.userBonds[0]?.iLBalance) <= 0) ||
       (cardState === 'Claim' &&
         Number(singleSidedBond?.userBonds[0]?.pendingFHM) <= 0)
     ) {
-      dispatch(error('Nothing to redeem!'));
+      await dispatch(error('Nothing to redeem!'));
     } else if (cardState === 'Redeem') {
-      dispatch(
+      await dispatch(
         redeemSingleSidedBond({
           value: String(quantity),
           slippage,
@@ -178,7 +179,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         } as IBondAssetAsyncThunk)
       );
     } else if (cardState === 'Deposit') {
-      dispatch(
+      await dispatch(
         bondAsset({
           value: String(quantity),
           slippage,
@@ -189,7 +190,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         } as IBondAssetAsyncThunk)
       );
     } else if (cardState === 'Claim') {
-      dispatch(
+      await dispatch(
         claimSingleSidedBond({
           value: String(quantity),
           slippage,
@@ -208,7 +209,6 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IRedeemBondAsyncThunk)
       );
-      clearInput();
     }
   }
 

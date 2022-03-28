@@ -26,6 +26,7 @@ import { chains } from '../providers';
 import { BondAction, BondType, PaymentToken } from '../lib/bond';
 
 import { findOrLoadMarketPrice } from './bond-slice';
+import { truncateDecimals } from "@fantohm/shared-helpers";
 
 export const getBalances = createAsyncThunk(
   'account/getBalances',
@@ -477,7 +478,7 @@ export const calculateUserBondDetails = createAsyncThunk(
     console.log(`bondMaturationBlock ${bondMaturationBlock}`);
     let pendingFHM = '0';
     let iLBalance = '0';
-    let lpTokenAmount = 0;
+    let lpTokenAmount = '0';
     let secondsToVest = 0;
     let maturationSeconds = 0;
     if (bond.type === BondType.SINGLE_SIDED) {
@@ -488,16 +489,14 @@ export const calculateUserBondDetails = createAsyncThunk(
       );
       const fhmRewards = await masterchefContract['pendingFhm'](0, address);
 
-      pendingFHM = ethers.utils.formatUnits(String(fhmRewards), 9);
+      pendingFHM = ethers.utils.formatUnits(fhmRewards, 9);
       iLBalance = ethers.utils.formatUnits(
-        Number(bondDetails.ilProtectionAmountInUsd),
+        bondDetails.ilProtectionAmountInUsd,
         9
       );
-      lpTokenAmount = Number(
-        ethers.utils.formatUnits(
-          bondDetails.lpTokenAmount,
-          orgPaymentTokenDecimals
-        )
+      lpTokenAmount = ethers.utils.formatUnits(
+        bondDetails.lpTokenAmount,
+        orgPaymentTokenDecimals
       );
       // Single sided are always available to unstake
       maturationSeconds = Number(bondDetails['lastTimestamp']);
@@ -525,8 +524,8 @@ export const calculateUserBondDetails = createAsyncThunk(
               secondsToVest,
               maturationSeconds,
               percentVestedFor: 0, // No such thing as percentVestedFor for single sided
-              lpTokenAmount: lpTokenAmount.toString(),
-              iLBalance: iLBalance,
+              lpTokenAmount,
+              iLBalance,
               pendingFHM,
               pricePaid: 1,
             },
