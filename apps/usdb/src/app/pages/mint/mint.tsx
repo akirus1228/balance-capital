@@ -164,10 +164,7 @@ export default function Mint() {
           Mint with FHM
         </Button>
       </div>
-      <Grid container spacing={8}>
-        <Grid item md={6}>
-          <div className={style['subCard']}/>
-        </Grid>
+      <Grid container spacing={8} className={style['cardGrid']}>
         <Grid item md={6}>
           <Paper className={style['subCard']}>
             <SettingsOutlinedIcon className={style['settingIcon']}/>
