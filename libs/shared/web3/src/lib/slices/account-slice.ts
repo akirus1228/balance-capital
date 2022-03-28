@@ -77,7 +77,6 @@ export const getBalances = createAsyncThunk(
       );
       usdbBalance = await usdbContract['balanceOf'](address);
     }
-    console.log('tokenBalances: ', daiBalance, fhmBalance, usdbBalance);
     return {
       balances: {
         dai: ethers.utils.formatUnits(daiBalance, 18),
@@ -489,18 +488,10 @@ export const calculateUserBondDetails = createAsyncThunk(
       );
       const fhmRewards = await masterchefContract['pendingFhm'](0, address);
 
-      pendingFHM = trim(
-        Number(ethers.utils.formatUnits(String(fhmRewards), 9)),
-        2
-      );
-      iLBalance = trim(
-        Number(
-          ethers.utils.formatUnits(
-            Number(bondDetails.ilProtectionAmountInUsd),
-            9
-          )
-        ),
-        2
+      pendingFHM = ethers.utils.formatUnits(String(fhmRewards), 9);
+      iLBalance = ethers.utils.formatUnits(
+        Number(bondDetails.ilProtectionAmountInUsd),
+        9
       );
       lpTokenAmount = Number(
         ethers.utils.formatUnits(
@@ -524,17 +515,17 @@ export const calculateUserBondDetails = createAsyncThunk(
       Number(amount) > 0.01
         ? [
             {
-              amount: trim(amount, 2), // TODO can we just assume lp is totally balanced?
+              amount: amount.toString(), // TODO can we just assume lp is totally balanced?
               rewards: pendingFHM,
               rewardToken: PaymentToken.FHM,
-              rewardsInUsd: trim(rewardsInUsd, 2),
+              rewardsInUsd: rewardsInUsd.toString(),
               interestDue,
               bondMaturationBlock,
               pendingPayout,
               secondsToVest,
               maturationSeconds,
               percentVestedFor: 0, // No such thing as percentVestedFor for single sided
-              lpTokenAmount: trim(lpTokenAmount, 2),
+              lpTokenAmount: lpTokenAmount.toString(),
               iLBalance: iLBalance,
               pendingFHM,
               pricePaid: 1,

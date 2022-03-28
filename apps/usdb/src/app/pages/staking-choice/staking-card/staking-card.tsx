@@ -84,6 +84,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const singleSidedBond = accountBonds[singleSidedBondData?.name];
 
+  console.log('singleSidedBond: ', singleSidedBond);
+
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
   });
@@ -198,7 +200,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         } as IBondAssetAsyncThunk)
       );
     } else if (cardState === 'IL Redeem') {
-      dispatch(
+      await dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
           networkId: chainId || defaultNetworkId,
@@ -206,12 +208,12 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IRedeemBondAsyncThunk)
       );
+      clearInput();
     }
-    clearInput();
   }
 
   const clearInput = () => {
-    setQuantity('0');
+    setQuantity('');
   };
 
   const onSeekApproval = async () => {
