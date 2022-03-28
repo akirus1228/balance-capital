@@ -90,14 +90,12 @@ export const Header = (): JSX.Element => {
   const accountLoading = useSelector((state: RootState) => {
     return state.account.loading;
   });
-  console.log('anchorElNav', anchorElNav);
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
 
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
-    console.log('hereClicked');
   };
 
   const handleConnect = useCallback(async () => {
