@@ -236,8 +236,8 @@ export const TradFiDeposit = (): JSX.Element => {
                 <span>{tradfiBond.roi}%</span>
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px", ml: "auto" }}>
-                <span>APR</span>
-                <span>{tradfiBond.apr}%</span>
+                <span>APY</span>
+                <span>{tradfiBond.apy}%</span>
               </Box>
             </Grid>
             <Grid item xs={0} sm={1}>
