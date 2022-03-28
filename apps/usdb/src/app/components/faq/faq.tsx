@@ -11,7 +11,7 @@ export interface FaqProps {
 
 export type FaqItem = {
   title: string;
-  content: string;
+  content: string | JSX.Element;
 }
 
 export const Faq = (props: FaqProps): JSX.Element => {
@@ -39,9 +39,16 @@ export const Faq = (props: FaqProps): JSX.Element => {
                 </AccordionSummary>
                 <AccordionDetails
                   className={style['faqContent']}>
-                  <Typography>
-                    {faqItem.content}
-                  </Typography>
+                  {
+                    typeof faqItem.content == 'string' ? (
+                      <Typography>
+                        {faqItem.content}
+                      </Typography>
+                    ) : (
+                      faqItem.content
+                    )
+                  }
+                  
                 </AccordionDetails>
                 </Accordion>
             ))}
