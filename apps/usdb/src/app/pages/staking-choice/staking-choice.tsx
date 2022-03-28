@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Box, Button, Grid, Typography } from "@mui/material";
+import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq, { FaqItem } from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
@@ -36,7 +36,7 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const StakingChoicePage = (): JSX.Element => {
-  const [ assetBalance, setAssetBalance ] = useState(0);
+  const [ assetBalance, setAssetBalance ] = useState(-1);
 
   useEffect(() => {
     async function getBalance() {
@@ -74,7 +74,9 @@ export const StakingChoicePage = (): JSX.Element => {
                 <span className={style['tvlInfo']}>Staked TVL</span>
               </Grid>
               <Grid item xs={6} sx={{display:'flex', justifyContent: 'flex-end'}}>
-                <span className={style['tvlInfo']}>${numberWithCommas(assetBalance)}</span>
+                {assetBalance === -1 ?
+                  <Skeleton width="100px" /> :
+                  <span className={style['tvlInfo']}>${numberWithCommas(assetBalance)}</span>}
               </Grid>
             </Grid>
           </DaiCard>

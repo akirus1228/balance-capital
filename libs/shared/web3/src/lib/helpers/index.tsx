@@ -311,7 +311,9 @@ export async function getStakedTVL() {
 
 		if (!networks[networkId]) continue;
 		// Contracts
-		const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = networks[networkId].addresses;
+		const { isEnabled, addresses } = networks[networkId];
+		if (!isEnabled) continue;
+		const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = addresses;
 		if (!MASTERCHEF_ADDRESS || !USDB_DAI_LP_ADDRESS) continue;
 
 		const pool = new ethers.Contract(USDB_DAI_LP_ADDRESS, BalancerWeightedPool, provider);
