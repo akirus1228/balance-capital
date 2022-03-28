@@ -30,7 +30,7 @@
         <text id="_35_" data-name="35%" transform="translate(1237 869)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">35%</tspan></text>
       </g>
       <g id="Group_12240" data-name="Group 12240">
-        <text id="USDB_APR" data-name="USDB APR" transform="translate(1075 2121)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-111.497" y="0">USDB APR</tspan></text>
+        <text id="USDB_APY" data-name="USDB APY" transform="translate(1075 2121)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-111.497" y="0">USDB APY</tspan></text>
         <g id="Group_12239" data-name="Group 12239">
           <g id="Group_11540" data-name="Group 11540" transform="translate(1654 2107) rotate(90)">
             <rect id="Rectangle_478" data-name="Rectangle 478" width="16" height="593" fill="url(#linear-gradient-2)"/>
@@ -45,7 +45,7 @@
             <path id="Rectangle_478-4" data-name="Rectangle 478" d="M2,0H14a2,2,0,0,1,2,2V209a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V2A2,2,0,0,1,2,0Z" transform="translate(0 -44.68)"/>
           </g>
         </g>
-        <text id="UST_APR" data-name="UST APR" transform="translate(1075 2059)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-100.239" y="0">UST APR</tspan></text>
+        <text id="UST_APY" data-name="UST APY" transform="translate(1075 2059)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-100.239" y="0">UST APY</tspan></text>
         <text id="S_P_500_APR_based_on_5y_avg" data-name="S&amp;P 500 APR 
 based on 5y avg" transform="translate(1035 1986)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-92.007" y="0">S&amp;P 500 APR </tspan><tspan x="-108.091" y="22">based on 5y avg</tspan></text>
         <text id="US_Money_Market_6mo._APR" data-name="US Money Market 
