@@ -87,7 +87,6 @@ export default function Mint() {
   };
 
   useEffect(() => {
-      console.log(usdbBondData?.allowance > 0)
       setAllowance((bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData)?.allowance > 0);
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
@@ -98,7 +97,7 @@ export default function Mint() {
       bondAsset({
         address,
         slippage: .005,
-        value: value.toString(),
+        value: quantity.toString(),
         provider,
         networkId: chainId,
         bond: bond,
