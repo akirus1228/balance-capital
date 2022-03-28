@@ -12,7 +12,7 @@ import style from './staking-card.module.scss';
 import DaiCard from '../../../components/dai-card/dai-card';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { DaiToken, FHMToken, USDBToken } from '@fantohm/shared/images';
+import { DaiToken, FHMToken, USDBToken, DaiUSDBLP } from '@fantohm/shared/images';
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import { USDCToken } from '@fantohm/shared/images';
@@ -123,15 +123,15 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setTokenBalance(daiBalance);
       setImage(DaiToken);
     } else if (cardState === 'Redeem') {
-      setToken('LP');
+      setToken('DAI-USDB LP');
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
       setTokenBalance(typeof lpAmount === 'undefined' ? '0' : String(lpAmount));
-      setImage(DaiToken);
+      setImage(DaiUSDBLP);
     } else if (cardState === 'IL Redeem') {
-      setToken('USD');
+      setToken('FHM');
       const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
       setTokenBalance(typeof ilbal === 'undefined' ? '0' : String(ilbal));
-      setImage(USDBToken);
+      setImage(FHMToken);
     } else if (cardState === 'Claim') {
       setToken('FHM');
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
