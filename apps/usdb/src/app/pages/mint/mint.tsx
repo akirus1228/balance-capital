@@ -93,16 +93,24 @@ export default function Mint() {
   const selectedToken = tabState ? token[0] : token[1];
 
   async function handleClick() {
-    dispatch(
-      bondAsset({
-        address,
-        slippage: .005,
-        value: quantity.toString(),
-        provider,
-        networkId: chainId,
-        bond: bond,
-      } as IBondAssetAsyncThunk)
-    );
+    if (Number(quantity) === 0) {
+      await dispatch(error('Please enter a value!'));
+    } else if (isNaN(Number(quantity))) {
+      await dispatch(error('Please enter a valid value!'));
+    } else if (Number(quantity) > selectedToken.total) {
+      await dispatch(error('Please enter a valid value!'));
+    } else {
+      dispatch(
+        bondAsset({
+          address,
+          slippage: .005,
+          value: quantity.toString(),
+          provider,
+          networkId: chainId,
+          bond: bond,
+        } as IBondAssetAsyncThunk)
+      );
+    }
   };
 
   useEffect(() => {
