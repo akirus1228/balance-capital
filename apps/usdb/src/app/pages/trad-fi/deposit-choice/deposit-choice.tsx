@@ -32,7 +32,7 @@ export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
               key={`dc-${index}`}
               bondType={bond.name}
               months={bond.name === "tradfi3month" ? 3 : 6}
-              roi={Number(bond.roi)} apr={Number(bond.apr)}
+              roi={Number(bond.roi)} apy={Number(bond.apy)}
               bond={bond}
               vestingTermPretty={bond.name === "tradfi3month" ? "90 days" : "180 days"}
             />))
@@ -45,7 +45,7 @@ export const DepositChoice = (params: DepositChoiceParams): JSX.Element => {
                     bondType={bond.name}
                     months={bond.name === "tradfi3month" ? 3 : 6}
                     roi={Number(bond.roi)}
-                    apr={Number(bond.roi)}
+                    apy={Number(bond.apy)}
                     bond={bond}
                     vestingTermPretty={bond.name === "tradfi3month" ? "90 days" : "180 days"}
                   />))

@@ -11,7 +11,7 @@ interface IDepositCardParams {
   bondType: string;
   months: number;
   roi: number;
-  apr: number;
+  apy: number;
   vestingTermPretty: string;
   bond: IAllBondData | Bond;
 }
@@ -55,8 +55,8 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                 </Grid>
                 <Grid item xs={6}>
                   <Box className={css['lowerStats']}>
-                    <Typography variant="h2">{params.apr}%</Typography>
-                    <span>APR</span>
+                    <Typography variant="h2">{params.apy}%</Typography>
+                    <span>APY</span>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
