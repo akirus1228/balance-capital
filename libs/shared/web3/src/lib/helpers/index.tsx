@@ -7,6 +7,10 @@ import {SvgIcon} from "@mui/material";
 import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";
 import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 
+import { 
+  balancerWeightedPoolAbi as BalancerWeightedPool
+} from "../abi";
+
 import {JsonRpcSigner, StaticJsonRpcProvider} from "@ethersproject/providers";
 
 import {NetworkId, networks} from "../networks";
@@ -169,6 +173,10 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 	return result;
 }
 
+export function numberWithCommas(x: any) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+
 function getSohmTokenImage() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
@@ -294,4 +302,34 @@ export function getQueryParams(search: string): { [key: string]: boolean } {
     custom[key] = value === "true" ? true : false;
   });
   return custom;
+}
+
+export async function getStakedTVL() {
+	let balances = 0;
+	for(const networkId in chains) {
+		const provider = await chains[networkId].provider;
+
+		if (!networks[networkId]) continue;
+		// Contracts
+		const { isEnabled, addresses } = networks[networkId];
+		if (!isEnabled) continue;
+		const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = addresses;
+		if (!MASTERCHEF_ADDRESS || !USDB_DAI_LP_ADDRESS) continue;
+
+		const pool = new ethers.Contract(USDB_DAI_LP_ADDRESS, BalancerWeightedPool, provider);
+		// Balances
+		try {
+			const balance = await Promise.all([
+				pool["balanceOf"](MASTERCHEF_ADDRESS),
+			]).then(([masterBalance]) => {
+				const balance = ethers.utils.formatUnits(masterBalance, 18);
+				return Math.floor(Number(balance));
+			});
+
+			balances += Number(balance);
+		} catch(e) {
+			console.log(e);
+		}
+	}
+	return balances;
 }
