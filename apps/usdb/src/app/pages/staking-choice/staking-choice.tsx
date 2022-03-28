@@ -1,11 +1,11 @@
-import { useMemo } from "react";
+import { useEffect, useState } from "react";
 import { Box, Button, Grid, Typography } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq, { FaqItem } from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
-import { numberWithCommas, useInvestments } from "@fantohm/shared-web3";
+import { numberWithCommas, useWeb3Context, getStakedTVL } from "@fantohm/shared-web3";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -36,13 +36,20 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const StakingChoicePage = (): JSX.Element => {
-  const { investments } = useInvestments();
-  const assetBalance = useMemo(() => {
-    if (!investments.length) return 0;
-    const investment = investments.filter(investment => investment.name === 'usdb-dai-lp');
-    if (!investment) return 0;
-    return investment[0].assetBalance;
-  }, [investments]);
+  const { provider, connected } = useWeb3Context();
+  const [ assetBalance, setAssetBalance ] = useState(0);
+
+  useEffect(() => {
+    async function getBalance() {
+      if (!connected || !provider) return;
+  
+      const { chainId } = provider!._network!;
+      const balance = await getStakedTVL(chainId);
+      setAssetBalance(balance);
+    }
+
+    getBalance();
+  }, [provider, connected]);
 
   const heroContent = {
     hero: true,
