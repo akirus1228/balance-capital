@@ -21,6 +21,14 @@ const faqItems: FaqItem[] = [
   {
     title: "Is it really only 2 steps?",
     content: "Yes! We've streamlined this process for your convenience."
+  },
+  {
+    title: "What happens if I want my money back?",
+    content: "You can withdraw your funds early, but you will receive your original value but in USDB and will be subject to a fee of 5%. "
+  },
+  {
+    title: "What happens at the end of the term of my Deposit?",
+    content: "You will need to withdraw the bond back into your wallet. That action is not automatic. You will be paid out in USDB."
   }
 ];
 
