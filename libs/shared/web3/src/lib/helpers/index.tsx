@@ -304,25 +304,30 @@ export function getQueryParams(search: string): { [key: string]: boolean } {
   return custom;
 }
 
-export async function getStakedTVL(networkId: NetworkId) {
-  const provider = await chains[networkId].provider;
+export async function getStakedTVL() {
+	let balances = 0;
+	for(const networkId in chains) {
+		const provider = await chains[networkId].provider;
 
-  // Contracts
-  const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = networks[networkId].addresses;
-  if (!MASTERCHEF_ADDRESS || !USDB_DAI_LP_ADDRESS) return 0;
+		if (!networks[networkId]) continue;
+		// Contracts
+		const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = networks[networkId].addresses;
+		if (!MASTERCHEF_ADDRESS || !USDB_DAI_LP_ADDRESS) continue;
 
-  const pool = new ethers.Contract(USDB_DAI_LP_ADDRESS, BalancerWeightedPool, provider);
-  // Balances
-  try {
-    const balance = await Promise.all([
-      pool["balanceOf"](MASTERCHEF_ADDRESS),
-    ]).then(([masterBalance]) => {
-      const balance = ethers.utils.formatUnits(masterBalance, 18);
-      return Math.floor(Number(balance));
-    });
+		const pool = new ethers.Contract(USDB_DAI_LP_ADDRESS, BalancerWeightedPool, provider);
+		// Balances
+		try {
+			const balance = await Promise.all([
+				pool["balanceOf"](MASTERCHEF_ADDRESS),
+			]).then(([masterBalance]) => {
+				const balance = ethers.utils.formatUnits(masterBalance, 18);
+				return Math.floor(Number(balance));
+			});
 
-    return Number(balance);
-  } catch(e) {
-    return 0;
-  }
+			balances += Number(balance);
+		} catch(e) {
+			console.log(e);
+		}
+	}
+	return balances;
 }
