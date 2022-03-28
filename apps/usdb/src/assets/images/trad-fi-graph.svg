@@ -18,7 +18,7 @@
       </g>
     </g>
     <g id="Group_12242" data-name="Group 12242" transform="translate(7 21)">
-      <text id="Annual_percentage_rates" data-name="Annual percentage rates" transform="translate(909 1812)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="30" font-family="SegoeUI, Segoe UI"><tspan x="0" y="32">Annual percentage rates</tspan></text>
+      <text id="usdb_vs_other_offerings" data-name="USDB vs. Other Offerings" transform="translate(909 1812)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="30" font-family="SegoeUI, Segoe UI"><tspan x="0" y="32">USDB vs. Other Offerings</tspan></text>
       <g id="Group_11538" data-name="Group 11538" transform="translate(442 1313)">
         <text id="_0_" data-name="0%" transform="translate(613 869)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">0%</tspan></text>
         <text id="_15_" data-name="15%" transform="translate(870 869)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">15%</tspan></text>
@@ -30,7 +30,7 @@
         <text id="_35_" data-name="35%" transform="translate(1237 869)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="16" font-family="SegoeUI, Segoe UI"><tspan x="0" y="0">35%</tspan></text>
       </g>
       <g id="Group_12240" data-name="Group 12240">
-        <text id="USDB_yearly_APR" data-name="USDB yearly APR" transform="translate(1035 2121)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-111.497" y="0">USDB yearly APR</tspan></text>
+        <text id="USDB_APY" data-name="USDB APY" transform="translate(1075 2121)" fill="#1a1a1a" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-111.497" y="0">USDB APY</tspan></text>
         <g id="Group_12239" data-name="Group 12239">
           <g id="Group_11540" data-name="Group 11540" transform="translate(1654 2107) rotate(90)">
             <rect id="Rectangle_478" data-name="Rectangle 478" width="16" height="593" fill="url(#linear-gradient-2)"/>
@@ -45,7 +45,7 @@
             <path id="Rectangle_478-4" data-name="Rectangle 478" d="M2,0H14a2,2,0,0,1,2,2V209a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0V2A2,2,0,0,1,2,0Z" transform="translate(0 -44.68)"/>
           </g>
         </g>
-        <text id="UST_yearly_APR" data-name="UST yearly APR" transform="translate(1035 2059)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-100.239" y="0">UST yearly APR</tspan></text>
+        <text id="UST_APY" data-name="UST APY" transform="translate(1075 2059)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-100.239" y="0">UST APY</tspan></text>
         <text id="S_P_500_APR_based_on_5y_avg" data-name="S&amp;P 500 APR 
 based on 5y avg" transform="translate(1035 1986)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-92.007" y="0">S&amp;P 500 APR </tspan><tspan x="-108.091" y="22">based on 5y avg</tspan></text>
         <text id="US_Money_Market_6mo._APR" data-name="US Money Market 
