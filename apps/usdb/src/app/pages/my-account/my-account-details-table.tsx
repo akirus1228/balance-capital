@@ -36,9 +36,14 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
   });
 
   const onRedeemAllInternal = async () => {
-    setPendingClaim(true);
-    await onRedeemAll();
-    setPendingClaim(false);
+    try {
+      setPendingClaim(true);
+      await onRedeemAll();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setPendingClaim(false);
+    }
   }
 
   return (
@@ -89,18 +94,20 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
               currencyFormat.format(accountDetails.claimableRewards)}
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={4}>
-          <Button
-            variant="contained"
-            disableElevation
-            disabled={pendingClaim}
-            onClick={() => {
-              onRedeemAllInternal();
-            }}
-          >
-            {pendingClaim ? '...Pending' : 'Claim all'}
-          </Button>
-        </Grid> */}
+        {
+          accountDetails?.claimableRewards > 0 && <Grid item xs={12} sm={6} md={4}>
+            <Button
+              variant="contained"
+              disableElevation
+              disabled={pendingClaim}
+              onClick={() => {
+                onRedeemAllInternal().then();
+              }}
+            >
+              {pendingClaim ? 'Pending' : 'Claim all'}
+            </Button>
+          </Grid>
+        }
       </Grid>
     </Paper>
   );
