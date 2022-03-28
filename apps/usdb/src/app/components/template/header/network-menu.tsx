@@ -87,7 +87,7 @@ export const NetworkMenu = (): JSX.Element => {
                               fullWidth onClick={() => changeNetworks(network.id)} disableElevation={true}>
                         <Box display="flex" justifyContent="center">
                           <SvgIcon component={network.icon} color="primary" viewBox="0 0 32 32" />
-                          <Typography hidden={isMediumScreen} sx={{marginLeft: "1rem"}}>{network.name}</Typography>
+                          <Typography noWrap hidden={isMediumScreen} sx={{marginLeft: "1rem", maxWidth: "90px"}}>{network.name}</Typography>
                         </Box>
                       </Button>
                     );
