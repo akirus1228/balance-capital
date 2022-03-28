@@ -229,6 +229,7 @@ export const Header = (): JSX.Element => {
                 vertical: 'top',
                 horizontal: 'left',
               }}
+              className={`${styles['navWrap']}`}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
@@ -251,6 +252,7 @@ export const Header = (): JSX.Element => {
               <MenuItem
                 sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
                 onClick={handleCloseNavMenu}
+                className={`${styles['mobileConnect']}`}
               >
                 <Typography textAlign="center">
                   <Button onClick={handleConnect}>{connectButtonText}</Button>
@@ -259,6 +261,7 @@ export const Header = (): JSX.Element => {
               <MenuItem
                 sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
                 onClick={handleCloseNavMenu}
+                className={`${styles['mobileTheme']}`}
               >
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
@@ -277,6 +280,7 @@ export const Header = (): JSX.Element => {
                   paddingLeft: '20px',
                 }}
                 onClick={handleCloseNavMenu}
+                className={`${styles['mobilePortfolio']}`}
               >
                 <Typography textAlign="center">
                   <Link to="/my-account">
@@ -284,7 +288,7 @@ export const Header = (): JSX.Element => {
                       <Box display="flex" alignItems="center" mr="10px">
                         <SvgIcon component={AnalyticsIcon} fontSize="large" />
                       </Box>
-                      <Box display="flex" alignItems="center" mt="2px">
+                      <Box display="flex" alignItems="center" mt="2px" className={`${styles['portfolioText']}`}>
                         My Portfolio:&nbsp;
                       </Box>
                       {!accountBondsLoading ? (
