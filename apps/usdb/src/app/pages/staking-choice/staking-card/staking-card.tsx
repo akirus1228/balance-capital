@@ -25,6 +25,7 @@ import {
   changeApproval,
   claimSingleSidedBond,
   error,
+  info,
   getBalances,
   IAllBondData,
   IBondAssetAsyncThunk,
@@ -242,7 +243,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     ) {
       setDeposited(true);
     } else if (deposited && cardState === 'Deposit') {
-      navigate('/my-account');
+      dispatch(info("Bond is completed."));
+      setTimeout(() => navigate("/my-account"), 2000);
     }
   }, [pendingTransactions]);
 
