@@ -474,11 +474,13 @@ export const calculateUserBondDetails = createAsyncThunk(
     const interestDue =
       bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
     console.log(`interestDue ${interestDue}`);
-    const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+    let bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
     console.log(`bondMaturationBlock ${bondMaturationBlock}`);
     let pendingFHM = '0';
     let iLBalance = '0';
     let lpTokenAmount = 0;
+    let secondsToVest = 0;
+    let maturationSeconds = 0;
     if (bond.type === BondType.SINGLE_SIDED) {
       const masterchefContract = new ethers.Contract(
         addresses[networkId]['MASTERCHEF_ADDRESS'],
@@ -506,6 +508,9 @@ export const calculateUserBondDetails = createAsyncThunk(
           orgPaymentTokenDecimals
         )
       );
+      // Single sided are always available to unstake
+      maturationSeconds = Number(bondDetails['lastTimestamp']);
+      secondsToVest = 0;
     }
     const payout = Number(
       ethers.utils.formatUnits(bondDetails.payout, orgPaymentTokenDecimals)
@@ -516,7 +521,7 @@ export const calculateUserBondDetails = createAsyncThunk(
     const amount = payout * pricePaid;
     const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
     const userBonds =
-      amount > 0
+      Number(amount) > 0.01
         ? [
             {
               amount: trim(amount, 2), // TODO can we just assume lp is totally balanced?
@@ -526,8 +531,8 @@ export const calculateUserBondDetails = createAsyncThunk(
               interestDue,
               bondMaturationBlock,
               pendingPayout,
-              secondsToVest: 999999999999, // TODO, how do we calculate this seconds until vested
-              maturationSeconds: 999999999999999, //TODO,  how do we calculate seconds until maturation
+              secondsToVest,
+              maturationSeconds,
               percentVestedFor: 0, // No such thing as percentVestedFor for single sided
               lpTokenAmount: trim(lpTokenAmount, 2),
               iLBalance: iLBalance,

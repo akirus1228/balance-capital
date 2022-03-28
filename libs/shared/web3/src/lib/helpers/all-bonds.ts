@@ -75,7 +75,7 @@ export const singleSided = new StableBond({
   bondToken: "singleSided",
   decimals: 18,
   apr: 0,
-  roi: 0,
+  roi: 20,
   days: 0,
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
