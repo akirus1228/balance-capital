@@ -261,6 +261,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       tokenImage={DaiToken}
       setTheme="light"
       sx={{ minWidth: { xs: '300px', sm: '587px' } }}
+
+      className={style['cardElement']}
     >
       <h3 className={style['titleWrapper']}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
@@ -272,7 +274,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           }}
         />
       </Box>
-      <Box className={`flexCenterRow`}>
+      <Box className={`flexCenterRow w100`}>
         <Box
           className={`${style['smokeyToggle']} ${
             cardState === 'Deposit' ? style['active'] : ''
@@ -314,7 +316,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       <Box className={`flexCenterRow`}>
         <h1>{params.apy}% APR</h1>
       </Box>
-      <Box className="flexCenterRow" mb="20px">
+      <Box className="flexCenterRow w100" mb="20px">
         <Box
           className={`flexCenterRow ${style['currencySelector']}`}
           sx={{ width: '245px' }}
