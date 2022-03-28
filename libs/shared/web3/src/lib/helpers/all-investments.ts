@@ -552,7 +552,7 @@ export const usdb_dai_lp = new TokenInvestment({
       pool["balanceOf"](masterAddress),
     ]).then(([masterBalance]) => {
       const balance = ethers.utils.formatUnits(masterBalance, 18);
-      return Math.floor(Number(balance)) * 2;
+      return Math.floor(Number(balance));
     });
 
     return Number(balance);
