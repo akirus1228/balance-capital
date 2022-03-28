@@ -9,7 +9,7 @@ import {
   TableRow, Tooltip,
   Typography
 } from "@mui/material";
-import { Link } from 'react-router-dom';
+import { HashLink as Link } from 'react-router-hash-link';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './my-account.module.scss';
 import Info from '../../../assets/icons/info.svg';
@@ -158,7 +158,7 @@ export const MyAccountActiveInvestmentsTable = (
                 </TableCell>
                 <TableCell>
                   {investment.type === BondType.SINGLE_SIDED && (
-                    <Link to="/staking#bond">
+                    <Link to={{pathname: "/staking", hash:"#deposit"}}>
                       <Button
                         variant="contained"
                         disableElevation

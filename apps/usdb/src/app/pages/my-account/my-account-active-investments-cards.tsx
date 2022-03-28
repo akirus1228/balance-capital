@@ -138,7 +138,7 @@ export const MyAccountActiveInvestmentsCards = ({ investments, onRedeemBond, onC
             <Grid item xs={12} sm={4}>
               <ButtonGroup>
                 {investment.type === BondType.SINGLE_SIDED && (
-                  <Link to="/staking#bond">
+                  <Link to={{pathname: "/staking", hash:"#deposit"}}>
                     <Button
                       variant="contained"
                       disableElevation
