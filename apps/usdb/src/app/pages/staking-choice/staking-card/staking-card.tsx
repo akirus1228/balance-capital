@@ -389,7 +389,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
             <Box className="flexCenterRow">
               <span>Your deposit&nbsp;</span>
-              <Tooltip arrow title="Your deposit means...">
+              <Tooltip arrow title="The amount of DAI invested initially.">
                 <Icon component={InfoOutlinedIcon} />
               </Tooltip>
             </Box>
@@ -398,7 +398,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           <Box className={`flexSBRow w100`} sx={{ mb: '1em' }}>
             <Box className="flexCenterRow">
               <span>Estimated Rewards&nbsp;</span>
-              <Tooltip arrow title="Estimated Rewards means...">
+              <Tooltip arrow title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
                 <Icon component={InfoOutlinedIcon} />
               </Tooltip>
             </Box>
