@@ -80,7 +80,7 @@ export const TradFi = (): JSX.Element => {
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
             <ThemeImage image="ShieldIcon" />
-              <span>No risk of capital loss</span>
+              <span>Low risk of capital loss</span>
             </Paper>
           </Grid>
         </Box>
