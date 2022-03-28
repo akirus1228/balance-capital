@@ -210,6 +210,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         } as IRedeemBondAsyncThunk)
       );
     }
+    clearInput();
   }
 
   const clearInput = () => {
