@@ -320,6 +320,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(error("Please connect your wallet!"));
       return;
     }
+    console.log('value: ', value);
 
     const signer = provider.getSigner();
     const bondContract = bond.getContractForBondForWrite(networkId, signer);
@@ -345,9 +346,9 @@ export const redeemSingleSidedBond = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(e.error.message));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
