@@ -165,7 +165,11 @@ export default function Mint() {
         </Button>
       </div>
       <Grid container spacing={8} className={style['cardGrid']}>
-        <Grid item md={6}>
+        <Grid item md={6} sx={{width: "100%"}}>
+          <Paper className={style['subCard']}>
+          </Paper>
+        </Grid>
+        <Grid item md={6} sx={{width: "100%"}}>
           <Paper className={style['subCard']}>
             <SettingsOutlinedIcon className={style['settingIcon']}/>
             <div className={style['subTitle']}>{selectedToken.title}</div>
