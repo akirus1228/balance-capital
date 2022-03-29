@@ -39,6 +39,7 @@ import {
   useBonds,
   useWeb3Context,
   defaultNetworkId,
+  getIlRedeemFHM,
 } from '@fantohm/shared-web3';
 
 import { RootState } from '../../../store';
@@ -132,9 +133,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setImage(DaiUSDBLP);
     } else if (cardState === 'IL Redeem') {
       setToken('FHM');
-      const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
-      setTokenBalance(typeof ilbal === 'undefined' ? '0' : String(ilbal));
       setImage(FHMToken);
+      (async () => {
+        const iLBalance = await getIlRedeemFHM(chainId!, address);
+        setTokenBalance(iLBalance);
+      })();
     } else if (cardState === 'Claim') {
       setToken('FHM');
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
