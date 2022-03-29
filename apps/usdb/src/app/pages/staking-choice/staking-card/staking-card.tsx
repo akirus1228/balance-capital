@@ -53,7 +53,7 @@ interface IStakingCardParams {
   roi: number;
   apy: number;
 }
-type CardStates = 'Deposit' | 'Redeem' | 'IL Redeem' | 'Claim';
+type CardStates = 'Deposit' | 'Withdraw' | 'IL Redeem' | 'Claim';
 
 export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [cardState, setCardState] = useState<CardStates>('Deposit');
@@ -94,7 +94,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const setMax = () => {
     if (cardState === 'Deposit') {
       setQuantity(daiBalance);
-    } else if (cardState === 'Redeem') {
+    } else if (cardState === 'Withdraw') {
       setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
     } else if (cardState === 'IL Redeem') {
       setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
@@ -124,7 +124,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setToken('DAI');
       setTokenBalance(daiBalance);
       setImage(DaiToken);
-    } else if (cardState === 'Redeem') {
+    } else if (cardState === 'Withdraw') {
       setToken('DAI-USDB LP');
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
       console.log('lpAmount: ', lpAmount);
@@ -167,7 +167,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         Number(singleSidedBond?.userBonds[0]?.pendingFHM) <= 0)
     ) {
       await dispatch(error('Nothing to redeem!'));
-    } else if (cardState === 'Redeem') {
+    } else if (cardState === 'Withdraw') {
       await dispatch(
         redeemSingleSidedBond({
           value: String(quantity),
@@ -200,6 +200,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
+      if(Number(singleSidedBond?.userBonds[0]?.iLBalance) > 0) setCardState("IL Redeem")
     } else if (cardState === 'IL Redeem') {
       await dispatch(
         redeemSingleSidedILProtection({
@@ -290,12 +291,12 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         </Box>
         <Box
           className={`${style['smokeyToggle']} ${
-            cardState === 'Redeem' ? style['active'] : ''
+            cardState === 'Withdraw' ? style['active'] : ''
           }`}
-          onClick={() => setCardState('Redeem')}
+          onClick={() => setCardState('Withdraw')}
         >
           <div className={style['dot']} />
-          <span>Redeem</span>
+          <span>Withdraw</span>
         </Box>
         <Box
           className={`${style['smokeyToggle']} ${
@@ -338,7 +339,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           >
             <span className={style['name']}>{token} balance</span>
             <span className={style['amount']}>
-              {tokenBalance} {token}
+              {trim(Number(tokenBalance), 4)} {token}
             </span>
           </Box>
         </Box>
@@ -383,7 +384,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       ) : (
         <></>
       )}
-      {cardState !== 'Claim' && cardState !== 'IL Redeem' ? (
+      {cardState === 'Deposit' ? (
         <>
         <Box className={style['tooltipElement']}>
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
