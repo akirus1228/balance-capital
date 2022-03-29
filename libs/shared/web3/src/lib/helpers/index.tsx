@@ -168,7 +168,9 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		result = dDisplay.slice(0, dDisplay.length - 2);
 	}
 
-	if (result === "") result = "Instant";
+	if (seconds <= 0) result = "Instant";
+
+	if (result === "") result = `${seconds} sec`;
 
 	return result;
 }
