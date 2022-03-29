@@ -195,7 +195,7 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     if (provider && chainId) {
       for (const bond of bonds) {
-        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name);
+        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name && investment.secondsToVest <= 0);
         if (currentInvests.length === 0) continue;
 
         if (bond.type === BondType.TRADFI) {
