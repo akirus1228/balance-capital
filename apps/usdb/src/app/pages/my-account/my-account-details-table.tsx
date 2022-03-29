@@ -99,7 +99,7 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
             <Button
               variant="contained"
               disableElevation
-              disabled={pendingClaim}
+              disabled={pendingClaim || accountDetails?.claimableRewards < 0.01}
               onClick={() => {
                 onRedeemAllInternal().then();
               }}
