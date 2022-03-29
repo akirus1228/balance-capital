@@ -384,7 +384,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       ) : (
         <></>
       )}
-      {cardState === 'Deposit' ? (
+      {cardState === 'Deposit' || cardState === 'Withdraw' ? (
         <>
         <Box className={style['tooltipElement']}>
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
@@ -396,15 +396,18 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
-          <Box className={`flexSBRow w100`} sx={{ mb: '1em' }}>
-            <Box className="flexCenterRow">
-              <span>Estimated Rewards&nbsp;</span>
-              <Tooltip arrow title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
-                <Icon component={InfoOutlinedIcon} />
-              </Tooltip>
+          {cardState === 'Deposit' &&
+            <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
+              <Box className="flexCenterRow">
+                <span>Estimated Rewards&nbsp;</span>
+                <Tooltip arrow
+                         title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
+                  <Icon component={InfoOutlinedIcon}/>
+                </Tooltip>
+              </Box>
+              <span>{claimableBalance} FHM</span>
             </Box>
-            <span>{claimableBalance} FHM</span>
-          </Box>
+          }
           <Box
             className={`${style['infoBox']}`}
             sx={{
