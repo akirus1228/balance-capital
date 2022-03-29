@@ -353,6 +353,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Withdrawal completed."));
       }
     }
   },
@@ -396,6 +397,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("IL Redeem completed."));
       }
     }
   },
@@ -440,6 +442,7 @@ export const claimSingleSidedBond = createAsyncThunk(
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Claim completed."));
       }
     }
   },
