@@ -259,17 +259,18 @@ export const bondAsset = createAsyncThunk(
     const depositorAddress = address;
     const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
     // parseUnits takes String => BigNumber
-    console.log('bond: ', bond);
-    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.isLP ? 18 : bond.decimals);
+    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.decimals);
     let balance;
     // Calculate maxPremium based on premium and slippage.
     // const calculatePremium = await bonding.calculatePremium();
+    console.log('bond: ', bond);
+
     const signer = provider.getSigner();
+
     const bondContractForRead = await bond.getContractForBond(networkId);
     const bondContractForWrite = bond.getContractForBondForWrite(networkId, signer);
     const calculatePremium = await bondContractForRead["bondPrice"]();
     const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
-
     // Deposit the bond
     let bondTx;
     const uaData = {

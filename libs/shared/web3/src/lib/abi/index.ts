@@ -66,6 +66,8 @@ import full_FhudABondDepository from './bonds/FhudABondDepository.json';
 import full_FhudBBondDepository from './bonds/FhudBBondDepository.json';
 import full_SingleSidedLPBondDepository from './bonds/SingleSidedLPBondDepository.json';
 import full_TradFiBondDepository from './bonds/TradFiBondDepository.json';
+import full_UsdbFhmBurnBondDepository from './bonds/UsdbFhmBurnBondDepository.json';
+import full_UsdbABondDepository from './bonds/UsdbABondDepository.json';
 
 export const balancerVaultAbi = full_BalancerVault.abi;
 export const balancerWeightedPoolAbi = full_BalancerWeightedPool.abi;
@@ -129,3 +131,5 @@ export const fhudABondDepositoryAbi = full_FhudABondDepository.abi;
 export const fhudBBondDepositoryAbi = full_FhudBBondDepository.abi;
 export const singleSidedLPBondDepositoryAbi = full_SingleSidedLPBondDepository.abi;
 export const tradFiBondDepositoryAbi = full_TradFiBondDepository.abi;
+export const usdbFhmBurnBondDepositoryAbi = full_UsdbFhmBurnBondDepository.abi;
+export const usdbABondDepositoryAbi = full_UsdbABondDepository.abi;

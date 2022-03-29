@@ -1,7 +1,8 @@
 import { StableBond, BondType, PaymentToken } from "../lib/bond";
 import {NetworkIds} from "../networks";
 
-import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi, lqdrUsdbPolBondDepositoryAbi } from "../abi";
+import { singleSidedLPBondDepositoryAbi, tradFiBondDepositoryAbi, lqdrUsdbPolBondDepositoryAbi, usdbABondDepositoryAbi,
+  usdbFhmBurnBondDepositoryAbi } from "../abi";
 
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
 // //   and include that in the definition of a bond
@@ -113,6 +114,62 @@ export const lqdrUsdbPol = new StableBond({
   },
 });
 
+export const usdbFhmBurn = new StableBond({
+  apr: 0,
+  days: 0,
+  name: "usdbFhmBurn",
+  type: BondType.Bond_USDB,
+  displayName: "FHM ➜ USDB",
+  bondToken: "FHM",
+  decimals: 9,
+  bondIconSvg: undefined,
+  roi: 0,
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.FantomTestnet]: true },
+  isPurchasable: true,
+  bondContractABI: usdbFhmBurnBondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x5ba97cAD8Eb46EFeEd70FD4f9463fBB5E68A4Bf3",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "0xA1DFDc1d9dA00aaE194871C3fb2bF572EB1cC53e",
+      reserveAddress: "0x4B209fd2826e6880e9605DCAF5F8dB0C2296D6d2",
+    },
+  }
+});
+
+export const usdbBuy = new StableBond({
+  apr: 0, days: 0,
+  name: "usdbBuy",
+  type: BondType.Bond_USDB,
+  displayName: "DAI ➜ USDB",
+  bondToken: "DAI",
+  decimals: 18,
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.FantomTestnet]: true, [NetworkIds.Rinkeby]: true },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: usdbABondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x299f15b527fdBf76A7CA6087a521e60c18F80529",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "0xA73e67e87a0479e9bB75e6d2451aE904DA135Cbd",
+      reserveAddress: "0x05db87C4Cbb198717F590AabA613cdD2180483Ce",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x3C37c5195839cEf16262f2Ed57d4c1F54c630d16",
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+  }
+});
+
+
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
@@ -123,7 +180,9 @@ export const allBonds = [
   tradfi3month,
   tradfi6month,
   singleSided,
-  lqdrUsdbPol
+  lqdrUsdbPol,
+  usdbFhmBurn,
+  usdbBuy
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };
