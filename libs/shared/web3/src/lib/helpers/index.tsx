@@ -16,6 +16,7 @@ import {JsonRpcSigner, StaticJsonRpcProvider} from "@ethersproject/providers";
 import {NetworkId, networks} from "../networks";
 import { LocalStorage } from "./local-storage";
 import { chains } from "../providers";
+import { singleSided } from "./all-bonds";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice(networkId : NetworkId) {
@@ -334,4 +335,15 @@ export async function getStakedTVL() {
 		}
 	}
 	return balances;
+}
+
+export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
+	if (!networkId || !address) return '0';
+	const bondContract = await singleSided.getContractForBond(networkId);
+	const bondDetails = await bondContract['bondInfo'](address);
+	const iLBalance = ethers.utils.formatUnits(
+		bondDetails.ilProtectionAmountInUsd,
+		9
+	);
+	return iLBalance;
 }
