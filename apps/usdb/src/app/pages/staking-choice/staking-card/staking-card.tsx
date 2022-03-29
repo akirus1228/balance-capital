@@ -108,8 +108,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     if (singleSidedBond?.userBonds[0]) {
       setPayout(String(singleSidedBond?.userBonds[0]?.interestDue));
       setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM);
+    } else {
+      setPayout('0');
+      setClaimableBalance('0');
     }
-  }, [singleSidedBond?.userBonds]);
+  }, [cardState, daiBalance, address, singleSidedBond]);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
