@@ -343,8 +343,13 @@ export const redeemSingleSidedBond = createAsyncThunk(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
       );
 
-      await redeemTx.wait();
-      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+      const minedBlock = (await redeemTx.wait()).blockNumber;
+
+      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
+      // If the maturation block is the next one. wait until the next block and then refresh bond details
+      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
+        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+      }
 
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {

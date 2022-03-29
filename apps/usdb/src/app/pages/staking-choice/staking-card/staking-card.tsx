@@ -396,7 +396,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
-          {cardState === 'Deposit' &&
+          {(cardState === 'Deposit' || cardState === 'Withdraw') &&
             <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
               <Box className="flexCenterRow">
                 <span>Estimated Rewards&nbsp;</span>
@@ -418,10 +418,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             }}
           >
             <Icon component={InfoOutlinedIcon} sx={{ mr: '0.5em' }} />
-            <span>
+            {cardState === 'Deposit' ?
+              ( <span>
+
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
-            </span>
+            </span>) :
+              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0].pendingFHM} <b>FHM</b> rewards.</span>)}
           </Box>
           </Box>
         </>
