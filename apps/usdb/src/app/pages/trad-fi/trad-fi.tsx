@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Paper } from '@mui/material';
+import { Box, Button, Grid, Paper, Typography } from '@mui/material';
 import { Outlet } from 'react-router-dom';
 import LongArrowRight from '../../../assets/icons/long-arrow-right.svg';
 import style from './trad-fi.module.scss';
@@ -8,6 +8,8 @@ import Headline from '../../components/headline/headline';
 import { Faq, FaqItem } from '../../components/faq/faq';
 import Logo from '../../components/logo/logo';
 import { ThemeImage } from '../../components/theme-image/theme-image';
+import { useWeb3Context } from "@fantohm/shared-web3";
+import { useEffect, useState } from "react";
 
 const faqItems: FaqItem[] = [
   {
@@ -33,7 +35,11 @@ const faqItems: FaqItem[] = [
 ];
 
 export const TradFi = (): JSX.Element => {
-  //console.log("TradFi rendered");
+
+  const { chainId } = useWeb3Context();
+
+  const availableNetworkIds = [1, 4, 250];
+  const [showNetworkBanner, setShowNetworkBanner] = useState<boolean>(false);
 
   const heroContent = {
     hero: true,
@@ -58,8 +64,21 @@ export const TradFi = (): JSX.Element => {
     return 0;
   };
 
+  useEffect(() => {
+    if (availableNetworkIds.indexOf(chainId || 0) >= 0) {
+      setShowNetworkBanner(false);
+    } else {
+      setShowNetworkBanner(true);
+    }
+  }, [chainId])
+
   return (
     <>
+      {
+        showNetworkBanner && <Box className={style["network-banner"]}>
+          <Typography variant="body2" color="primary">Please select the correct network, ethereum or fantom.</Typography>
+        </Box>
+      }
       <Box className={style["__heading"]}>
         <Headline {...heroContent} />
         <a href="/trad-fi#get-started">
@@ -75,19 +94,19 @@ export const TradFi = (): JSX.Element => {
         <Box className={style["__icons"]}>
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <ThemeImage image="CardsIcon" />
+              <ThemeImage image="CardsIcon" />
               <span>No investment fee</span>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <ThemeImage image="DoughnutChartIcon" />
+              <ThemeImage image="DoughnutChartIcon" />
               <span>No management fee</span>
             </Paper>
           </Grid>
           <Grid item xs={12} md={4}>
             <Paper className={`${style['infoIcon']} ${style['lightBG']} softGradient`} elevation={0}>
-            <ThemeImage image="ShieldIcon" />
+              <ThemeImage image="ShieldIcon" />
               <span>Low risk of capital loss</span>
             </Paper>
           </Grid>
@@ -106,7 +125,7 @@ export const TradFi = (): JSX.Element => {
           <Logo />
         </Box>
       </Box>
-  </>
+    </>
   );
 }
 
