@@ -95,7 +95,7 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
           </Typography>
         </Grid>
         {
-          accountDetails?.claimableRewards > 0 && <Grid item xs={12} sm={6} md={4}>
+          accountDetails?.claimableRewards >= 0.005 && <Grid item xs={12} sm={6} md={4}>
             <Button
               variant="contained"
               disableElevation
