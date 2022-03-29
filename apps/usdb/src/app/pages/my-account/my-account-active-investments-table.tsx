@@ -44,11 +44,11 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
 });
 
 export const MyAccountActiveInvestmentsTable = (
-  { investments, onRedeemBond, onCancelBond }: 
+  { investments, onRedeemBond, onConfirmCancelBond }:
   { 
     investments: Investment[], 
-    onRedeemBond: (bond: IAllBondData, index: number) => void, 
-    onCancelBond: (bond: IAllBondData, index: number) => void 
+    onRedeemBond: (bond: IAllBondData, index: number) => void,
+    onConfirmCancelBond: (bond: IAllBondData, index: number) => void
 }): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
@@ -196,7 +196,7 @@ export const MyAccountActiveInvestmentsTable = (
                         const bond = bonds.find(
                           (bond) => bond.name === investment.bondName
                         );
-                        bond && onCancelBond(bond as IAllBondData, investment.bondIndex);
+                        bond && onConfirmCancelBond(bond as IAllBondData, investment.bondIndex);
                       }}
                     >
                       {txnButtonTextGeneralPending(
