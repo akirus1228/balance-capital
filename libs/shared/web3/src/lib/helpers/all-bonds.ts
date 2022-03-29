@@ -80,12 +80,16 @@ export const singleSided = new StableBond({
   apr: 0,
   roi: 20,
   days: 0,
-  isAvailable: { [NetworkIds.Rinkeby]: true },
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
   bondContractABI: singleSidedLPBondDepositoryAbi,
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x798A542724651Ea1d2b75e068FA7B39299eA09d5",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0x6343A974Aa8d979ce1BA0a3eBC9B094Fe69dD639", // special version if activate IL redeem
       // bondAddress: "0x8D36B8484459753a346e4274821EdBC6DeA39F3f",
