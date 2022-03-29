@@ -167,7 +167,7 @@ export const MyAccount = (): JSX.Element => {
           0
         ),
         rewardsClaimed: 1247.31, // TODO
-        claimableRewards: activeInvestments.reduce(
+        claimableRewards: activeInvestments.filter(investment => investment.secondsToVest <= 0).reduce(
           (rewardsInUsd, investment) => rewardsInUsd + investment.rewardsInUsd,
           0
         )
