@@ -136,7 +136,7 @@ export const MyAccountActiveInvestmentsTable = (
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">
-                    {trim(investment.rewards, 2)}{' '}{investment.rewardToken}
+                    {trim(investment.rewards, 4)}{' '}{investment.rewardToken}
                   </Typography>
                 </TableCell>
                 <TableCell>
