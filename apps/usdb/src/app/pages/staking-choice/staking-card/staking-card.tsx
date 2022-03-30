@@ -429,7 +429,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
             </span>) :
-              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0].pendingFHM} <b>FHM</b> rewards.</span>)}
+              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM} <b>FHM</b> rewards.</span>)}
           </Box>
           </Box>
         </>
