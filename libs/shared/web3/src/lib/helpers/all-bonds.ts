@@ -93,6 +93,11 @@ export const singleSided = new StableBond({
     [NetworkIds.Rinkeby]: {
       bondAddress: "0xc7330002761E52034efDC0cAe69B5Bd20D69aD38", // special version if activate IL redeem
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+      // bondAddress: "0xf801D0dF7fe678aa6C69b3D3d787e84C02A3BD31",
+      // bondAddress: "0x6343A974Aa8d979ce1BA0a3eBC9B094Fe69dD639",
+      // bondAddress: "0x8D36B8484459753a346e4274821EdBC6DeA39F3f",
+      // bondAddress: "0x98B853A6310EB136532E2B99f327b16F8730a978",
+      // bondAddress: "0x49a14bDD5b232F727C147d94976680671D9c5B53",
     },
   },
 });
