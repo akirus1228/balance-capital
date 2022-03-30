@@ -22,25 +22,31 @@ interface IDepositCardParams {
 
 export const faqItems: FaqItem[] = [
   {
-    title: "What is USDB?",
-    content: "USDB is a truly decentralised stablecoin backed by FHM. It uses a method known as proof of burn to cement its value at $1. Proof of burn is a concept in which a coin is destroyed at a specific point in time and value.  At that moment it is recorded in a blockchain transaction. USDB is valued and maintained at $1 through its relationship with FHM, a decentralised reserve asset and an arbitrage that anyone can participate in."
+    title: "What is Single Sided Staking?",
+    content: "Single Sided Staking is similar to Liquidity Pair (LP) farming while also eliminating the impermanent losses. Instead of depositing both tokens of an LP to farm and earn rewards, investors only provide $DAI tokens, i.e., one side of the pair while our protocol deposits the other token of the liquidity pair which is $USDB. This pair is then farmed to earn rewards continuously."
   },
   {
-    title: "How to use Single Sided Staking",
-    content: "Connect your wallet using the button in the upper right corner of this page and use the interface just above these FAQs. Deposit your DAI and return in 3-6 months for your returns. The interface will only appear on the ETH and FTM networks."
-  },
-  {
-    title: "Is it really only 2 steps?",
-    content: "Yes! We've streamlined this process for your convenience."
+    title: "How Single Sided Staking eliminates impermanent loss?",
+    content: "By providing up to 20% reward in $FHM tokens to the dollar value of your $DAIs, we mitigate against impermanent losses! So no matter what the market state is and how much $FHM costs, as an investor, you will earn up to 20% rewards on your initial investment."
   },
   {
     title: "What happens if I want my money back?",
-    content: "You can withdraw your funds early, but you will receive your original value in USDB and will be subject to a fee of 5%."
+    content: "Unlike other Bonds, your investments and assets are not locked in Single Sided Staking. As such, you can withdraw your investments and claim rewards at any point in time."
   },
   {
-    title: "What happens at the end of the term of my Deposit?",
-    content: "You will need to withdraw the bond back into your wallet. That action is not automatic. You will be paid out in USDB."
-  }
+    title: "What is IL redeem?",
+    content: "To circumvent impermanent loss users will be able to claim back any impermanent losses incurred, paid out in FHM. \n" +
+      "\n" +
+      "To be eligible for this rebate. users need to:\n" +
+      "\n" +
+      "1. Incur impermanent loss. i.e The amount of DAI withdrawn is less than that originally deposited. \n" +
+      "2. Have been staking for at least 24 hrs.\n" +
+      "3. Withdraw the full amount or last part of the amount that was invested. To the last decimal."
+  },
+  // {
+  //   title: "What happens at the end of the term of my Deposit?",
+  //   content: "You will need to withdraw the bond back into your wallet. That action is not automatic. You will be paid out in USDB."
+  // }
 ];
 
 export const StakingChoicePage = (): JSX.Element => {

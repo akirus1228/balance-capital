@@ -39,6 +39,7 @@ import {
   useBonds,
   useWeb3Context,
   defaultNetworkId,
+  getIlRedeemFHM,
 } from '@fantohm/shared-web3';
 
 import { RootState } from '../../../store';
@@ -106,12 +107,12 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   useEffect(() => {
     if (singleSidedBond?.userBonds[0]) {
       setPayout(String(singleSidedBond?.userBonds[0]?.interestDue));
-      setClaimableBalance(singleSidedBond?.userBonds[0]?.pendingFHM);
+      setClaimableBalance(trim(Number(singleSidedBond?.userBonds[0]?.pendingFHM), 4));
     } else {
       setPayout('0');
       setClaimableBalance('0');
     }
-  }, [singleSidedBond?.userBonds]);
+  }, [cardState, daiBalance, address, singleSidedBond]);
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -134,9 +135,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setImage(DaiUSDBLP);
     } else if (cardState === 'IL Redeem') {
       setToken('FHM');
-      const ilbal = singleSidedBond?.userBonds[0]?.iLBalance;
-      setTokenBalance(typeof ilbal === 'undefined' ? '0' : String(ilbal));
       setImage(FHMToken);
+      (async () => {
+        const iLBalance = await getIlRedeemFHM(chainId!, address);
+        setTokenBalance(iLBalance);
+      })();
     } else if (cardState === 'Claim') {
       setToken('FHM');
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
@@ -386,7 +389,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       ) : (
         <></>
       )}
-      {cardState === 'Deposit' ? (
+      {cardState === 'Deposit' || cardState === 'Withdraw' ? (
         <>
         <Box className={style['tooltipElement']}>
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
@@ -398,15 +401,18 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
-          <Box className={`flexSBRow w100`} sx={{ mb: '1em' }}>
-            <Box className="flexCenterRow">
-              <span>Estimated Rewards&nbsp;</span>
-              <Tooltip arrow title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
-                <Icon component={InfoOutlinedIcon} />
-              </Tooltip>
+          {(cardState === 'Deposit' || cardState === 'Withdraw') &&
+            <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
+              <Box className="flexCenterRow">
+                <span>Estimated Rewards&nbsp;</span>
+                <Tooltip arrow
+                         title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
+                  <Icon component={InfoOutlinedIcon}/>
+                </Tooltip>
+              </Box>
+              <span>{claimableBalance} FHM</span>
             </Box>
-            <span>{claimableBalance} FHM</span>
-          </Box>
+          }
           <Box
             className={`${style['infoBox']}`}
             sx={{
@@ -417,10 +423,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             }}
           >
             <Icon component={InfoOutlinedIcon} sx={{ mr: '0.5em' }} />
-            <span>
+            {cardState === 'Deposit' ?
+              ( <span>
+
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
-            </span>
+            </span>) :
+              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0].pendingFHM} <b>FHM</b> rewards.</span>)}
           </Box>
           </Box>
         </>
