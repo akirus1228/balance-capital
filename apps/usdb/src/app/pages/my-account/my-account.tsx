@@ -96,45 +96,34 @@ export function shorten(str: string) {
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
+export const isInvestment = (element: Investment | []): element is Investment => {
+  return (element as Investment).type !== undefined;
+}
+
 export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
-  const [currentBlock, setCurrentBlock] = useState<number>();
   const [openConfirmationModal, setOpenConfirmationModal] = useState<boolean>(false);
   const [cancellingBond, setCancellingBond] = useState<IAllBondData>();
   const [cancellingBondIndex, setCancellingBondIndex] = useState<number>(0);
-
+  const [investmentsLoaded, setInvestmentsLoaded] = useState<boolean>(false);
   const isMediumScreen = useMediaQuery("(max-width: 1000px)");
 
+  // is the wallet really disconnected or have we just not checked the cache?
   const hasCheckedConnection = useSelector((state: RootState) => state.app.checkedConnection);
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
 
-  useEffect(() => {
-    (async function () {
-      if (chainId) {
-        const provider = await chains[chainId].provider;
-        setCurrentBlock(await provider.getBlockNumber());
-        // console.log('blockNumber: ', await provider.getBlockNumber());
-      }
-    })();
-  }, [chainId]);
+  const accountBonds = useSelector((state: RootState) => state.account.bonds);
+  const accountBondsLoaded = useSelector((state: RootState) => state.account.allBondsLoaded);
 
-  const activeInvestments = useMemo(() => {
-    if (accountBonds && currentBlock && chainId) {
-      return bonds.flatMap((bond) => {
+  const activeInvestments: Investment[] | null = useMemo(() => {
+    if (accountBonds && accountBondsLoaded && chainId) {
+      const myInvestments = bonds.flatMap((bond) => {
         const bondName = bond.name;
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
           return userBonds.map((userBond: IUserBond, i: number) => {
-            // const secondsToVest = secondsUntilBlock(
-            //   chainId,
-            //   currentBlock,
-            //   userBond.bondMaturationBlock
-            // );
             const investment: Investment = {
               id: `investment-${bond.name}-${i}`,
               type: bond.type,
@@ -158,10 +147,20 @@ export const MyAccount = (): JSX.Element => {
           return [];
         }
       });
+      // set timeout on setting the readystate to avoid additional render
+      return myInvestments;
     } else {
-      return [];
+      return null;
     }
-  }, [JSON.stringify(accountBonds), JSON.stringify(bonds), currentBlock]);
+  }, [JSON.stringify(accountBonds), JSON.stringify(bonds), accountBondsLoaded]);
+
+  useEffect(() => {
+    if(activeInvestments && accountBondsLoaded){
+      setInvestmentsLoaded(true);
+    }else{
+      setInvestmentsLoaded(false);
+    }
+  },[activeInvestments, accountBondsLoaded])
 
   const accountDetails: AccountDetails | null = useMemo(() => {
     if (address && activeInvestments) {
@@ -209,6 +208,8 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     if (provider && chainId) {
       for (const bond of bonds) {
+        if(activeInvestments === null)
+          return;
         const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name && investment.secondsToVest <= 0);
         if (currentInvests.length === 0) continue;
 
@@ -258,9 +259,9 @@ export const MyAccount = (): JSX.Element => {
         </Box>
         <Box my={4}>
           <Typography variant="subtitle1">
-            Active Investments ({activeInvestments.length})
+            Active Investments ({activeInvestments ? activeInvestments.length : "..."})
           </Typography>
-          {activeInvestments.length > 0 ? <Box>
+          {activeInvestments && activeInvestments.length > 0 ? <Box>
             {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onConfirmCancelBond={onConfirmCancelBond} /> ||
             <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onConfirmCancelBond={onConfirmCancelBond} />}
             </Box> : <Box>
@@ -269,9 +270,12 @@ export const MyAccount = (): JSX.Element => {
                 sx={{ marginTop: '10px' }}
                 className={style['rowCard']}
               >
-                <Typography variant="h6">
-                  You have no active investments
-                </Typography>
+                
+                  { investmentsLoaded ?
+                    (<Typography variant="h6">You have no active investments</Typography>):
+                    (<Typography variant="h6">Loading investments</Typography>)
+                  }
+                
               </Paper>
             </Box>
             }
