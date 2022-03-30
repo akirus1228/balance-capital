@@ -344,9 +344,14 @@ export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
 	if (!networkId || !address) return '0';
 	const bondContract = await singleSided.getContractForBond(networkId);
 	const bondDetails = await bondContract['bondInfo'](address);
-	const iLBalance = ethers.utils.formatUnits(
+	const iLBalanceInUsd = ethers.utils.formatUnits(
 		bondDetails.ilProtectionAmountInUsd,
 		18
 	);
-	return iLBalance;
+	let iLBalance = await bondContract['payoutInFhmFor'](bondDetails.ilProtectionAmountInUsd);
+	iLBalance = ethers.utils.formatUnits(
+		iLBalance,
+		18
+	);
+	return [iLBalance, iLBalanceInUsd];
 }

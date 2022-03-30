@@ -47,6 +47,7 @@ import { allBonds } from '@fantohm/shared-web3';
 import { ethers } from 'ethers';
 import InputWrapper from '../../../components/input-wrapper/input-wrapper';
 import { Link, Route, useNavigate } from 'react-router-dom';
+import { formatCurrency } from "@fantohm/shared-helpers";
 
 interface IStakingCardParams {
   bondType: string;
@@ -64,6 +65,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [image, setImage] = useState(DaiToken);
   const [payout, setPayout] = useState('0');
   const [deposited, setDeposited] = useState(false);
+  const [iLBalanceInUsd, setILBalanceInUsd] = useState<number>(0);
   const [stdButtonColor, setStdButtonColor] = useState<'primary' | 'error'>(
     'primary'
   );
@@ -137,7 +139,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       setToken('FHM');
       setImage(FHMToken);
       (async () => {
-        const iLBalance = await getIlRedeemFHM(chainId!, address);
+        const [iLBalance, iLBalanceInUsd] = await getIlRedeemFHM(chainId!, address);
+        setILBalanceInUsd(iLBalanceInUsd);
         setTokenBalance(iLBalance);
       })();
     } else if (cardState === 'Claim') {
@@ -341,7 +344,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           >
             <span className={style['name']}>{token} balance</span>
             <span className={style['amount']}>
-              {tokenBalance} {token}
+              {tokenBalance} {token} { iLBalanceInUsd > 0 && cardState === 'IL Redeem' && ` ≈ ${formatCurrency(iLBalanceInUsd, 2)}`}
             </span>
           </Box>
         </Box>
