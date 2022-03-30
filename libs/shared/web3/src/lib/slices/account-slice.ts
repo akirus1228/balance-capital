@@ -81,7 +81,7 @@ export const getBalances = createAsyncThunk(
     return {
       balances: {
         dai: ethers.utils.formatUnits(daiBalance, 18),
-        fhm: ethers.utils.formatUnits(fhmBalance, 18),
+        fhm: ethers.utils.formatUnits(fhmBalance, 9),
         usdb: ethers.utils.formatUnits(usdbBalance, 18),
       },
     };
