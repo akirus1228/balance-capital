@@ -69,7 +69,7 @@ export const App = (): JSX.Element => {
 
   const location = useLocation();
   useEffect(() => {
-    console.log(location.pathname);
+    //console.log(location.pathname);
     switch(location.pathname){
       case '/':
       case '/trad-fi':
