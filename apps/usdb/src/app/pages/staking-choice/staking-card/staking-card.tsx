@@ -290,7 +290,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             cardState === 'Deposit' ? style['active'] : ''
           }`}
           sx={{ mr: '1em' }}
-          onClick={() => setCardState('Deposit')}
+          onClick={() => {
+            clearInput()
+            setCardState('Deposit')
+          }}
         >
           <div className={style['dot']} />
           <span>Deposit</span>
@@ -299,7 +302,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           className={`${style['smokeyToggle']} ${
             cardState === 'Withdraw' ? style['active'] : ''
           }`}
-          onClick={() => setCardState('Withdraw')}
+          onClick={() => {
+            clearInput()
+            setCardState('Withdraw')
+          }}
         >
           <div className={style['dot']} />
           <span>Withdraw</span>
