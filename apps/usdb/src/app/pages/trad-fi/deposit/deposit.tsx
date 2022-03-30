@@ -212,10 +212,10 @@ export const TradFiDeposit = (): JSX.Element => {
                   color="primary"
                   id="bond-btn"
                   className="transaction-button inputButton"
-                  disabled={isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)}
+                  disabled={isPendingTxn(pendingTransactions, "deposit_" + tradfiBond.name)}
                   onClick={useBond}
                 >
-                  {txnButtonText(pendingTransactions, "bond_" + tradfiBond.name, tradfiBond.bondAction)}
+                  {txnButtonText(pendingTransactions, "deposit_" + tradfiBond.name, "Deposit")}
                 </Button>
               ) : (
                 <Button
@@ -253,11 +253,11 @@ export const TradFiDeposit = (): JSX.Element => {
             </Grid>
             <Grid item className={` ${style["infoElement"]}`} xs={12} sm>
               <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
-                <span>Your deposit</span>
+                <span>Amount Deposited</span>
                 <span>{payout} DAI</span>
               </Box>
               <Box sx={{ display: "flex", justifyContent: "space-between", maxWidth: "361px" }}>
-                <span>Payout amount</span>
+                <span>Amount Pending</span>
                 <span>{trim(totalInterestDue, 2) ?? 0} USDB</span>
               </Box>
             </Grid>

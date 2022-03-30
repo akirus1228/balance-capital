@@ -284,7 +284,7 @@ export const bondAsset = createAsyncThunk(
     try {
       bondTx = await bondContractForWrite["deposit"](valueInWei, maxPremium, depositorAddress);
       dispatch(
-        fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "bond_" + bond.name }),
+        fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "deposit_" + bond.name }),
       );
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
