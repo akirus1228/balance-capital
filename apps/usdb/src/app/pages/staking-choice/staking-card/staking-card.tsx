@@ -165,13 +165,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       cardState !== 'IL Redeem'
     ) {
       await dispatch(error('Please enter a valid value!'));
-    } else if (
-      (cardState === 'IL Redeem' &&
-        Number(singleSidedBond?.userBonds[0]?.iLBalance || 0) <= 0) ||
-      (cardState === 'Claim' &&
-        Number(singleSidedBond?.userBonds[0]?.pendingFHM || 0) <= 0)
-    ) {
+    } else if (cardState === 'IL Redeem' && Number(tokenBalance || 0) <= 0) {
       await dispatch(error('Nothing to redeem!'));
+    } else if (cardState === 'Claim' && Number(tokenBalance || 0) <= 0) {
+      await dispatch(error('Nothing to claim!'));
     } else if (cardState === 'Withdraw') {
       await dispatch(
         redeemSingleSidedBond({
