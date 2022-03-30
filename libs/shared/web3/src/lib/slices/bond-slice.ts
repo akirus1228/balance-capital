@@ -289,11 +289,13 @@ export const bondAsset = createAsyncThunk(
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
 
-
       const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
-      // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
-        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+      if (userBondDetails && userBondDetails.userBonds.length > 0) {
+        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        // If the maturation block is the next one. wait until the next block and then refresh bond details
+        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
+          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        }
       }
 
     } catch (e: any) {
@@ -346,9 +348,12 @@ export const redeemSingleSidedBond = createAsyncThunk(
       const minedBlock = (await redeemTx.wait()).blockNumber;
 
       const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
-      // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
-        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+      if (userBondDetails && userBondDetails.userBonds.length > 0) {
+        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        // If the maturation block is the next one. wait until the next block and then refresh bond details
+        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
+          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        }
       }
 
       dispatch(getBalances({ address, networkId }));

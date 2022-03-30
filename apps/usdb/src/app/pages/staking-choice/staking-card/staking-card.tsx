@@ -96,11 +96,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     if (cardState === 'Deposit') {
       setQuantity(daiBalance);
     } else if (cardState === 'Withdraw') {
-      setQuantity(String(singleSidedBond?.userBonds[0].lpTokenAmount));
+      setQuantity(String(singleSidedBond?.userBonds[0]?.lpTokenAmount || 0));
     } else if (cardState === 'IL Redeem') {
-      setQuantity(String(singleSidedBond?.userBonds[0].iLBalance));
+      setQuantity(String(singleSidedBond?.userBonds[0]?.iLBalance || 0));
     } else if (cardState === 'Claim') {
-      setQuantity(String(singleSidedBond?.userBonds[0].pendingFHM));
+      setQuantity(String(singleSidedBond?.userBonds[0]?.pendingFHM || 0));
     }
   };
 
@@ -167,9 +167,9 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       await dispatch(error('Please enter a valid value!'));
     } else if (
       (cardState === 'IL Redeem' &&
-        Number(singleSidedBond?.userBonds[0]?.iLBalance) <= 0) ||
+        Number(singleSidedBond?.userBonds[0]?.iLBalance || 0) <= 0) ||
       (cardState === 'Claim' &&
-        Number(singleSidedBond?.userBonds[0]?.pendingFHM) <= 0)
+        Number(singleSidedBond?.userBonds[0]?.pendingFHM || 0) <= 0)
     ) {
       await dispatch(error('Nothing to redeem!'));
     } else if (cardState === 'Withdraw') {
@@ -429,7 +429,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
             </span>) :
-              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM} <b>FHM</b> rewards.</span>)}
+              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.</span>)}
           </Box>
           </Box>
         </>
