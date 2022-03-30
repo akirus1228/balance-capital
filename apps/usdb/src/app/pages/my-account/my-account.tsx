@@ -17,7 +17,8 @@ import {
   chains,
   IAllBondData,
   cancelBond,
-  IUserBond
+  IUserBond,
+  info
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -218,6 +219,7 @@ export const MyAccount = (): JSX.Element => {
           await dispatch(claimSingleSidedBond({ value: String(amount), networkId: chainId!, address, bond, provider: provider! }));
         }
       }
+      dispatch(info("Claim all completed."));
     }
   };
 
