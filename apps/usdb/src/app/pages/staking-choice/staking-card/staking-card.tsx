@@ -131,7 +131,6 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     } else if (cardState === 'Withdraw') {
       setToken('DAI-USDB LP');
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
-      console.log('lpAmount: ', lpAmount);
       setTokenBalance(typeof lpAmount === 'undefined' ? '0' : String(lpAmount));
       setImage(DaiUSDBLP);
     } else if (cardState === 'IL Redeem') {
@@ -345,7 +344,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           >
             <span className={style['name']}>{token} balance</span>
             <span className={style['amount']}>
-              {trim(Number(tokenBalance), 4)} {token}
+              {tokenBalance} {token}
             </span>
           </Box>
         </Box>
