@@ -12,7 +12,6 @@ export interface HeadlineProps {
 
 export const Headline = (props: HeadlineProps): JSX.Element => {
   const subtitle: string[] | JSX.Element = typeof(props.subtitle) === 'string' ? [props.subtitle] : props.subtitle;
-  console.log(subtitle);
 
   const isElement = (element: JSX.Element | string[]): element is JSX.Element => {
     return (element as JSX.Element).type !== undefined;
