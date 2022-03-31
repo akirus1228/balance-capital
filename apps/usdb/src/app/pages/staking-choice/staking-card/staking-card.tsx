@@ -247,13 +247,14 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }, [tokenBalance, quantity, cardState]);
 
   useEffect(() => {
+    console.log(pendingTransactions);
     if (
-      isPendingTxn(pendingTransactions, 'bond_' + singleSided.name) &&
+      isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) &&
       cardState === 'Deposit'
     ) {
       setDeposited(true);
     } else if (deposited && cardState === 'Deposit') {
-      dispatch(info("Bond is completed."));
+      dispatch(info("Congratulations, transaction successful. Please check your portfolio for details."));
       setTimeout(() => navigate("/my-account"), 2000);
     }
   }, [pendingTransactions]);
@@ -391,7 +392,6 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         <></>
       )}
       {cardState === 'Deposit' || cardState === 'Withdraw' ? (
-        <>
         <Box className={style['tooltipElement']}>
           <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
             <Box className="flexCenterRow">
@@ -403,37 +403,37 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
           {(cardState === 'Deposit' || cardState === 'Withdraw') &&
-            <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
-              <Box className="flexCenterRow">
-                <span>Estimated Rewards&nbsp;</span>
-                <Tooltip arrow
-                         title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
-                  <Icon component={InfoOutlinedIcon}/>
-                </Tooltip>
-              </Box>
-              <span>{claimableBalance} FHM</span>
+          <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
+            <Box className="flexCenterRow">
+              <span>Estimated Rewards&nbsp;</span>
+              <Tooltip arrow
+                      title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
+                <Icon component={InfoOutlinedIcon}/>
+              </Tooltip>
             </Box>
+            <span>{claimableBalance} FHM</span>
+          </Box>
           }
           <Box
             className={`${style['infoBox']}`}
             sx={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              mb: '1.5em',
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            mb: '1.5em',
             }}
           >
-            <Icon component={InfoOutlinedIcon} sx={{ mr: '0.5em' }} />
-            {cardState === 'Deposit' ?
-              ( <span>
-
+          <Icon component={InfoOutlinedIcon} sx={{ mr: '0.5em' }} />
+          {cardState === 'Deposit' ?
+          (
+            <span>
               Deposit DAI into this pool for FHM rewards with no impermanent
               loss or deposit fees
-            </span>) :
-              (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.</span>)}
+            </span>
+          ) :
+          (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.</span>)}
           </Box>
-          </Box>
-        </>
+        </Box>
       ) : (
         <Box className={`flexSBRow w100`} sx={{ mb: '2em' }}></Box>
       )}
