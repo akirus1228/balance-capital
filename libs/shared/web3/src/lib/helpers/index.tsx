@@ -109,8 +109,11 @@ export function formatCurrency(c: number, precision = 0) {
 }
 
 export function trim(number = 0, precision = 0) {
+	if (!number) {
+		return '0';
+	}
 	// why would number ever be undefined??? what are we trimming?
-	const array = number.toFixed(precision).toString().split(".");
+	const array = Number(number).toFixed(precision).toString().split(".");
 	if (array.length === 1) return number.toString();
 	if (precision === 0) return array[0].toString();
 
