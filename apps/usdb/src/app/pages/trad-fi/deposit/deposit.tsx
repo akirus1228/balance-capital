@@ -113,10 +113,10 @@ export const TradFiDeposit = (): JSX.Element => {
   }, [bondType, allBonds, tradfiBond]);
 
   useEffect(() => {
-    if(isPendingTxn(pendingTransactions, "bond_" + tradfiBond.name)){
+    if(isPendingTxn(pendingTransactions, "deposit_" + tradfiBond.name)){
       setDeposited(true)
     } else if(deposited){
-      dispatch(info("Bond is completed."));
+      dispatch(info("Congratulations, transaction successful. Please check your portfolio for details."));
       setTimeout(() => navigate("/my-account"), 2000);
     }
   }, [pendingTransactions])
