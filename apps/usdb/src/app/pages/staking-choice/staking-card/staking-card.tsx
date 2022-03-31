@@ -464,13 +464,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           className="paperButton cardActionButton"
           disabled={isPendingTxn(
             pendingTransactions,
-            'bond_' + singleSided.name
+            'deposit_' + singleSided.name
           )}
           onClick={useBond}
         >
           {txnButtonText(
             pendingTransactions,
-            'bond_' + singleSided.name,
+            'deposit_' + singleSided.name,
             cardState
           )}
         </Button>
@@ -490,7 +490,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color={stdButtonColor}
           className="paperButton cardActionButton"
           disabled={
-            isPendingTxn(pendingTransactions, 'bond_' + singleSided.name) ||
+            isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) ||
             isOverBalance ||
             quantity === '' ||
             quantity === '0'
@@ -501,7 +501,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             ? 'Insufficient Balance'
             : txnButtonText(
                 pendingTransactions,
-                'bond_' + singleSided.name,
+                'deposit_' + singleSided.name,
                 cardState
               )}
         </Button>
@@ -521,7 +521,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color={stdButtonColor}
           className="paperButton cardActionButton"
           disabled={
-            isPendingTxn(pendingTransactions, 'bond_' + singleSided.name) ||
+            isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) ||
             isOverBalance ||
             quantity === '' ||
             quantity === '0'
@@ -532,7 +532,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             ? 'Insufficient Balance'
             : txnButtonText(
                 pendingTransactions,
-                'bond_' + singleSided.name,
+                'deposit_' + singleSided.name,
                 cardState
               )}
         </Button>
