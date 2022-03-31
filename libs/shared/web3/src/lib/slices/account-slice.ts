@@ -385,9 +385,9 @@ export const calculateUserBondDetails = createAsyncThunk(
               ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
               Number(percentVestedFor.div(BigNumber.from('100'))),
             ]);
-          console.log(`bondDetails ${bondDetails}`);
-          console.log(`pendingPayout ${pendingPayout}`);
-          console.log(`percentVestedFor ${percentVestedFor}`);
+          // console.log(`bondDetails ${bondDetails}`);
+          // console.log(`pendingPayout ${pendingPayout}`);
+          // console.log(`percentVestedFor ${percentVestedFor}`);
           const interestDue =
             bondDetails.payout / Math.pow(10, paymentTokenDecimals);
           const bondMaturationBlock =
@@ -400,9 +400,9 @@ export const calculateUserBondDetails = createAsyncThunk(
           );
           const rewards = trim(interestDue * (1 - pricePaid), 2);
           const amount = trim(Number(payout) * pricePaid, 2);
-          
+
           const latestBlockNumber = await provider.getBlockNumber();
-          
+
           // TODO: Move this function to a helper or other.
           // sometimes getBlock fails
           const getLatestBlock = async ():Promise<ethers.providers.Block> => {
@@ -473,9 +473,9 @@ export const calculateUserBondDetails = createAsyncThunk(
     // console.log(`fhmMarketPrice ${fhmMarketPrice}`);
     const interestDue =
       bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
-    console.log(`interestDue ${interestDue}`);
+    // console.log(`interestDue ${interestDue}`);
     let bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-    console.log(`bondMaturationBlock ${bondMaturationBlock}`);
+    // console.log(`bondMaturationBlock ${bondMaturationBlock}`);
     let pendingFHM = '0';
     let iLBalance = '0';
     let lpTokenAmount = '0';

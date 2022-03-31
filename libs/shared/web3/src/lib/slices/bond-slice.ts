@@ -263,7 +263,7 @@ export const bondAsset = createAsyncThunk(
     let balance;
     // Calculate maxPremium based on premium and slippage.
     // const calculatePremium = await bonding.calculatePremium();
-    console.log('bond: ', bond);
+    // console.log('bond: ', bond);
 
     const signer = provider.getSigner();
 
