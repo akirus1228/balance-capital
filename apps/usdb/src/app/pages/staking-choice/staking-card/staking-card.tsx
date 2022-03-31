@@ -87,7 +87,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const singleSidedBond = accountBonds[singleSidedBondData?.name];
 
-  console.log('singleSidedBond: ', singleSidedBond);
+  // console.log('singleSidedBond: ', singleSidedBond);
 
   const daiBalance = useSelector((state: RootState) => {
     return trim(Number(state.account.balances.dai), 2);
@@ -238,7 +238,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   };
 
   const isOverBalance: boolean = useMemo(() => {
-    console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
+    // console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
     if (['IL Redeem', 'Claim'].includes(cardState)) return false;
 
     if (Number(tokenBalance) < Number(quantity)) return true;
@@ -247,7 +247,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }, [tokenBalance, quantity, cardState]);
 
   useEffect(() => {
-    console.log(pendingTransactions);
+    // console.log(pendingTransactions);
     if (
       isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) &&
       cardState === 'Deposit'
