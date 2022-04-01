@@ -47,18 +47,15 @@ export const formatAmount = (
   decimals: any,
   length = 2,
   truncate = false
-) => {
+): number => {
   if (!amount || !decimals || isNaN(amount)) {
     return 0;
   }
-  const result = ethers.utils.formatUnits(
-    scientificToDecimal(amount).toString(),
-    decimals
-  );
+  const result = ethers.utils.formatUnits(scientificToDecimal(amount), decimals);
   if (truncate) {
     return truncateDecimals(result, length);
   } else {
-    return result;
+    return parseInt(result);
   }
 };
 

@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import IconGrid from './icon-grid';
+import IconGrid from "./icon-grid";
 
-describe('IconGrid', () => {
-  it('should render successfully', () => {
+describe("IconGrid", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<IconGrid />);
     expect(baseElement).toBeTruthy();
   });

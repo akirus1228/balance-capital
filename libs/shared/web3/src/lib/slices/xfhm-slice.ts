@@ -417,7 +417,7 @@ export const calcAssetAmount = createAsyncThunk(
   async (
     { provider, address, networkId, value, action }: IXfhmActionValueAsyncThunk,
     { dispatch }
-  ): Promise<number> => {
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return 0;

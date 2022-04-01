@@ -1,11 +1,11 @@
-import { Backdrop, Fade, FormControl, Grid, Paper, RadioGroup } from '@mui/material';
-import { useState } from 'react';
-import { useParams } from 'react-router-dom';
-import BondDeposit from './bond-deposit/bond-deposit';
-import BondRedeem from './bond-redeem/bond-redeem';
-import style from './bond.module.scss';
-import { Box } from '@mui/system';
-import { BondRadioButton } from './bond-radio-button/bond-radio-button';
+import { Backdrop, Fade, FormControl, Grid, Paper, RadioGroup } from "@mui/material";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import BondDeposit from "./bond-deposit/bond-deposit";
+import BondRedeem from "./bond-redeem/bond-redeem";
+import style from "./bond.module.scss";
+import { Box } from "@mui/system";
+import { BondRadioButton } from "./bond-radio-button/bond-radio-button";
 
 /* eslint-disable-next-line */
 export interface BondProps {}
@@ -16,25 +16,37 @@ export const Bond = (props: BondProps): JSX.Element => {
 
   return (
     <Fade in={true} mountOnEnter unmountOnExit>
-      <Grid container id="bond-view" className={style['bondView']}>
+      <Grid container id="bond-view" className={style["bondView"]}>
         <Backdrop open={true}>
           <Fade in={true}>
-            <Paper className={`${style['flexCenterCol']} ${style['paperContainer']}`}>
+            <Paper className={`${style["flexCenterCol"]} ${style["paperContainer"]}`}>
               <h2>{bondType}</h2>
-              <Grid container sx={{maxWidth: '500px'}}>
+              <Grid container sx={{ maxWidth: "500px" }}>
                 <Grid item xs={12}>
-                  <Box className={style['flexCenterRow']}>
+                  <Box className={style["flexCenterRow"]}>
                     <FormControl>
                       <RadioGroup row name="bond-options" defaultValue="deposit">
-                          <BondRadioButton onClick={() => setIsDeposit(true)} active={isDeposit} label="Deposit"/>
-                          <BondRadioButton onClick={() => setIsDeposit(false)} active={!isDeposit} label="Redeem"/>
+                        <BondRadioButton
+                          onClick={() => setIsDeposit(true)}
+                          active={isDeposit}
+                          label="Deposit"
+                        />
+                        <BondRadioButton
+                          onClick={() => setIsDeposit(false)}
+                          active={!isDeposit}
+                          label="Redeem"
+                        />
                       </RadioGroup>
                     </FormControl>
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  <Box className={style['flexCenterRow']}>
-                    {isDeposit ? (<BondDeposit bondType={bondType}/>) : (<BondRedeem bondType={bondType}/>)}
+                  <Box className={style["flexCenterRow"]}>
+                    {isDeposit ? (
+                      <BondDeposit bondType={bondType} />
+                    ) : (
+                      <BondRedeem bondType={bondType} />
+                    )}
                   </Box>
                 </Grid>
               </Grid>
@@ -44,6 +56,6 @@ export const Bond = (props: BondProps): JSX.Element => {
       </Grid>
     </Fade>
   );
-}
+};
 
 export default Bond;
