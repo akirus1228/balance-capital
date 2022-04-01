@@ -187,7 +187,7 @@ export default function Mint() {
         <Grid item md={6} sx={{ width: "100%" }}>
           <Box className={style["subCardBorder"]} sx={{ borderRadius: "20px" }}>
             <Carousel
-              sx={{ width: "100%", height: "470px" }}
+              sx={{ width: "100%", height: {xs: "370px", md: "550px"} }}
               indicatorContainerProps={{
                 style: {
                   position: "absolute",
@@ -197,12 +197,15 @@ export default function Mint() {
               }}
             >
               {
-                selectedToken.banner.map((item: any, index) => <img key={`${selectedToken.title}_${index}`} style={{
+                selectedToken.banner.map((item: any, index) => <Box key={`${selectedToken.title}_${index}`} sx={{
                   width: "100%",
-                  height: "470px",
-                  objectFit: "fill",
+                  height: {xs: "370px", md: "550px"},
+                }}><img style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
                   borderRadius: "20px"
-                }} src={item} />)
+                }} src={item} /></Box>)
               }
             </Carousel>
           </Box>
@@ -212,10 +215,10 @@ export default function Mint() {
             <SettingsOutlinedIcon className={style["settingIcon"]} />
             <div className={style["subTitle"]}>{selectedToken.title}</div>
             <Grid container spacing={1}>
-              <Grid item md={4} xs={6}>
+              <Grid item md={4} xs={12}>
                 <div className={style["roundArea"]}>
                   <img src={image} className={style["daiIcon"]} style={{ marginRight: "10px" }} />
-                  <div style={{ textAlign: "left" }}>
+                  <div className={style["tokenInfo"]}>
                     <div className={style["tokenName"]}>
                       {selectedToken.name}
                     </div>
@@ -225,7 +228,7 @@ export default function Mint() {
                   </div>
                 </div>
               </Grid>
-              <Grid item md={8} xs={6}>
+              <Grid item md={8} xs={12}>
                 <Box
                   className={style["roundArea"]}
                 >
