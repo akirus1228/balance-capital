@@ -2,13 +2,13 @@ import Snackbar from "@material-ui/core/Snackbar";
 import MuiAlert from "@material-ui/lab/Alert";
 import Slide from "@material-ui/core/Slide";
 import { makeStyles } from "@material-ui/core/styles";
-import {useState} from "react";
+import { useState } from "react";
 
 function Alert(props) {
   return <MuiAlert elevation={6} variant="outlined" {...props} />;
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
     "& > * + *": {
@@ -42,16 +42,16 @@ function OhmSnackbar({ message, duration, severity }) {
 }
 
 export const ohmToast = {
-  success: message => {
+  success: (message) => {
     OhmSnackbar(message, null, "success");
   },
-  error: message => {
+  error: (message) => {
     OhmSnackbar(message, null, "error");
   },
-  info: message => {
+  info: (message) => {
     OhmSnackbar(message, null, "info");
   },
-  warn: message => {
+  warn: (message) => {
     OhmSnackbar(message, null, "warning");
   },
 };

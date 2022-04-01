@@ -95,7 +95,6 @@ export async function getHistoricTokenPrice(chain: string, ca: string) {
   const resp: any = await axios.get(
     `https://api.coingecko.com/api/v3/coins/${chain}/contract/${ca}/market_chart?vs_currency=usd&days=90`
   );
-  const prices = resp.data.prices;
   return resp.data.prices.reduce(
     (prices: { [key: number]: number }, price: [number, number]) => (
       (prices[roundToNearestHour(price[0] / 1000)] = price[1]), prices

@@ -1,7 +1,7 @@
-import { Provider, StaticJsonRpcProvider } from '@ethersproject/providers';
-import { NetworkIds } from './networks';
-import { NodeHelper } from './helpers/node-helper';
-import { MulticallProvider } from './lib/multicall-provider';
+import { Provider, StaticJsonRpcProvider } from "@ethersproject/providers";
+import { NetworkIds } from "./networks";
+import { NodeHelper } from "./helpers/node-helper";
+import { MulticallProvider } from "./lib/multicall-provider";
 
 interface ChainDetailsOpts {
   networkName: string;
@@ -30,20 +30,18 @@ class ChainDetails {
     this.multicallAddress = chainDetailsOpts.multicallAddress;
 
     // Use the fastest node available
-    this.provider = ChainDetails.getFastestRpcUrl(this.rpcUrls).then(
-      (rpcUrl) => {
-        const staticProvider = new StaticJsonRpcProvider(rpcUrl);
-        if (this.multicallAddress) {
-          return new MulticallProvider(
-            this.networkName,
-            staticProvider,
-            this.multicallAddress
-          );
-        } else {
-          return staticProvider;
-        }
+    this.provider = ChainDetails.getFastestRpcUrl(this.rpcUrls).then((rpcUrl) => {
+      const staticProvider = new StaticJsonRpcProvider(rpcUrl);
+      if (this.multicallAddress) {
+        return new MulticallProvider(
+          this.networkName,
+          staticProvider,
+          this.multicallAddress
+        );
+      } else {
+        return staticProvider;
       }
-    );
+    });
   }
 
   // Return the fastest rpcUrl available
@@ -71,84 +69,82 @@ interface AllChainDetails {
 
 export const chains: AllChainDetails = {
   [NetworkIds.FantomOpera]: new ChainDetails({
-    networkName: 'Fantom Opera',
+    networkName: "Fantom Opera",
     rpcUrls: [
       // this is just a test, have our node and one other
       // 'https://summer-frosty-cherry.fantom.quiknode.pro/40823c8d106b70145e5cb78de1751d9ecadc5f1d/',
-      'https://rpc.ankr.com/fantom',
-      'https://rpc.ftm.tools',
-      'https://rpc3.fantom.network',
-      'https://rpc.fantom.network',
-      'https://rpcapi.fantom.network',
-      'https://rpc2.fantom.network',
+      "https://rpc.ankr.com/fantom",
+      "https://rpc.ftm.tools",
+      "https://rpc3.fantom.network",
+      "https://rpc.fantom.network",
+      "https://rpcapi.fantom.network",
+      "https://rpc2.fantom.network",
       // 'https://rpc.neist.io',
     ],
-    symbol: 'FTM',
+    symbol: "FTM",
     decimals: 18,
-    blockExplorerUrls: ['https://ftmscan.com/'],
-    multicallAddress: '0xe4CC2532B2b1EC585310682af3656b2E4B6fab58',
+    blockExplorerUrls: ["https://ftmscan.com/"],
+    multicallAddress: "0xe4CC2532B2b1EC585310682af3656b2E4B6fab58",
   }),
   [NetworkIds.FantomTestnet]: new ChainDetails({
-    networkName: 'Fantom testnet',
-    rpcUrls: ['https://rpc.testnet.fantom.network/'],
+    networkName: "Fantom testnet",
+    rpcUrls: ["https://rpc.testnet.fantom.network/"],
     decimals: 18,
-    symbol: 'FTM',
+    symbol: "FTM",
     blockExplorerUrls: [],
   }),
   [NetworkIds.Moonriver]: new ChainDetails({
-    networkName: 'Moonriver',
-    rpcUrls: ['https://rpc.api.moonbeam.network'],
-    symbol: 'MOVR',
+    networkName: "Moonriver",
+    rpcUrls: ["https://rpc.api.moonbeam.network"],
+    symbol: "MOVR",
     decimals: 18,
-    blockExplorerUrls: ['https://blockscout.moonriver.moonbeam.network/'],
-    multicallAddress: '0x43D002a2B468F048028Ea9C2D3eD4705a94e68Ae',
+    blockExplorerUrls: ["https://blockscout.moonriver.moonbeam.network/"],
+    multicallAddress: "0x43D002a2B468F048028Ea9C2D3eD4705a94e68Ae",
   }),
   [NetworkIds.MoonbaseAlpha]: new ChainDetails({
-    networkName: 'Moonbase Alpha',
-    rpcUrls: ['https://rpc.api.moonbase.moonbeam.network/'],
-    symbol: 'DEV',
+    networkName: "Moonbase Alpha",
+    rpcUrls: ["https://rpc.api.moonbase.moonbeam.network/"],
+    symbol: "DEV",
     decimals: 18,
-    blockExplorerUrls: [
-      'https://moonbase-blockscout.testnet.moonbeam.network/',
-    ],
+    blockExplorerUrls: ["https://moonbase-blockscout.testnet.moonbeam.network/"],
   }),
   [NetworkIds.Ethereum]: new ChainDetails({
-    networkName: 'Ethereum',
-    rpcUrls: ['https://mainnet.infura.io/v3/84842078b09946638c03157f83405213'],
-    symbol: 'ETH',
+    networkName: "Ethereum",
+    rpcUrls: ["https://mainnet.infura.io/v3/84842078b09946638c03157f83405213"],
+    symbol: "ETH",
     decimals: 18,
-    blockExplorerUrls: ['https://etherscan.io/'],
-    multicallAddress: '0x5ba1e12693dc8f9c48aad8770482f4739beed696',
+    blockExplorerUrls: ["https://etherscan.io/"],
+    multicallAddress: "0x5ba1e12693dc8f9c48aad8770482f4739beed696",
   }),
   [NetworkIds.Rinkeby]: new ChainDetails({
-    networkName: 'Rinkeby',
+    networkName: "Rinkeby",
     rpcUrls: [
       // 'https://rinkeby.infura.io/v3/84842078b09946638c03157f83405213',
-      'https://eth-rinkeby.alchemyapi.io/v2/EWSLdTPfKsidqzm4f_kvJPaX5HI8A-D8',
+      "https://eth-rinkeby.alchemyapi.io/v2/EWSLdTPfKsidqzm4f_kvJPaX5HI8A-D8",
     ],
-    symbol: 'ETH',
+    symbol: "ETH",
     decimals: 18,
-    blockExplorerUrls: ['https://rinkeby.etherscan.io/'],
+    blockExplorerUrls: ["https://rinkeby.etherscan.io/"],
   }),
   [NetworkIds.Avalanche]: new ChainDetails({
-    networkName: 'Avalanche Network',
-    rpcUrls: ['https://api.avax.network/ext/bc/C/rpc'],
-    symbol: 'AVAX',
+    networkName: "Avalanche Network",
+    rpcUrls: ["https://api.avax.network/ext/bc/C/rpc"],
+    symbol: "AVAX",
     decimals: 18,
-    blockExplorerUrls: ['https://snowtrace.io/'],
+    blockExplorerUrls: ["https://snowtrace.io/"],
   }),
   [NetworkIds.Bsc]: new ChainDetails({
-    networkName: 'Smart Chain',
-    rpcUrls: ['https://bsc-dataseed.binance.org/'],
-    symbol: 'BNB',
+    networkName: "Smart Chain",
+    rpcUrls: ["https://bsc-dataseed.binance.org/"],
+    symbol: "BNB",
     decimals: 18,
-    blockExplorerUrls: ['https://bscscan.com/'],
+    blockExplorerUrls: ["https://bscscan.com/"],
   }),
   [NetworkIds.Boba]: new ChainDetails({
-    networkName: 'BOBA L2',
-    rpcUrls: ['https://mainnet.boba.network/'],
-    symbol: 'ETH',
+    networkName: "BOBA L2",
+    rpcUrls: ["https://mainnet.boba.network/"],
+    symbol: "ETH",
     decimals: 18,
-    blockExplorerUrls: ['https://blockexplorer.boba.network/'],
+    blockExplorerUrls: ["https://blockexplorer.boba.network/"],
   }),
 };

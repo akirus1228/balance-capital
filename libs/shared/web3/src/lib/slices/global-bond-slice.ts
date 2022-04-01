@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IBaseAllBondsAsyncThunk } from "./interfaces";
 import { enabledMainNetworkIds, NetworkId } from "../networks";
 import { Bond } from "../lib/bond";
@@ -9,17 +9,16 @@ export interface IGlobalBondDetails {
 }
 
 interface GlobalBond {
-  networkId: NetworkId,
-  bond: Bond,
+  networkId: NetworkId;
+  bond: Bond;
 }
 
 export const calcGlobalBondDetails = createAsyncThunk(
   "globalbonding/calcGlobalBondDetails",
   // eslint-disable-next-line no-empty-pattern
-  async ({ allBonds }: IBaseAllBondsAsyncThunk, { }): Promise<IGlobalBondDetails> => {
-
+  async ({ allBonds }: IBaseAllBondsAsyncThunk, {}): Promise<IGlobalBondDetails> => {
     const includedReserveAddresses = new Set<string>();
-    const globalBonds: GlobalBond[] = []
+    const globalBonds: GlobalBond[] = [];
     for (let i = 0; i < allBonds.length; i++) {
       const bond = allBonds[i];
       for (let j = 0; j < enabledMainNetworkIds.length; j++) {
@@ -41,7 +40,9 @@ export const calcGlobalBondDetails = createAsyncThunk(
     let globalTreasuryBalance = 0;
     let globalTreasuryBondRFV = 0;
 
-    const purchased = await Promise.all(globalBonds.map(({ networkId, bond }) => bond.getTreasuryBalance(networkId)));
+    const purchased = await Promise.all(
+      globalBonds.map(({ networkId, bond }) => bond.getTreasuryBalance(networkId))
+    );
     purchased.forEach((amount, i) => {
       globalTreasuryBalance += amount;
       if (globalBonds[i].bond.isRiskFree) globalTreasuryBondRFV += amount;
@@ -51,7 +52,7 @@ export const calcGlobalBondDetails = createAsyncThunk(
       globalTreasuryBalance,
       globalTreasuryBondRFV,
     };
-  },
+  }
 );
 
 // Note(zx): this is a barebones interface for the state. Update to be more accurate
@@ -78,11 +79,11 @@ const initialState: IBondSlice = {
 const globalBondingSlice = createSlice({
   name: "globalbonding",
   initialState,
-  reducers: { },
+  reducers: {},
 
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(calcGlobalBondDetails.pending, state => {
+      .addCase(calcGlobalBondDetails.pending, (state) => {
         state.loading = true;
       })
       .addCase(calcGlobalBondDetails.fulfilled, (state, action) => {
@@ -97,4 +98,3 @@ const globalBondingSlice = createSlice({
 });
 
 export const globalbondingReducer = globalBondingSlice.reducer;
-

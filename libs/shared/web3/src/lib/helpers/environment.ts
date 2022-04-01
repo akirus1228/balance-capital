@@ -36,15 +36,22 @@ export class EnvHelper {
     let ALCHEMY_ID_LIST: string[];
 
     // split the provided API keys on whitespace
-    if (EnvHelper.env["REACT_APP_ALCHEMY_IDS"] && EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_ALCHEMY_IDS"])) {
-      ALCHEMY_ID_LIST = EnvHelper.env["REACT_APP_ALCHEMY_IDS"].split(EnvHelper.whitespaceRegex);
+    if (
+      EnvHelper.env["REACT_APP_ALCHEMY_IDS"] &&
+      EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_ALCHEMY_IDS"])
+    ) {
+      ALCHEMY_ID_LIST = EnvHelper.env["REACT_APP_ALCHEMY_IDS"].split(
+        EnvHelper.whitespaceRegex
+      );
     } else {
       ALCHEMY_ID_LIST = [];
     }
 
     // now add the uri path
     if (ALCHEMY_ID_LIST.length > 0) {
-      ALCHEMY_ID_LIST = ALCHEMY_ID_LIST.map(alchemyID => `https://eth-mainnet.alchemyapi.io/v2/${alchemyID}`);
+      ALCHEMY_ID_LIST = ALCHEMY_ID_LIST.map(
+        (alchemyID) => `https://eth-mainnet.alchemyapi.io/v2/${alchemyID}`
+      );
     } else {
       ALCHEMY_ID_LIST = [];
     }
@@ -59,15 +66,22 @@ export class EnvHelper {
     let INFURA_ID_LIST: string[];
 
     // split the provided API keys on whitespace
-    if (EnvHelper.env["REACT_APP_INFURA_IDS"] && EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_INFURA_IDS"])) {
-      INFURA_ID_LIST = EnvHelper.env["REACT_APP_INFURA_IDS"].split(new RegExp(EnvHelper.whitespaceRegex));
+    if (
+      EnvHelper.env["REACT_APP_INFURA_IDS"] &&
+      EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_INFURA_IDS"])
+    ) {
+      INFURA_ID_LIST = EnvHelper.env["REACT_APP_INFURA_IDS"].split(
+        new RegExp(EnvHelper.whitespaceRegex)
+      );
     } else {
       INFURA_ID_LIST = [];
     }
 
     // now add the uri path
     if (INFURA_ID_LIST.length > 0) {
-      INFURA_ID_LIST = INFURA_ID_LIST.map(infuraID => `https://mainnet.infura.io/v3/${infuraID}`);
+      INFURA_ID_LIST = INFURA_ID_LIST.map(
+        (infuraID) => `https://mainnet.infura.io/v3/${infuraID}`
+      );
     } else {
       INFURA_ID_LIST = [];
     }
@@ -82,8 +96,13 @@ export class EnvHelper {
    */
   static getSelfHostedNode() {
     let URI_LIST: string[];
-    if (EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"] && EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"])) {
-      URI_LIST = EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"].split(new RegExp(EnvHelper.whitespaceRegex));
+    if (
+      EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"] &&
+      EnvHelper.isNotEmpty(EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"])
+    ) {
+      URI_LIST = EnvHelper.env["REACT_APP_SELF_HOSTED_NODE"].split(
+        new RegExp(EnvHelper.whitespaceRegex)
+      );
     } else {
       URI_LIST = [];
     }
@@ -106,7 +125,10 @@ export class EnvHelper {
   }
 
   static getFallbackURIs() {
-    const ALL_URIs = [...EnvHelper.getAlchemyAPIKeyList(), ...EnvHelper.getInfuraIdList()];
+    const ALL_URIs = [
+      ...EnvHelper.getAlchemyAPIKeyList(),
+      ...EnvHelper.getInfuraIdList(),
+    ];
     return ALL_URIs;
   }
 
