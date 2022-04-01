@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import Deposit from './deposit';
+import Deposit from "./deposit";
 
-describe('Deposit', () => {
-  it('should render successfully', () => {
+describe("Deposit", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<Deposit />);
     expect(baseElement).toBeTruthy();
   });

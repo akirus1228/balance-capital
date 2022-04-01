@@ -1,10 +1,10 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import Logo from './logo';
+import Graph from "./graph";
 
-describe('Logo', () => {
-  it('should render successfully', () => {
-    const { baseElement } = render(<Logo />);
+describe("Graph", () => {
+  it("should render successfully", () => {
+    const { baseElement } = render(<Graph />);
     expect(baseElement).toBeTruthy();
   });
 });

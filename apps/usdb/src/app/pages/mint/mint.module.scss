@@ -15,10 +15,13 @@
 }
 .subCard {
   width: 100%;
-  height: 470px;
+  height: 550px;
   border-radius: 20px !important;
   position: relative;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 
 }
 .subCardBorder {
@@ -39,12 +42,19 @@
   flex-direction: row;
   align-items: center;
 }
+.tokenInfo {
+  text-align: left;
+  width: calc(100% - 45px);
+}
+
 .tokenName {
   font-size: 15px;
   font-weight: bold;
 }
 .tokenValue {
   font-size: 15px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .reward {
   display: flex;
