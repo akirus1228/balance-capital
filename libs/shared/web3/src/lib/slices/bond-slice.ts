@@ -391,7 +391,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
     };
     try {
       redeemTx = await bondContract["ilProtectionRedeem"](address);
-      const pendingTxnType = "bond_" + bond.name;
+      const pendingTxnType = "deposit_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
