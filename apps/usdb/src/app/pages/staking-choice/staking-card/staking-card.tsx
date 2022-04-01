@@ -42,7 +42,7 @@ import {
   networks,
   allBonds
 } from "@fantohm/shared-web3";
-import { formatCurrency } from "@fantohm/shared-helpers";
+import { formatCurrency, formatSeconds } from "@fantohm/shared-helpers";
 import { useNavigate } from 'react-router-dom';
 
 import { RootState } from '../../../store';
@@ -497,13 +497,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           disabled={isPendingTxn(
             pendingTransactions,
             'deposit_' + singleSided.name
-          ) || Number(tokenBalance) === 0}
+          ) || Number(tokenBalance) === 0 || ilUnLockPeriod > 0}
           onClick={useBond}
         >
           {txnButtonText(
             pendingTransactions,
             'deposit_' + singleSided.name,
-            `${cardState}${ilUnLockPeriod > 0 ? ` (Wait ≈ ${ilUnLockPeriod}s` : ''}`
+            `${cardState}${ilUnLockPeriod > 0 ? ` (Wait ≈ ${formatSeconds(ilUnLockPeriod)}s)` : ''}`
           )}
         </Button>
       ) : !singleSided.isAvailable[chainId ?? 250] ? (

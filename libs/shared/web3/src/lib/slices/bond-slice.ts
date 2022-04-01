@@ -403,7 +403,11 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(e.error.message));
+      if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
+        dispatch(error("Redeeming IL rewards before end of vesting period."));
+      } else {
+        dispatch(error(e.error.message));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
