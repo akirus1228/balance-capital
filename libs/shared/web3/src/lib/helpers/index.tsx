@@ -349,7 +349,9 @@ export async function getStakedTVL() {
 }
 
 export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
-	if (!networkId || !address) return '0';
+	if (!networkId || !address) {
+		return ['0', '0'];
+	}
 	const bondContract = await singleSided.getContractForBond(networkId);
 	const bondDetails = await bondContract['bondInfo'](address);
 	const iLBalanceInUsd = ethers.utils.formatUnits(
@@ -362,4 +364,15 @@ export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
 		9
 	);
 	return [iLBalance, iLBalanceInUsd];
+}
+
+export async function getIlRedeemBlockNumber(networkId: NetworkId, address: string) {
+	if (!networkId || !address) {
+		return [0, 0];
+	}
+	const bondContract = await singleSided.getContractForBond(networkId);
+	const bondDetails = await bondContract['bondInfo'](address);
+	const provider = await chains[networkId].provider;
+	const currentBlockNumber = await provider.getBlockNumber();
+	return [currentBlockNumber, Number(bondDetails.ilProtectionUnlockBlock.toString())];
 }

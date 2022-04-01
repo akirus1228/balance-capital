@@ -401,9 +401,13 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
+        dispatch(error("Redeeming IL rewards before end of vesting period."));
+      } else {
+        dispatch(error(e.error.message));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -446,9 +450,9 @@ export const claimSingleSidedBond = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(e.error.message));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -491,9 +495,9 @@ export const redeemOneBond = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(e.error.message));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -532,8 +536,8 @@ export const redeemAllBonds = createAsyncThunk(
         });
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      dispatch(error(e.error.message));
     } finally {
       if (redeemAllTx) {
         dispatch(clearPendingTxn(redeemAllTx.hash));
@@ -566,8 +570,8 @@ export const cancelBond = createAsyncThunk(
       await cancelTx.wait();
 
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      dispatch(error(e.error.message));
     } finally {
       if (cancelTx) {
         dispatch(clearPendingTxn(cancelTx.hash));
