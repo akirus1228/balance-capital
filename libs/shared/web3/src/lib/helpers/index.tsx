@@ -118,9 +118,14 @@ export function trim(number = 0, precision = 0) {
 	if (precision === 0) return array[0].toString();
 
 	const poppedNumber = array.pop() || "0";
-	const belowPrecision = poppedNumber.substring(0, precision);
+	let belowPrecision = poppedNumber.substring(0, precision);
 	
-	if (belowPrecision.match(/^[0]+$/)) return array[0];
+	const lastZeros = belowPrecision.match(/[0]+$/);
+	if (lastZeros) {
+		const { index } = lastZeros!;
+		if (index === 0) return array[0];
+		belowPrecision = belowPrecision.substring(0, index);
+	}
 	array.push(belowPrecision);
 	const trimmedNumber = array.join(".");
 	return trimmedNumber;
