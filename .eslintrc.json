@@ -25,7 +25,8 @@
     "comma-dangle": ["warn", "only-multiline"],
     "quotes": ["error", "double"],
     "node/no-unpublished-import": "off",
-    "node/no-missing-import": "off"
+    "node/no-missing-import": "off",
+    "react-hooks/exhaustive-deps": "off"
   },
   "parser": "@typescript-eslint/parser",
   "overrides": [
