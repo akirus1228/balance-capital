@@ -1,11 +1,11 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Box, CssBaseline } from '@mui/material';
-import { ThemeProvider } from '@mui/material/styles';
-import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
-import Mint from './pages/mint/mint';
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Box, CssBaseline } from "@mui/material";
+import { ThemeProvider } from "@mui/material/styles";
+import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
+import Mint from "./pages/mint/mint";
 import {
   useWeb3Context,
   calcBondDetails,
@@ -14,21 +14,20 @@ import {
   calcInvestmentDetails,
   useInvestments,
   fetchTokenPrice,
-  calculateUserBondDetails,
   loadAccountDetails,
   defaultNetworkId,
-  calculateAllUserBondDetails
-} from '@fantohm/shared-web3';
-import { StakingChoicePage } from './pages/staking-choice/staking-choice';
-import { Header } from './components/template';
-import { Messages } from './components/messages/messages';
-import { XfhmLqdrPage } from './pages/xfhm-lqdr/xfhm-lqdr';
-import { HomePage } from './pages/home/home-page';
-import { TradFiDeposit } from './pages/trad-fi/deposit/deposit';
-import { TradFi } from './pages/trad-fi/trad-fi';
-import { MyAccount } from './pages/my-account/my-account';
-import { RootState } from './store';
-import { loadAppDetails } from './store/reducers/app-slice';
+  calculateAllUserBondDetails,
+} from "@fantohm/shared-web3";
+import { StakingChoicePage } from "./pages/staking-choice/staking-choice";
+import { Header } from "./components/template";
+import { Messages } from "./components/messages/messages";
+import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
+import { HomePage } from "./pages/home/home-page";
+import { TradFiDeposit } from "./pages/trad-fi/deposit/deposit";
+import { TradFi } from "./pages/trad-fi/trad-fi";
+import { MyAccount } from "./pages/my-account/my-account";
+import { RootState } from "./store";
+import { loadAppDetails } from "./store/reducers/app-slice";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -40,16 +39,17 @@ export const App = (): JSX.Element => {
   const { investments } = useInvestments();
 
   useEffect(() => {
-    setTheme(themeType === 'light' ? USDBLight : USDBDark);
+    setTheme(themeType === "light" ? USDBLight : USDBDark);
   }, [themeType]);
 
   useEffect(() => {
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
-    if(!connected || !chainId)
-      return;
+    if (!connected || !chainId) return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
     bonds.map((bond) => {
-      dispatch(calcBondDetails({ bond, value: '', networkId: chainId || defaultNetworkId }));
+      dispatch(
+        calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
+      );
     });
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map((investment) => {
@@ -61,26 +61,29 @@ export const App = (): JSX.Element => {
   // Load account details
   useEffect(() => {
     if (address) {
-      console.log('app-chainId, address: ', chainId, address);
+      console.log("app-chainId, address: ", chainId, address);
       dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
-      dispatch(calculateAllUserBondDetails({ address, allBonds: bonds, networkId: chainId || defaultNetworkId }));
+      dispatch(
+        calculateAllUserBondDetails({
+          address,
+          allBonds: bonds,
+          networkId: chainId || defaultNetworkId,
+        })
+      );
     }
   }, [chainId, address, dispatch]);
 
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box paddingTop={5} paddingBottom={12} sx={{ height: '100vh' }}>
+      <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
         <Messages />
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/trad-fi" element={<TradFi />}>
-            <Route
-              path="/trad-fi/deposit/:bondType"
-              element={<TradFiDeposit />}
-            />
+            <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
           </Route>
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
@@ -88,7 +91,7 @@ export const App = (): JSX.Element => {
           <Route
             path="*"
             element={
-              <main style={{ padding: '1rem' }}>
+              <main style={{ padding: "1rem" }}>
                 <p>There's nothing here!</p>
               </main>
             }
