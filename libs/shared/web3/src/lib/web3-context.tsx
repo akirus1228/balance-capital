@@ -1,11 +1,4 @@
-import React, {
-  useState,
-  ReactElement,
-  useContext,
-  useMemo,
-  useCallback,
-  useEffect,
-} from "react";
+import React, { useState, ReactElement, useContext, useMemo, useCallback } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
