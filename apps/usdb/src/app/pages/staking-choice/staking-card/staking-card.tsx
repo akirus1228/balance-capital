@@ -455,15 +455,18 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             mb: '1.5em',
             }}
           >
-          <Icon component={InfoOutlinedIcon} sx={{ mr: '0.5em' }} />
-          {cardState === 'Deposit' ?
-          (
-            <span>
-              Deposit DAI into this pool for FHM rewards with no impermanent
-              loss or deposit fees
-            </span>
-          ) :
-          (<span>Withdrawal action will also claim your {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.</span>)}
+            <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
+            {cardState === "Deposit" ? (
+              <span>
+                Deposit DAI into this pool for FHM rewards with no impermanent loss or
+                deposit fees
+              </span>
+            ) : (
+              <span>
+                Withdrawal action will also claim your{" "}
+                {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.
+              </span>
+            )}
           </Box>
         </Box>
       ) : (
