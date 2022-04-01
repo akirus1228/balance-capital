@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import { formatAmount } from "@fantohm/shared-helpers";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
-import { memo } from "react";
+import { ChangeEvent, memo, SetStateAction, Dispatch } from "react";
 import { ethers } from "ethers";
 
 import { ReactComponent as ArrowDown } from "../../../assets/icons/arrow-down.svg";
@@ -24,37 +24,37 @@ interface AssetSectionProps {
   title: string;
   isMulti: boolean;
   amount: string;
-  setATokenAmount: string | number;
-  setBTokenAmount: string | number;
+  setATokenAmount: Dispatch<SetStateAction<string>>;
+  setBTokenAmount: Dispatch<SetStateAction<string>>;
   calcATokenAmount?: number;
   calcBTokenAmount?: number;
   setMax: (title: string) => void;
+  openAssetTokenModal?: () => void;
 }
-
 
 export const AssetSection = (props: AssetSectionProps): JSX.Element => {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
 
-  const changeAmount = async (e: any) => {
+  const changeAmount = async (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     try {
-      if (props?.isMulti) {
-        props?.setBTokenAmount(e.target.value);
+      if (props.isMulti) {
+        props.setBTokenAmount(e.target.value);
         const bTokenAmount = ethers.utils.parseUnits(
           e.target.value || "0",
           props?.token.decimals
         );
-        const maxAmount = await props?.calcATokenAmount(bTokenAmount);
-        props?.setATokenAmount(
-          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
+        const maxAmount = await props.calcATokenAmount(bTokenAmount);
+        props.setATokenAmount(
+          formatAmount(maxAmount || 0, props.pairToken.decimals, 9)
         );
       } else {
-        props?.setATokenAmount(e.target.value);
+        props.setATokenAmount(e.target.value);
         const aTokenAmount = ethers.utils.parseUnits(
           e.target.value || "0",
           props?.token.decimals
         );
-        const maxAmount = await props?.calcBTokenAmount(aTokenAmount);
-        props?.setBTokenAmount(
+        const maxAmount = await props.calcBTokenAmount(aTokenAmount);
+        props.setBTokenAmount(
           formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
         );
       }
@@ -79,7 +79,7 @@ export const AssetSection = (props: AssetSectionProps): JSX.Element => {
             alignItems="center"
             justifyContent="space-between"
             onClick={() => {
-              if (props?.isMulti) {
+              if (props.isMulti) {
                 props?.openAssetTokenModal();
               }
             }}

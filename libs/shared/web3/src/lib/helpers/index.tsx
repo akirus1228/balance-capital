@@ -135,9 +135,14 @@ export function trim(number = 0, precision = 0) {
   if (precision === 0) return array[0].toString();
 
   const poppedNumber = array.pop() || "0";
-  const belowPrecision = poppedNumber.substring(0, precision);
+  let belowPrecision = poppedNumber.substring(0, precision);
 
-  if (belowPrecision.match(/^[0]+$/)) return array[0];
+  const lastZeros = belowPrecision.match(/[0]+$/);
+  if (lastZeros) {
+    const { index } = lastZeros!;
+    if (index === 0) return array[0];
+    belowPrecision = belowPrecision.substring(0, index);
+  }
   array.push(belowPrecision);
   const trimmedNumber = array.join(".");
   return trimmedNumber;
@@ -377,7 +382,9 @@ export async function getStakedTVL() {
 }
 
 export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
-  if (!networkId || !address) return "0";
+  if (!networkId || !address) {
+    return ["0", "0"];
+  }
   const bondContract = await singleSided.getContractForBond(networkId);
   const bondDetails = await bondContract["bondInfo"](address);
   const iLBalanceInUsd = ethers.utils.formatUnits(
@@ -389,4 +396,15 @@ export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
   );
   iLBalance = ethers.utils.formatUnits(iLBalance, 9);
   return [iLBalance, iLBalanceInUsd];
+}
+
+export async function getIlRedeemBlockNumber(networkId: NetworkId, address: string) {
+  if (!networkId || !address) {
+    return [0, 0];
+  }
+  const bondContract = await singleSided.getContractForBond(networkId);
+  const bondDetails = await bondContract["bondInfo"](address);
+  const provider = await chains[networkId].provider;
+  const currentBlockNumber = await provider.getBlockNumber();
+  return [currentBlockNumber, Number(bondDetails.ilProtectionUnlockBlock.toString())];
 }

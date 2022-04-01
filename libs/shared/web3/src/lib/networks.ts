@@ -102,6 +102,7 @@ export const networks: INetworks = {
       LQDR_ADDRESS: "",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
       LQDR_USDB_LP_ADDRESS: "",
+      USDB_DAI_LP_ADDRESS: "0x7799f423534c319781b1b370b69aaf2c75ca16a3",
     },
   },
   [NetworkIds.FantomTestnet]: {

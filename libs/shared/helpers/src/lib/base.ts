@@ -42,12 +42,27 @@ export const truncateDecimals = (number: any, digits = 2) => {
   return truncatedNum / multiplier;
 };
 
+export const formatSeconds = (duration: number) => {
+  const hrs = parseInt((duration / 3600).toString(), 10);
+  const mins = parseInt(((duration % 3600) / 60).toString(), 10);
+  const secs = duration % 60;
+
+  // Output like "1:01" or "4:03:59" or "123:03:59"
+  let result = "";
+  if (hrs > 0) {
+    result += "" + (hrs < 10 ? "0" + hrs : hrs) + "h :";
+  }
+  result +=
+    "" + (mins < 10 ? "0" + mins : mins) + "m :" + (secs < 10 ? "0" + secs : secs) + "s";
+  return result;
+};
+
 export const formatAmount = (
   amount: any,
   decimals: any,
   length = 2,
   truncate = false
-): number => {
+) => {
   if (!amount || !decimals || isNaN(amount)) {
     return 0;
   }
