@@ -419,7 +419,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             ) : (
               <span>
                 Withdrawal action will also claim your{" "}
-                {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.
+                {claimableBalance} <b>FHM</b> rewards.
               </span>
             )}
           </Box>
