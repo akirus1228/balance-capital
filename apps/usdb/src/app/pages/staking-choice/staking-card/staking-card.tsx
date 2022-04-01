@@ -5,6 +5,7 @@ import {
   Icon,
   InputAdornment,
   OutlinedInput,
+  Skeleton,
   Tooltip
 } from '@mui/material';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
@@ -141,6 +142,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     } else if (cardState === 'IL Redeem') {
       setToken('FHM');
       setImage(FHMToken);
+      setTokenBalance('null');
       (async () => {
         const [iLBalance, iLBalanceInUsd] = await getIlRedeemFHM(chainId!, address);
         const [currentBlockNumber, ilProtectionUnlockBlockNumber] = await getIlRedeemBlockNumber(chainId!, address);
@@ -378,7 +380,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           >
             <span className={style['name']}>{token} balance</span>
             <span className={style['amount']}>
-              {tokenBalance} {token} { iLBalanceInUsd > 0 && cardState === 'IL Redeem' && ` ≈ ${formatCurrency(iLBalanceInUsd, 2)}`}
+              {
+                tokenBalance === 'null' ?
+                <Skeleton />:
+                <>
+                  {tokenBalance} {token} { iLBalanceInUsd > 0 && cardState === 'IL Redeem' && ` ≈ ${formatCurrency(iLBalanceInUsd, 2)}`}
+                </>
+              }
             </span>
           </Box>
         </Box>
