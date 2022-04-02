@@ -57,7 +57,7 @@ export const SsInfoBlock = (): JSX.Element => {
               sx={{ marginBottom: "2em", minHeight: "309px", width: "100%" }}
             >
               <Box className="flexCenterCol">
-                <Typography variant="h1">Zero Imperminant Loss</Typography>
+                <Typography variant="h1">Zero Impermanent Loss</Typography>
                 <Box className="flexCenterCol h-full">
                   <ThemeImage image="DoughnutChartIcon" />
                 </Box>
