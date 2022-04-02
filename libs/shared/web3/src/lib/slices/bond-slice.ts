@@ -435,7 +435,8 @@ export const claimSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await masterchefContract["harvest"](0, address);
+      const poolId = await masterchefContract["getPoolIdForLpToken"](addresses[networkId]["USDB_DAI_LP_ADDRESS"]);
+      redeemTx = await masterchefContract["harvest"](poolId, address);
       const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
