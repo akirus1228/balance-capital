@@ -87,8 +87,9 @@ export const singleSided = new StableBond({
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
-      bondAddress: "0x6F3D5858BBC95553DfEeFda4886Ea20E933535fA",
+      bondAddress: "0x9D2141a3BfDbe0f9a948B993f9a70B5f9C9D17f9",
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+      // bondAddress: "0x6F3D5858BBC95553DfEeFda4886Ea20E933535fA",
       // bondAddress: "0xbA28476fc4EdAd909fA13A7048Ef432311B4680c",
     },
     [NetworkIds.Rinkeby]: {
