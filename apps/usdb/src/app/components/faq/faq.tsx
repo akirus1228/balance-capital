@@ -28,7 +28,7 @@ export const Faq = (props: FaqProps): JSX.Element => {
           </Box>
         </Grid>
         <Grid item xs={12} md={6}>
-          
+
             {props.faqItems.map((faqItem: FaqItem, key: number) => (
               <Accordion key={`faq-acc-${key}`} square={false}>
                 <AccordionSummary
@@ -41,14 +41,14 @@ export const Faq = (props: FaqProps): JSX.Element => {
                   className={style['faqContent']}>
                   {
                     typeof faqItem.content == 'string' ? (
-                      <Typography>
+                      <Typography style={{whiteSpace: 'pre-line'}}>
                         {faqItem.content}
                       </Typography>
                     ) : (
                       faqItem.content
                     )
                   }
-                  
+
                 </AccordionDetails>
                 </Accordion>
             ))}

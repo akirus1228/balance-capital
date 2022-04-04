@@ -1,9 +1,9 @@
 import {
   Button,
-  Grid,
-  Paper,
-  Typography,
-} from '@mui/material';
+  Grid, Icon,
+  Paper, Tooltip,
+  Typography
+} from "@mui/material";
 import { useSelector } from 'react-redux';
 import style from './my-account.module.scss';
 import Info from '../../../assets/icons/info.svg';
@@ -16,6 +16,7 @@ import {
 import { RootState } from '../../store';
 import AccountDetails from './my-account-details';
 import { useState } from 'react';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -35,9 +36,14 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
   });
 
   const onRedeemAllInternal = async () => {
-    setPendingClaim(true);
-    await onRedeemAll();
-    setPendingClaim(false);
+    try {
+      setPendingClaim(true);
+      await onRedeemAll();
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setPendingClaim(false);
+    }
   }
 
   return (
@@ -50,8 +56,10 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="subtitle2" className={style['subTitle']}>
-            Portfolio value{' '}
-            <img src={Info} alt="info" className={style['infoIcon']} />{' '}
+            Portfolio value
+            <Tooltip sx={{marginLeft: "5px"}} arrow title="Total value of your portfolio">
+              <Icon component={InfoOutlinedIcon} fontSize="small" />
+            </Tooltip>
           </Typography>
           <Typography variant="h5">
             {accountDetails &&
@@ -76,11 +84,9 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="subtitle2" className={style['subTitle']}>
             Claimable rewards
-            <img
-              src={Info}
-              alt="info"
-              className={style['infoIcon']}
-            />{' '}
+            <Tooltip sx={{marginLeft: "5px"}} arrow title="Value of rewards you will receive at the end of the vesting period(s)">
+              <Icon component={InfoOutlinedIcon} fontSize="small" />
+            </Tooltip>
           </Typography>
           <Typography variant="h5">
             +
@@ -88,18 +94,20 @@ export const MyAccountDetailsTable = ({ accountDetails, onRedeemAll }: { account
               currencyFormat.format(accountDetails.claimableRewards)}
           </Typography>
         </Grid>
-        {/* <Grid item xs={12} sm={6} md={4}>
-          <Button
-            variant="contained"
-            disableElevation
-            disabled={pendingClaim}
-            onClick={() => {
-              onRedeemAllInternal();
-            }}
-          >
-            {pendingClaim ? '...Pending' : 'Claim all'}
-          </Button>
-        </Grid> */}
+        {
+          accountDetails?.claimableRewards >= 0.005 && <Grid item xs={12} sm={6} md={4}>
+            <Button
+              variant="contained"
+              disableElevation
+              disabled={pendingClaim}
+              onClick={() => {
+                onRedeemAllInternal().then();
+              }}
+            >
+              {pendingClaim ? 'Pending' : 'Claim all'}
+            </Button>
+          </Grid>
+        }
       </Grid>
     </Paper>
   );

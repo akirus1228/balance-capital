@@ -17,7 +17,8 @@ import {
   chains,
   IAllBondData,
   cancelBond,
-  IUserBond
+  IUserBond,
+  info
 } from "@fantohm/shared-web3";
 import {useEffect, useMemo, useState} from "react";
 import { RootState } from '../../store';
@@ -27,6 +28,7 @@ import MyAccountDetailsTable from './my-account-details-table';
 import Investment from './my-account-investments';
 import AccountDetails from './my-account-details';
 import MyAccountActiveInvestmentsCards from './my-account-active-investments-cards';
+import { ConfirmationModal } from "./confirmation-modal";
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -94,42 +96,34 @@ export function shorten(str: string) {
   return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
 }
 
+export const isInvestment = (element: Investment | []): element is Investment => {
+  return (element as Investment).type !== undefined;
+}
+
 export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
   const { provider, address, chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
-  const [currentBlock, setCurrentBlock] = useState<number>();
-
+  const [openConfirmationModal, setOpenConfirmationModal] = useState<boolean>(false);
+  const [cancellingBond, setCancellingBond] = useState<IAllBondData>();
+  const [cancellingBondIndex, setCancellingBondIndex] = useState<number>(0);
+  const [investmentsLoaded, setInvestmentsLoaded] = useState<boolean>(false);
   const isMediumScreen = useMediaQuery("(max-width: 1000px)");
 
+  // is the wallet really disconnected or have we just not checked the cache?
   const hasCheckedConnection = useSelector((state: RootState) => state.app.checkedConnection);
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
 
-  useEffect(() => {
-    (async function () {
-      if (chainId) {
-        const provider = await chains[chainId].provider;
-        setCurrentBlock(await provider.getBlockNumber());
-        // console.log('blockNumber: ', await provider.getBlockNumber());
-      }
-    })();
-  }, [chainId]);
+  const accountBonds = useSelector((state: RootState) => state.account.bonds);
+  const accountBondsLoaded = useSelector((state: RootState) => state.account.allBondsLoaded);
 
-  const activeInvestments = useMemo(() => {
-    if (accountBonds && currentBlock && chainId) {
-      return bonds.flatMap((bond) => {
+  const activeInvestments: Investment[] | null = useMemo(() => {
+    if (accountBonds && accountBondsLoaded && chainId) {
+      const myInvestments = bonds.flatMap((bond) => {
         const bondName = bond.name;
         const accountBond = accountBonds[bondName];
         if (accountBond) {
           const userBonds = accountBond.userBonds;
           return userBonds.map((userBond: IUserBond, i: number) => {
-            // const secondsToVest = secondsUntilBlock(
-            //   chainId,
-            //   currentBlock,
-            //   userBond.bondMaturationBlock
-            // );
             const investment: Investment = {
               id: `investment-${bond.name}-${i}`,
               type: bond.type,
@@ -153,10 +147,20 @@ export const MyAccount = (): JSX.Element => {
           return [];
         }
       });
+      // set timeout on setting the readystate to avoid additional render
+      return myInvestments;
     } else {
-      return [];
+      return null;
     }
-  }, [JSON.stringify(accountBonds), JSON.stringify(bonds), currentBlock]);
+  }, [JSON.stringify(accountBonds), JSON.stringify(bonds), accountBondsLoaded]);
+
+  useEffect(() => {
+    if(activeInvestments && accountBondsLoaded){
+      setInvestmentsLoaded(true);
+    }else{
+      setInvestmentsLoaded(false);
+    }
+  },[activeInvestments, accountBondsLoaded])
 
   const accountDetails: AccountDetails | null = useMemo(() => {
     if (address && activeInvestments) {
@@ -167,7 +171,7 @@ export const MyAccount = (): JSX.Element => {
           0
         ),
         rewardsClaimed: 1247.31, // TODO
-        claimableRewards: activeInvestments.reduce(
+        claimableRewards: activeInvestments.filter(investment => investment.secondsToVest <= 0).reduce(
           (rewardsInUsd, investment) => rewardsInUsd + investment.rewardsInUsd,
           0
         )
@@ -177,13 +181,22 @@ export const MyAccount = (): JSX.Element => {
     }
   }, [address, JSON.stringify(activeInvestments)]);
 
-  const onCancelBond = async (bond: IAllBondData, index: number) => {
-    const shouldProceed = window.confirm(
-      "Cancelling a bond incurs a 5% loss. Do you still want to proceed?",
-    );
-    if (provider && chainId && shouldProceed) {
-      await dispatch(cancelBond({ networkId: chainId, address, bond, provider, index }));
+  const onConfirmCancelBond = (bond: IAllBondData, index: number) => {
+    setCancellingBond(bond);
+    setCancellingBondIndex(index);
+    setOpenConfirmationModal(true);
+
+  };
+
+  const onCancelBond = async () => {
+    setOpenConfirmationModal(false);
+    if (provider && chainId && cancellingBond) {
+      await dispatch(cancelBond({ networkId: chainId, address, bond: cancellingBond, provider, index: cancellingBondIndex }));
     }
+  };
+
+  const closeConfirmModal = () => {
+    setOpenConfirmationModal(false);
   };
 
   const onRedeemBond = async (bond: IAllBondData, index: number) => {
@@ -195,7 +208,9 @@ export const MyAccount = (): JSX.Element => {
   const onRedeemAll = async () => {
     if (provider && chainId) {
       for (const bond of bonds) {
-        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name);
+        if(activeInvestments === null)
+          return;
+        const currentInvests = activeInvestments.filter(investment => investment.bondName === bond.name && investment.secondsToVest <= 0);
         if (currentInvests.length === 0) continue;
 
         if (bond.type === BondType.TRADFI) {
@@ -205,6 +220,7 @@ export const MyAccount = (): JSX.Element => {
           await dispatch(claimSingleSidedBond({ value: String(amount), networkId: chainId!, address, bond, provider: provider! }));
         }
       }
+      dispatch(info("Claim all completed."));
     }
   };
 
@@ -218,6 +234,7 @@ export const MyAccount = (): JSX.Element => {
         width: '100%',
       }}
     >
+      <ConfirmationModal open={openConfirmationModal} closeConfirmModal={closeConfirmModal} onCancelBond={onCancelBond} />
       <Box
         sx={{
           display: 'flex',
@@ -242,20 +259,23 @@ export const MyAccount = (): JSX.Element => {
         </Box>
         <Box my={4}>
           <Typography variant="subtitle1">
-            Active Investments ({activeInvestments.length})
+            Active Investments ({activeInvestments ? activeInvestments.length : "..."})
           </Typography>
-          {activeInvestments.length > 0 ? <Box>
-            {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} /> ||
-            <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onCancelBond={onCancelBond} />}
+          {activeInvestments && activeInvestments.length > 0 ? <Box>
+            {isMediumScreen && <MyAccountActiveInvestmentsCards investments={activeInvestments} onRedeemBond={onRedeemBond} onConfirmCancelBond={onConfirmCancelBond} /> ||
+            <MyAccountActiveInvestmentsTable investments={activeInvestments} onRedeemBond={onRedeemBond} onConfirmCancelBond={onConfirmCancelBond} />}
             </Box> : <Box>
               <Paper
                 elevation={0}
                 sx={{ marginTop: '10px' }}
                 className={style['rowCard']}
               >
-                <Typography variant="h6">
-                  You have no active investments
-                </Typography>
+                
+                  { investmentsLoaded ?
+                    (<Typography variant="h6">You have no active investments</Typography>):
+                    (<Typography variant="h6">Loading investments</Typography>)
+                  }
+                
               </Paper>
             </Box>
             }

@@ -56,3 +56,52 @@
   font-size: 16px;
   padding: 7px;
 }
+.navWrap {
+  
+  @media (max-width:900px) {
+    ul {
+      max-width:300px;
+      display:flex;
+      flex-flow: wrap;
+      a {order:10;
+        flex:0 0 100%;
+      }
+      li {
+        order:1;
+        flex:0 0 76%;
+        &.mobilePortfolio {
+          text-align:left;
+          .portfolioText {display:none;}
+          p, a {display:block; width:100%;}
+          button {
+            justify-content:flex-start;
+            width:100%;
+          }
+        }
+        &.mobileTheme {
+          order:2;
+          flex:0 0 24%;
+          justify-content:flex-end;
+        }
+        &.mobileConnect {
+          order:20;
+          flex:0 0 100%;
+
+          a {display:block; width:100%;}
+          p {
+            margin:0 auto;
+            display:block;
+            width:100%;
+            button {
+              border-width: 1px;
+              background:#000;
+              color:#fff;
+              width:100%;
+            }
+          }
+        }
+    }
+      
+    }
+  }
+}

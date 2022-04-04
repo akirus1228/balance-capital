@@ -259,17 +259,18 @@ export const bondAsset = createAsyncThunk(
     const depositorAddress = address;
     const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
     // parseUnits takes String => BigNumber
-    console.log('bond: ', bond);
-    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.isLP ? 18 : bond.decimals);
+    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.decimals);
     let balance;
     // Calculate maxPremium based on premium and slippage.
     // const calculatePremium = await bonding.calculatePremium();
+    // console.log('bond: ', bond);
+
     const signer = provider.getSigner();
+
     const bondContractForRead = await bond.getContractForBond(networkId);
     const bondContractForWrite = bond.getContractForBondForWrite(networkId, signer);
     const calculatePremium = await bondContractForRead["bondPrice"]();
     const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
-
     // Deposit the bond
     let bondTx;
     const uaData = {
@@ -283,16 +284,18 @@ export const bondAsset = createAsyncThunk(
     try {
       bondTx = await bondContractForWrite["deposit"](valueInWei, maxPremium, depositorAddress);
       dispatch(
-        fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "bond_" + bond.name }),
+        fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "deposit_" + bond.name }),
       );
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
 
-
       const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
-      // If the maturation block is the next one. wait until the next block and then refresh bond details
-      if (userBondDetails && userBondDetails.userBonds[0].bondMaturationBlock && (userBondDetails.userBonds[0].bondMaturationBlock - minedBlock) === 1) {
-        waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+      if (userBondDetails && userBondDetails.userBonds.length > 0) {
+        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        // If the maturation block is the next one. wait until the next block and then refresh bond details
+        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
+          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        }
       }
 
     } catch (e: any) {
@@ -301,7 +304,7 @@ export const bondAsset = createAsyncThunk(
           error("Maximum daily limit for bond reached."),
         );
       } else {
-        dispatch(error(e.error.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
     } finally {
       if (bondTx) {
@@ -320,6 +323,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(error("Please connect your wallet!"));
       return;
     }
+    console.log('value: ', value);
 
     const signer = provider.getSigner();
     const bondContract = bond.getContractForBondForWrite(networkId, signer);
@@ -335,23 +339,32 @@ export const redeemSingleSidedBond = createAsyncThunk(
     };
     try {
       redeemTx = await bondContract["redeem"](address, ethers.utils.parseUnits(value, 18), 0);
-      const pendingTxnType = "bond_" + bond.name;
+      const pendingTxnType = "deposit_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
       );
 
-      await redeemTx.wait();
-      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+      const minedBlock = (await redeemTx.wait()).blockNumber;
+
+      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
+      if (userBondDetails && userBondDetails.userBonds.length > 0) {
+        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        // If the maturation block is the next one. wait until the next block and then refresh bond details
+        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
+          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        }
+      }
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(`Unknown error: ${e.error.message}`));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Withdrawal completed."));
       }
     }
   },
@@ -378,7 +391,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
     };
     try {
       redeemTx = await bondContract["ilProtectionRedeem"](address);
-      const pendingTxnType = "bond_" + bond.name;
+      const pendingTxnType = "deposit_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
         fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
@@ -388,13 +401,18 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
+        dispatch(error("Redeeming IL rewards before end of vesting period."));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("IL Redeem completed."));
       }
     }
   },
@@ -421,7 +439,8 @@ export const claimSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await masterchefContract["harvest"](0, address);
+      const poolId = await masterchefContract["getPoolIdForLpToken"](addresses[networkId]["USDB_DAI_LP_ADDRESS"]);
+      redeemTx = await masterchefContract["harvest"](poolId, address);
       const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
@@ -432,13 +451,14 @@ export const claimSingleSidedBond = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(`Unknown error: ${e.error.message}`));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Claim completed."));
       }
     }
   },
@@ -476,9 +496,9 @@ export const redeemOneBond = createAsyncThunk(
       await dispatch(calculateUserBondDetails({ address, bond, networkId }));
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      dispatch(error((e as IJsonRPCError).message));
+      dispatch(error(e.error.message));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -517,8 +537,8 @@ export const redeemAllBonds = createAsyncThunk(
         });
 
       dispatch(getBalances({ address, networkId }));
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      dispatch(error(e.error.message));
     } finally {
       if (redeemAllTx) {
         dispatch(clearPendingTxn(redeemAllTx.hash));
@@ -551,8 +571,8 @@ export const cancelBond = createAsyncThunk(
       await cancelTx.wait();
 
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      dispatch(error(e.error.message));
     } finally {
       if (cancelTx) {
         dispatch(clearPendingTxn(cancelTx.hash));

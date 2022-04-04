@@ -20,8 +20,8 @@ export const NetworkMenu = (): JSX.Element => {
   const { chainId, switchEthereumChain } = useWeb3Context();
   const [currentNetwork, setCurrentNetwork] = useState({
     id: chainId,
-    name: networks[chainId || defaultNetworkId].name,
-    icon: networks[chainId || defaultNetworkId].logo
+    name: networks[chainId || defaultNetworkId]?.name,
+    icon: networks[chainId || defaultNetworkId]?.logo
   });
 
   const open = Boolean(anchorEl);
@@ -29,8 +29,8 @@ export const NetworkMenu = (): JSX.Element => {
 
   let availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId).map(networkId => ({
     id: networkId,
-    name: networks[networkId].name,
-    icon: networks[networkId].logo
+    name: networks[networkId]?.name,
+    icon: networks[networkId]?.logo
   }));
 
   const changeNetworks = async (chainId: number) => {
@@ -53,13 +53,13 @@ export const NetworkMenu = (): JSX.Element => {
     }
     setCurrentNetwork({
       id: chainId,
-      name: networks[chainId].name,
-      icon: networks[chainId].logo
+      name: networks[chainId]?.name,
+      icon: networks[chainId]?.logo
     });
     availableNetworks = enabledNetworkIds.filter(networkId => networkId !== chainId).map(networkId => ({
       id: networkId,
-      name: networks[networkId].name,
-      icon: networks[networkId].logo
+      name: networks[networkId]?.name,
+      icon: networks[networkId]?.logo
     }));
   }, [chainId]);
 
@@ -70,7 +70,7 @@ export const NetworkMenu = (): JSX.Element => {
               title="Network"
               aria-describedby="network-popper" disableElevation={false}>
         <SvgIcon component={currentNetwork.icon} color="primary" viewBox="0 0 32 32" />
-        <Typography noWrap hidden={isMediumScreen} style={{ paddingLeft: "8px" }}>{currentNetwork.name}</Typography>
+        <Typography noWrap hidden={isMediumScreen} style={{ paddingLeft: "8px" }}>{currentNetwork?.name}</Typography>
       </Button>
 
       <Popper id="network-popper" open={open} anchorEl={anchorEl} placement="bottom-end" transition
@@ -83,11 +83,11 @@ export const NetworkMenu = (): JSX.Element => {
                   {availableNetworks?.map(network => {
                     return (
                       <Button className="ultraThin"
-                              key={`${network.name}-btn`} size="large" color="primary"
+                              key={`${network?.name}-btn`} size="large" color="primary"
                               fullWidth onClick={() => changeNetworks(network.id)} disableElevation={true}>
                         <Box display="flex" justifyContent="center">
                           <SvgIcon component={network.icon} color="primary" viewBox="0 0 32 32" />
-                          <Typography hidden={isMediumScreen} sx={{marginLeft: "1rem"}}>{network.name}</Typography>
+                          <Typography noWrap hidden={isMediumScreen} sx={{marginLeft: "1rem", maxWidth: "90px"}}>{network?.name}</Typography>
                         </Box>
                       </Button>
                     );

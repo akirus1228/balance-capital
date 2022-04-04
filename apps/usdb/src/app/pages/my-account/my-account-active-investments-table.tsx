@@ -1,15 +1,15 @@
 import {
-  Button,
+  Button, Icon,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow,
-  Typography,
-} from '@mui/material';
-import { Link } from 'react-router-dom';
+  TableRow, Tooltip,
+  Typography
+} from "@mui/material";
+import { HashLink as Link } from 'react-router-hash-link';
 import { useDispatch, useSelector } from 'react-redux';
 import style from './my-account.module.scss';
 import Info from '../../../assets/icons/info.svg';
@@ -34,6 +34,7 @@ import {
   txnButtonTextGeneralPending,
 } from "@fantohm/shared-web3";
 import { RootState } from '../../store';
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat('en-US', {
   style: 'currency',
@@ -43,11 +44,11 @@ export const currencyFormat = new Intl.NumberFormat('en-US', {
 });
 
 export const MyAccountActiveInvestmentsTable = (
-  { investments, onRedeemBond, onCancelBond }: 
+  { investments, onRedeemBond, onConfirmCancelBond }:
   { 
     investments: Investment[], 
-    onRedeemBond: (bond: IAllBondData, index: number) => void, 
-    onCancelBond: (bond: IAllBondData, index: number) => void 
+    onRedeemBond: (bond: IAllBondData, index: number) => void,
+    onConfirmCancelBond: (bond: IAllBondData, index: number) => void
 }): JSX.Element => {
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
@@ -85,51 +86,41 @@ export const MyAccountActiveInvestmentsTable = (
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Amount
-                  <img
-                    src={Info}
-                    alt="info"
-                    className={style['infoIcon']}
-                  />{' '}
+                  <Tooltip sx={{marginLeft: "5px"}} arrow title="List of active investments">
+                    <Icon component={InfoOutlinedIcon} fontSize="small" />
+                  </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Rewards
-                  <img
-                    src={Info}
-                    alt="info"
-                    className={style['infoIcon']}
-                  />{' '}
+                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Projected reward per investment">
+                    <Icon component={InfoOutlinedIcon} fontSize="small" />
+                  </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Investment
-                  <img
-                    src={Info}
-                    alt="info"
-                    className={style['infoIcon']}
-                  />{' '}
+                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Product invested in">
+                    <Icon component={InfoOutlinedIcon} fontSize="small" />
+                  </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   ROI
-                  <img
-                    src={Info}
-                    alt="info"
-                    className={style['infoIcon']}
-                  />{' '}
+                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Return on investment over vesting period">
+                    <Icon component={InfoOutlinedIcon} fontSize="small" />
+                  </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography variant="subtitle2" className={style['subTitle']}>
                   Time remaining
-                  <img
-                    src={Info}
-                    alt="info"
-                    className={style['infoIcon']}
-                  />{' '}
+                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Time remaining in vesting period">
+                    <Icon component={InfoOutlinedIcon} fontSize="small" />
+                  </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell></TableCell>
@@ -145,7 +136,7 @@ export const MyAccountActiveInvestmentsTable = (
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">
-                    {trim(investment.rewards, 2)}{' '}{investment.rewardToken}
+                    {trim(investment.rewards, 4)}{' '}{investment.rewardToken}
                   </Typography>
                 </TableCell>
                 <TableCell>
@@ -167,7 +158,7 @@ export const MyAccountActiveInvestmentsTable = (
                 </TableCell>
                 <TableCell>
                   {investment.type === BondType.SINGLE_SIDED && (
-                    <Link to="/staking#bond">
+                    <Link to={{pathname: "/staking", hash:"#deposit"}}>
                       <Button
                         variant="contained"
                         disableElevation
@@ -205,7 +196,7 @@ export const MyAccountActiveInvestmentsTable = (
                         const bond = bonds.find(
                           (bond) => bond.name === investment.bondName
                         );
-                        bond && onCancelBond(bond as IAllBondData, investment.bondIndex);
+                        bond && onConfirmCancelBond(bond as IAllBondData, investment.bondIndex);
                       }}
                     >
                       {txnButtonTextGeneralPending(

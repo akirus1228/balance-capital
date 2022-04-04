@@ -67,6 +67,7 @@ interface BondOpts {
   bondAction?: BondAction; // What to display in the bond button
   redeemAction?: RedeemAction; // What to displat in the redeeom button
   apr: number;
+  apy?: number;
   roi: number;
   days: number;
 }
@@ -89,6 +90,7 @@ export abstract class Bond {
   readonly bondAction: BondAction;
   readonly redeemAction: RedeemAction;
   readonly apr: number;
+  readonly apy?: number;
   readonly roi: number;
   readonly days: number; // FIXME read from vestingTermSeconds
 
@@ -118,6 +120,7 @@ export abstract class Bond {
     this.redeemAction = bondOpts.redeemAction || RedeemAction.Redeem;
     this.roi = bondOpts.roi;
     this.apr = bondOpts.apr;
+    this.apy = bondOpts.apy;
     this.days = bondOpts.days;
   }
 

@@ -7,11 +7,16 @@ import {SvgIcon} from "@mui/material";
 import {ReactComponent as OhmImg} from "../assets/tokens/token_OHM.svg";
 import {ReactComponent as SOhmImg} from "../assets/tokens/token_sOHM.svg";
 
+import { 
+  balancerWeightedPoolAbi as BalancerWeightedPool
+} from "../abi";
+
 import {JsonRpcSigner, StaticJsonRpcProvider} from "@ethersproject/providers";
 
 import {NetworkId, networks} from "../networks";
 import { LocalStorage } from "./local-storage";
 import { chains } from "../providers";
+import { singleSided } from "./all-bonds";
 
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice(networkId : NetworkId) {
@@ -104,13 +109,26 @@ export function formatCurrency(c: number, precision = 0) {
 }
 
 export function trim(number = 0, precision = 0) {
+	if (!number) {
+		return '0';
+	}
+	const multiPrecision = Math.pow(10, precision);
+	number = Math.floor(number * multiPrecision) / multiPrecision;
 	// why would number ever be undefined??? what are we trimming?
-	const array = number.toString().split(".");
+	const array = Number(number).toFixed(precision).toString().split(".");
 	if (array.length === 1) return number.toString();
 	if (precision === 0) return array[0].toString();
 
 	const poppedNumber = array.pop() || "0";
-	array.push(poppedNumber.substring(0, precision));
+	let belowPrecision = poppedNumber.substring(0, precision);
+	
+	const lastZeros = belowPrecision.match(/[0]+$/);
+	if (lastZeros) {
+		const { index } = lastZeros!;
+		if (index === 0) return array[0];
+		belowPrecision = belowPrecision.substring(0, index);
+	}
+	array.push(belowPrecision);
 	const trimmedNumber = array.join(".");
 	return trimmedNumber;
 }
@@ -164,9 +182,15 @@ export function prettifySeconds(seconds: number, resolution?: string) {
 		result = dDisplay.slice(0, dDisplay.length - 2);
 	}
 
-	if (result === "") result = "Instant";
+	if (seconds <= 0) result = "Instant";
+
+	if (result === "") result = `${seconds} sec`;
 
 	return result;
+}
+
+export function numberWithCommas(x: any) {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 function getSohmTokenImage() {
@@ -294,4 +318,63 @@ export function getQueryParams(search: string): { [key: string]: boolean } {
     custom[key] = value === "true" ? true : false;
   });
   return custom;
+}
+
+export async function getStakedTVL() {
+	let balances = 0;
+	for(const networkId in chains) {
+		const provider = await chains[networkId].provider;
+
+		if (!networks[networkId]) continue;
+		// Contracts
+		const { isEnabled, addresses } = networks[networkId];
+		if (!isEnabled) continue;
+		const { MASTERCHEF_ADDRESS, USDB_DAI_LP_ADDRESS } = addresses;
+		if (!MASTERCHEF_ADDRESS || !USDB_DAI_LP_ADDRESS) continue;
+
+		const pool = new ethers.Contract(USDB_DAI_LP_ADDRESS, BalancerWeightedPool, provider);
+		// Balances
+		try {
+			const balance = await Promise.all([
+				pool["balanceOf"](MASTERCHEF_ADDRESS),
+			]).then(([masterBalance]) => {
+				const balance = ethers.utils.formatUnits(masterBalance, 18);
+				return Math.floor(Number(balance));
+			});
+
+			balances += Number(balance);
+		} catch(e) {
+			console.log(e);
+		}
+	}
+	return balances;
+}
+
+export async function getIlRedeemFHM(networkId: NetworkId, address: string) {
+	if (!networkId || !address) {
+		return ['0', '0'];
+	}
+	const bondContract = await singleSided.getContractForBond(networkId);
+	const bondDetails = await bondContract['bondInfo'](address);
+	const iLBalanceInUsd = ethers.utils.formatUnits(
+		bondDetails.ilProtectionAmountInUsd,
+		18
+	);
+	let iLBalance = await bondContract['payoutInFhmFor'](bondDetails.ilProtectionAmountInUsd);
+	iLBalance = ethers.utils.formatUnits(
+		iLBalance,
+		9
+	);
+	return [iLBalance, iLBalanceInUsd];
+}
+
+export async function getIlRedeemBlockNumber(networkId: NetworkId, address: string) {
+	if (!networkId || !address) {
+		return [0, 0];
+	}
+	const bondContract = await singleSided.getContractForBond(networkId);
+	const bondDetails = await bondContract['bondInfo'](address);
+	const provider = await chains[networkId].provider;
+	const currentBlockNumber = await provider.getBlockNumber();
+	return [currentBlockNumber, Number(bondDetails.ilProtectionUnlockBlock.toString())];
 }

@@ -21,8 +21,7 @@ export const IconGrid = (): JSX.Element => {
         />
       </Grid>
       <Grid item md={4} xs={6}>
-        {/*<IconLink title="Staking" icon={WalletIcon} link="/staking" />*/}
-        <IconLink title="Staking" icon={WalletIcon} />
+        <IconLink title="Staking" icon={WalletIcon} link="/staking" />
       </Grid>
       <Grid item md={4} xs={6}>
         {/*<IconLink title="xFHM" icon={xFhmIcon} link="/xfhm"/>*/}

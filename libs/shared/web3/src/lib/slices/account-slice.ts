@@ -26,6 +26,7 @@ import { chains } from '../providers';
 import { BondAction, BondType, PaymentToken } from '../lib/bond';
 
 import { findOrLoadMarketPrice } from './bond-slice';
+import { truncateDecimals } from "@fantohm/shared-helpers";
 
 export const getBalances = createAsyncThunk(
   'account/getBalances',
@@ -77,11 +78,10 @@ export const getBalances = createAsyncThunk(
       );
       usdbBalance = await usdbContract['balanceOf'](address);
     }
-    console.log('tokenBalances: ', daiBalance, fhmBalance, usdbBalance);
     return {
       balances: {
         dai: ethers.utils.formatUnits(daiBalance, 18),
-        fhm: ethers.utils.formatUnits(fhmBalance, 18),
+        fhm: ethers.utils.formatUnits(fhmBalance, 9),
         usdb: ethers.utils.formatUnits(usdbBalance, 18),
       },
     };
@@ -385,9 +385,9 @@ export const calculateUserBondDetails = createAsyncThunk(
               ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
               Number(percentVestedFor.div(BigNumber.from('100'))),
             ]);
-          console.log(`bondDetails ${bondDetails}`);
-          console.log(`pendingPayout ${pendingPayout}`);
-          console.log(`percentVestedFor ${percentVestedFor}`);
+          // console.log(`bondDetails ${bondDetails}`);
+          // console.log(`pendingPayout ${pendingPayout}`);
+          // console.log(`percentVestedFor ${percentVestedFor}`);
           const interestDue =
             bondDetails.payout / Math.pow(10, paymentTokenDecimals);
           const bondMaturationBlock =
@@ -400,9 +400,9 @@ export const calculateUserBondDetails = createAsyncThunk(
           );
           const rewards = trim(interestDue * (1 - pricePaid), 2);
           const amount = trim(Number(payout) * pricePaid, 2);
-          
+
           const latestBlockNumber = await provider.getBlockNumber();
-          
+
           // TODO: Move this function to a helper or other.
           // sometimes getBlock fails
           const getLatestBlock = async ():Promise<ethers.providers.Block> => {
@@ -473,12 +473,14 @@ export const calculateUserBondDetails = createAsyncThunk(
     // console.log(`fhmMarketPrice ${fhmMarketPrice}`);
     const interestDue =
       bondDetails.payout / Math.pow(10, orgPaymentTokenDecimals);
-    console.log(`interestDue ${interestDue}`);
-    const bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
-    console.log(`bondMaturationBlock ${bondMaturationBlock}`);
+    // console.log(`interestDue ${interestDue}`);
+    let bondMaturationBlock = +bondDetails.vesting + +bondDetails.lastBlock;
+    // console.log(`bondMaturationBlock ${bondMaturationBlock}`);
     let pendingFHM = '0';
     let iLBalance = '0';
-    let lpTokenAmount = 0;
+    let lpTokenAmount = '0';
+    let secondsToVest = 0;
+    let maturationSeconds = 0;
     if (bond.type === BondType.SINGLE_SIDED) {
       const masterchefContract = new ethers.Contract(
         addresses[networkId]['MASTERCHEF_ADDRESS'],
@@ -487,25 +489,18 @@ export const calculateUserBondDetails = createAsyncThunk(
       );
       const fhmRewards = await masterchefContract['pendingFhm'](0, address);
 
-      pendingFHM = trim(
-        Number(ethers.utils.formatUnits(String(fhmRewards), 9)),
-        2
+      pendingFHM = ethers.utils.formatUnits(fhmRewards, 9);
+      iLBalance = ethers.utils.formatUnits(
+        bondDetails.ilProtectionAmountInUsd,
+        9
       );
-      iLBalance = trim(
-        Number(
-          ethers.utils.formatUnits(
-            Number(bondDetails.ilProtectionAmountInUsd),
-            9
-          )
-        ),
-        2
+      lpTokenAmount = ethers.utils.formatUnits(
+        bondDetails.lpTokenAmount,
+        orgPaymentTokenDecimals
       );
-      lpTokenAmount = Number(
-        ethers.utils.formatUnits(
-          bondDetails.lpTokenAmount,
-          orgPaymentTokenDecimals
-        )
-      );
+      // Single sided are always available to unstake
+      maturationSeconds = Number(bondDetails['lastTimestamp']);
+      secondsToVest = 0;
     }
     const payout = Number(
       ethers.utils.formatUnits(bondDetails.payout, orgPaymentTokenDecimals)
@@ -516,21 +511,21 @@ export const calculateUserBondDetails = createAsyncThunk(
     const amount = payout * pricePaid;
     const rewardsInUsd = Number(pendingFHM) * fhmMarketPrice;
     const userBonds =
-      amount > 0
+      Number(amount) > 0.01
         ? [
             {
-              amount: trim(amount, 2), // TODO can we just assume lp is totally balanced?
+              amount: amount.toString(), // TODO can we just assume lp is totally balanced?
               rewards: pendingFHM,
               rewardToken: PaymentToken.FHM,
-              rewardsInUsd: trim(rewardsInUsd, 2),
+              rewardsInUsd: rewardsInUsd.toString(),
               interestDue,
               bondMaturationBlock,
               pendingPayout,
-              secondsToVest: 999999999999, // TODO, how do we calculate this seconds until vested
-              maturationSeconds: 999999999999999, //TODO,  how do we calculate seconds until maturation
+              secondsToVest,
+              maturationSeconds,
               percentVestedFor: 0, // No such thing as percentVestedFor for single sided
-              lpTokenAmount: trim(lpTokenAmount, 2),
-              iLBalance: iLBalance,
+              lpTokenAmount,
+              iLBalance,
               pendingFHM,
               pricePaid: 1,
             },

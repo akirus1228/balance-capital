@@ -136,6 +136,9 @@ const globalTheme: ThemeOptions = {
           "&.thin": {
             padding: "15px 27px"
           },
+          "&.border": {
+            background: "none"
+          },
           "&.ultraThin": {
             padding: "5px 27px"
           },
@@ -158,14 +161,6 @@ const globalTheme: ThemeOptions = {
             borderRadius: '1.5em',
             color: "#FFF",
             padding: "15px 27px"
-          },
-          "&.border": {
-            fontSize: '14px',
-            backgroundColor: '#FFF',
-            borderRadius: '1.5em',
-            color: "#000",
-            padding: "15px 27px",
-            border: "solid 1px #000"
           },
           "&.inputButton": {
             height: "3em",
@@ -248,11 +243,11 @@ const globalTheme: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
-          backgroundPosition: 'top',
+        "&.heroBackground": {
+          backgroundPosition: 'top 0 right 50%',
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
+          backgroundSize: 'cover'
         },
       },
     },
@@ -268,7 +263,8 @@ const USDBLightBase: ThemeOptions = {
       contrastText: usdbLightColors.invertedColor,
     },
     secondary: {
-      main: usdbLightColors.color,
+      main: usdbLightColors.invertedColor,
+      contrastText: usdbLightColors.color,
     },
     background: {
       default: usdbLightColors.backgroundColor,
@@ -301,6 +297,10 @@ const USDBLightBase: ThemeOptions = {
           '&.menuButton': {
             border: '1px solid #000',
           },
+          '&.border': {
+            border: '1px solid #000',
+            color: "#000"
+          },
         },
         outlined: {
           '&, &:hover': {
@@ -330,7 +330,7 @@ const USDBLightBase: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
+        "&.heroBackground": {
           backgroundImage: `url(${lightBG})`,
         },
       },
@@ -347,7 +347,8 @@ const USDBDarkBase: ThemeOptions = {
       contrastText: usdbDarkColors.invertedColor,
     },
     secondary: {
-      main: usdbDarkColors.color,
+      main: usdbDarkColors.invertedColor,
+      contrastText: usdbDarkColors.color,
     },
     background: {
       default: usdbDarkColors.backgroundColor,
@@ -360,7 +361,7 @@ const USDBDarkBase: ThemeOptions = {
     error: {
       main: usdbDarkColors.errorColor,
       light: usdbDarkColors.errorBackground,
-    }
+    },
   },
   components: {
     MuiToolbar: {
@@ -379,6 +380,10 @@ const USDBDarkBase: ThemeOptions = {
           },
           '&.menuButton': {
             border: '1px solid #FFF',
+          },
+          '&.border': {
+            border: '1px solid #FFF',
+            color: "#FFF"
           },
           '&.Mui-disabled': {
             color: usdbDarkColors.gray,
@@ -412,7 +417,7 @@ const USDBDarkBase: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
+        "&.heroBackground": {
           backgroundImage: `url(${darkBG})`,
         },
       },
