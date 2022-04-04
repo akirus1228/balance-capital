@@ -243,11 +243,11 @@ const globalTheme: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
-          backgroundPosition: 'top',
+        "&.heroBackground": {
+          backgroundPosition: 'top 0 right 50%',
           backgroundRepeat: 'no-repeat',
           backgroundAttachment: 'fixed',
-          backgroundSize: 'cover',
+          backgroundSize: 'cover'
         },
       },
     },
@@ -330,7 +330,7 @@ const USDBLightBase: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
+        "&.heroBackground": {
           backgroundImage: `url(${lightBG})`,
         },
       },
@@ -417,7 +417,7 @@ const USDBDarkBase: ThemeOptions = {
     },
     MuiCssBaseline: {
       styleOverrides: {
-        body: {
+        "&.heroBackground": {
           backgroundImage: `url(${darkBG})`,
         },
       },
