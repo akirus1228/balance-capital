@@ -365,7 +365,7 @@ export const bondAsset = createAsyncThunk(
       ) {
         dispatch(error("Maximum daily limit for bond reached."));
       } else {
-        dispatch(error(e.error.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
     } finally {
       if (bondTx) {
@@ -439,7 +439,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(e.error.message));
+      dispatch(error(`Unknown error: ${e.error.message}`));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -490,7 +490,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
         dispatch(error("Redeeming IL rewards before end of vesting period."));
       } else {
-        dispatch(error(e.error.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
     } finally {
       if (redeemTx) {
@@ -530,7 +530,8 @@ export const claimSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await masterchefContract["harvest"](0, address);
+      const poolId = await masterchefContract["getPoolIdForLpToken"](addresses[networkId]["USDB_DAI_LP_ADDRESS"]);
+      redeemTx = await masterchefContract["harvest"](poolId, address);
       const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
@@ -547,7 +548,7 @@ export const claimSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(e.error.message));
+      dispatch(error(`Unknown error: ${e.error.message}`));
     } finally {
       if (redeemTx) {
         segmentUA(uaData);

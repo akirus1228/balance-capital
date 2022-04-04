@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
@@ -72,6 +72,20 @@ export const App = (): JSX.Element => {
       );
     }
   }, [chainId, address, dispatch]);
+
+  const location = useLocation();
+  useEffect(() => {
+    //console.log(location.pathname);
+    switch (location.pathname) {
+      case "/":
+      case "/trad-fi":
+      case "/staking":
+        document.body.classList.add("heroBackground");
+        break;
+      default:
+        document.body.classList.remove("heroBackground");
+    }
+  }, [location]);
 
   return (
     <ThemeProvider theme={theme}>

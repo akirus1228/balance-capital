@@ -514,7 +514,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           {txnButtonText(
             pendingTransactions,
             'deposit_' + singleSided.name,
-            `${cardState}${ilUnLockPeriod > 0 ? ` (Wait ≈ ${formatSeconds(ilUnLockPeriod)}s)` : ''}`
+            `${cardState}${ilUnLockPeriod > 0 ? ` (Wait ≈ ${formatSeconds(ilUnLockPeriod)})` : ''}`
           )}
         </Button>
       ) : !singleSided.isAvailable[chainId ?? 250] ? (

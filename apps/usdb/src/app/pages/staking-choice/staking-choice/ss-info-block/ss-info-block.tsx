@@ -41,7 +41,8 @@ export const SsInfoBlock = (): JSX.Element => {
                 <Typography variant="h1">Risk Averse Investment</Typography>
                 <Typography variant="h2">
                   Investors only need to provide DAI, while our protocol provides the
-                  other token in the pair, USDB.
+                  other token in the pair, USDB, and you can withdraw at any time
+                  with effectively zero impermanent loss.
                 </Typography>
                 <Box className="flexCenterCol h-full">
                   <ThemeImage image="BankIcon" />
@@ -57,7 +58,7 @@ export const SsInfoBlock = (): JSX.Element => {
               sx={{ marginBottom: "2em", minHeight: "309px", width: "100%" }}
             >
               <Box className="flexCenterCol">
-                <Typography variant="h1">Zero Imperminant Loss</Typography>
+                <Typography variant="h1">Zero Impermanent Loss</Typography>
                 <Box className="flexCenterCol h-full">
                   <ThemeImage image="DoughnutChartIcon" />
                 </Box>
