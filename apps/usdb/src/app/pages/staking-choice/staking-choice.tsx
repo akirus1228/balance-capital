@@ -60,7 +60,7 @@ export const StakingChoicePage = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
-    subtitle: ["The safest way to earn Yields on your Dai"],
+    subtitle: ["The easiest way to earn yields on your Dai, no lockups, no impermanent loss, no hassle"],
   };
   const simpleSafe = {
     title: "Simple & safe returns",
