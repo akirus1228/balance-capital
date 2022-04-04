@@ -82,7 +82,7 @@ export const StakingChoicePage = (): JSX.Element => {
         <Box className={`${style["depositBox"]} flexCenterCol`}>
           <DaiCard className={`${style["daiIcon"]} dai`} tokenImage={DaiToken}>
             <h2 className={style["daiAPR"]}>20.00% APR</h2>
-            <Grid container>
+            {/* <Grid container>
               <Grid item xs={6} sx={{ justifyContent: "left" }}>
                 <span className={style["tvlInfo"]}>Staked TVL</span>
               </Grid>
@@ -95,7 +95,7 @@ export const StakingChoicePage = (): JSX.Element => {
                   </span>
                 )}
               </Grid>
-            </Grid>
+            </Grid> */}
           </DaiCard>
           <Grid container sx={{ my: "2em" }} columnSpacing={2}>
             <Grid
