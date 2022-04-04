@@ -303,12 +303,8 @@ export const bondAsset = createAsyncThunk(
         dispatch(
           error("Maximum daily limit for bond reached."),
         );
-      } else if (e.error.code === -32603 && e.error.message === 'execution reverted') {
-        dispatch(
-          error(`Unknown error: ${e.error.message}`)
-        );
       } else {
-        dispatch(error(e.error.message));
+        dispatch(`Unknown error: ${e.error.message}`);
       }
     } finally {
       if (bondTx) {
@@ -363,11 +359,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      if (e.error.code === -32603 && e.error.message === 'execution reverted') {
-        dispatch(
-          error(`Unknown error: ${e.error.message}`)
-        );
-      } else dispatch(error(e.error.message));
+      dispatch(`Unknown error: ${e.error.message}`);
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -413,12 +405,8 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       uaData.approved = false;
       if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
         dispatch(error("Redeeming IL rewards before end of vesting period."));
-      } else if (e.error.code === -32603 && e.error.message === 'execution reverted') {
-        dispatch(
-          error(`Unknown error: ${e.error.message}`)
-        );
       } else {
-        dispatch(error(e.error.message));
+        dispatch(`Unknown error: ${e.error.message}`);
       }
     } finally {
       if (redeemTx) {
@@ -464,11 +452,7 @@ export const claimSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      if (e.error.code === -32603 && e.error.message === 'execution reverted') {
-        dispatch(
-          error(`Unknown error: ${e.error.message}`)
-        );
-      } else dispatch(error(e.error.message));
+      dispatch(`Unknown error: ${e.error.message}`);
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
