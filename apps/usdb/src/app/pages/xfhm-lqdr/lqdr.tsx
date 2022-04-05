@@ -140,8 +140,7 @@ export const LqdrPage = (): JSX.Element => {
       if (isSubscribed) {
         // @ts-ignore
         setUsdbAmount(usdbAmount?.payload.toString());
-        // @ts-ignore
-        setUsdbAmountInUsd(
+        setUsdbAmountInUsd( // @ts-ignore
           (Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString())) /
             Math.pow(10, 18)
         );
