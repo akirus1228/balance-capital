@@ -37,7 +37,9 @@ export const faqItems: FaqItem[] = [
       "\n" +
       "1. Incur impermanent loss. i.e The amount of DAI withdrawn is less than that originally deposited. \n" +
       "2. Have been staking for at least 24 hrs.\n" +
-      "3. Withdraw the full amount or last part of the amount that was invested. To the last decimal.",
+      "3. Withdraw the full amount or last part of the amount that was invested. To the last decimal. \n" +
+      "4.) Impermanent loss will be paid out at a rate of 1% over a period of 100 days staking. \n" +
+      "5.) Note that Impermanent Loss is only paid out at a maximum of $10,000.",
   },
   // {
   //   title: "What happens at the end of the term of my Deposit?",
@@ -60,7 +62,9 @@ export const StakingChoicePage = (): JSX.Element => {
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
-    subtitle: ["The easiest way to earn yields on your Dai, no lockups, no impermanent loss, no hassle"],
+    subtitle: [
+      "The easiest way to earn yields on your Dai, no lockups, no hassle & impermanent Loss protection",
+    ],
   };
   const simpleSafe = {
     title: "Simple & safe returns",
@@ -71,7 +75,7 @@ export const StakingChoicePage = (): JSX.Element => {
   const getStarted = {
     title: "Get started today",
     subtitle: [
-      "Single Sided Staking is similar to Liquidity Pair (LP) farming but eliminates impermanent loss.",
+      "Deposit DAI to the liquidity pool, farm the DAI-USDB pair and start earning yields in just two steps",
     ],
   };
 
