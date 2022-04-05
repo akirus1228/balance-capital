@@ -21,13 +21,13 @@ export enum BondAssetType {
 }
 
 export enum BondType {
-  Bond_11,
-  Bond_44,
-  Bond_USDB,
-  TRADFI,
-  SINGLE_SIDED,
-  SINGLE_SIDED_V1,
-  LQDR_USDB_POL = 5,
+  Bond_11 = 0,
+  Bond_44= 1,
+  Bond_USDB = 2,
+  TRADFI = 3,
+  SINGLE_SIDED = 4,
+  SINGLE_SIDED_V1 = 5,
+  LQDR_USDB_POL = 6,
 }
 
 export enum BondAction {

@@ -168,6 +168,17 @@ export const MyAccountActiveInvestmentsTable = (
                       </Button>
                     </Link>
                   )}
+                  {investment.type === BondType.SINGLE_SIDED_V1 && (
+                    <Link to={{pathname: "/staking-v1", hash:"#deposit"}}>
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        sx={{ padding: '10px 30px' }}
+                      >
+                        Manage
+                      </Button>
+                    </Link>
+                  )}
                   {investment.type === BondType.TRADFI && (
                     investment.percentVestedFor >= 100 ? (<Button
                       variant="contained"
