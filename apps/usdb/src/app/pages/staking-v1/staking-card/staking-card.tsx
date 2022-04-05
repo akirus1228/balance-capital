@@ -257,7 +257,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       sx={{ minWidth: { xs: "300px", sm: "587px" } }}
       className={style["cardElement"]}
     >
-      <h3 className={style["titleWrapper"]}>Single</h3>
+      <h3 className={style["titleWrapper"]}>Single v1</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box className="w100">
         <hr
@@ -410,6 +410,20 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             <span>
               Withdrawal action will also claim your{" "}
               {singleSidedBond?.userBonds[0]?.pendingFHM || 0} <b>FHM</b> rewards.
+            </span>
+          </Box>
+          <Box
+            className={`${style["infoBox"]}`}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              mb: "1.5em",
+            }}
+          >
+            <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
+            <span>
+              You can migrate to newer staking contract by withdraw of your position whenever you want.
             </span>
           </Box>
         </Box>

@@ -87,7 +87,7 @@ export const tradfi6month = new StableBond({
 export const singleSidedV1 = new StableBond({
   name: "singleSidedV1",
   type: BondType.SINGLE_SIDED_V1,
-  displayName: "Staking",
+  displayName: "Staking v1",
   bondToken: "singleSided",
   decimals: 18,
   apr: 0,
@@ -102,19 +102,10 @@ export const singleSidedV1 = new StableBond({
     [NetworkIds.FantomOpera]: {
       bondAddress: "0x9D2141a3BfDbe0f9a948B993f9a70B5f9C9D17f9",
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
-      // bondAddress: "0x6F3D5858BBC95553DfEeFda4886Ea20E933535fA",
-      // bondAddress: "0xbA28476fc4EdAd909fA13A7048Ef432311B4680c",
     },
     [NetworkIds.Rinkeby]: {
       bondAddress: "0xC2B356342D191E2E068B3c9876Fc0440b4d5Ed25", // special version if activate IL redeem
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
-      // bondAddress: "0xC2B356342D191E2E068B3c9876Fc0440b4d5Ed25",
-      // bondAddress: "0xc7330002761E52034efDC0cAe69B5Bd20D69aD38",
-      // bondAddress: "0xf801D0dF7fe678aa6C69b3D3d787e84C02A3BD31",
-      // bondAddress: "0x6343A974Aa8d979ce1BA0a3eBC9B094Fe69dD639",
-      // bondAddress: "0x8D36B8484459753a346e4274821EdBC6DeA39F3f",
-      // bondAddress: "0x98B853A6310EB136532E2B99f327b16F8730a978",
-      // bondAddress: "0x49a14bDD5b232F727C147d94976680671D9c5B53",
     },
   },
 });
