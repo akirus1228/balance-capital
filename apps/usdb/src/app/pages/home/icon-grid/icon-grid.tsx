@@ -20,12 +20,11 @@ export const IconGrid = (): JSX.Element => {
         <IconLink title="Staking" icon={WalletIcon} link="/staking" />
       </Grid>
       <Grid item md={4} xs={6}>
-        {/*<IconLink title="xFHM" icon={xFhmIcon} link="/xfhm"/>*/}
-        <IconLink title="xFHM" icon={xFhmIcon} />
+        <IconLink title="Mint USDB" icon={MintIcon} link="/mint"/>
       </Grid>
       <Grid item md={4} xs={6}>
-        {/*<IconLink title="Mint USDB" icon={MintIcon} link="/mint"/>*/}
-        <IconLink title="Mint USDB" icon={MintIcon} />
+        {/*<IconLink title="xFHM" icon={xFhmIcon} link="/xfhm"/>*/}
+        <IconLink title="xFHM" icon={xFhmIcon} />
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="USDBank" icon={BankIcon} />

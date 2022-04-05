@@ -48,8 +48,8 @@ type Pages = {
 const pages: Pages[] = [
   { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
   { title: "Staking", href: "/staking", params: { comingSoon: false } },
+  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
   { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "Mint USDB", href: "/mint", params: { comingSoon: true } },
   { title: "USDB bank", href: "", params: { comingSoon: true } },
   {
     title: "Bridge",
