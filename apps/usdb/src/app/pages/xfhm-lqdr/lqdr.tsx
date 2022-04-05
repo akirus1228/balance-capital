@@ -55,19 +55,19 @@ export const LqdrPage = (): JSX.Element => {
     try {
       setBTokenLoading(true);
       if (title === "Asset A") {
-        setATokenAmount(
-          formatAmount(aToken?.balance || 0, aToken.decimals, 9).toString()
-        );
+        // @ts-ignore
+        setATokenAmount(formatAmount(aToken?.balance || 0, aToken.decimals, 9));
         const maxAmount = await calcBTokenAmount(aToken?.balance || 0);
-        setBTokenAmount(formatAmount(maxAmount, bToken.decimals, 9).toString());
+        // @ts-ignore
+        setBTokenAmount(formatAmount(maxAmount, bToken.decimals, 9));
       } else {
-        setBTokenAmount(
-          formatAmount(bToken?.balance || 0, bToken.decimals, 9).toString()
-        );
+        // @ts-ignore
+        setBTokenAmount(formatAmount(bToken?.balance || 0, bToken.decimals, 9));
         const maxAmount = await calcATokenAmount(bToken?.balance || 0);
-        setATokenAmount(formatAmount(maxAmount, aToken.decimals, 9).toString());
+        // @ts-ignore
+        setATokenAmount(formatAmount(maxAmount, aToken.decimals, 9));
       }
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
     } finally {
       setBTokenLoading(false);
@@ -99,6 +99,7 @@ export const LqdrPage = (): JSX.Element => {
         networkId: chainId,
       })
     );
+    // @ts-ignore
     return maxAmount?.payload;
   };
 
@@ -115,6 +116,7 @@ export const LqdrPage = (): JSX.Element => {
         networkId: chainId,
       })
     );
+    // @ts-ignore
     return maxAmount?.payload;
   };
 
@@ -136,7 +138,9 @@ export const LqdrPage = (): JSX.Element => {
         })
       );
       if (isSubscribed) {
+        // @ts-ignore
         setUsdbAmount(usdbAmount?.payload.toString());
+        // @ts-ignore
         setUsdbAmountInUsd(
           (Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString())) /
             Math.pow(10, 18)
@@ -156,6 +160,7 @@ export const LqdrPage = (): JSX.Element => {
       return;
     }
     let bTokenMaxAmount = await calcBTokenAmount(aToken?.balance || 0);
+    // @ts-ignore
     bTokenMaxAmount = formatAmount(bTokenMaxAmount, bToken.decimals, 2, true);
     if (Number(bTokenAmount) > formatAmount(bToken.balance, bToken.decimals)) {
       dispatch(error(`You cannot deposit more than your ${bToken?.name} balance.`));
