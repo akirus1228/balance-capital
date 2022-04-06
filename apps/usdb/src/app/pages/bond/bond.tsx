@@ -4,13 +4,10 @@ import { useParams } from "react-router-dom";
 import BondDeposit from "./bond-deposit/bond-deposit";
 import BondRedeem from "./bond-redeem/bond-redeem";
 import style from "./bond.module.scss";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import { BondRadioButton } from "./bond-radio-button/bond-radio-button";
 
-/* eslint-disable-next-line */
-export interface BondProps {}
-
-export const Bond = (props: BondProps): JSX.Element => {
+export const Bond = (): JSX.Element => {
   const { bondType } = useParams();
   const [isDeposit, setIsDeposit] = useState(true);
 

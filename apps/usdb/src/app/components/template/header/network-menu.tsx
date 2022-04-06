@@ -2,7 +2,6 @@ import {
   defaultNetworkId,
   enabledNetworkIds,
   error,
-  NetworkIds,
   networks,
   useWeb3Context,
 } from "@fantohm/shared-web3";
@@ -35,7 +34,7 @@ export const NetworkMenu = (): JSX.Element => {
     }));
 
   const changeNetworks = async (chainId: number) => {
-    // @ts-ignore
+    if (!switchEthereumChain) return;
     const result = await switchEthereumChain(chainId || defaultNetworkId);
     if (!result) {
       const errorMessage =

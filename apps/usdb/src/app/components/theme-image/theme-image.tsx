@@ -13,7 +13,6 @@ import {
   LightShieldIcon,
 } from "@fantohm/shared/images";
 import { RootState } from "../../store";
-import { CSSProperties } from "@mui/styled-engine";
 
 type ThemeImage = {
   alt: string;

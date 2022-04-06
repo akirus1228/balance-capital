@@ -12,20 +12,14 @@ import {
   Typography,
 } from "@mui/material";
 import { HashLink as Link } from "react-router-hash-link";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import style from "./my-account.module.scss";
-import Info from "../../../assets/icons/info.svg";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import {
   BondType,
-  cancelBond,
   IAllBondData,
-  redeemOneBond,
   useBonds,
   useWeb3Context,
   prettifySeconds,
-  secondsUntilBlock,
   trim,
   chains,
 } from "@fantohm/shared-web3";
@@ -51,11 +45,9 @@ export const MyAccountActiveInvestmentsTable = ({
   onRedeemBond: (bond: IAllBondData, index: number) => void;
   onConfirmCancelBond: (bond: IAllBondData, index: number) => void;
 }): JSX.Element => {
-  const themeType = useSelector((state: any) => state.app.theme);
+  const themeType = useSelector((state) => state.app.theme);
   const backgroundColor = themeType === "light" ? "#f7f7ff" : "#0E0F10";
-
-  const dispatch = useDispatch();
-  const { provider, address, chainId } = useWeb3Context();
+  const { chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
@@ -184,55 +176,67 @@ export const MyAccountActiveInvestmentsTable = ({
                     </Link>
                   )}
                   {investment.type === BondType.SINGLE_SIDED_V1 && (
-                    <Link to={{pathname: "/staking-v1", hash:"#deposit"}}>
+                    <Link to={{ pathname: "/staking-v1", hash: "#deposit" }}>
                       <Button
                         variant="contained"
                         disableElevation
-                        sx={{ padding: '10px 30px' }}
+                        sx={{ padding: "10px 30px" }}
                       >
                         Manage
                       </Button>
                     </Link>
                   )}
-                  {investment.type === BondType.TRADFI && (
-                    investment.percentVestedFor >= 100 ? (<Button
-                      variant="contained"
-                      disableElevation
-                      disabled={isPendingTxn(pendingTransactions, `redeem_bond_${investment.bondName}`)}
-                      sx={{ padding: '10px 30px' }}
-                      onClick={() => {
-                        const bond = bonds.find(
-                          (bond) => bond.name === investment.bondName
-                        );
-                        bond && onRedeemBond(bond as IAllBondData, investment.bondIndex);
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(
-                        pendingTransactions,
-                        `redeem_bond_${investment.bondName}`,
-                        'Redeem'
-                      )}
-                    </Button>):
-                    (<Button
-                      variant="contained"
-                      disableElevation
-                      disabled={isPendingTxn(pendingTransactions, `cancel_bond_${investment.bondName}_${investment.bondIndex}`)}
-                      sx={{ padding: '10px 30px' }}
-                      onClick={() => {
-                        const bond = bonds.find(
-                          (bond) => bond.name === investment.bondName
-                        );
-                        bond && onConfirmCancelBond(bond as IAllBondData, investment.bondIndex);
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(
-                        pendingTransactions,
-                        `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
-                        'Cancel'
-                      )}
-                    </Button>
-                    )
-                  )}
+                  {investment.type === BondType.TRADFI &&
+                    (investment.percentVestedFor >= 100 ? (
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        disabled={isPendingTxn(
+                          pendingTransactions,
+                          `redeem_bond_${investment.bondName}`
+                        )}
+                        sx={{ padding: "10px 30px" }}
+                        onClick={() => {
+                          const bond = bonds.find(
+                            (bond) => bond.name === investment.bondName
+                          );
+                          bond &&
+                            onRedeemBond(bond as IAllBondData, investment.bondIndex);
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(
+                          pendingTransactions,
+                          `redeem_bond_${investment.bondName}`,
+                          "Redeem"
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        disabled={isPendingTxn(
+                          pendingTransactions,
+                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`
+                        )}
+                        sx={{ padding: "10px 30px" }}
+                        onClick={() => {
+                          const bond = bonds.find(
+                            (bond) => bond.name === investment.bondName
+                          );
+                          bond &&
+                            onConfirmCancelBond(
+                              bond as IAllBondData,
+                              investment.bondIndex
+                            );
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(
+                          pendingTransactions,
+                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
+                          "Cancel"
+                        )}
+                      </Button>
+                    ))}
                 </TableCell>
               </TableRow>
             ))}

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bondAsset,
@@ -47,8 +47,12 @@ export default function Mint() {
   const [value, setValue] = React.useState("");
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
-  const [bond, setBond] = useState(allBonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as Bond);
-  const [usdbBondData, setUsdbBondData] = useState(bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData);
+  const [bond, setBond] = useState(
+    allBonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as Bond
+  );
+  const [usdbBondData, setUsdbBondData] = useState(
+    bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData
+  );
   const [allowance, setAllowance] = React.useState(false);
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(DaiToken);
@@ -70,33 +74,17 @@ export default function Mint() {
       name: "DAI",
       total: tokenBalance.dai,
       price: daiPrice,
-      darkBanner: [
-        DarkMintDai0Img,
-        DarkMintDai1Img,
-        DarkMintDai2Img
-      ],
-      lightBanner: [
-        LightMintDai0Img,
-        LightMintDai1Img,
-        LightMintDai2Img
-      ]
+      darkBanner: [DarkMintDai0Img, DarkMintDai1Img, DarkMintDai2Img],
+      lightBanner: [LightMintDai0Img, LightMintDai1Img, LightMintDai2Img],
     },
     {
       title: "Mint with FHM",
       name: "FHM",
       total: tokenBalance.fhm,
       price: fhmPrice,
-      darkBanner: [
-        DarkMintFhm0Img,
-        DarkMintFhm1Img,
-        DarkMintFhm2Img
-      ],
-      lightBanner: [
-        LightMintFhm0Img,
-        LightMintFhm1Img,
-        LightMintFhm2Img
-      ]
-    }
+      darkBanner: [DarkMintFhm0Img, DarkMintFhm1Img, DarkMintFhm2Img],
+      lightBanner: [LightMintFhm0Img, LightMintFhm1Img, LightMintFhm2Img],
+    },
   ];
 
   useEffect(() => {
@@ -121,7 +109,10 @@ export default function Mint() {
   };
 
   useEffect(() => {
-    setAllowance((bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData)?.allowance > 0);
+    setAllowance(
+      (bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData)
+        ?.allowance > 0
+    );
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
   const selectedToken = tabState ? token[0] : token[1];
@@ -148,8 +139,8 @@ export default function Mint() {
   }
 
   useEffect(() => {
-    setUsdbBondData(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
-    setBond(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
+    setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
+    setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
     setUsdbBond(accountBonds["usdbBuy"]);
   }, [usdbBondData?.userBonds]);
 
@@ -200,8 +191,13 @@ export default function Mint() {
       </div>
       <Grid container spacing={8} className={style["cardGrid"]}>
         <Grid item md={6} sx={{ width: "100%" }}>
-          <Box className={style["subCardBorder"]}
-               sx={{ borderRadius: "20px", background: `${themeType === "light" ? "white" : "black"}` }}>
+          <Box
+            className={style["subCardBorder"]}
+            sx={{
+              borderRadius: "20px",
+              background: `${themeType === "light" ? "white" : "black"}`,
+            }}
+          >
             <Carousel
               sx={{ width: "100%", height: { xs: "270px", md: "550px" } }}
               indicatorContainerProps={{
@@ -213,40 +209,54 @@ export default function Mint() {
               }}
               indicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "#877979" : "#808080"
-                }
+                  color: themeType === "light" ? "#877979" : "#808080",
+                },
               }}
               activeIndicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "black" : "white"
-                }
+                  color: themeType === "light" ? "black" : "white",
+                },
               }}
             >
-              {
-                themeType === "light" ? (
-                  selectedToken.lightBanner.map((item: any, index: number) => <Box
-                    key={`light_${selectedToken.title}_${index}`} sx={{
-                    width: "100%",
-                    height: { xs: "270px", md: "550px" }
-                  }}><img style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    borderRadius: "20px"
-                  }} src={item} /></Box>)
-                ) : (
-                  selectedToken.darkBanner.map((item: any, index: number) => <Box
-                    key={`dark_${selectedToken.title}_${index}`} sx={{
-                    width: "100%",
-                    height: { xs: "270px", md: "550px" }
-                  }}><img style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "cover",
-                    borderRadius: "20px"
-                  }} src={item} /></Box>)
-                )
-              }
+              {themeType === "light"
+                ? selectedToken.lightBanner.map((item: any, index: number) => (
+                    <Box
+                      key={`light_${selectedToken.title}_${index}`}
+                      sx={{
+                        width: "100%",
+                        height: { xs: "270px", md: "550px" },
+                      }}
+                    >
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "20px",
+                        }}
+                        src={item}
+                      />
+                    </Box>
+                  ))
+                : selectedToken.darkBanner.map((item: any, index: number) => (
+                    <Box
+                      key={`dark_${selectedToken.title}_${index}`}
+                      sx={{
+                        width: "100%",
+                        height: { xs: "270px", md: "550px" },
+                      }}
+                    >
+                      <img
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "20px",
+                        }}
+                        src={item}
+                      />
+                    </Box>
+                  ))}
             </Carousel>
           </Box>
         </Grid>
@@ -353,28 +363,31 @@ export default function Mint() {
                     "Mint USDB"
                   )}
                 </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  className={style["mintButton"]}
+                >
+                  Mint USDB
+                </Button>
               ) : (
-                !bond?.isAvailable[chainId ?? 250] ? (
-                  <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
-                    Sold Out
-                  </Button>
-                ) : allowance ? (
-                  <Button
-                    color="primary" variant="contained"
-                    disableElevation
-                    onClick={handleClick}
-                    className={style["mintButton"]}
-                  >
-                    Mint USDB
-                  </Button>
-                ) : (
-                  <Button
-                    color="primary" variant="contained"
-                    className={style["mintButton"]}
-                    disabled={isPendingTxn(pendingTransactions, "approve_" + bond?.name)}
-                    onClick={onSeekApproval}>
-                    {txnButtonText(pendingTransactions, "approve_" + bond?.name, "Approve")}
-                  </Button>))}
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className={style["mintButton"]}
+                  disabled={isPendingTxn(pendingTransactions, "approve_" + bond?.name)}
+                  onClick={onSeekApproval}
+                >
+                  {txnButtonText(pendingTransactions, "approve_" + bond?.name, "Approve")}
+                </Button>
+              )}
             </div>
           </Paper>
         </Grid>
