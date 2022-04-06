@@ -185,7 +185,19 @@ export const changeApprovalForXfhm = createAsyncThunk(
       await dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
       await approveTx.wait();
     } catch (e: any) {
-      dispatch(error(e?.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -231,7 +243,19 @@ export const changeStakeForXfhm = createAsyncThunk(
       }));
       await stakeTx.wait();
     } catch (e: any) {
-      await dispatch(error(e?.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (stakeTx) {
@@ -263,7 +287,19 @@ export const claimForXfhm = createAsyncThunk(
       await dispatch(fetchPendingTxns({ txnHash: claimTx.hash, text, type: pendingTxnType }));
       await claimTx.wait();
     } catch (e: any) {
-      dispatch(error(e?.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (claimTx) {
@@ -294,7 +330,19 @@ export const addLiquidity = createAsyncThunk(
       await dispatch(fetchPendingTxns({ txnHash: addLiquidityTx.hash, text, type: pendingTxnType }));
       await addLiquidityTx.wait();
     } catch (e: any) {
-      dispatch(error(e?.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (addLiquidityTx) {

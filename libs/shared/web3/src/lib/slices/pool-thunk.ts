@@ -94,8 +94,20 @@ const changeApproval = createAsyncThunk(
         dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
         await approveTx.wait();
       }
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -143,14 +155,23 @@ export const poolDeposit = createAsyncThunk(
       } else {
         console.log("unrecognized action: ", action);
       }
-    } catch (e: unknown) {
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+    } catch (e: any) {
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {
@@ -227,14 +248,23 @@ export const poolWithdraw = createAsyncThunk(
       } else {
         console.log("unrecognized action: ", action);
       }
-    } catch (e: unknown) {
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+    } catch (e: any) {
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {
@@ -274,14 +304,23 @@ export const awardProcess = createAsyncThunk(
       const pendingTxnType = "pool_" + action;
       dispatch(fetchPendingTxns({ txnHash: poolTx.hash, text: text, type: pendingTxnType }));
       await poolTx.wait();
-    } catch (e: unknown) {
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+    } catch (e: any) {
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {

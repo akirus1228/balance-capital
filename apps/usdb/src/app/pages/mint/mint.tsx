@@ -48,8 +48,8 @@ export default function Mint() {
   const [value, setValue] = React.useState("");
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
-  const [bond, setBond] = useState(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
-  const [usdbBondData, setUsdbBondData] = useState(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
+  const [bond, setBond] = useState(allBonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as Bond);
+  const [usdbBondData, setUsdbBondData] = useState(bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData);
   const [allowance, setAllowance] = React.useState(false);
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(DaiToken);
@@ -121,11 +121,7 @@ export default function Mint() {
   };
 
   useEffect(() => {
-    if (tabState) {
-      setAllowance((bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance > 0);
-    } else {
-      setAllowance((bonds.filter(bond => bond.name === "usdbFhmBurn")[0] as IAllBondData)?.allowance > 0);
-    }
+    setAllowance((bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData)?.allowance > 0);
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
   const selectedToken = tabState ? token[0] : token[1];
@@ -136,7 +132,7 @@ export default function Mint() {
     } else if (isNaN(Number(quantity))) {
       await dispatch(error("Please enter a valid value!"));
     } else if (Number(quantity) > selectedToken.total) {
-      await dispatch(error("You're trying to deposit more than the maximum available!"));
+      await dispatch(error("Please enter a valid value!"));
     } else {
       dispatch(
         bondAsset({
@@ -150,6 +146,12 @@ export default function Mint() {
       );
     }
   };
+
+  useEffect(() => {
+    setUsdbBondData(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
+    setBond(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
+    setUsdbBond(accountBonds["usdbBuy"]);
+  }, [usdbBondData?.userBonds]);
 
   function setBondState(bool: boolean) {
     if (bool) {
@@ -319,10 +321,9 @@ export default function Mint() {
                     color="primary" variant="contained"
                     disableElevation
                     onClick={handleClick}
-                    disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
                     className={style["mintButton"]}
                   >
-                    {txnButtonText(pendingTransactions, "deposit_" + bond?.name, "Mint USDB")}
+                    Mint USDB
                   </Button>
                 ) : (
                   <Button

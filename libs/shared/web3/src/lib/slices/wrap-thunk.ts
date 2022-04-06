@@ -84,8 +84,20 @@ export const changeApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -147,15 +159,24 @@ export const changeWrap = createAsyncThunk(
         type: pendingTxnType
       }));
       await wrapTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to wrap/unwrap more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to wrap/unwrap more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {
