@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useMatch } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
@@ -28,6 +28,7 @@ import { TradFi } from "./pages/trad-fi/trad-fi";
 import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 import { loadAppDetails } from "./store/reducers/app-slice";
+import StakingV1Page from "./pages/staking-v1/staking-v1";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -96,6 +97,7 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />
+          <Route path="/staking-v1" element={<StakingV1Page />} />
           <Route path="/trad-fi" element={<TradFi />}>
             <Route path="/trad-fi/deposit/:bondType" element={<TradFiDeposit />} />
           </Route>

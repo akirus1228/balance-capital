@@ -183,57 +183,56 @@ export const MyAccountActiveInvestmentsTable = ({
                       </Button>
                     </Link>
                   )}
-                  {investment.type === BondType.TRADFI &&
-                    (investment.percentVestedFor >= 100 ? (
+                  {investment.type === BondType.SINGLE_SIDED_V1 && (
+                    <Link to={{pathname: "/staking-v1", hash:"#deposit"}}>
                       <Button
                         variant="contained"
                         disableElevation
-                        disabled={isPendingTxn(
-                          pendingTransactions,
-                          `redeem_bond_${investment.bondName}`
-                        )}
-                        sx={{ padding: "10px 30px" }}
-                        onClick={() => {
-                          const bond = bonds.find(
-                            (bond) => bond.name === investment.bondName
-                          );
-                          bond &&
-                            onRedeemBond(bond as IAllBondData, investment.bondIndex);
-                        }}
+                        sx={{ padding: '10px 30px' }}
                       >
-                        {txnButtonTextGeneralPending(
-                          pendingTransactions,
-                          `redeem_bond_${investment.bondName}`,
-                          "Redeem"
-                        )}
+                        Manage
                       </Button>
-                    ) : (
-                      <Button
-                        variant="contained"
-                        disableElevation
-                        disabled={isPendingTxn(
-                          pendingTransactions,
-                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`
-                        )}
-                        sx={{ padding: "10px 30px" }}
-                        onClick={() => {
-                          const bond = bonds.find(
-                            (bond) => bond.name === investment.bondName
-                          );
-                          bond &&
-                            onConfirmCancelBond(
-                              bond as IAllBondData,
-                              investment.bondIndex
-                            );
-                        }}
-                      >
-                        {txnButtonTextGeneralPending(
-                          pendingTransactions,
-                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
-                          "Cancel"
-                        )}
-                      </Button>
-                    ))}
+                    </Link>
+                  )}
+                  {investment.type === BondType.TRADFI && (
+                    investment.percentVestedFor >= 100 ? (<Button
+                      variant="contained"
+                      disableElevation
+                      disabled={isPendingTxn(pendingTransactions, `redeem_bond_${investment.bondName}`)}
+                      sx={{ padding: '10px 30px' }}
+                      onClick={() => {
+                        const bond = bonds.find(
+                          (bond) => bond.name === investment.bondName
+                        );
+                        bond && onRedeemBond(bond as IAllBondData, investment.bondIndex);
+                      }}
+                    >
+                      {txnButtonTextGeneralPending(
+                        pendingTransactions,
+                        `redeem_bond_${investment.bondName}`,
+                        'Redeem'
+                      )}
+                    </Button>):
+                    (<Button
+                      variant="contained"
+                      disableElevation
+                      disabled={isPendingTxn(pendingTransactions, `cancel_bond_${investment.bondName}_${investment.bondIndex}`)}
+                      sx={{ padding: '10px 30px' }}
+                      onClick={() => {
+                        const bond = bonds.find(
+                          (bond) => bond.name === investment.bondName
+                        );
+                        bond && onConfirmCancelBond(bond as IAllBondData, investment.bondIndex);
+                      }}
+                    >
+                      {txnButtonTextGeneralPending(
+                        pendingTransactions,
+                        `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
+                        'Cancel'
+                      )}
+                    </Button>
+                    )
+                  )}
                 </TableCell>
               </TableRow>
             ))}

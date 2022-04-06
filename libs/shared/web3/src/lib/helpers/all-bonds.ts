@@ -84,6 +84,32 @@ export const tradfi6month = new StableBond({
   },
 });
 
+export const singleSidedV1 = new StableBond({
+  name: "singleSidedV1",
+  type: BondType.SINGLE_SIDED_V1,
+  displayName: "Staking v1",
+  bondToken: "singleSided",
+  decimals: 18,
+  apr: 0,
+  roi: 20,
+  days: 0,
+  isAvailable: { [NetworkIds.FantomOpera]: true, [NetworkIds.Rinkeby]: true },
+  isPurchasable: true,
+  bondIconSvg: null,
+  bondContractABI: singleSidedLPBondDepositoryAbi,
+  paymentToken: PaymentToken.FHM,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "0x9D2141a3BfDbe0f9a948B993f9a70B5f9C9D17f9",
+      reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0xC2B356342D191E2E068B3c9876Fc0440b4d5Ed25", // special version if activate IL redeem
+      reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
+    },
+  },
+});
+
 export const singleSided = new StableBond({
   name: "singleSided",
   type: BondType.SINGLE_SIDED,
@@ -100,13 +126,13 @@ export const singleSided = new StableBond({
   paymentToken: PaymentToken.FHM,
   networkAddrs: {
     [NetworkIds.FantomOpera]: {
-      bondAddress: "0x9D2141a3BfDbe0f9a948B993f9a70B5f9C9D17f9",
+      bondAddress: "0x78b0d7B61EBB1f6073cD66ED3A347a7E9debD836",
       reserveAddress: "0x8D11eC38a3EB5E956B052f67Da8Bdc9bef8Abf3E",
       // bondAddress: "0x6F3D5858BBC95553DfEeFda4886Ea20E933535fA",
       // bondAddress: "0xbA28476fc4EdAd909fA13A7048Ef432311B4680c",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x7f994aA6C6FEdd75f69d8339A7cE653161c967c8", // special version if activate IL redeem
+      bondAddress: "0x55b6f354416cc599C01E1c928BE8086497C4D999", // special version if activate IL redeem
       reserveAddress: "0xfa1FBb8Ef55A4855E5688C0eE13aC3f202486286",
       // bondAddress: "0xC2B356342D191E2E068B3c9876Fc0440b4d5Ed25",
       // bondAddress: "0xc7330002761E52034efDC0cAe69B5Bd20D69aD38",
@@ -210,6 +236,7 @@ export const allBonds = [
   tradfi3month,
   tradfi6month,
   singleSided,
+  singleSidedV1,
   lqdrUsdbPol,
   usdbFhmBurn,
   usdbBuy,

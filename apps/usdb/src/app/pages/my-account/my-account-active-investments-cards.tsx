@@ -4,39 +4,25 @@ import {
   Grid,
   Icon,
   Paper,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
   Tooltip,
   Typography,
 } from "@mui/material";
 import { HashLink as Link } from "react-router-hash-link";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import style from "./my-account.module.scss";
-import Info from "../../../assets/icons/info.svg";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import {
   BondType,
-  cancelBond,
   IAllBondData,
-  redeemOneBond,
   useBonds,
   useWeb3Context,
   prettifySeconds,
-  secondsUntilBlock,
   trim,
   chains,
   defaultNetworkId,
 } from "@fantohm/shared-web3";
 import { useEffect, useState } from "react";
 import Investment from "./my-account-investments";
-import { isPendingTxn, txnButtonTextGeneralPending } from "@fantohm/shared-web3";
-import { RootState } from "../../store";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
@@ -58,14 +44,9 @@ export const MyAccountActiveInvestmentsCards = ({
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === "light" ? "#f7f7ff" : "#0E0F10";
 
-  const dispatch = useDispatch();
-  const { provider, address, chainId } = useWeb3Context();
+  const { chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? defaultNetworkId);
   const [currentBlock, setCurrentBlock] = useState<number>();
-
-  const pendingTransactions = useSelector((state: RootState) => {
-    return state?.pendingTransactions;
-  });
 
   useEffect(() => {
     (async function () {
@@ -151,16 +132,25 @@ export const MyAccountActiveInvestmentsCards = ({
                   <Icon component={InfoOutlinedIcon} fontSize="small" />
                 </Tooltip>
               </Typography>
-              {currentBlock ? (
+              {currentBlock && (
                 <Typography variant="h6">
                   {prettifySeconds(investment.secondsToVest)}
                 </Typography>
-              ) : (
-                <></>
               )}
             </Grid>
             <Grid item xs={12} sm={4}>
               <ButtonGroup>
+                {investment.type === BondType.SINGLE_SIDED_V1 && (
+                  <Link to={{ pathname: "/staking-v1", hash: "#deposit" }}>
+                    <Button
+                      variant="contained"
+                      disableElevation
+                      sx={{ padding: "10px 30px" }}
+                    >
+                      Manage
+                    </Button>
+                  </Link>
+                )}
                 {investment.type === BondType.SINGLE_SIDED && (
                   <Link to={{ pathname: "/staking", hash: "#deposit" }}>
                     <Button

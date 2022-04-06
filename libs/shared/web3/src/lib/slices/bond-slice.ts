@@ -119,8 +119,20 @@ export const changeApproval = createAsyncThunk(
         })
       );
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (approveTx) {
         dispatch(clearPendingTxn(approveTx.hash));
@@ -359,13 +371,30 @@ export const bondAsset = createAsyncThunk(
         }
       }
     } catch (e: any) {
+<<<<<<< HEAD
       if (
         e.error.code === -32603 &&
         e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
       ) {
         dispatch(error("Maximum daily limit for bond reached."));
+=======
+      if (e.error.code === -32603 && e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0) {
+        dispatch(error("Maximum daily limit for bond reached."),);
+>>>>>>> 824cb91837e5626327b1cc3b9cafe8e54b6b2fec
       } else {
-        dispatch(error(`Unknown error: ${e.error.message}`));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
     } finally {
       if (bondTx) {
@@ -439,7 +468,19 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(`Unknown error: ${e.error.message}`));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -487,10 +528,24 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      if (e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
-        dispatch(error("Redeeming IL rewards before end of vesting period."));
+      if (e.error.code === -32603 && e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
+        dispatch(
+          error("Maximum daily limit for bond reached."),
+        );
       } else {
-        dispatch(error(`Unknown error: ${e.error.message}`));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
     } finally {
       if (redeemTx) {
@@ -548,7 +603,19 @@ export const claimSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(`Unknown error: ${e.error.message}`));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -600,7 +667,19 @@ export const redeemOneBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      dispatch(error(e.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
@@ -648,7 +727,19 @@ export const redeemAllBonds = createAsyncThunk(
 
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
-      dispatch(error(e.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (redeemAllTx) {
         dispatch(clearPendingTxn(redeemAllTx.hash));
@@ -689,7 +780,19 @@ export const cancelBond = createAsyncThunk(
 
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
     } catch (e: any) {
-      dispatch(error(e.error.message));
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
     } finally {
       if (cancelTx) {
         dispatch(clearPendingTxn(cancelTx.hash));

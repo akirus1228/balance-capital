@@ -1,6 +1,6 @@
 import { Paper, Typography, useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/system";
+import { Box } from "@mui/material";
 import style from "./my-account.module.scss";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
@@ -10,8 +10,6 @@ import {
   claimSingleSidedBond,
   useBonds,
   useWeb3Context,
-  secondsUntilBlock,
-  chains,
   IAllBondData,
   cancelBond,
   IUserBond,
@@ -20,7 +18,6 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import { RootState } from "../../store";
 import MyAccountActiveInvestmentsTable from "./my-account-active-investments-table";
-import MyAccountInactiveInvestmentsTable from "./my-account-inactive-investments-table";
 import MyAccountDetailsTable from "./my-account-details-table";
 import Investment from "./my-account-investments";
 import AccountDetails from "./my-account-details";
@@ -33,60 +30,6 @@ export const currencyFormat = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });
-
-const inactiveInvestments: Investment[] = [
-  {
-    id: "1",
-    amount: 29275.51,
-    type: BondType.TRADFI,
-    rewards: 832.23,
-    rewardToken: "USDB",
-    rewardsInUsd: 832.23,
-    term: 6,
-    termType: "months",
-    roi: "32.5",
-    vestDate: 1638507600,
-    bondName: "tradfi3month",
-    bondIndex: 0,
-    displayName: "6 Months",
-    secondsToVest: 1638507600,
-    percentVestedFor: 100,
-  },
-  {
-    id: "2",
-    type: BondType.TRADFI,
-    amount: 29275.51,
-    rewards: 1963.75,
-    rewardToken: "USDB",
-    rewardsInUsd: 1963.75,
-    term: 6,
-    termType: "months",
-    roi: "32.5",
-    vestDate: 1638507600,
-    bondName: "tradfi3month",
-    bondIndex: 1,
-    displayName: "6 Months",
-    secondsToVest: 1638507600,
-    percentVestedFor: 100,
-  },
-  {
-    id: "3",
-    type: BondType.TRADFI,
-    amount: 29275.51,
-    rewards: 1963.75,
-    rewardToken: "USDB",
-    rewardsInUsd: 1963.75,
-    term: 6,
-    termType: "months",
-    roi: "32.5",
-    vestDate: 1638507600,
-    bondName: "tradfi3month",
-    bondIndex: 2,
-    displayName: "6 Months",
-    secondsToVest: 1638507600,
-    percentVestedFor: 100,
-  },
-];
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -243,7 +186,10 @@ export const MyAccount = (): JSX.Element => {
               autostake: false,
             })
           );
-        } else if (bond.type === BondType.SINGLE_SIDED) {
+        } else if (
+          bond.type === BondType.SINGLE_SIDED ||
+          bond.type === BondType.SINGLE_SIDED_V1
+        ) {
           const { amount } = currentInvests[0];
           await dispatch(
             claimSingleSidedBond({

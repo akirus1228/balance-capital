@@ -464,7 +464,7 @@ export const calculateUserBondDetails = createAsyncThunk(
     let lpTokenAmount = "0";
     let secondsToVest = 0;
     let maturationSeconds = 0;
-    if (bond.type === BondType.SINGLE_SIDED) {
+    if (bond.type === BondType.SINGLE_SIDED || bond.type === BondType.SINGLE_SIDED_V1) {
       const masterchefContract = new ethers.Contract(
         addresses[networkId]["MASTERCHEF_ADDRESS"],
         masterchefAbi,
