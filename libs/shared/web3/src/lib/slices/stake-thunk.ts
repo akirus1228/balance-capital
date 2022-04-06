@@ -83,8 +83,20 @@ export const changeApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -138,8 +150,20 @@ export const changeFHUDApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -199,15 +223,24 @@ export const changeStake = createAsyncThunk(
       uaData.txHash = stakeTx.hash;
       dispatch(fetchPendingTxns({ txnHash: stakeTx.hash, text: getStakingTypeText(action), type: pendingTxnType }));
       await stakeTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {
@@ -254,15 +287,24 @@ export const changeMint = createAsyncThunk(
       uaData.txHash = mintTx.hash;
       dispatch(fetchPendingTxns({ txnHash: mintTx.hash, text: "Minting USDB", type: pendingTxnType }));
       await mintTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to mint more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
+        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
       } else {
-        dispatch(error(rpcError.message));
+        let message;
+        if (!e.error || e.error === undefined || isNaN(e.error)) {
+          if (e.message === "Internal JSON-RPC error.") {
+            message = e.data.message;
+          } else {
+            message = e.message;
+          }
+          if (typeof message === "string") {
+            dispatch(error(`Unknown error: ${message}`));
+          }
+        } else {
+          dispatch(error(`Unknown error: ${e.error.message}`));
+        }
       }
       return;
     } finally {
@@ -297,8 +339,20 @@ export const changeForfeit = createAsyncThunk(
       await forfeitTx.wait();
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (forfeitTx) {
@@ -334,8 +388,20 @@ export const changeClaim = createAsyncThunk(
       await claimTx.wait();
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      let message;
+      if (!e.error || e.error === undefined || isNaN(e.error)) {
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (claimTx) {
