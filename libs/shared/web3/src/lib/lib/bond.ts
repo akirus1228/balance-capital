@@ -21,12 +21,13 @@ export enum BondAssetType {
 }
 
 export enum BondType {
-  Bond_11,
-  Bond_44,
-  Bond_USDB,
-  TRADFI,
-  SINGLE_SIDED,
-  LQDR_USDB_POL = 5
+  Bond_11 = 0,
+  Bond_44= 1,
+  Bond_USDB = 2,
+  TRADFI = 3,
+  SINGLE_SIDED = 4,
+  SINGLE_SIDED_V1 = 5,
+  LQDR_USDB_POL = 6,
 }
 
 export enum BondAction {
@@ -45,11 +46,11 @@ export interface BondAddresses {
 }
 
 export interface NetworkAddresses {
-  [key: string]: BondAddresses
+  [key: string]: BondAddresses;
 }
 
 export interface Available {
-  [key: string]: boolean
+  [key: string]: boolean;
 }
 
 interface BondOpts {
@@ -139,7 +140,11 @@ export abstract class Bond {
 
   async getContractForBond(networkId: NetworkId) {
     const bondAddress = this.getAddressForBond(networkId);
-    return new ethers.Contract(bondAddress, this.bondContractABI, await chains[networkId].provider);
+    return new ethers.Contract(
+      bondAddress,
+      this.bondContractABI,
+      await chains[networkId].provider
+    );
   }
 
   getAddressForReserve(networkId: NetworkId) {
@@ -153,7 +158,11 @@ export abstract class Bond {
 
   async getContractForReserve(networkId: NetworkId) {
     const bondAddress = this.getAddressForReserve(networkId);
-    return new ethers.Contract(bondAddress, this.reserveContract, await chains[networkId].provider);
+    return new ethers.Contract(
+      bondAddress,
+      this.reserveContract,
+      await chains[networkId].provider
+    );
   }
 
   async getBondReservePrice(networkId: NetworkId) {
@@ -192,12 +201,13 @@ export class LPBond extends Bond {
     const bondCalculator = await getBondCalculator(networkId);
     const [tokenAmount, markdown] = await Promise.all([
       token["balanceOf"](addresses[networkId]["TREASURY_ADDRESS"]),
-      bondCalculator["markdown"](tokenAddress)
+      bondCalculator["markdown"](tokenAddress),
     ]).then(([tokenAmount, markdown]) => [
       tokenAmount,
-      markdown / Math.pow(10, this.decimals)
+      markdown / Math.pow(10, this.decimals),
     ]);
-    const valuation = await bondCalculator["valuation"](tokenAddress, tokenAmount) / Math.pow(10, 9);
+    const valuation =
+      (await bondCalculator["valuation"](tokenAddress, tokenAmount)) / Math.pow(10, 9);
     const tokenUSD = valuation * markdown;
     return tokenUSD;
   }
@@ -205,7 +215,7 @@ export class LPBond extends Bond {
 
 // Generic BondClass we should be using everywhere
 // Assumes the token being deposited follows the standard ERC20 spec
-export type StableBondOpts = BondOpts
+export type StableBondOpts = BondOpts;
 
 export class StableBond extends Bond {
   readonly isLP = false;
@@ -223,7 +233,9 @@ export class StableBond extends Bond {
 
   async getTreasuryBalance(networkId: NetworkId) {
     const token = await this.getContractForReserve(networkId);
-    const tokenAmount = await token["balanceOf"](addresses[networkId]["TREASURY_ADDRESS"]);
+    const tokenAmount = await token["balanceOf"](
+      addresses[networkId]["TREASURY_ADDRESS"]
+    );
     return tokenAmount / Math.pow(10, this.decimals);
   }
 }
@@ -234,10 +246,7 @@ export interface CustomBondOpts extends BondOpts {
   assetType: number;
   lpUrl: string;
   isRiskFree: boolean;
-  customTreasuryBalanceFunc: (
-    this: CustomBond,
-    networkId: NetworkId
-  ) => Promise<number>;
+  customTreasuryBalanceFunc: (this: CustomBond, networkId: NetworkId) => Promise<number>;
 }
 
 export class CustomBond extends Bond {
