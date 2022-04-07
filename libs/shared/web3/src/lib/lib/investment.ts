@@ -1,14 +1,16 @@
-import { ethers } from "ethers";
 import { ReactNode } from "react";
-import { getBinanceTokenPrice, getCoingeckoTokenPrice, getHistoricTokenPrice, getTokenPrice, roundToNearestHour } from "../helpers";
-import { abi as ierc20Abi } from "../abi/IERC20.json";
+import {
+  getCoingeckoTokenPrice,
+  getHistoricTokenPrice,
+  roundToNearestHour,
+} from "../helpers";
 import { NetworkId } from "../networks";
 import { chains } from "../providers";
 import { Provider } from "@ethersproject/providers";
 
 // HistoricPrices are keyed by timestamp in seconds rounded down to nearest hour
 export interface IHistoricPrices {
-  getPrice(timestamp: number): number
+  getPrice(timestamp: number): number;
 }
 
 export class HistoricPrices implements IHistoricPrices {
@@ -27,7 +29,6 @@ export class HistoricPrices implements IHistoricPrices {
     }
     return price;
   }
-
 }
 
 interface InvestmentOpts {
@@ -36,18 +37,10 @@ interface InvestmentOpts {
   tokenIcon: ReactNode; //  SVG path for icons
   decimals: number;
   isLp: boolean;
-  customAssetBalanceFunc?: (
-    this: TokenInvestment
-  ) => Promise<number>;
-  customAssetPriceFunc?: (
-    this: TokenInvestment
-  ) => Promise<number>;
-  customTreasuryBalanceFunc?: (
-    this: TokenInvestment
-  ) => Promise<number>;
-  customHistoricPricesFunc?: (
-    this: TokenInvestment
-  ) => Promise<IHistoricPrices>;
+  customAssetBalanceFunc?: (this: TokenInvestment) => Promise<number>;
+  customAssetPriceFunc?: (this: TokenInvestment) => Promise<number>;
+  customTreasuryBalanceFunc?: (this: TokenInvestment) => Promise<number>;
+  customHistoricPricesFunc?: (this: TokenInvestment) => Promise<IHistoricPrices>;
 }
 
 export abstract class Investment {
@@ -70,13 +63,19 @@ export abstract class Investment {
   }
 }
 
-export type NetworkName = "ethereum" | "fantom" | "binance-smart-chain" | "boba" | "moonriver" | "boba-network";
+export type NetworkName =
+  | "ethereum"
+  | "fantom"
+  | "binance-smart-chain"
+  | "boba"
+  | "moonriver"
+  | "boba-network";
 
 export interface TokenInvestmentOpts extends InvestmentOpts {
-  chainId: NetworkId,
-  chainName: NetworkName,
-  contractAddress: string,
-  daoAddress: string,
+  chainId: NetworkId;
+  chainName: NetworkName;
+  contractAddress: string;
+  daoAddress: string;
 }
 
 export class TokenInvestment extends Investment {
@@ -102,7 +101,9 @@ export class TokenInvestment extends Investment {
   }
 
   async getHistoricPrices(this: TokenInvestment): Promise<IHistoricPrices> {
-    return new HistoricPrices(await getHistoricTokenPrice(this.networkName, this.contractAddress));
+    return new HistoricPrices(
+      await getHistoricTokenPrice(this.networkName, this.contractAddress)
+    );
   }
 
   constructor(investmentOpts: TokenInvestmentOpts) {
@@ -111,28 +112,27 @@ export class TokenInvestment extends Investment {
     this.daoAddress = investmentOpts.daoAddress;
     this.provider = chains[investmentOpts.chainId].provider;
     this.networkName = investmentOpts.chainName;
-    this.assetBalance = investmentOpts.customAssetBalanceFunc ? investmentOpts.customAssetBalanceFunc.bind(this)() : this.getAssetBalance.bind(this)();
-    this.assetPrice = investmentOpts.customAssetPriceFunc ? investmentOpts.customAssetPriceFunc.bind(this)() : this.getAssetPrice.bind(this)();
-    this.treasuryBalance = investmentOpts.customTreasuryBalanceFunc ? investmentOpts.customTreasuryBalanceFunc.bind(this)() : this.getTreasuryBalance.bind(this)();
-    this.historicPrices = investmentOpts.customHistoricPricesFunc ? investmentOpts.customHistoricPricesFunc.bind(this)() : this.getHistoricPrices.bind(this)();
+    this.assetBalance = investmentOpts.customAssetBalanceFunc
+      ? investmentOpts.customAssetBalanceFunc.bind(this)()
+      : this.getAssetBalance.bind(this)();
+    this.assetPrice = investmentOpts.customAssetPriceFunc
+      ? investmentOpts.customAssetPriceFunc.bind(this)()
+      : this.getAssetPrice.bind(this)();
+    this.treasuryBalance = investmentOpts.customTreasuryBalanceFunc
+      ? investmentOpts.customTreasuryBalanceFunc.bind(this)()
+      : this.getTreasuryBalance.bind(this)();
+    this.historicPrices = investmentOpts.customHistoricPricesFunc
+      ? investmentOpts.customHistoricPricesFunc.bind(this)()
+      : this.getHistoricPrices.bind(this)();
   }
-
 }
 
 // These are special investments that have different valuation methods
 export interface CustomInvestmentOpts extends InvestmentOpts {
-  customAssetBalanceFunc: (
-    this: CustomInvestment
-  ) => Promise<number>;
-  customAssetPriceFunc: (
-    this: CustomInvestment
-  ) => Promise<number>;
-  customTreasuryBalanceFunc: (
-    this: CustomInvestment
-  ) => Promise<number>;
-  customHistoricPricesFunc: (
-    this: CustomInvestment
-  ) => Promise<IHistoricPrices>;
+  customAssetBalanceFunc: (this: CustomInvestment) => Promise<number>;
+  customAssetPriceFunc: (this: CustomInvestment) => Promise<number>;
+  customTreasuryBalanceFunc: (this: CustomInvestment) => Promise<number>;
+  customHistoricPricesFunc: (this: CustomInvestment) => Promise<IHistoricPrices>;
 }
 
 export class CustomInvestment extends Investment {

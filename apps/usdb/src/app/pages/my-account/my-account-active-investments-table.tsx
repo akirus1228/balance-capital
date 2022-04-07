@@ -1,60 +1,53 @@
 import {
-  Button, Icon,
+  Button,
+  Icon,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
   TableHead,
-  TableRow, Tooltip,
-  Typography
+  TableRow,
+  Tooltip,
+  Typography,
 } from "@mui/material";
-import { HashLink as Link } from 'react-router-hash-link';
-import { useDispatch, useSelector } from 'react-redux';
-import style from './my-account.module.scss';
-import Info from '../../../assets/icons/info.svg';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
+import { HashLink as Link } from "react-router-hash-link";
+import { useSelector } from "react-redux";
+import style from "./my-account.module.scss";
 import {
   BondType,
-  cancelBond,
   IAllBondData,
-  redeemOneBond,
   useBonds,
   useWeb3Context,
   prettifySeconds,
-  secondsUntilBlock,
   trim,
   chains,
 } from "@fantohm/shared-web3";
-import { useEffect, useState } from 'react';
-import Investment from './my-account-investments';
-import {
-  isPendingTxn,
-  txnButtonTextGeneralPending,
-} from "@fantohm/shared-web3";
-import { RootState } from '../../store';
+import { useEffect, useState } from "react";
+import Investment from "./my-account-investments";
+import { isPendingTxn, txnButtonTextGeneralPending } from "@fantohm/shared-web3";
+import { RootState } from "../../store";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
-export const currencyFormat = new Intl.NumberFormat('en-US', {
-  style: 'currency',
-  currency: 'USD',
+export const currencyFormat = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
   maximumFractionDigits: 2,
   minimumFractionDigits: 2,
 });
 
-export const MyAccountActiveInvestmentsTable = (
-  { investments, onRedeemBond, onConfirmCancelBond }:
-  { 
-    investments: Investment[], 
-    onRedeemBond: (bond: IAllBondData, index: number) => void,
-    onConfirmCancelBond: (bond: IAllBondData, index: number) => void
+export const MyAccountActiveInvestmentsTable = ({
+  investments,
+  onRedeemBond,
+  onConfirmCancelBond,
+}: {
+  investments: Investment[];
+  onRedeemBond: (bond: IAllBondData, index: number) => void;
+  onConfirmCancelBond: (bond: IAllBondData, index: number) => void;
 }): JSX.Element => {
-  const themeType = useSelector((state: any) => state.app.theme);
-  const backgroundColor = themeType === 'light' ? '#f7f7ff' : '#0E0F10';
-
-  const dispatch = useDispatch();
-  const { provider, address, chainId } = useWeb3Context();
+  const themeType = useSelector((state) => state.app.theme);
+  const backgroundColor = themeType === "light" ? "#f7f7ff" : "#0E0F10";
+  const { chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
   const [currentBlock, setCurrentBlock] = useState<number>();
 
@@ -75,8 +68,8 @@ export const MyAccountActiveInvestmentsTable = (
   return (
     <Paper
       elevation={0}
-      sx={{ marginTop: '10px' }}
-      className={style['rowCard']}
+      sx={{ marginTop: "10px" }}
+      className={style["rowCard"]}
       style={{ backgroundColor: `${backgroundColor}` }}
     >
       <TableContainer>
@@ -84,41 +77,57 @@ export const MyAccountActiveInvestmentsTable = (
           <TableHead>
             <TableRow>
               <TableCell>
-                <Typography variant="subtitle2" className={style['subTitle']}>
+                <Typography variant="subtitle2" className={style["subTitle"]}>
                   Amount
-                  <Tooltip sx={{marginLeft: "5px"}} arrow title="List of active investments">
+                  <Tooltip
+                    sx={{ marginLeft: "5px" }}
+                    arrow
+                    title="List of active investments"
+                  >
                     <Icon component={InfoOutlinedIcon} fontSize="small" />
                   </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="subtitle2" className={style['subTitle']}>
+                <Typography variant="subtitle2" className={style["subTitle"]}>
                   Rewards
-                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Projected reward per investment">
+                  <Tooltip
+                    sx={{ marginLeft: "5px" }}
+                    arrow
+                    title="Projected reward per investment"
+                  >
                     <Icon component={InfoOutlinedIcon} fontSize="small" />
                   </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="subtitle2" className={style['subTitle']}>
+                <Typography variant="subtitle2" className={style["subTitle"]}>
                   Investment
-                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Product invested in">
+                  <Tooltip sx={{ marginLeft: "5px" }} arrow title="Product invested in">
                     <Icon component={InfoOutlinedIcon} fontSize="small" />
                   </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="subtitle2" className={style['subTitle']}>
+                <Typography variant="subtitle2" className={style["subTitle"]}>
                   ROI
-                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Return on investment over vesting period">
+                  <Tooltip
+                    sx={{ marginLeft: "5px" }}
+                    arrow
+                    title="Return on investment over vesting period"
+                  >
                     <Icon component={InfoOutlinedIcon} fontSize="small" />
                   </Tooltip>
                 </Typography>
               </TableCell>
               <TableCell>
-                <Typography variant="subtitle2" className={style['subTitle']}>
+                <Typography variant="subtitle2" className={style["subTitle"]}>
                   Time remaining
-                  <Tooltip sx={{marginLeft: "5px"}} arrow title="Time remaining in vesting period">
+                  <Tooltip
+                    sx={{ marginLeft: "5px" }}
+                    arrow
+                    title="Time remaining in vesting period"
+                  >
                     <Icon component={InfoOutlinedIcon} fontSize="small" />
                   </Tooltip>
                 </Typography>
@@ -136,88 +145,98 @@ export const MyAccountActiveInvestmentsTable = (
                 </TableCell>
                 <TableCell>
                   <Typography variant="h6">
-                    {trim(investment.rewards, 4)}{' '}{investment.rewardToken}
+                    {trim(investment.rewards, 4)} {investment.rewardToken}
                   </Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">
-                    {investment.displayName}
-                  </Typography>
+                  <Typography variant="h6">{investment.displayName}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">
-                    {investment.roi}%
-                  </Typography>
+                  <Typography variant="h6">{investment.roi}%</Typography>
                 </TableCell>
                 <TableCell>
                   {currentBlock ? (
                     <Typography variant="h6">
                       {prettifySeconds(investment.secondsToVest)}
                     </Typography>
-                  ) : (<></>)}
+                  ) : (
+                    <></>
+                  )}
                 </TableCell>
                 <TableCell>
                   {investment.type === BondType.SINGLE_SIDED && (
-                    <Link to={{pathname: "/staking", hash:"#deposit"}}>
+                    <Link to={{ pathname: "/staking", hash: "#deposit" }}>
                       <Button
                         variant="contained"
                         disableElevation
-                        sx={{ padding: '10px 30px' }}
+                        sx={{ padding: "10px 30px" }}
                       >
                         Manage
                       </Button>
                     </Link>
                   )}
                   {investment.type === BondType.SINGLE_SIDED_V1 && (
-                    <Link to={{pathname: "/staking-v1", hash:"#deposit"}}>
+                    <Link to={{ pathname: "/staking-v1", hash: "#deposit" }}>
                       <Button
                         variant="contained"
                         disableElevation
-                        sx={{ padding: '10px 30px' }}
+                        sx={{ padding: "10px 30px" }}
                       >
                         Manage
                       </Button>
                     </Link>
                   )}
-                  {investment.type === BondType.TRADFI && (
-                    investment.percentVestedFor >= 100 ? (<Button
-                      variant="contained"
-                      disableElevation
-                      disabled={isPendingTxn(pendingTransactions, `redeem_bond_${investment.bondName}`)}
-                      sx={{ padding: '10px 30px' }}
-                      onClick={() => {
-                        const bond = bonds.find(
-                          (bond) => bond.name === investment.bondName
-                        );
-                        bond && onRedeemBond(bond as IAllBondData, investment.bondIndex);
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(
-                        pendingTransactions,
-                        `redeem_bond_${investment.bondName}`,
-                        'Redeem'
-                      )}
-                    </Button>):
-                    (<Button
-                      variant="contained"
-                      disableElevation
-                      disabled={isPendingTxn(pendingTransactions, `cancel_bond_${investment.bondName}_${investment.bondIndex}`)}
-                      sx={{ padding: '10px 30px' }}
-                      onClick={() => {
-                        const bond = bonds.find(
-                          (bond) => bond.name === investment.bondName
-                        );
-                        bond && onConfirmCancelBond(bond as IAllBondData, investment.bondIndex);
-                      }}
-                    >
-                      {txnButtonTextGeneralPending(
-                        pendingTransactions,
-                        `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
-                        'Cancel'
-                      )}
-                    </Button>
-                    )
-                  )}
+                  {investment.type === BondType.TRADFI &&
+                    (investment.percentVestedFor >= 100 ? (
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        disabled={isPendingTxn(
+                          pendingTransactions,
+                          `redeem_bond_${investment.bondName}`
+                        )}
+                        sx={{ padding: "10px 30px" }}
+                        onClick={() => {
+                          const bond = bonds.find(
+                            (bond) => bond.name === investment.bondName
+                          );
+                          bond &&
+                            onRedeemBond(bond as IAllBondData, investment.bondIndex);
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(
+                          pendingTransactions,
+                          `redeem_bond_${investment.bondName}`,
+                          "Redeem"
+                        )}
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        disableElevation
+                        disabled={isPendingTxn(
+                          pendingTransactions,
+                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`
+                        )}
+                        sx={{ padding: "10px 30px" }}
+                        onClick={() => {
+                          const bond = bonds.find(
+                            (bond) => bond.name === investment.bondName
+                          );
+                          bond &&
+                            onConfirmCancelBond(
+                              bond as IAllBondData,
+                              investment.bondIndex
+                            );
+                        }}
+                      >
+                        {txnButtonTextGeneralPending(
+                          pendingTransactions,
+                          `cancel_bond_${investment.bondName}_${investment.bondIndex}`,
+                          "Cancel"
+                        )}
+                      </Button>
+                    ))}
                 </TableCell>
               </TableRow>
             ))}
@@ -227,7 +246,5 @@ export const MyAccountActiveInvestmentsTable = (
     </Paper>
   );
 };
-
-
 
 export default MyAccountActiveInvestmentsTable;

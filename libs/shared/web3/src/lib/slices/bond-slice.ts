@@ -1,5 +1,5 @@
 import { BigNumber, ethers } from "ethers";
-import {contractForRedeemHelper, getMarketPrice, getTokenPrice} from "../helpers";
+import { contractForRedeemHelper, getMarketPrice, getTokenPrice } from "../helpers";
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
@@ -13,30 +13,34 @@ import {
   ICancelBondAsyncThunk,
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
-  IRedeemBondAsyncThunk, IRedeemSingleSidedBondAsyncThunk,
+  IRedeemBondAsyncThunk,
+  IRedeemSingleSidedBondAsyncThunk,
 } from "./interfaces";
-import {segmentUA} from "../helpers/user-analytic-helpers";
+import { segmentUA } from "../helpers/user-analytic-helpers";
 
 import { getBondCalculator } from "../helpers/bond-calculator";
 import { networks } from "../networks";
 import { waitUntilBlock } from "../helpers/network-helper";
-import {calculateUserBondDetails, getBalances} from "./account-slice";
-import {BondType, PaymentToken} from "../lib/bond";
-import {addresses} from "../constants";
+import { calculateUserBondDetails, getBalances } from "./account-slice";
+import { BondType, PaymentToken } from "../lib/bond";
+import { addresses } from "../constants";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
  * - updates the App.slice when it runs
  */
-const loadMarketPrice = createAsyncThunk("networks/loadMarketPrice", async ({ networkId }: IBaseAsyncThunk) => {
-  let marketPrice: number;
-  try {
-    marketPrice = await getMarketPrice(networkId);
-  } catch (e) {
-    marketPrice = await getTokenPrice("fantohm");
+const loadMarketPrice = createAsyncThunk(
+  "networks/loadMarketPrice",
+  async ({ networkId }: IBaseAsyncThunk) => {
+    let marketPrice: number;
+    try {
+      marketPrice = await getMarketPrice(networkId);
+    } catch (e) {
+      marketPrice = await getTokenPrice("fantohm");
+    }
+    return { marketPrice };
   }
-  return {marketPrice};
-});
+);
 
 /**
  * checks if networks.slice has marketPrice already for this network
@@ -64,7 +68,7 @@ export const findOrLoadMarketPrice = createAsyncThunk(
       // we don't have marketPrice in networks.state, so go get it
       try {
         const originalPromiseResult = await dispatch(
-          loadMarketPrice({ networkId }),
+          loadMarketPrice({ networkId })
         ).unwrap();
         marketPrice = originalPromiseResult?.marketPrice;
       } catch (rejectedValueOrSerializedError) {
@@ -73,14 +77,16 @@ export const findOrLoadMarketPrice = createAsyncThunk(
         return;
       }
     }
-    return {marketPrice};
-  },
+    return { marketPrice };
+  }
 );
-
 
 export const changeApproval = createAsyncThunk(
   "bonding/changeApproval",
-  async ({ address, bond, provider, networkId }: IApproveBondAsyncThunk, { dispatch }) => {
+  async (
+    { address, bond, provider, networkId }: IApproveBondAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -101,13 +107,16 @@ export const changeApproval = createAsyncThunk(
     }
 
     try {
-      approveTx = await reserveContract["approve"](bondAddr, ethers.utils.parseUnits("1000000000", "ether").toString());
+      approveTx = await reserveContract["approve"](
+        bondAddr,
+        ethers.utils.parseUnits("1000000000", "ether").toString()
+      );
       dispatch(
         fetchPendingTxns({
           txnHash: approveTx.hash,
           text: "Approving " + bond.displayName,
           type: "approve_" + bond.name,
-        }),
+        })
       );
       await approveTx.wait();
     } catch (e: any) {
@@ -130,7 +139,7 @@ export const changeApproval = createAsyncThunk(
         dispatch(calculateUserBondDetails({ address, bond, networkId }));
       }
     }
-  },
+  }
 );
 
 export interface IBondDetails {
@@ -152,7 +161,10 @@ export interface IBondDetails {
 }
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
-  async ({ bond, value, networkId }: ICalcBondDetailsAsyncThunk, { dispatch }): Promise<IBondDetails> => {
+  async (
+    { bond, value, networkId }: ICalcBondDetailsAsyncThunk,
+    { dispatch }
+  ): Promise<IBondDetails> => {
     if (!value) {
       value = "0";
     }
@@ -163,13 +175,17 @@ export const calcBondDetails = createAsyncThunk(
     const bondCalcContract = await getBondCalculator(networkId);
 
     async function getBondQuoteAndValuation() {
-      let bondQuote, valuation = 0;
+      let bondQuote,
+        valuation = 0;
       if (Number(value) === 0) {
         // if inputValue is 0 avoid the bondQuote calls
         bondQuote = 0;
       } else if (bond.isLP) {
         [valuation, bondQuote] = await Promise.all([
-          bondCalcContract["valuation"](bond.getAddressForReserve(networkId), amountInWei),
+          bondCalcContract["valuation"](
+            bond.getAddressForReserve(networkId),
+            amountInWei
+          ),
           bondContract["payoutFor"](valuation),
         ]);
         if (!amountInWei.isZero() && bondQuote < 100000) {
@@ -196,35 +212,59 @@ export const calcBondDetails = createAsyncThunk(
     }
 
     // Contract interactions
-    const [fhmMarketPrice, terms, maxBondPrice, debtRatio, bondPrice, purchased, valuation, bondQuote] = await Promise.all([
-      dispatch(findOrLoadMarketPrice({ networkId: networkId })).unwrap(),
-      bondContract["terms"](),
-      bondContract["maxPayout"](),
-      0,//bondContract["standardizedDebtRatio"]().catch((reason: any) => (console.log("error getting standardizedDebtRatio", reason), 0)),
-      bondContract["bondPriceInUSD"]().catch((reason: any) => (console.log("error getting bondPriceInUSD", reason), 0)),
-      bond.getTreasuryBalance(networkId),
-      getBondQuoteAndValuation(),
-    ]).then(([fhmMarketPrice, terms, maxBondPrice, debtRatio, bondPrice, purchased, { valuation, bondQuote }]) => [
-			fhmMarketPrice?.marketPrice || 0,
+    const [
+      fhmMarketPrice,
       terms,
-      maxBondPrice / Math.pow(10, 9),
-      debtRatio / Math.pow(10, 9),
-      bondPrice / Math.pow(10, bond.decimals),
+      maxBondPrice,
+      debtRatio,
+      bondPrice,
       purchased,
       valuation,
       bondQuote,
-    ]);
+    ] = await Promise.all([
+      dispatch(findOrLoadMarketPrice({ networkId: networkId })).unwrap(),
+      bondContract["terms"](),
+      bondContract["maxPayout"](),
+      0, //bondContract["standardizedDebtRatio"]().catch((reason: any) => (console.log("error getting standardizedDebtRatio", reason), 0)),
+      bondContract["bondPriceInUSD"]().catch(
+        (reason: any) => (console.log("error getting bondPriceInUSD", reason), 0)
+      ),
+      bond.getTreasuryBalance(networkId),
+      getBondQuoteAndValuation(),
+    ]).then(
+      ([
+        fhmMarketPrice,
+        terms,
+        maxBondPrice,
+        debtRatio,
+        bondPrice,
+        purchased,
+        { valuation, bondQuote },
+      ]) => [
+        fhmMarketPrice?.marketPrice || 0,
+        terms,
+        maxBondPrice / Math.pow(10, 9),
+        debtRatio / Math.pow(10, 9),
+        bondPrice / Math.pow(10, bond.decimals),
+        purchased,
+        valuation,
+        bondQuote,
+      ]
+    );
 
-    const paymentTokenMarketPrice = bond.paymentToken === PaymentToken.USDB ? 1 : fhmMarketPrice;
+    const paymentTokenMarketPrice =
+      bond.paymentToken === PaymentToken.USDB ? 1 : fhmMarketPrice;
 
-    const bondDiscount = bondPrice > 0 ? (paymentTokenMarketPrice - bondPrice) / bondPrice : 0; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
+    const bondDiscount =
+      bondPrice > 0 ? (paymentTokenMarketPrice - bondPrice) / bondPrice : 0; // 1 - bondPrice / (bondPrice * Math.pow(10, 9));
 
     // Circuit breaking for FHUD bonds
     let isCircuitBroken = false;
     let actualMaxBondPrice = maxBondPrice;
     if (bond.type === BondType.Bond_USDB) {
       const soldBondsLimitUsd = terms.soldBondsLimitUsd / Math.pow(10, 18);
-      const circuitBreakerCurrentPayoutUsd = await bondContract["circuitBreakerCurrentPayout"]() / Math.pow(10, 18);
+      const circuitBreakerCurrentPayoutUsd =
+        (await bondContract["circuitBreakerCurrentPayout"]()) / Math.pow(10, 18);
       const payoutAvailableUsd = soldBondsLimitUsd - circuitBreakerCurrentPayoutUsd;
       // If payoutAvailable is less than $500 display it as "Sold Out"
       // Note: both FHUD contracts calculate based on USD, not on payout token
@@ -234,7 +274,7 @@ export const calcBondDetails = createAsyncThunk(
     }
 
     // Display error if user tries to exceed maximum.
-    if (value !== '0' && !!value && parseFloat(bondQuote.toString()) > maxBondPrice) {
+    if (value !== "0" && !!value && parseFloat(bondQuote.toString()) > maxBondPrice) {
       const errorString =
         "You're trying to bond more than the maximum payout available! The maximum bond payout is " +
         maxBondPrice.toFixed(2).toString() +
@@ -250,7 +290,9 @@ export const calcBondDetails = createAsyncThunk(
       bondQuote,
       purchased,
       vestingTerm: Number(terms.vestingTerm),
-      vestingTermSeconds: terms["vestingTermSeconds"] ? Number(terms.vestingTermSeconds) : 0,
+      vestingTermSeconds: terms["vestingTermSeconds"]
+        ? Number(terms.vestingTermSeconds)
+        : 0,
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,
@@ -258,12 +300,15 @@ export const calcBondDetails = createAsyncThunk(
       isRiskFree: bond.isRiskFree,
       isCircuitBroken,
     };
-  },
+  }
 );
 
 export const bondAsset = createAsyncThunk(
   "bonding/bondAsset",
-  async ({ value, address, bond, networkId, provider, slippage }: IBondAssetAsyncThunk, { dispatch }) => {
+  async (
+    { value, address, bond, networkId, provider, slippage }: IBondAssetAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -294,25 +339,48 @@ export const bondAsset = createAsyncThunk(
       txHash: null,
     };
     try {
-      bondTx = await bondContractForWrite["deposit"](valueInWei, maxPremium, depositorAddress);
+      bondTx = await bondContractForWrite["deposit"](
+        valueInWei,
+        maxPremium,
+        depositorAddress
+      );
       dispatch(
-        fetchPendingTxns({ txnHash: bondTx.hash, text: "Bonding " + bond.displayName, type: "deposit_" + bond.name }),
+        fetchPendingTxns({
+          txnHash: bondTx.hash,
+          text: "Bonding " + bond.displayName,
+          type: "deposit_" + bond.name,
+        })
       );
       uaData.txHash = bondTx.hash;
       const minedBlock = (await bondTx.wait()).blockNumber;
 
-      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
+      const userBondDetails = await dispatch(
+        calculateUserBondDetails({ address, bond, networkId })
+      ).unwrap();
       if (userBondDetails && userBondDetails.userBonds.length > 0) {
-        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        const latestBond =
+          userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
         // If the maturation block is the next one. wait until the next block and then refresh bond details
-        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
-          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        if (
+          latestBond.bondMaturationBlock &&
+          latestBond.bondMaturationBlock - minedBlock === 1
+        ) {
+          waitUntilBlock(provider, minedBlock + 1).then(() =>
+            dispatch(calculateUserBondDetails({ address, bond, networkId }))
+          );
         }
       }
-
     } catch (e: any) {
+<<<<<<< HEAD
+      if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
+      ) {
+        dispatch(error("Maximum daily limit for bond reached."));
+=======
       if (e.error.code === -32603 && e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0) {
         dispatch(error("Maximum daily limit for bond reached."),);
+>>>>>>> 824cb91837e5626327b1cc3b9cafe8e54b6b2fec
       } else {
         let message;
         if (!e.error || e.error === undefined || isNaN(e.error)) {
@@ -335,17 +403,20 @@ export const bondAsset = createAsyncThunk(
         await dispatch(getBalances({ address, networkId }));
       }
     }
-  },
+  }
 );
 
 export const redeemSingleSidedBond = createAsyncThunk(
   "bonding/redeemBond",
-  async ({ value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk, { dispatch }) => {
+  async (
+    { value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
-    console.log('value: ', value);
+    console.log("value: ", value);
 
     const signer = provider.getSigner();
     const bondContract = bond.getContractForBondForWrite(networkId, signer);
@@ -360,21 +431,37 @@ export const redeemSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeem"](address, ethers.utils.parseUnits(value, 18), 0);
+      redeemTx = await bondContract["redeem"](
+        address,
+        ethers.utils.parseUnits(value, 18),
+        0
+      );
       const pendingTxnType = "deposit_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
-        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
       );
 
       const minedBlock = (await redeemTx.wait()).blockNumber;
 
-      const userBondDetails = await dispatch(calculateUserBondDetails({ address, bond, networkId })).unwrap();
+      const userBondDetails = await dispatch(
+        calculateUserBondDetails({ address, bond, networkId })
+      ).unwrap();
       if (userBondDetails && userBondDetails.userBonds.length > 0) {
-        const latestBond = userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
+        const latestBond =
+          userBondDetails.userBonds[userBondDetails.userBonds.length - 1];
         // If the maturation block is the next one. wait until the next block and then refresh bond details
-        if (latestBond.bondMaturationBlock && (latestBond.bondMaturationBlock - minedBlock) === 1) {
-          waitUntilBlock(provider, minedBlock + 1).then(() => dispatch(calculateUserBondDetails({ address, bond, networkId })));
+        if (
+          latestBond.bondMaturationBlock &&
+          latestBond.bondMaturationBlock - minedBlock === 1
+        ) {
+          waitUntilBlock(provider, minedBlock + 1).then(() =>
+            dispatch(calculateUserBondDetails({ address, bond, networkId }))
+          );
         }
       }
 
@@ -401,7 +488,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
         dispatch(info("Withdrawal completed."));
       }
     }
-  },
+  }
 );
 
 export const redeemSingleSidedILProtection = createAsyncThunk(
@@ -428,7 +515,11 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       const pendingTxnType = "deposit_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
-        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
       );
 
       await redeemTx.wait();
@@ -463,19 +554,26 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
         dispatch(info("IL Redeem completed."));
       }
     }
-  },
+  }
 );
 
 export const claimSingleSidedBond = createAsyncThunk(
   "bonding/redeemBond",
-  async ({ value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk, { dispatch }) => {
+  async (
+    { value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const masterchefContract = new ethers.Contract(addresses[networkId]["MASTERCHEF_ADDRESS"], masterchefAbi, signer);
+    const masterchefContract = new ethers.Contract(
+      addresses[networkId]["MASTERCHEF_ADDRESS"],
+      masterchefAbi,
+      signer
+    );
 
     let redeemTx;
     const uaData = {
@@ -492,7 +590,11 @@ export const claimSingleSidedBond = createAsyncThunk(
       const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
       dispatch(
-        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
       );
 
       await redeemTx.wait();
@@ -521,12 +623,15 @@ export const claimSingleSidedBond = createAsyncThunk(
         dispatch(info("Claim completed."));
       }
     }
-  },
+  }
 );
 
 export const redeemOneBond = createAsyncThunk(
   "bonding/redeemBond",
-  async ({ address, bond, networkId, provider, autostake }: IRedeemBondAsyncThunk, { dispatch }) => {
+  async (
+    { address, bond, networkId, provider, autostake }: IRedeemBondAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -549,7 +654,11 @@ export const redeemOneBond = createAsyncThunk(
       const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
       uaData.txHash = redeemTx.hash;
       dispatch(
-        fetchPendingTxns({ txnHash: redeemTx.hash, text: "Redeeming " + bond.displayName, type: pendingTxnType }),
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
       );
 
       await redeemTx.wait();
@@ -577,12 +686,15 @@ export const redeemOneBond = createAsyncThunk(
         dispatch(clearPendingTxn(redeemTx.hash));
       }
     }
-  },
+  }
 );
 
 export const redeemAllBonds = createAsyncThunk(
   "bonding/redeemAllBonds",
-  async ({ bonds, address, networkId, provider, autostake }: IRedeemAllBondsAsyncThunk, { dispatch }) => {
+  async (
+    { bonds, address, networkId, provider, autostake }: IRedeemAllBondsAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -595,16 +707,21 @@ export const redeemAllBonds = createAsyncThunk(
 
     try {
       redeemAllTx = await redeemHelperContract["redeemAll"](address, autostake);
-      const pendingTxnType = "redeem_all_bonds" + (autostake === true ? "_autostake" : "");
+      const pendingTxnType =
+        "redeem_all_bonds" + (autostake === true ? "_autostake" : "");
 
       await dispatch(
-        fetchPendingTxns({ txnHash: redeemAllTx.hash, text: "Redeeming All Bonds", type: pendingTxnType }),
+        fetchPendingTxns({
+          txnHash: redeemAllTx.hash,
+          text: "Redeeming All Bonds",
+          type: pendingTxnType,
+        })
       );
 
       await redeemAllTx.wait();
 
       bonds &&
-        bonds.forEach(async bond => {
+        bonds.forEach(async (bond) => {
           dispatch(calculateUserBondDetails({ address, bond, networkId }));
         });
 
@@ -628,12 +745,15 @@ export const redeemAllBonds = createAsyncThunk(
         dispatch(clearPendingTxn(redeemAllTx.hash));
       }
     }
-  },
+  }
 );
 
 export const cancelBond = createAsyncThunk(
   "bonding/cancelBond",
-  async ({ bond, address, networkId, provider, index }: ICancelBondAsyncThunk, { dispatch }) => {
+  async (
+    { bond, address, networkId, provider, index }: ICancelBondAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -649,7 +769,11 @@ export const cancelBond = createAsyncThunk(
       const pendingCancelTxnType = `cancel_bond_${bond.name}_${index}`;
 
       await dispatch(
-        fetchPendingTxns({ txnHash: cancelTx.hash, text: "Cancelling " + bond.displayName, type: pendingCancelTxnType }),
+        fetchPendingTxns({
+          txnHash: cancelTx.hash,
+          text: "Cancelling " + bond.displayName,
+          type: pendingCancelTxnType,
+        })
       );
 
       await cancelTx.wait();
@@ -674,7 +798,7 @@ export const cancelBond = createAsyncThunk(
         dispatch(clearPendingTxn(cancelTx.hash));
       }
     }
-  },
+  }
 );
 
 // Note(zx): this is a barebones interface for the state. Update to be more accurate
@@ -703,9 +827,9 @@ const bondingSlice = createSlice({
     },
   },
 
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(calcBondDetails.pending, state => {
+      .addCase(calcBondDetails.pending, (state) => {
         state["loading"] = true;
       })
       .addCase(calcBondDetails.fulfilled, (state, action) => {

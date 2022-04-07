@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import Faq from './faq';
+import Faq from "./faq";
 
-describe('Faq', () => {
-  it('should render successfully', () => {
+describe("Faq", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<Faq />);
     expect(baseElement).toBeTruthy();
   });

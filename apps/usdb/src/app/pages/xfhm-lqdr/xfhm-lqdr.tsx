@@ -4,11 +4,15 @@ import { memo, SyntheticEvent, useEffect, useState } from "react";
 
 import { XfhmPage } from "./xfhm";
 import { LqdrPage } from "./lqdr";
-import { calcAllAssetTokenDetails, calcXfhmDetails, NetworkId, useWeb3Context } from "@fantohm/shared-web3";
+import {
+  calcAllAssetTokenDetails,
+  calcXfhmDetails,
+  NetworkId,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
 import { useDispatch } from "react-redux";
 
 export const XfhmLqdrPage = (): JSX.Element => {
-
   const { chainId, address } = useWeb3Context();
   const dispatch = useDispatch();
   const [xfhmView, setXfhmView] = useState<number>(0);
@@ -40,11 +44,17 @@ export const XfhmLqdrPage = (): JSX.Element => {
         <Tab label="xFHM" {...a11yProps(0)} />
         <Tab label="Add Liquidity" {...a11yProps(1)} />
       </Tabs>
-      <Paper className="w100"
-             sx={{ maxWidth: "500px", mt: "2rem", py: "2rem", px: "1.25rem", borderRadius: "1.5rem" }}>
-        {
-          xfhmView === 0 ? (<XfhmPage />) : (<LqdrPage />)
-        }
+      <Paper
+        className="w100"
+        sx={{
+          maxWidth: "500px",
+          mt: "2rem",
+          py: "2rem",
+          px: "1.25rem",
+          borderRadius: "1.5rem",
+        }}
+      >
+        {xfhmView === 0 ? <XfhmPage /> : <LqdrPage />}
       </Paper>
     </Box>
   );
