@@ -1,20 +1,15 @@
-import { ReactComponent as SpiritLinspiritImg } from "../assets/tokens/SPIRIT-LINSPIRIT.svg";
 import { CustomInvestment, HistoricPrices, TokenInvestment } from "../lib/investment";
-import { getCoingeckoTokenPrice, getHistoricTokenPrice, getTokenPrice, roundToNearestHour } from "./index";
-import { NetworkId, NetworkIds } from "../networks";
+import { getHistoricTokenPrice, getTokenPrice } from "./index";
+import { NetworkIds } from "../networks";
 import { chains } from "../providers";
 import { ethers } from "ethers";
-import { 
-  ierc20Abi, 
-  wMemoAbi, 
+import {
+  ierc20Abi,
+  wMemoAbi,
   gohmAbi as gOHMAbi,
-  uniswapV2PairAbi as UniswapV2Pair,
-  tShareRewardPoolAbi as TShareRewardPool,
-  tombMasonryAbi as TombMasonry,
-  masterChefLqdrAbi as MasterChefLqdr,
   masterChefBeetsAbi as MasterChefBeets,
   balancerVaultAbi as BalancerVault,
-  balancerWeightedPoolAbi as BalancerWeightedPool
+  balancerWeightedPoolAbi as BalancerWeightedPool,
 } from "../abi";
 
 export const weth = new TokenInvestment({
@@ -45,23 +40,38 @@ export const wmemo = new TokenInvestment({
     // Convert wMemo balance to memo balance
     const avaxProvider = await chains[NetworkIds.Avalanche].provider;
     const avaxWmemoAddress = "0x0da67235dd5787d67955420c84ca1cecd4e5bb3b";
-    const avaxWmemoContract = new ethers.Contract(avaxWmemoAddress, wMemoAbi, avaxProvider);
+    const avaxWmemoContract = new ethers.Contract(
+      avaxWmemoAddress,
+      wMemoAbi,
+      avaxProvider
+    );
     const oneWMemo = "1000000000000000000";
-    const memoPerWMemo = (await avaxWmemoContract["wMEMOToMEMO"](oneWMemo)) / Math.pow(10, 9);
+    const memoPerWMemo =
+      (await avaxWmemoContract["wMEMOToMEMO"](oneWMemo)) / Math.pow(10, 9);
 
     return timePrice * memoPerWMemo;
   },
   customHistoricPricesFunc: async function (this: TokenInvestment) {
-    const timeHistoricPrices = await getHistoricTokenPrice('avalanche', '0xb54f16fb19478766a268f172c9480f8da1a7c9c3');
+    const timeHistoricPrices = await getHistoricTokenPrice(
+      "avalanche",
+      "0xb54f16fb19478766a268f172c9480f8da1a7c9c3"
+    );
 
     // Convert wMemo balance to memo balance
     const avaxProvider = await chains[NetworkIds.Avalanche].provider;
     const avaxWmemoAddress = "0x0da67235dd5787d67955420c84ca1cecd4e5bb3b";
-    const avaxWmemoContract = new ethers.Contract(avaxWmemoAddress, wMemoAbi, avaxProvider);
+    const avaxWmemoContract = new ethers.Contract(
+      avaxWmemoAddress,
+      wMemoAbi,
+      avaxProvider
+    );
     const oneWMemo = "1000000000000000000";
-    const memoPerWMemo = (await avaxWmemoContract["wMEMOToMEMO"](oneWMemo)) / Math.pow(10, 9);
+    const memoPerWMemo =
+      (await avaxWmemoContract["wMEMOToMEMO"](oneWMemo)) / Math.pow(10, 9);
 
-    Object.keys(timeHistoricPrices).forEach(timestamp => timeHistoricPrices[timestamp] *= memoPerWMemo);
+    Object.keys(timeHistoricPrices).forEach(
+      (timestamp) => (timeHistoricPrices[timestamp] *= memoPerWMemo)
+    );
     return new HistoricPrices(timeHistoricPrices);
   },
 });
@@ -99,7 +109,7 @@ export const btc = new TokenInvestment({
   chainId: NetworkIds.Ethereum,
   chainName: "ethereum",
   contractAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599",
-  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1"
+  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1",
 });
 
 export const ohm = new TokenInvestment({
@@ -133,7 +143,7 @@ export const matic = new TokenInvestment({
   chainId: NetworkIds.Ethereum,
   chainName: "ethereum",
   contractAddress: "0x7D1AfA7B718fb893dB30A3aBc0Cfc608AaCfeBB0",
-  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1"
+  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1",
 });
 
 export const dusk = new TokenInvestment({
@@ -145,7 +155,7 @@ export const dusk = new TokenInvestment({
   chainId: NetworkIds.Ethereum,
   chainName: "ethereum",
   contractAddress: "0x940a2db1b7008b6c776d4faaca729d6d4a4aa551",
-  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1"
+  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1",
 });
 
 export const qnt = new TokenInvestment({
@@ -157,7 +167,7 @@ export const qnt = new TokenInvestment({
   chainId: NetworkIds.Ethereum,
   chainName: "ethereum",
   contractAddress: "0x4a220E6096B25EADb88358cb44068A3248254675",
-  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1"
+  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1",
 });
 
 export const quartz = new TokenInvestment({
@@ -169,7 +179,7 @@ export const quartz = new TokenInvestment({
   chainId: NetworkIds.Ethereum,
   chainName: "ethereum",
   contractAddress: "0xbA8A621b4a54e61C442F5Ec623687e2a942225ef",
-  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1"
+  daoAddress: "0x66a98CfCd5A0dCB4E578089E1D89134A3124F0b1",
 });
 
 export const dot = new TokenInvestment({
@@ -181,7 +191,7 @@ export const dot = new TokenInvestment({
   chainId: NetworkIds.Bsc,
   chainName: "binance-smart-chain",
   contractAddress: "0x7083609fCE4d1d8Dc0C979AAb8c869Ea2C873402",
-  daoAddress: "0x3538Acb37Cf5a92eBE7091714975b2f8dDd5c6C1"
+  daoAddress: "0x3538Acb37Cf5a92eBE7091714975b2f8dDd5c6C1",
 });
 
 export const boba = new TokenInvestment({
@@ -198,7 +208,12 @@ export const boba = new TokenInvestment({
     return await getTokenPrice("boba-network"); // coingecko use eth contract instead of boba contract for some reason
   },
   customHistoricPricesFunc: async function (this: TokenInvestment) {
-    return new HistoricPrices(await getHistoricTokenPrice('ethereum', '0x42bbfa2e77757c645eeaad1655e0911a7553efbc'));
+    return new HistoricPrices(
+      await getHistoricTokenPrice(
+        "ethereum",
+        "0x42bbfa2e77757c645eeaad1655e0911a7553efbc"
+      )
+    );
   },
 });
 
@@ -222,9 +237,14 @@ export const xvader = new TokenInvestment({
     // xVader rate gotten from https://www.vaderprotocol.app/
     // TODO get rate from contract
     const xVaderRate = 1.01329;
-    const vaderHistoricPrices = await getHistoricTokenPrice('ethereum', '0x2602278ee1882889b946eb11dc0e810075650983');
+    const vaderHistoricPrices = await getHistoricTokenPrice(
+      "ethereum",
+      "0x2602278ee1882889b946eb11dc0e810075650983"
+    );
 
-    Object.keys(vaderHistoricPrices).forEach(timestamp => vaderHistoricPrices[timestamp] *= xVaderRate);
+    Object.keys(vaderHistoricPrices).forEach(
+      (timestamp) => (vaderHistoricPrices[timestamp] *= xVaderRate)
+    );
     return new HistoricPrices(vaderHistoricPrices);
   },
 });
@@ -379,20 +399,42 @@ export const beets_lqdr_ftm_lp_pirate_party = new CustomInvestment({
     const poolId = "0x5e02ab5699549675a6d3beeb92a62782712d0509000200000000000000000138";
 
     // Contracts
-    const vault = new ethers.Contract("0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce", BalancerVault, ftmProvider);
-    const masterChef = new ethers.Contract("0x8166994d9ebBe5829EC86Bd81258149B87faCfd3", MasterChefBeets, ftmProvider);
-    const pool = new ethers.Contract("0x5E02aB5699549675A6d3BEEb92A62782712D0509", BalancerWeightedPool, ftmProvider);
-    const beetsContract = new ethers.Contract("0xF24Bcf4d1e507740041C9cFd2DddB29585aDCe1e", ierc20Abi, ftmProvider);
+    const vault = new ethers.Contract(
+      "0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce",
+      BalancerVault,
+      ftmProvider
+    );
+    const masterChef = new ethers.Contract(
+      "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
+      MasterChefBeets,
+      ftmProvider
+    );
+    const pool = new ethers.Contract(
+      "0x5E02aB5699549675A6d3BEEb92A62782712D0509",
+      BalancerWeightedPool,
+      ftmProvider
+    );
+    const beetsContract = new ethers.Contract(
+      "0xF24Bcf4d1e507740041C9cFd2DddB29585aDCe1e",
+      ierc20Abi,
+      ftmProvider
+    );
 
     // Balances
-    const { balance, beetsPendingBalance, beetsBalance, totalSupply, reserve0, reserve1 } = await Promise.all([
+    const {
+      balance,
+      beetsPendingBalance,
+      beetsBalance,
+      totalSupply,
+      reserve0,
+      reserve1,
+    } = await Promise.all([
       masterChef["userInfo"](36, daoAddress),
       masterChef["pendingBeets"](36, daoAddress),
       beetsContract["balanceOf"](daoAddress),
       pool["totalSupply"](),
       vault["getPoolTokens"](poolId),
     ]).then(([info, beetsPendingBalance, beetsBalance, totalSupply, poolTokens]) => {
-
       return {
         // count lqdr-ftm LP balance
         balance: info[0] / Math.pow(10, this.decimals),
@@ -404,7 +446,7 @@ export const beets_lqdr_ftm_lp_pirate_party = new CustomInvestment({
         totalSupply: totalSupply / Math.pow(10, this.decimals),
         reserve0: poolTokens[1][0] / Math.pow(10, this.decimals),
         reserve1: poolTokens[1][1] / Math.pow(10, this.decimals),
-      }
+      };
     });
     // console.log("balance", balance);
     // console.log("beetsPendingBalance", beetsPendingBalance);
@@ -414,13 +456,13 @@ export const beets_lqdr_ftm_lp_pirate_party = new CustomInvestment({
     // console.log("reserve1", reserve1);
 
     const totalValue = lqdrPrice * reserve0 + ftmPrice * reserve1;
-    const ftmLqdrValue = totalValue / totalSupply * balance;
+    const ftmLqdrValue = (totalValue / totalSupply) * balance;
     const beetsValue = (beetsPendingBalance + beetsBalance) * beetsPrice;
     return ftmLqdrValue + beetsValue;
   },
   customHistoricPricesFunc: async function (this: CustomInvestment) {
     return {
-      getPrice: (timestamp: number) => 0
+      getPrice: (timestamp: number) => 0,
     };
   },
 });
@@ -446,39 +488,53 @@ export const beets_beets_ftm_lp_fidelio_duetto = new CustomInvestment({
     const poolId = "0xcde5a11a4acb4ee4c805352cec57e236bdbc3837000200000000000000000019";
 
     // Contracts
-    const vault = new ethers.Contract("0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce", BalancerVault, ftmProvider);
-    const masterChef = new ethers.Contract("0x8166994d9ebBe5829EC86Bd81258149B87faCfd3", MasterChefBeets, ftmProvider);
-    const pool = new ethers.Contract("0xcde5a11a4acb4ee4c805352cec57e236bdbc3837", BalancerWeightedPool, ftmProvider);
+    const vault = new ethers.Contract(
+      "0x20dd72Ed959b6147912C2e529F0a0C651c33c9ce",
+      BalancerVault,
+      ftmProvider
+    );
+    const masterChef = new ethers.Contract(
+      "0x8166994d9ebBe5829EC86Bd81258149B87faCfd3",
+      MasterChefBeets,
+      ftmProvider
+    );
+    const pool = new ethers.Contract(
+      "0xcde5a11a4acb4ee4c805352cec57e236bdbc3837",
+      BalancerWeightedPool,
+      ftmProvider
+    );
 
     // Balances
-    const { fBeetsBalance, beetsPendingBalance, totalSupply, reserve0, reserve1 } = await Promise.all([
-      masterChef["userInfo"](22, daoAddress),
-      masterChef["pendingBeets"](22, daoAddress),
-      pool["totalSupply"](),
-      vault["getPoolTokens"](poolId),
-    ]).then(([info, beetsPendingBalance, totalSupply, poolTokens]) => {
-      return {
-        // count fBeets balance
-        fBeetsBalance: info[0] / Math.pow(10, this.decimals),
-        // count earned lqdr
-        beetsPendingBalance: beetsPendingBalance / Math.pow(10, this.decimals),
-        // count ftm-beets total value and amount of FTM and BEETS
-        totalSupply: totalSupply / Math.pow(10, this.decimals),
-        // count total amount of FTM
-        reserve0: poolTokens[1][0] / Math.pow(10, 18),
-        // count total amount of BEETS
-        reserve1: poolTokens[1][1] / Math.pow(10, 18),
-      }
-    });
+    const { fBeetsBalance, beetsPendingBalance, totalSupply, reserve0, reserve1 } =
+      await Promise.all([
+        masterChef["userInfo"](22, daoAddress),
+        masterChef["pendingBeets"](22, daoAddress),
+        pool["totalSupply"](),
+        vault["getPoolTokens"](poolId),
+      ]).then(([info, beetsPendingBalance, totalSupply, poolTokens]) => {
+        return {
+          // count fBeets balance
+          fBeetsBalance: info[0] / Math.pow(10, this.decimals),
+          // count earned lqdr
+          beetsPendingBalance: beetsPendingBalance / Math.pow(10, this.decimals),
+          // count ftm-beets total value and amount of FTM and BEETS
+          totalSupply: totalSupply / Math.pow(10, this.decimals),
+          // count total amount of FTM
+          reserve0: poolTokens[1][0] / Math.pow(10, 18),
+          // count total amount of BEETS
+          reserve1: poolTokens[1][1] / Math.pow(10, 18),
+        };
+      });
     const totalValue = ftmPrice * reserve0 + beetsPrice * reserve1;
-    const bptValue = totalValue / totalSupply * (fBeetsBalance * 1.0152 /* see exchange rate https://beets.fi/#/stake */);
+    const bptValue =
+      (totalValue / totalSupply) *
+      (fBeetsBalance * 1.0152); /* see exchange rate https://beets.fi/#/stake */
     const beetsPendingValue = beetsPendingBalance * beetsPrice;
     return bptValue + beetsPendingValue;
-
   },
   customHistoricPricesFunc: async function (this: CustomInvestment) {
     return {
-      getPrice: (timestamp: number) => 0
+      getPrice: (timestamp: number) => 0,
     };
   },
 });
@@ -498,7 +554,7 @@ export const fhud_dai_lp1 = new TokenInvestment({
   },
   customHistoricPricesFunc: async function (this: TokenInvestment) {
     return {
-      getPrice: (_: number) => 1 // FHUD is always $1
+      getPrice: (_: number) => 1, // FHUD is always $1
     };
   },
 });
@@ -518,7 +574,7 @@ export const usdb = new TokenInvestment({
   },
   customHistoricPricesFunc: async function (this: TokenInvestment) {
     return {
-      getPrice: (_: number) => 1 // FHUD is always $1
+      getPrice: (_: number) => 1, // FHUD is always $1
     };
   },
 });
@@ -538,7 +594,7 @@ export const usdb_dai_lp = new TokenInvestment({
   },
   customHistoricPricesFunc: async function (this: TokenInvestment) {
     return {
-      getPrice: (_: number) => 1 // FHUD is always $1
+      getPrice: (_: number) => 1, // FHUD is always $1
     };
   },
 });
@@ -556,18 +612,20 @@ export const fhud_dai_lp2 = new TokenInvestment({
   contractAddress: "0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e",
   daoAddress: "0x34f93b12ca2e13c6e64f45cfa36eabadd0ba30fc",
   customAssetBalanceFunc: async function (this: TokenInvestment) {
-    const contract = new ethers.Contract(this.contractAddress, ierc20Abi, await this.provider);
-    return await contract["balanceOf"](this.daoAddress) / Math.pow(10, this.decimals);
-  }
+    const contract = new ethers.Contract(
+      this.contractAddress,
+      ierc20Abi,
+      await this.provider
+    );
+    return (await contract["balanceOf"](this.daoAddress)) / Math.pow(10, this.decimals);
+  },
 });
 
 // HOW TO ADD A NEW INVESTMENT:
 // Is it a token? use `new TokenInvestment`
 // Does it need custom balance function? use `new CustomInvestment`
 // Add new investments to this array!!
-export const allInvestments = [
-    boba
-];
+export const allInvestments = [boba];
 export const allInvestmentsMap = allInvestments.reduce((prevVal, investment) => {
   return { ...prevVal, [investment.name]: investment };
 }, {});

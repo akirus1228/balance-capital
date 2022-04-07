@@ -1,6 +1,6 @@
-import { JsonRpcProvider } from '@ethersproject/providers';
-import Web3Modal from 'web3modal';
-import { NetworkId } from '../networks';
+import { JsonRpcProvider } from "@ethersproject/providers";
+import Web3Modal from "web3modal";
+import { NetworkId } from "../networks";
 
 type onChainProvider = {
   connect: () => void;
@@ -10,8 +10,8 @@ type onChainProvider = {
   connected: boolean;
   web3Modal: Web3Modal;
   hasCachedProvider?: () => boolean;
-  chainId?: number
-  switchEthereumChain?: (networkId: NetworkId, forceSwitch?: boolean) => Promise<boolean>
+  chainId?: number;
+  switchEthereumChain?: (networkId: NetworkId, forceSwitch?: boolean) => Promise<boolean>;
 };
 
 export type Web3ContextData = {

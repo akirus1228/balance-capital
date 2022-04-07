@@ -22,7 +22,7 @@ export enum BondAssetType {
 
 export enum BondType {
   Bond_11 = 0,
-  Bond_44= 1,
+  Bond_44 = 1,
   Bond_USDB = 2,
   TRADFI = 3,
   SINGLE_SIDED = 4,

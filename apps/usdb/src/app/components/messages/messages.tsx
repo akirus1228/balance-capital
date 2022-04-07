@@ -1,10 +1,4 @@
-import {
-  Alert,
-  AlertColor,
-  AlertTitle,
-  LinearProgress,
-  Snackbar,
-} from '@mui/material';
+import { Alert, AlertColor, AlertTitle, LinearProgress, Snackbar } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { close, handle_obsolete, Message } from "@fantohm/shared-web3";
 import { memo, useEffect, useState } from "react";
@@ -63,8 +57,8 @@ export const Messages = (): JSX.Element => {
   // Returns a function that can closes a message
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
-  const handleClose = function(message) {
-    return function() {
+  const handleClose = function (message) {
+    return function () {
       dispatch(close(message));
     };
   };
@@ -75,7 +69,7 @@ export const Messages = (): JSX.Element => {
           <Snackbar
             open={message.open}
             key={index}
-            anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+            anchorOrigin={{ vertical: "top", horizontal: "center" }}
           >
             <Alert
               variant="filled"
@@ -83,7 +77,7 @@ export const Messages = (): JSX.Element => {
               severity={message.severity as AlertColor}
               onClose={handleClose(message)}
               // NOTE (appleseed): mui includes overflow-wrap: "break-word", but word-break: "break-word" is needed for webKit browsers
-              style={{ wordBreak: 'break-word', borderRadius: '10px' }}
+              style={{ wordBreak: "break-word", borderRadius: "10px" }}
             >
               <AlertTitle>{message.title}</AlertTitle>
               {message.text}

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { ICalcTokenPriceAsyncThunk } from "./interfaces";
-import {IHistoricPrices} from "../lib/investment";
+import { IHistoricPrices } from "../lib/investment";
 
 export interface ITokenPriceDetails {
   tokenName: string;
@@ -10,13 +10,13 @@ export interface ITokenPriceDetails {
 export const fetchTokenPrice = createAsyncThunk(
   "tokenPrice/fetchPrice",
   // eslint-disable-next-line no-empty-pattern
-  async ({ investment }: ICalcTokenPriceAsyncThunk, { }): Promise<ITokenPriceDetails> => {
+  async ({ investment }: ICalcTokenPriceAsyncThunk, {}): Promise<ITokenPriceDetails> => {
     const prices = await investment.historicPrices;
     return {
       tokenName: investment.name,
       prices: prices,
     };
-  },
+  }
 );
 
 // Note(zx): this is a barebones interface for the state. Update to be more accurate
@@ -37,12 +37,11 @@ const initialState: ITokenPriceSlice = {
 const tokenPriceSlice = createSlice({
   name: "tokenPrices",
   initialState,
-  reducers: {
-  },
+  reducers: {},
 
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(fetchTokenPrice.pending, state => {
+      .addCase(fetchTokenPrice.pending, (state) => {
         state["loading"] = true;
       })
       .addCase(fetchTokenPrice.fulfilled, (state, action) => {

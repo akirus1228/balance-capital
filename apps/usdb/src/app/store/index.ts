@@ -11,7 +11,8 @@ const store = configureStore({
     ...web3Reducers,
     app: appReducer,
   },
-  middleware: getDefaultMiddleware => getDefaultMiddleware({ serializableCheck: false })
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({ serializableCheck: false }),
 });
 
 store.subscribe(() => {
@@ -20,19 +21,26 @@ store.subscribe(() => {
 
 // create slices
 const accountInfo = (state: RootState) => state.account;
-export const getAccountState = createSelector(accountInfo, account => account);
+export const getAccountState = createSelector(accountInfo, (account) => account);
 const bondingInfo = (state: RootState) => state.bonding;
-export const getBondingState = createSelector(bondingInfo, bonding => bonding);
+export const getBondingState = createSelector(bondingInfo, (bonding) => bonding);
 const globalbondingInfo = (state: RootState) => state.globalbonding;
-export const getGlobalBondingState = createSelector(globalbondingInfo, globalbonding => globalbonding);
+export const getGlobalBondingState = createSelector(
+  globalbondingInfo,
+  (globalbonding) => globalbonding
+);
 const investmentsInfo = (state: RootState) => state.investments;
-export const getInvestmentsState = createSelector(investmentsInfo, investments => investments);
+export const getInvestmentsState = createSelector(
+  investmentsInfo,
+  (investments) => investments
+);
 const networksInfo = (state: RootState) => state.networks;
-export const getNetworksState = createSelector(networksInfo, networks => networks);
-const poolInfo = (state: RootState) => state.poolData;
-export const getPoolState = createSelector(poolInfo, app => app);
+export const getNetworksState = createSelector(networksInfo, (networks) => networks);
 const tokenPricesInfo = (state: RootState) => state.tokenPrices;
-export const getTokenPricesState = createSelector(tokenPricesInfo, tokenPrices => tokenPrices);
+export const getTokenPricesState = createSelector(
+  tokenPricesInfo,
+  (tokenPrices) => tokenPrices
+);
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

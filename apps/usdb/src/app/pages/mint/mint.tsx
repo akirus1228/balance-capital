@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bondAsset,
@@ -14,7 +14,7 @@ import {
   useWeb3Context,
   getTokenPrice,
   allBonds,
-  Bond
+  Bond,
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import { DaiToken, FHMToken } from "@fantohm/shared/images";
@@ -40,7 +40,6 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Mint() {
-
   const outlinedInputClasses = noBorderOutlinedInputStyles();
 
   const { provider, address, connected, connect, chainId } = useWeb3Context();
@@ -50,8 +49,12 @@ export default function Mint() {
   const [value, setValue] = React.useState("");
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
-  const [bond, setBond] = useState(allBonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as Bond);
-  const [usdbBondData, setUsdbBondData] = useState(bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData);
+  const [bond, setBond] = useState(
+    allBonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as Bond
+  );
+  const [usdbBondData, setUsdbBondData] = useState(
+    bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData
+  );
   const [allowance, setAllowance] = React.useState(false);
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(DaiToken);
@@ -75,8 +78,7 @@ export default function Mint() {
       name: "DAI",
       total: tokenBalance.dai,
       price: daiPrice,
-      darkBanner: [
-        {
+      darkBanner: [{
           text: "Mint USDB to unlock the full potential of DeFi.",
           location: "center",
           img: DarkMintDai0Img
@@ -104,7 +106,7 @@ export default function Mint() {
           text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
           img: LightMintDai2Img
         }
-      ]
+      ],
     },
     {
       title: "Mint with FHM",
@@ -154,15 +156,19 @@ export default function Mint() {
     return state?.pendingTransactions;
   });
 
-
   const onSeekApproval = async () => {
     if (provider) {
-      dispatch(changeApproval({ address, bond: bond, provider, networkId: chainId ?? 250 }));
+      dispatch(
+        changeApproval({ address, bond: bond, provider, networkId: chainId ?? 250 })
+      );
     }
   };
 
   useEffect(() => {
-    setAllowance((bonds.filter(bond => bond.type === BondType.Bond_USDB)[0] as IAllBondData)?.allowance > 0);
+    setAllowance(
+      (bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData)
+        ?.allowance > 0
+    );
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
   const selectedToken = tabState ? token[0] : token[1];
@@ -178,31 +184,33 @@ export default function Mint() {
       dispatch(
         bondAsset({
           address,
-          slippage: .005,
+          slippage: 0.005,
           value: quantity.toString(),
           provider,
           networkId: chainId,
-          bond: bond
+          bond: bond,
         } as IBondAssetAsyncThunk)
       );
     }
-  };
+  }
 
   useEffect(() => {
-    setUsdbBondData(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
-    setBond(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
+    setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
+    setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
     setUsdbBond(accountBonds["usdbBuy"]);
   }, [usdbBondData?.userBonds]);
 
   function setBondState(bool: boolean) {
     if (bool) {
-      setUsdbBondData(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
-      setBond(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
+      setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
+      setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
       setUsdbBond(accountBonds["usdbBuy"]);
       setImage(DaiToken);
     } else {
-      setUsdbBondData(bonds.filter(bond => bond.name === "usdbFhmBurn")[0] as IAllBondData);
-      setBond(allBonds.filter(bond => bond.name === "usdbFhmBurn")[0] as Bond);
+      setUsdbBondData(
+        bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData
+      );
+      setBond(allBonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as Bond);
       setUsdbBond(accountBonds["usdbFhmBurn"]);
       setImage(FHMToken);
     }
@@ -216,7 +224,6 @@ export default function Mint() {
       setQuantity(tokenBalance.fhm);
     }
   };
-
 
   return (
     <Box className={style["hero"]}>
@@ -240,26 +247,31 @@ export default function Mint() {
       </div>
       <Grid container spacing={8} className={style["cardGrid"]}>
         <Grid item md={6} sx={{ width: "100%" }}>
-          <Box className={style["subCardBorder"]}
-               sx={{ borderRadius: "20px", background: `${themeType === "light" ? "white" : "black"}` }}>
+          <Box
+            className={style["subCardBorder"]}
+            sx={{
+              borderRadius: "20px",
+              background: `${themeType === "light" ? "white" : "black"}`,
+            }}
+          >
             <Carousel
               sx={{ width: "100%", height: { xs: "330px", md: "550px" } }}
               indicatorContainerProps={{
                 style: {
                   position: "absolute",
                   bottom: "15px",
-                  zIndex: "1000"
-                }
+                  zIndex: "1000",
+                },
               }}
               indicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "#877979" : "#808080"
-                }
+                  color: themeType === "light" ? "#877979" : "#808080",
+                },
               }}
               activeIndicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "black" : "white"
-                }
+                  color: themeType === "light" ? "black" : "white",
+                },
               }}
             >
               {
@@ -299,11 +311,13 @@ export default function Mint() {
             <Grid container spacing={1}>
               <Grid item md={4} xs={12}>
                 <div className={style["roundArea"]}>
-                  <img src={image} className={style["daiIcon"]} style={{ marginRight: "10px" }} />
+                  <img
+                    src={image}
+                    className={style["daiIcon"]}
+                    style={{ marginRight: "10px" }}
+                  />
                   <div className={style["tokenInfo"]}>
-                    <div className={style["tokenName"]}>
-                      {selectedToken.name}
-                    </div>
+                    <div className={style["tokenName"]}>{selectedToken.name}</div>
                     <div className={style["tokenValue"]}>
                       {trim(selectedToken.total, 9)}
                     </div>
@@ -311,9 +325,7 @@ export default function Mint() {
                 </div>
               </Grid>
               <Grid item md={8} xs={12}>
-                <Box
-                  className={style["roundArea"]}
-                >
+                <Box className={style["roundArea"]}>
                   <OutlinedInput
                     id="amount-input-lqdr"
                     type="number"
@@ -328,15 +340,18 @@ export default function Mint() {
                     inputProps={{
                       classes: {
                         notchedOutline: {
-                          border: "none"
-                        }
-                      }
+                          border: "none",
+                        },
+                      },
                     }}
                     startAdornment={
                       <InputAdornment position="end">
-                        <Button className={style["no-padding"]} variant="text"
-                                onClick={setMax}
-                                color="primary">
+                        <Button
+                          className={style["no-padding"]}
+                          variant="text"
+                          onClick={setMax}
+                          color="primary"
+                        >
                           Max
                         </Button>
                       </InputAdornment>
@@ -351,31 +366,72 @@ export default function Mint() {
             </div>
             <div style={{ marginTop: "30px" }}>
               {!connected ? (
-                <Button variant="contained" color="primary" id="bond-btn" onClick={connect}>
+                <Button
+                  variant="contained"
+                  color="primary"
+                  id="bond-btn"
+                  onClick={connect}
+                >
                   Connect Wallet
                 </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  className={style["mintButton"]}
+                >
+                  Mint USDB
+                </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
+                  className={style["mintButton"]}
+                >
+                  {txnButtonText(
+                    pendingTransactions,
+                    "deposit_" + bond?.name,
+                    "Mint USDB"
+                  )}
+                </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  className={style["mintButton"]}
+                >
+                  Mint USDB
+                </Button>
               ) : (
-                !bond?.isAvailable[chainId ?? 250] ? (
-                  <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
-                    Sold Out
-                  </Button>
-                ) : allowance ? (
-                  <Button
-                    color="primary" variant="contained"
-                    disableElevation
-                    onClick={handleClick}
-                    className={style["mintButton"]}
-                  >
-                    Mint USDB
-                  </Button>
-                ) : (
-                  <Button
-                    color="primary" variant="contained"
-                    className={style["mintButton"]}
-                    disabled={isPendingTxn(pendingTransactions, "approve_" + bond?.name)}
-                    onClick={onSeekApproval}>
-                    {txnButtonText(pendingTransactions, "approve_" + bond?.name, "Approve")}
-                  </Button>))}
+                <Button
+                  color="primary"
+                  variant="contained"
+                  className={style["mintButton"]}
+                  disabled={isPendingTxn(pendingTransactions, "approve_" + bond?.name)}
+                  onClick={onSeekApproval}
+                >
+                  {txnButtonText(pendingTransactions, "approve_" + bond?.name, "Approve")}
+                </Button>
+              )}
             </div>
           </Paper>
         </Grid>

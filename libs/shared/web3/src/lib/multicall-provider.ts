@@ -1,4 +1,4 @@
-import { BlockWithTransactions } from '@ethersproject/abstract-provider';
+import { BlockWithTransactions } from "@ethersproject/abstract-provider";
 import {
   Block,
   BlockTag,
@@ -11,11 +11,11 @@ import {
   TransactionReceipt,
   TransactionRequest,
   TransactionResponse,
-} from '@ethersproject/providers';
-import { BigNumber, BigNumberish, ethers } from 'ethers';
-import { Deferrable } from 'ethers/lib/utils';
-import { DebugHelper } from '@fantohm/shared-helpers';
-import { abi as MulticallContract } from './abi/Multicall.json';
+} from "@ethersproject/providers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import { Deferrable } from "ethers/lib/utils";
+import { DebugHelper } from "@fantohm/shared-helpers";
+import { abi as MulticallContract } from "./abi/Multicall.json";
 
 interface Request {
   transaction: Deferrable<TransactionRequest>;
@@ -30,13 +30,9 @@ export class MulticallProvider extends Provider {
   private readonly multicallContract: ethers.Contract;
   private requestQueue: Request[] | null;
 
-  constructor(
-    networkName: string,
-    provider: Provider,
-    multicallAddress: string
-  ) {
+  constructor(networkName: string, provider: Provider, multicallAddress: string) {
     super();
-    this.disabled = DebugHelper.isActive('disable-multicall');
+    this.disabled = DebugHelper.isActive("disable-multicall");
     this.networkName = networkName;
     this.provider = provider;
     this.multicallContract = new ethers.Contract(
@@ -49,20 +45,18 @@ export class MulticallProvider extends Provider {
 
   private flushQueue(): void {
     if (this.requestQueue == null || this.requestQueue.length === 0) {
-      console.error('Did not expect empty requestQueue');
+      console.error("Did not expect empty requestQueue");
     } else {
       const toFlush = this.requestQueue;
       this.requestQueue = null;
-      if (DebugHelper.isActive('enable-tracing'))
-        console.log(
-          `${this.networkName}: Requests to flush: ${toFlush.length}`
-        );
+      if (DebugHelper.isActive("enable-tracing"))
+        console.log(`${this.networkName}: Requests to flush: ${toFlush.length}`);
       const aggregatedRequest = toFlush
         .map((request) => request.transaction)
         .map((transaction) => [transaction.to, transaction.data]);
       const resolves = toFlush.map((request) => request.resolve);
       const rejects = toFlush.map((request) => request.reject);
-      this.multicallContract['tryAggregate'](false, aggregatedRequest).then(
+      this.multicallContract["tryAggregate"](false, aggregatedRequest).then(
         (results: any) => {
           for (let i = 0; i < results.length; i++) {
             const result = results[i];
@@ -187,10 +181,6 @@ export class MulticallProvider extends Provider {
     confirmations?: number,
     timeout?: number
   ): Promise<TransactionReceipt> {
-    return this.provider.waitForTransaction(
-      transactionHash,
-      confirmations,
-      timeout
-    );
+    return this.provider.waitForTransaction(transactionHash, confirmations, timeout);
   }
 }

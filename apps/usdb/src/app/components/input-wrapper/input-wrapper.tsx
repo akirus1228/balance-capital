@@ -1,9 +1,9 @@
-import { Box, Grid, Paper, SxProps, Theme, ThemeProvider } from '@mui/material';
-import { useCallback } from 'react';
+import { Box, Grid, Paper, SxProps, Theme, ThemeProvider } from "@mui/material";
+import { useCallback } from "react";
 import { useSelector } from "react-redux";
-import { USDBLight, USDBDark } from '@fantohm/shared-ui-themes';
+import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
-import style from './input-wrapper.module.scss';
+import style from "./input-wrapper.module.scss";
 
 /* eslint-disable-next-line */
 export interface InputWrapperProps {
@@ -16,9 +16,9 @@ export interface InputWrapperProps {
 
 export const InputWrapper = (props: InputWrapperProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
-  
+
   const theme = useCallback(() => {
-    if(props.invertTheme){
+    if (props.invertTheme) {
       return themeType === "light" ? USDBDark : USDBLight;
     } else {
       return themeType === "light" ? USDBLight : USDBDark;
@@ -27,21 +27,22 @@ export const InputWrapper = (props: InputWrapperProps): JSX.Element => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Box sx={{
+      <Box
+        sx={{
           border: 2,
           borderRadius: "2em",
           padding: "1em",
           display: "flex",
           flexDirection: "row",
           justifyContent: "space-between",
-          ...props.sx
+          ...props.sx,
         }}
-        className={`inputWrapper ${style['inputWrapper']} ${props.className}`}
+        className={`inputWrapper ${style["inputWrapper"]} ${props.className}`}
       >
         {props.children}
       </Box>
     </ThemeProvider>
   );
-}
+};
 
 export default InputWrapper;

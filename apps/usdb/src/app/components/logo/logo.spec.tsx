@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import Logo from './logo';
+import Logo from "./logo";
 
-describe('Logo', () => {
-  it('should render successfully', () => {
+describe("Logo", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<Logo />);
     expect(baseElement).toBeTruthy();
   });
