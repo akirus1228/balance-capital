@@ -7,18 +7,18 @@ const client = () =>
     cache: new InMemoryCache(),
   });
 
-const apollo = queryString => {
+const apollo = (queryString) => {
   return client()
     .query({
       query: gql(queryString),
     })
-    .then(data => {
+    .then((data) => {
       return data;
     })
-    .catch(err => console.error("qraph ql error: ", err));
+    .catch((err) => console.error("qraph ql error: ", err));
 };
 
-const extClient = uri =>
+const extClient = (uri) =>
   new ApolloClient({
     uri: uri,
     cache: new InMemoryCache(),
@@ -29,10 +29,10 @@ export const apolloExt = (queryString, uri) => {
     .query({
       query: gql(queryString),
     })
-    .then(data => {
+    .then((data) => {
       return data;
     })
-    .catch(err => console.error("external graph ql api error: ", err));
+    .catch((err) => console.error("external graph ql api error: ", err));
 };
 
 export default apollo;

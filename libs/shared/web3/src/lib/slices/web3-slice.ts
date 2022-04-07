@@ -1,8 +1,4 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-} from '@reduxjs/toolkit';
+import { createSlice } from "@reduxjs/toolkit";
 
 type Web3State = {
   walletConnected: boolean;
@@ -13,7 +9,7 @@ const initialState: Web3State = {
 };
 
 const web3Slice = createSlice({
-  name: 'web3',
+  name: "web3",
   initialState,
   reducers: {
     setWalletConnected: (state, action) => {

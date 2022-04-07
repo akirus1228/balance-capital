@@ -343,6 +343,39 @@ export default function Mint() {
                 >
                   Mint USDB
                 </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
+                  className={style["mintButton"]}
+                >
+                  {txnButtonText(
+                    pendingTransactions,
+                    "deposit_" + bond?.name,
+                    "Mint USDB"
+                  )}
+                </Button>
+              ) : !bond?.isAvailable[chainId ?? 250] ? (
+                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
+                  Sold Out
+                </Button>
+              ) : allowance ? (
+                <Button
+                  color="primary"
+                  variant="contained"
+                  disableElevation
+                  onClick={handleClick}
+                  className={style["mintButton"]}
+                >
+                  Mint USDB
+                </Button>
               ) : (
                 <Button
                   color="primary"

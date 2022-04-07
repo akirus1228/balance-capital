@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -6,19 +6,13 @@ import {
   InputAdornment,
   OutlinedInput,
   Skeleton,
-  Tooltip
-} from '@mui/material';
-import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
-import style from './staking-card.module.scss';
-import DaiCard from '../../../components/dai-card/dai-card';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { DaiToken, FHMToken, USDBToken, DaiUSDBLP } from '@fantohm/shared/images';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { USDCToken } from '@fantohm/shared/images';
-
-import { useDispatch, useSelector } from 'react-redux';
+  Tooltip,
+} from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import style from "./staking-card.module.scss";
+import DaiCard from "../../../components/dai-card/dai-card";
+import { DaiToken, FHMToken, USDBToken, DaiUSDBLP } from "@fantohm/shared/images";
+import { useDispatch, useSelector } from "react-redux";
 import {
   Bond,
   bondAsset,
@@ -41,12 +35,12 @@ import {
   getIlRedeemFHM,
   getIlRedeemBlockNumber,
   networks,
-  allBonds
+  allBonds,
 } from "@fantohm/shared-web3";
 import { formatCurrency, formatSeconds } from "@fantohm/shared-helpers";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-import { RootState } from '../../../store';
+import { RootState } from "../../../store";
 
 interface IStakingCardParams {
   bondType: string;
@@ -54,25 +48,22 @@ interface IStakingCardParams {
   roi: number;
   apy: number;
 }
-type CardStates = 'Deposit' | 'Withdraw' | 'IL Redeem' | 'Claim';
+type CardStates = "Deposit" | "Withdraw" | "IL Redeem" | "Claim";
 
 export const StakingCard = (params: IStakingCardParams): JSX.Element => {
-  const [cardState, setCardState] = useState<CardStates>('Deposit');
-  const [quantity, setQuantity] = useState('');
-  const [token, setToken] = useState('DAI');
-  const [claimableBalance, setClaimableBalance] = useState('0');
+  const [cardState, setCardState] = useState<CardStates>("Deposit");
+  const [quantity, setQuantity] = useState("");
+  const [token, setToken] = useState("DAI");
+  const [claimableBalance, setClaimableBalance] = useState("0");
   const [image, setImage] = useState(DaiToken);
-  const [payout, setPayout] = useState('0');
+  const [payout, setPayout] = useState("0");
   const [deposited, setDeposited] = useState(false);
   const [iLBalanceInUsd, setILBalanceInUsd] = useState<number>(0);
-  const [stdButtonColor, setStdButtonColor] = useState<'primary' | 'error'>(
-    'primary'
-  );
+  const [stdButtonColor, setStdButtonColor] = useState<"primary" | "error">("primary");
   const [ilUnLockPeriod, setIlUnLockPeriod] = useState<number>(0);
 
   const dispatch = useDispatch();
-  const { provider, address, chainId, connect, disconnect, connected } =
-    useWeb3Context();
+  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
   const { bonds } = useBonds(chainId || defaultNetworkId);
   const singleSidedBondData = bonds.filter(
     (bond) => bond.type === BondType.SINGLE_SIDED
@@ -94,13 +85,13 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [tokenBalance, setTokenBalance] = useState(daiBalance);
 
   const setMax = () => {
-    if (cardState === 'Deposit') {
+    if (cardState === "Deposit") {
       setQuantity(daiBalance);
-    } else if (cardState === 'Withdraw') {
+    } else if (cardState === "Withdraw") {
       setQuantity(String(singleSidedBond?.userBonds[0]?.lpTokenAmount || 0));
-    } else if (cardState === 'IL Redeem') {
+    } else if (cardState === "IL Redeem") {
       setQuantity(String(singleSidedBond?.userBonds[0]?.iLBalance || 0));
-    } else if (cardState === 'Claim') {
+    } else if (cardState === "Claim") {
       setQuantity(String(singleSidedBond?.userBonds[0]?.pendingFHM || 0));
     }
   };
@@ -111,8 +102,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       const { pendingFHM = 0 } = singleSidedBond?.userBonds[0] || {};
       setClaimableBalance(trim(Number(pendingFHM), 4));
     } else {
-      setPayout('0');
-      setClaimableBalance('0');
+      setPayout("0");
+      setClaimableBalance("0");
     }
   }, [cardState, daiBalance, address, singleSidedBond]);
 
@@ -128,25 +119,28 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     let timer: any = null;
     setIlUnLockPeriod(0);
     if (!address) {
-      setTokenBalance('0');
-    }
-    else if (cardState === 'Deposit') {
-      setToken('DAI');
+      setTokenBalance("0");
+    } else if (cardState === "Deposit") {
+      setToken("DAI");
       setTokenBalance(daiBalance);
       setImage(DaiToken);
-    } else if (cardState === 'Withdraw') {
-      setToken('DAI-USDB LP');
+    } else if (cardState === "Withdraw") {
+      setToken("DAI-USDB LP");
       const lpAmount = singleSidedBond?.userBonds[0]?.lpTokenAmount;
-      setTokenBalance(typeof lpAmount === 'undefined' ? '0' : String(lpAmount));
+      setTokenBalance(typeof lpAmount === "undefined" ? "0" : String(lpAmount));
       setImage(DaiUSDBLP);
-    } else if (cardState === 'IL Redeem') {
-      setToken('FHM');
+    } else if (cardState === "IL Redeem") {
+      setToken("FHM");
       setImage(FHMToken);
-      setTokenBalance('null');
+      setTokenBalance("null");
       (async () => {
         const [iLBalance, iLBalanceInUsd] = await getIlRedeemFHM(chainId!, address);
-        const [currentBlockNumber, ilProtectionUnlockBlockNumber] = await getIlRedeemBlockNumber(chainId!, address);
-        const period = Math.ceil((ilProtectionUnlockBlockNumber - currentBlockNumber) * networks[chainId!].blocktime);
+        const [currentBlockNumber, ilProtectionUnlockBlockNumber] =
+          await getIlRedeemBlockNumber(chainId!, address);
+        const period = Math.ceil(
+          (ilProtectionUnlockBlockNumber - currentBlockNumber) *
+            networks[chainId!].blocktime
+        );
         if (ilProtectionUnlockBlockNumber >= currentBlockNumber) {
           setIlUnLockPeriod(period);
         } else {
@@ -166,12 +160,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         setILBalanceInUsd(iLBalanceInUsd);
         setTokenBalance(iLBalance);
       })();
-    } else if (cardState === 'Claim') {
-      setToken('FHM');
+    } else if (cardState === "Claim") {
+      setToken("FHM");
       const pendingClaim = singleSidedBond?.userBonds[0]?.pendingFHM;
-      setTokenBalance(
-        typeof pendingClaim === 'undefined' ? '0' : String(pendingClaim)
-      );
+      setTokenBalance(typeof pendingClaim === "undefined" ? "0" : String(pendingClaim));
       setImage(FHMToken);
     }
 
@@ -185,23 +177,19 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   async function useBond() {
     const slippage = 0;
 
-    if (
-      Number(quantity) === 0 &&
-      cardState !== 'Claim' &&
-      cardState !== 'IL Redeem'
-    ) {
-      await dispatch(error('Please enter a value!'));
+    if (Number(quantity) === 0 && cardState !== "Claim" && cardState !== "IL Redeem") {
+      await dispatch(error("Please enter a value!"));
     } else if (
       isNaN(Number(quantity)) &&
-      cardState !== 'Claim' &&
-      cardState !== 'IL Redeem'
+      cardState !== "Claim" &&
+      cardState !== "IL Redeem"
     ) {
-      await dispatch(error('Please enter a valid value!'));
-    } else if (cardState === 'IL Redeem' && Number(tokenBalance || 0) <= 0) {
-      await dispatch(error('Nothing to redeem!'));
-    } else if (cardState === 'Claim' && Number(tokenBalance || 0) <= 0) {
-      await dispatch(error('Nothing to claim!'));
-    } else if (cardState === 'Withdraw') {
+      await dispatch(error("Please enter a valid value!"));
+    } else if (cardState === "IL Redeem" && Number(tokenBalance || 0) <= 0) {
+      await dispatch(error("Nothing to redeem!"));
+    } else if (cardState === "Claim" && Number(tokenBalance || 0) <= 0) {
+      await dispatch(error("Nothing to claim!"));
+    } else if (cardState === "Withdraw") {
       await dispatch(
         redeemSingleSidedBond({
           value: String(quantity),
@@ -212,7 +200,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-    } else if (cardState === 'Deposit') {
+    } else if (cardState === "Deposit") {
       await dispatch(
         bondAsset({
           value: String(quantity),
@@ -223,7 +211,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-    } else if (cardState === 'Claim') {
+    } else if (cardState === "Claim") {
       await dispatch(
         claimSingleSidedBond({
           value: String(quantity),
@@ -234,8 +222,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           address: address,
         } as IBondAssetAsyncThunk)
       );
-      if(Number(singleSidedBond?.userBonds[0]?.iLBalance) > 0) setCardState("IL Redeem")
-    } else if (cardState === 'IL Redeem') {
+      if (Number(singleSidedBond?.userBonds[0]?.iLBalance) > 0) setCardState("IL Redeem");
+    } else if (cardState === "IL Redeem") {
       await dispatch(
         redeemSingleSidedILProtection({
           bond: singleSided,
@@ -249,7 +237,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   }
 
   const clearInput = () => {
-    setQuantity('');
+    setQuantity("");
   };
 
   const onSeekApproval = async () => {
@@ -267,7 +255,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
 
   const isOverBalance: boolean = useMemo(() => {
     // console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
-    if (['IL Redeem', 'Claim'].includes(cardState)) return false;
+    if (["IL Redeem", "Claim"].includes(cardState)) return false;
 
     if (Number(tokenBalance) < Number(quantity)) return true;
 
@@ -277,84 +265,87 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   useEffect(() => {
     // console.log(pendingTransactions);
     if (
-      isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) &&
-      cardState === 'Deposit'
+      isPendingTxn(pendingTransactions, "deposit_" + singleSided.name) &&
+      cardState === "Deposit"
     ) {
       setDeposited(true);
-    } else if (deposited && cardState === 'Deposit') {
-      dispatch(info("Congratulations, transaction successful. Please check your portfolio for details."));
+    } else if (deposited && cardState === "Deposit") {
+      dispatch(
+        info(
+          "Congratulations, transaction successful. Please check your portfolio for details."
+        )
+      );
       setTimeout(() => navigate("/my-account"), 2000);
     }
   }, [pendingTransactions]);
 
   useEffect(() => {
     if (isOverBalance) {
-      setStdButtonColor('error');
+      setStdButtonColor("error");
       return;
     }
-    setStdButtonColor('primary');
+    setStdButtonColor("primary");
   }, [isOverBalance, quantity]);
 
   return (
     <DaiCard
       tokenImage={DaiToken}
       setTheme="light"
-      sx={{ minWidth: { xs: '300px', sm: '587px' } }}
-
-      className={style['cardElement']}
+      sx={{ minWidth: { xs: "300px", sm: "587px" } }}
+      className={style["cardElement"]}
     >
-      <h3 className={style['titleWrapper']}>Single</h3>
+      <h3 className={style["titleWrapper"]}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box className="w100">
         <hr
           style={{
-            border: 'none',
-            borderTop: '2px solid rgba(105,108,128,0.07)',
+            border: "none",
+            borderTop: "2px solid rgba(105,108,128,0.07)",
           }}
         />
       </Box>
       <Box className={`flexCenterRow w100`}>
         <Box
-          className={`${style['smokeyToggle']} ${
-            cardState === 'Deposit' ? style['active'] : ''
+          className={`${style["smokeyToggle"]} ${
+            cardState === "Deposit" ? style["active"] : ""
           }`}
-          sx={{ mr: '1em' }}
+          sx={{ mr: "1em" }}
           onClick={() => {
-            clearInput()
-            setCardState('Deposit')
+            clearInput();
+            setCardState("Deposit");
           }}
         >
-          <div className={style['dot']} />
+          <div className={style["dot"]} />
           <span>Deposit</span>
         </Box>
         <Box
-          className={`${style['smokeyToggle']} ${
-            cardState === 'Withdraw' ? style['active'] : ''
+          className={`${style["smokeyToggle"]} ${
+            cardState === "Withdraw" ? style["active"] : ""
           }`}
           onClick={() => {
-            clearInput()
-            setCardState('Withdraw')
+            clearInput();
+            setCardState("Withdraw");
           }}
         >
-          <div className={style['dot']} />
+          <div className={style["dot"]} />
           <span>Withdraw</span>
         </Box>
         <Box
-          className={`${style['smokeyToggle']} ${
-            cardState === 'Claim' ? style['active'] : ''
+          className={`${style["smokeyToggle"]} ${
+            cardState === "Claim" ? style["active"] : ""
           }`}
-          onClick={() => setCardState('Claim')}
+          onClick={() => setCardState("Claim")}
         >
-          <div className={style['dot']} />
+          <div className={style["dot"]} />
           <span>Claim</span>
         </Box>
         <Box
-          className={`${style['smokeyToggle']} ${
-            cardState === 'IL Redeem' ? style['active'] : ''
+          className={`${style["smokeyToggle"]} ${
+            cardState === "IL Redeem" ? style["active"] : ""
           }`}
-          onClick={() => setCardState('IL Redeem')}
+          onClick={() => setCardState("IL Redeem")}
         >
-          <div className={style['dot']} />
+          <div className={style["dot"]} />
           <span>ILRedeem</span>
         </Box>
       </Box>
@@ -363,77 +354,77 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       </Box>
       <Box className="flexCenterRow w100" mb="20px">
         <Box
-          className={`flexCenterRow ${style['currencySelector']}`}
-          sx={{ width: '245px' }}
+          className={`flexCenterRow ${style["currencySelector"]}`}
+          sx={{ width: "245px" }}
         >
           <img
             src={image}
-            style={{ height: '31px', marginRight: '1em' }}
+            style={{ height: "31px", marginRight: "1em" }}
             alt="DAI Token Symbol"
           />
           <Box
             sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'left',
+              display: "flex",
+              flexDirection: "column",
+              justifyContent: "left",
             }}
           >
-            <span className={style['name']}>{token} balance</span>
-            <span className={style['amount']}>
-              {
-                tokenBalance === 'null' ?
-                <Skeleton />:
+            <span className={style["name"]}>{token} balance</span>
+            <span className={style["amount"]}>
+              {tokenBalance === "null" ? (
+                <Skeleton />
+              ) : (
                 <>
-                  {tokenBalance} {token} { iLBalanceInUsd > 0 && cardState === 'IL Redeem' && ` ≈ ${formatCurrency(iLBalanceInUsd, 2)}`}
+                  {tokenBalance} {token}{" "}
+                  {iLBalanceInUsd > 0 &&
+                    cardState === "IL Redeem" &&
+                    ` ≈ ${formatCurrency(iLBalanceInUsd, 2)}`}
                 </>
-              }
+              )}
             </span>
           </Box>
         </Box>
       </Box>
 
-
-      {cardState !== 'Claim' && cardState !== 'IL Redeem' ? (
-        <Box
-        className={style['amountField']}
-      >
-        <OutlinedInput
-          id="amount-input-lqdr"
-          type="number"
-          placeholder="Enter an amount"
-          className={`stake-input ${style['styledInput']}`}
-          value={quantity}
-          onChange={(e) => {
-            if (Number(e.target.value) < 0 || e.target.value === '-') return;
-            setQuantity(e.target.value);
-          }}
-          inputProps={{
-            classes: {
-              notchedOutline: {
-                border: 'none',
+      {cardState !== "Claim" && cardState !== "IL Redeem" ? (
+        <Box className={style["amountField"]}>
+          <OutlinedInput
+            id="amount-input-lqdr"
+            type="number"
+            placeholder="Enter an amount"
+            className={`stake-input ${style["styledInput"]}`}
+            value={quantity}
+            onChange={(e) => {
+              if (Number(e.target.value) < 0 || e.target.value === "-") return;
+              setQuantity(e.target.value);
+            }}
+            inputProps={{
+              classes: {
+                notchedOutline: {
+                  border: "none",
+                },
               },
-            },
-          }}
-          startAdornment={
-            <InputAdornment position="end" className={style['maxButton']}>
-              <Button
-                className={style['no-padding']}
-                variant="text"
-                onClick={setMax}
-                color="inherit"
-              >
-                Max
-              </Button>
-            </InputAdornment>
-          }
-        />
+            }}
+            startAdornment={
+              <InputAdornment position="end" className={style["maxButton"]}>
+                <Button
+                  className={style["no-padding"]}
+                  variant="text"
+                  onClick={setMax}
+                  color="inherit"
+                >
+                  Max
+                </Button>
+              </InputAdornment>
+            }
+          />
         </Box>
       ) : (
         <></>
       )}
-      {cardState === 'Deposit' || cardState === 'Withdraw' ? (
-        <Box className={style['tooltipElement']}>
-          <Box className={`flexSBRow w100`} sx={{ my: '1em' }}>
+      {cardState === "Deposit" || cardState === "Withdraw" ? (
+        <Box className={style["tooltipElement"]}>
+          <Box className={`flexSBRow w100`} sx={{ my: "1em" }}>
             <Box className="flexCenterRow">
               <span>Your deposit&nbsp;</span>
               <Tooltip arrow title="The amount of DAI invested initially.">
@@ -442,25 +433,27 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
             </Box>
             <span>{trim(Number(payout), 2)} DAI</span>
           </Box>
-          {(cardState === 'Deposit' || cardState === 'Withdraw') &&
-          <Box className={`flexSBRow w100`} sx={{mb: '1em'}}>
-            <Box className="flexCenterRow">
-              <span>Estimated Rewards&nbsp;</span>
-              <Tooltip arrow
-                      title="This it the estimated amount of FHM you will receive if you withdraw your investment.">
-                <Icon component={InfoOutlinedIcon}/>
-              </Tooltip>
+          {(cardState === "Deposit" || cardState === "Withdraw") && (
+            <Box className={`flexSBRow w100`} sx={{ mb: "1em" }}>
+              <Box className="flexCenterRow">
+                <span>Estimated Rewards&nbsp;</span>
+                <Tooltip
+                  arrow
+                  title="This it the estimated amount of FHM you will receive if you withdraw your investment."
+                >
+                  <Icon component={InfoOutlinedIcon} />
+                </Tooltip>
+              </Box>
+              <span>{claimableBalance} FHM</span>
             </Box>
-            <span>{claimableBalance} FHM</span>
-          </Box>
-          }
+          )}
           <Box
-            className={`${style['infoBox']}`}
+            className={`${style["infoBox"]}`}
             sx={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            mb: '1.5em',
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              mb: "1.5em",
             }}
           >
             <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
@@ -478,7 +471,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           </Box>
         </Box>
       ) : (
-        <Box className={`flexSBRow w100`} sx={{ mb: '2em' }}></Box>
+        <Box className={`flexSBRow w100`} sx={{ mb: "2em" }}></Box>
       )}
       {!connected ? (
         <Button
@@ -505,16 +498,19 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           variant="contained"
           color="primary"
           className="paperButton cardActionButton"
-          disabled={isPendingTxn(
-            pendingTransactions,
-            'deposit_' + singleSided.name
-          ) || Number(tokenBalance) === 0 || ilUnLockPeriod > 0}
+          disabled={
+            isPendingTxn(pendingTransactions, "deposit_" + singleSided.name) ||
+            Number(tokenBalance) === 0 ||
+            ilUnLockPeriod > 0
+          }
           onClick={useBond}
         >
           {txnButtonText(
             pendingTransactions,
-            'deposit_' + singleSided.name,
-            `${cardState}${ilUnLockPeriod > 0 ? ` (Wait ≈ ${formatSeconds(ilUnLockPeriod)})` : ''}`
+            "deposit_" + singleSided.name,
+            `${cardState}${
+              ilUnLockPeriod > 0 ? ` (Wait ≈ ${formatSeconds(ilUnLockPeriod)})` : ""
+            }`
           )}
         </Button>
       ) : !singleSided.isAvailable[chainId ?? 250] ? (
@@ -533,19 +529,19 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color={stdButtonColor}
           className="paperButton cardActionButton"
           disabled={
-            isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) ||
+            isPendingTxn(pendingTransactions, "deposit_" + singleSided.name) ||
             isOverBalance ||
-            quantity === '' ||
-            quantity === '0' ||
+            quantity === "" ||
+            quantity === "0" ||
             Number(tokenBalance) === 0
           }
           onClick={useBond}
         >
           {isOverBalance
-            ? 'Insufficient Balance'
+            ? "Insufficient Balance"
             : txnButtonText(
                 pendingTransactions,
-                'deposit_' + singleSided.name,
+                "deposit_" + singleSided.name,
                 cardState
               )}
         </Button>
@@ -565,19 +561,19 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color={stdButtonColor}
           className="paperButton cardActionButton"
           disabled={
-            isPendingTxn(pendingTransactions, 'deposit_' + singleSided.name) ||
+            isPendingTxn(pendingTransactions, "deposit_" + singleSided.name) ||
             isOverBalance ||
-            quantity === '' ||
-            quantity === '0' ||
+            quantity === "" ||
+            quantity === "0" ||
             Number(tokenBalance) === 0
           }
           onClick={useBond}
         >
           {isOverBalance
-            ? 'Insufficient Balance'
+            ? "Insufficient Balance"
             : txnButtonText(
                 pendingTransactions,
-                'deposit_' + singleSided.name,
+                "deposit_" + singleSided.name,
                 cardState
               )}
         </Button>
@@ -586,17 +582,10 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           variant="contained"
           color="primary"
           className="paperButton cardActionButton"
-          disabled={isPendingTxn(
-            pendingTransactions,
-            'approve_' + singleSided.name
-          )}
+          disabled={isPendingTxn(pendingTransactions, "approve_" + singleSided.name)}
           onClick={onSeekApproval}
         >
-          {txnButtonText(
-            pendingTransactions,
-            'approve_' + singleSided.name,
-            'Approve'
-          )}
+          {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
         </Button>
       )}
     </DaiCard>

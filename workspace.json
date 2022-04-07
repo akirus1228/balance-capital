@@ -1,7 +1,6 @@
 {
   "version": 2,
   "projects": {
-    "shared-assets": "libs/shared/assets",
     "shared-helpers": "libs/shared/helpers",
     "shared-images": "libs/shared/images",
     "shared-ui-themes": "libs/shared/ui-themes",

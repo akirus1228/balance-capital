@@ -28,4 +28,5 @@ export class DebugHelper {
   }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 console.debug = DebugHelper.isActive("enable-debug") ? console.log : () => {};

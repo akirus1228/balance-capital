@@ -1,9 +1,6 @@
 import { BigNumber, ethers } from "ethers";
 import { addresses } from "../constants";
 import { networks } from "../networks";
-import { abi as PrizePool } from "../abi/33-together/PrizePoolAbi2.json";
-import { abi as AwardPool } from "../abi/33-together/AwardAbi2.json";
-import { abi as SOhmAbi } from "../abi/sOHM.json";
 
 /**
  * Calculates user's odds of winning based on their pool balance
@@ -12,12 +9,26 @@ import { abi as SOhmAbi } from "../abi/sOHM.json";
  * @param {*} winners the pool's winners quantity per award period
  * PoolTogether's implementation: https://github.com/pooltogether/pooltogether-community-ui/blob/2d4749e2e64c4f2ae259ac073edc0a49ca5857e2/lib/utils/calculateOdds.js#L3
  */
-export const calculateOdds = (usersPoolBalance: string, totalPoolDeposits: number, winners: number) => {
+export const calculateOdds = (
+  usersPoolBalance: string,
+  totalPoolDeposits: number,
+  winners: number
+) => {
   let userOdds;
-  if (usersPoolBalance === undefined || Number(usersPoolBalance) === 0 || parseFloat(usersPoolBalance) === 0) {
+  if (
+    usersPoolBalance === undefined ||
+    Number(usersPoolBalance) === 0 ||
+    parseFloat(usersPoolBalance) === 0
+  ) {
     userOdds = "ngmi";
   } else {
-    userOdds = 1 / (1 - Math.pow((totalPoolDeposits - Number(usersPoolBalance)) / totalPoolDeposits, winners));
+    userOdds =
+      1 /
+      (1 -
+        Math.pow(
+          (totalPoolDeposits - Number(usersPoolBalance)) / totalPoolDeposits,
+          winners
+        ));
   }
   return userOdds;
 };
@@ -31,7 +42,7 @@ export const calculateOdds = (usersPoolBalance: string, totalPoolDeposits: numbe
  */
 export const getCreditMaturationDaysAndLimitPercentage = (
   ticketCreditRateMantissa: BigNumber,
-  ticketCreditLimitMantissa: BigNumber,
+  ticketCreditLimitMantissa: BigNumber
 ): Array<number> => {
   const creditLimitMantissa = ethers.utils.formatEther(ticketCreditLimitMantissa);
   const creditLimitPercentage = fractionToPercentage(Number(creditLimitMantissa));

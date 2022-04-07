@@ -1,7 +1,12 @@
-import React, { ReactNode } from "react";
-
 import { DebugHelper } from "./helpers/debug-helper";
-import { FantomIcon, RinkebyIcon, EthereumIcon, MoonriverIcon, BscIcon, MoonBaseAlphaIcon} from "@fantohm/shared-ui-themes";
+import {
+  FantomIcon,
+  RinkebyIcon,
+  EthereumIcon,
+  MoonriverIcon,
+  BscIcon,
+  MoonBaseAlphaIcon,
+} from "@fantohm/shared-ui-themes";
 
 export type NetworkId = number;
 
@@ -24,22 +29,22 @@ export const defaultNetworkId = NetworkIds.FantomOpera;
 // https://moonscan.io/chart/blocktime
 
 interface INetwork {
-  name: string,
-  logo: any,
-  isEnabled: boolean,
-  isTestNet: boolean,
-  blocktime: number, // NOTE could get this from an outside source since it changes slightly over time
-  epochBlock: number,
-  epochInterval: number,
-  blockCountdownUrl: (block: number) => string,
-  getEtherscanUrl: (txnHash: string) => string,
-  getPoolTogetherUrls: (contractAddress: string) => string[],
-  poolGraphUrl: string,
+  name: string;
+  logo: any;
+  isEnabled: boolean;
+  isTestNet: boolean;
+  blocktime: number; // NOTE could get this from an outside source since it changes slightly over time
+  epochBlock: number;
+  epochInterval: number;
+  blockCountdownUrl: (block: number) => string;
+  getEtherscanUrl: (txnHash: string) => string;
+  getPoolTogetherUrls: (contractAddress: string) => string[];
+  poolGraphUrl: string;
   liquidityPoolReserveDecimals: {
-    token0Decimals: number,
-    token1Decimals: number,
-  },
-  addresses: { [key: string]: string }
+    token0Decimals: number;
+    token1Decimals: number;
+  };
+  addresses: { [key: string]: string };
 }
 
 interface INetworks {
@@ -48,7 +53,7 @@ interface INetworks {
 
 export const networks: INetworks = {
   [NetworkIds.FantomOpera]: {
-    name: 'Fantom',
+    name: "Fantom",
     logo: FantomIcon,
     isEnabled: true,
     isTestNet: false,
@@ -61,7 +66,8 @@ export const networks: INetworks = {
       `https://community.pooltogether.com/pools/mainnet/${contractAddress}/home`,
       `https://community.pooltogether.com/pools/mainnet/${contractAddress}/manage#stats`,
     ],
-    poolGraphUrl: "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
+    poolGraphUrl:
+      "https://api.thegraph.com/subgraphs/name/pooltogether/pooltogether-v3_4_3",
     liquidityPoolReserveDecimals: {
       token0Decimals: 18,
       token1Decimals: 9,
@@ -96,13 +102,13 @@ export const networks: INetworks = {
       LQDR_ADDRESS: "",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
       LQDR_USDB_LP_ADDRESS: "",
-      USDB_DAI_LP_ADDRESS : "0xD5E946b5619fFf054c40D38c976f1d06C1e2fA82"
+      USDB_DAI_LP_ADDRESS: "0xD5E946b5619fFf054c40D38c976f1d06C1e2fA82",
     },
   },
   [NetworkIds.FantomTestnet]: {
-    name: 'Fantom Testnet',
+    name: "Fantom Testnet",
     logo: FantomIcon,
-    isEnabled: DebugHelper.isActive('enable-testnet'),
+    isEnabled: DebugHelper.isActive("enable-testnet"),
     isTestNet: true,
     blocktime: 3.589,
     epochBlock: 6617987,
@@ -142,22 +148,23 @@ export const networks: INetworks = {
       MASTERCHEF_ADDRESS: "",
       LQDR_ADDRESS: "",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
-      LQDR_USDB_LP_ADDRESS: ""
+      LQDR_USDB_LP_ADDRESS: "",
       // staking warmup: 0x312DBa92153E931D91c5e75870Dbc62E2DCD21AC
       // staking warmup manager: 0x8D4603d7302f2F962CCf6044A6AC2Dfd812B92bE
       // FHUD Minter: 0xA3b5fE35db679D21af9a499EE88231Ea9B656Cb8
       // mock oracle: 0xB85a387b0DfBFA6BAf834118C5478D9a8D418322
-    }
+    },
   },
   [NetworkIds.Moonriver]: {
-    name: 'Moonriver',
+    name: "Moonriver",
     logo: MoonriverIcon,
     isEnabled: false,
     isTestNet: false,
     blocktime: 21.46, // https://moonriver.moonscan.io/chart/blocktime
     epochBlock: 979500,
     epochInterval: 1960,
-    blockCountdownUrl: (block) => `https://moonriver.moonscan.io/block/countdown/${block}`,
+    blockCountdownUrl: (block) =>
+      `https://moonriver.moonscan.io/block/countdown/${block}`,
     getEtherscanUrl: (txnHash) => "https://moonriver.moonscan.io/tx/" + txnHash,
     getPoolTogetherUrls: (contractAddress) => [
       `https://community.pooltogether.com/pools/rinkeby/${contractAddress}/home`,
@@ -191,13 +198,13 @@ export const networks: INetworks = {
       XFHM_ADDRESS: "",
       LQDR_ADDRESS: "",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
-      LQDR_USDB_LP_ADDRESS: ""
-    }
+      LQDR_USDB_LP_ADDRESS: "",
+    },
   },
   [NetworkIds.MoonbaseAlpha]: {
-    name: 'Moonbase Alpha',
+    name: "Moonbase Alpha",
     logo: MoonBaseAlphaIcon,
-    isEnabled: DebugHelper.isActive('enable-testnet'),
+    isEnabled: DebugHelper.isActive("enable-testnet"),
     isTestNet: true,
     blocktime: 21.46,
     epochBlock: 979500,
@@ -249,13 +256,13 @@ export const networks: INetworks = {
       XFHM_ADDRESS: "",
       LQDR_ADDRESS: "",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "",
-      LQDR_USDB_LP_ADDRESS: ""
-    }
+      LQDR_USDB_LP_ADDRESS: "",
+    },
   },
   [NetworkIds.Rinkeby]: {
-    name: 'Rinkeby Testnet',
+    name: "Rinkeby Testnet",
     logo: RinkebyIcon,
-    isEnabled: DebugHelper.isActive('enable-testnet'),
+    isEnabled: DebugHelper.isActive("enable-testnet"),
     isTestNet: true,
     blocktime: 15.01,
     epochBlock: 10112184,
@@ -290,16 +297,16 @@ export const networks: INetworks = {
       LQDR_ADDRESS: "0xf03b216dfc70008442e6f56ac085c18210b740f5",
       LQDR_USDB_POL_BOND_DEPOSITORY_ADDRESS: "0x4f06EC6079BB6F6B39aF11010d764f1B4747E3eC",
       LQDR_USDB_LP_ADDRESS: "0xF1AF8B78eAB2E33e59a4D487fb9CF9dCCEF65427",
-      MASTERCHEF_ADDRESS: "0xa742025b8137b71BEc3A3242cE50A052E1F85D22" ,
+      MASTERCHEF_ADDRESS: "0xa742025b8137b71BEc3A3242cE50A052E1F85D22",
       USDB_DAI_LP_ADDRESS: "0x67B694d556879b8cAC9Ae751209c43c85a1ebD2e",
       // staking warmup: 0xCD12666f754aCefa1ee5477fA809911bAB915aa0
       // staking warmup manager: 0xeD1f984502f8773Ec950E2D006781D7ce33CEEE4
       // FHUD Minter: 0x139ffDD962A2d8D498a92aB33b31ed78397cbae2
       // twap oracle: 0xc9ca91fe0667bafd4289e082088e41ed86471d79
-    }
+    },
   },
   [NetworkIds.Ethereum]: {
-    name: 'Ethereum',
+    name: "Ethereum",
     logo: EthereumIcon,
     isEnabled: true,
     isTestNet: false,
@@ -334,11 +341,11 @@ export const networks: INetworks = {
       USDB_ADDRESS: "0x02B5453D92B730F29a86A0D5ef6e930c4Cf8860B",
       DAI_ADDRESS: "0x6b175474e89094c44da98b954eedeac495271d0f",
       XFHM_ADDRESS: "",
-      MASTERCHEF_ADDRESS: ""
-    }
+      MASTERCHEF_ADDRESS: "",
+    },
   },
   [NetworkIds.Bsc]: {
-    name: 'BSC',
+    name: "BSC",
     logo: BscIcon,
     isEnabled: false,
     isTestNet: false,
@@ -371,11 +378,22 @@ export const networks: INetworks = {
       WSOHM_ADDRESS: "0x0000000000000000000000000000000000000000",
       FHUD_ADDRESS: "0x0000000000000000000000000000000000000000",
       USDT_ADDRESS: "0x55d398326f99059ff775485246999027b3197955",
-      DAI_ADDRESS: "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3"
-    }
+      DAI_ADDRESS: "0x1af3f329e8be154074d8769d1ffa4ee058b1dbc3",
+    },
   },
 };
 
-export const enabledNetworkIds: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled);
-export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks).map(networkID => parseInt(networkID)).filter(networkID => networks[networkID].isEnabled && networkID !== NetworkIds.Bsc && networkID !== NetworkIds.Ethereum);
-export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(networkID => !networks[networkID].isTestNet);
+export const enabledNetworkIds: NetworkId[] = Object.keys(networks)
+  .map((networkID) => parseInt(networkID))
+  .filter((networkID) => networks[networkID].isEnabled);
+export const enabledNetworkIdsExceptBscAndEth: NetworkId[] = Object.keys(networks)
+  .map((networkID) => parseInt(networkID))
+  .filter(
+    (networkID) =>
+      networks[networkID].isEnabled &&
+      networkID !== NetworkIds.Bsc &&
+      networkID !== NetworkIds.Ethereum
+  );
+export const enabledMainNetworkIds: NetworkId[] = enabledNetworkIds.filter(
+  (networkID) => !networks[networkID].isTestNet
+);
