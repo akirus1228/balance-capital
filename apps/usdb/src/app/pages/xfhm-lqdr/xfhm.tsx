@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   Box,
   Tabs,
@@ -52,13 +51,11 @@ export const XfhmPage = (): JSX.Element => {
       return;
     }
     if (action === "stake") {
-      // @ts-ignore
-      if (isNaN(stakeQuantity) || stakeQuantity === 0 || stakeQuantity === "") {
+      if (isNaN(Number(stakeQuantity)) || Number(stakeQuantity) === 0 || stakeQuantity === "") {
         dispatch(error("Please enter a value!"));
         return;
       }
-      // @ts-ignore
-      if (Number(stakeQuantity) > formatAmount(details?.fhmBalance, "gwei", 4)) {
+      if (Number(stakeQuantity) > formatAmount(details?.fhmBalance || 0, "gwei", 4)) {
         dispatch(error("You cannot stake more than your FHM balance."));
         return;
       }
@@ -72,13 +69,11 @@ export const XfhmPage = (): JSX.Element => {
         })
       );
     } else {
-      // @ts-ignore
-      if (isNaN(unstakeQuantity) || unstakeQuantity === 0 || unstakeQuantity === "") {
+      if (isNaN(Number(unstakeQuantity)) || Number(unstakeQuantity) === 0 || unstakeQuantity === "") {
         dispatch(error("Please enter a value!"));
         return;
       }
-      // @ts-ignore
-      if (Number(unstakeQuantity) > formatAmount(details?.depositAmount, "gwei", 4)) {
+      if (Number(unstakeQuantity) > formatAmount(details?.depositAmount || 0, "gwei", 4)) {
         dispatch(error("You cannot unstake more than your FHM balance."));
         return;
       }
