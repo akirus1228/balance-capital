@@ -58,11 +58,11 @@ export const formatSeconds = (duration: number) => {
 };
 
 export const formatAmount = (
-  amount: any,
-  decimals: any,
+  amount: number,
+  decimals: number,
   length = 2,
   truncate = false
-) => {
+): number => {
   if (!amount || !decimals || isNaN(amount)) {
     return 0;
   }
