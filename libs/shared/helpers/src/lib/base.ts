@@ -59,7 +59,7 @@ export const formatSeconds = (duration: number) => {
 
 export const formatAmount = (
   amount: number,
-  decimals: number,
+  decimals: number | string,
   length = 2,
   truncate = false
 ): number => {
