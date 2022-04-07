@@ -56,7 +56,7 @@ export const tradfi6month = new StableBond({
   bondToken: "tradfi6month",
   decimals: 18,
   apr: 30,
-  apy: 32.5,
+  apy: 32.25,
   roi: 15,
   days: 180,
   isAvailable: {
