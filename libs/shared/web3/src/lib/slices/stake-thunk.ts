@@ -299,21 +299,15 @@ export const changeStake = createAsyncThunk(
       await stakeTx.wait();
     } catch (e: any) {
       uaData.approved = false;
-<<<<<<< HEAD
-      const rpcError = e as IJsonRPCError;
       if (
-        rpcError.code === -32603 &&
-        rpcError.message.indexOf("ds-math-sub-underflow") >= 0
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
       ) {
         dispatch(
           error(
             "You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"
           )
         );
-=======
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
->>>>>>> 824cb91837e5626327b1cc3b9cafe8e54b6b2fec
       } else {
         let message;
         if (!e.error || e.error === undefined || isNaN(e.error)) {
@@ -389,21 +383,15 @@ export const changeMint = createAsyncThunk(
       await mintTx.wait();
     } catch (e: any) {
       uaData.approved = false;
-<<<<<<< HEAD
-      const rpcError = e as IJsonRPCError;
       if (
-        rpcError.code === -32603 &&
-        rpcError.message.indexOf("ds-math-sub-underflow") >= 0
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
       ) {
         dispatch(
           error(
-            "You may be trying to mint more than your balance! Error code: 32603. Message: ds-math-sub-underflow"
+            "You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"
           )
         );
-=======
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
->>>>>>> 824cb91837e5626327b1cc3b9cafe8e54b6b2fec
       } else {
         let message;
         if (!e.error || e.error === undefined || isNaN(e.error)) {

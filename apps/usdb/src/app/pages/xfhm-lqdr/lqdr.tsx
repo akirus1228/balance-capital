@@ -1,3 +1,5 @@
+// TODO: remove the eslint-disable from this file and bring up to compliance
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
 import { formatAmount, truncateDecimals } from "@fantohm/shared-helpers";
 import {
@@ -41,30 +43,26 @@ export const LqdrPage = (): JSX.Element => {
   const [aToken, setAToken] = useState<AssetToken>(allAssetTokens[0]);
   const [bToken, setBToken] = useState<AssetToken>(allAssetTokens[1]);
   const [assetTokenModalOpen, setAssetTokenModalOpen] = useState(false);
-  const [aTokenAmount, setATokenAmount] = useState<string>("");
-  const [bTokenAmount, setBTokenAmount] = useState<string>("");
+  const [aTokenAmount, setATokenAmount] = useState<number>(0);
+  const [bTokenAmount, setBTokenAmount] = useState<number>(0);
   const [bTokenLoading, setBTokenLoading] = useState<boolean>(false);
   const [usdbLoading, setUsdbLoading] = useState<boolean>(false);
-  const [usdbAmount, setUsdbAmount] = useState<string>("");
+  const [usdbAmount, setUsdbAmount] = useState<number>(0);
   const [usdbAmountInUsd, setUsdbAmountInUsd] = useState<number>(0);
   const [lqdrAmountInUsd, setLqdrAmountInUsd] = useState<number>(0);
 
-  const bTokenAmountDebounce = useDebounce(bTokenAmount, 1000);
+  const bTokenAmountDebounce = useDebounce(bTokenAmount.toString(), 1000);
 
   const setMax = async (title: string) => {
     try {
       setBTokenLoading(true);
       if (title === "Asset A") {
-        // @ts-ignore
         setATokenAmount(formatAmount(aToken?.balance || 0, aToken.decimals, 9));
         const maxAmount = await calcBTokenAmount(aToken?.balance || 0);
-        // @ts-ignore
         setBTokenAmount(formatAmount(maxAmount, bToken.decimals, 9));
       } else {
-        // @ts-ignore
         setBTokenAmount(formatAmount(bToken?.balance || 0, bToken.decimals, 9));
         const maxAmount = await calcATokenAmount(bToken?.balance || 0);
-        // @ts-ignore
         setATokenAmount(formatAmount(maxAmount, aToken.decimals, 9));
       }
     } catch (e: any) {
@@ -86,7 +84,7 @@ export const LqdrPage = (): JSX.Element => {
     setBToken(token);
   };
 
-  const calcATokenAmount = async (bTokenAmount: number): Promise<any> => {
+  const calcATokenAmount = async (bTokenAmount: number): Promise<number> => {
     if (!assetTokens || !assetTokens?.length || !provider || !chainId) {
       return 0;
     }
@@ -132,7 +130,9 @@ export const LqdrPage = (): JSX.Element => {
       const usdbAmount = await dispatch(
         payoutForUsdb({
           address,
-          value: ethers.utils.parseUnits(bTokenAmount, bToken.decimals).toString(),
+          value: ethers.utils
+            .parseUnits(bTokenAmount.toString(), bToken.decimals)
+            .toString(),
           provider,
           networkId: chainId,
         })
@@ -140,7 +140,8 @@ export const LqdrPage = (): JSX.Element => {
       if (isSubscribed) {
         // @ts-ignore
         setUsdbAmount(usdbAmount?.payload.toString());
-        setUsdbAmountInUsd( // @ts-ignore
+        setUsdbAmountInUsd(
+          // @ts-ignore
           (Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString())) /
             Math.pow(10, 18)
         );
@@ -161,7 +162,10 @@ export const LqdrPage = (): JSX.Element => {
     let bTokenMaxAmount = await calcBTokenAmount(aToken?.balance || 0);
     // @ts-ignore
     bTokenMaxAmount = formatAmount(bTokenMaxAmount, bToken.decimals, 2, true);
-    if (Number(bTokenAmount) > formatAmount(bToken.balance, bToken.decimals)) {
+    if (
+      bToken.balance &&
+      Number(bTokenAmount) > formatAmount(bToken.balance, bToken.decimals)
+    ) {
       dispatch(error(`You cannot deposit more than your ${bToken?.name} balance.`));
       return;
     }
@@ -172,7 +176,9 @@ export const LqdrPage = (): JSX.Element => {
     await dispatch(
       addLiquidity({
         address,
-        value: ethers.utils.parseUnits(bTokenAmount, bToken.decimals).toString(),
+        value: ethers.utils
+          .parseUnits(bTokenAmount.toString(), bToken.decimals)
+          .toString(),
         provider,
         token: bToken,
         networkId: chainId,
@@ -209,7 +215,7 @@ export const LqdrPage = (): JSX.Element => {
   useEffect(() => {
     let isSubscribed = true;
     if (!bTokenAmount) {
-      setUsdbAmount("0");
+      setUsdbAmount(0);
       return;
     }
     calcUsdbAmount(isSubscribed).then();

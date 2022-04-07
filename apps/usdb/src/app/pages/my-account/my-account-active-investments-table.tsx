@@ -45,7 +45,7 @@ export const MyAccountActiveInvestmentsTable = ({
   onRedeemBond: (bond: IAllBondData, index: number) => void;
   onConfirmCancelBond: (bond: IAllBondData, index: number) => void;
 }): JSX.Element => {
-  const themeType = useSelector((state) => state.app.theme);
+  const themeType = useSelector((state: RootState) => state.app.theme);
   const backgroundColor = themeType === "light" ? "#f7f7ff" : "#0E0F10";
   const { chainId } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);

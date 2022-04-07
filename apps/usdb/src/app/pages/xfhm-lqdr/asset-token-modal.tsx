@@ -33,7 +33,12 @@ export const AssetTokenModal = (props: any): JSX.Element => {
                     {token.name}
                   </Typography>
                   <Typography noWrap className="w100" variant="h5">
-                    {formatAmount(token.balance, token.decimals, 9, true)}
+                    {formatAmount(
+                      token.balance ? token.balance : 0,
+                      token.decimals,
+                      9,
+                      true
+                    )}
                   </Typography>
                 </Box>
               )

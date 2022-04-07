@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import {
   Box,
   Tabs,
@@ -56,6 +57,7 @@ export const XfhmPage = (): JSX.Element => {
         dispatch(error("Please enter a value!"));
         return;
       }
+      // @ts-ignore
       if (Number(stakeQuantity) > formatAmount(details?.fhmBalance, "gwei", 4)) {
         dispatch(error("You cannot stake more than your FHM balance."));
         return;
@@ -75,6 +77,7 @@ export const XfhmPage = (): JSX.Element => {
         dispatch(error("Please enter a value!"));
         return;
       }
+      // @ts-ignore
       if (Number(unstakeQuantity) > formatAmount(details?.depositAmount, "gwei", 4)) {
         dispatch(error("You cannot unstake more than your FHM balance."));
         return;
@@ -156,7 +159,11 @@ export const XfhmPage = (): JSX.Element => {
           disabled={
             !address ||
             isPendingTxn(pendingTransactions, "claiming") ||
-            formatAmount(details?.claimableXfhm, xFhmToken.decimals, 9) <= 0
+            formatAmount(
+              details?.claimableXfhm ? details?.claimableXfhm : 0,
+              xFhmToken.decimals,
+              9
+            ) <= 0
           }
           onClick={() => onClaim().then()}
         >
