@@ -371,16 +371,11 @@ export const bondAsset = createAsyncThunk(
         }
       }
     } catch (e: any) {
-<<<<<<< HEAD
       if (
         e.error.code === -32603 &&
         e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
       ) {
         dispatch(error("Maximum daily limit for bond reached."));
-=======
-      if (e.error.code === -32603 && e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0) {
-        dispatch(error("Maximum daily limit for bond reached."),);
->>>>>>> 824cb91837e5626327b1cc3b9cafe8e54b6b2fec
       } else {
         let message;
         if (!e.error || e.error === undefined || isNaN(e.error)) {
@@ -529,9 +524,7 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
     } catch (e: any) {
       uaData.approved = false;
       if (e.error.code === -32603 && e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
-        dispatch(
-          error("Maximum daily limit for bond reached."),
-        );
+        dispatch(error("Maximum daily limit for bond reached."));
       } else {
         let message;
         if (!e.error || e.error === undefined || isNaN(e.error)) {
@@ -585,7 +578,9 @@ export const claimSingleSidedBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      const poolId = await masterchefContract["getPoolIdForLpToken"](addresses[networkId]["USDB_DAI_LP_ADDRESS"]);
+      const poolId = await masterchefContract["getPoolIdForLpToken"](
+        addresses[networkId]["USDB_DAI_LP_ADDRESS"]
+      );
       redeemTx = await masterchefContract["harvest"](poolId, address);
       const pendingTxnType = "bond_" + bond.name;
       uaData.txHash = redeemTx.hash;
