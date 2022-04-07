@@ -122,12 +122,6 @@ export default function Mint() {
     }
   }
 
-  useEffect(() => {
-    setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
-    setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-    setUsdbBond(accountBonds["usdbBuy"]);
-  }, [usdbBondData?.userBonds]);
-
   function setBondState(bool: boolean) {
     if (bool) {
       setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
@@ -261,7 +255,6 @@ export default function Mint() {
         </Grid>
         <Grid item md={6} sx={{ width: "100%" }}>
           <Paper className={`${style["subCard"]} ${style["subCardBorder"]}`}>
-            <SettingsOutlinedIcon className={style["settingIcon"]} />
             <div className={style["subTitle"]}>{selectedToken.title}</div>
             <Grid container spacing={1}>
               <Grid item md={4} xs={12}>
