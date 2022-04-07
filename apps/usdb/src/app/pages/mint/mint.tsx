@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bondAsset,
-  BondType,
   changeApproval,
   error,
   IAllBondData,
@@ -46,29 +45,21 @@ export default function Mint() {
   const dispatch = useDispatch();
   const [tabState, setTabState] = React.useState(true);
   const [daiPrice, setDaiPrice] = React.useState(0);
-  const [value, setValue] = React.useState("");
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
   const [bond, setBond] = useState(
-    allBonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as Bond
+    allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond
   );
   const [usdbBondData, setUsdbBondData] = useState(
-    bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData
+    bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData
   );
   const [allowance, setAllowance] = React.useState(false);
   const [quantity, setQuantity] = useState("");
   const [image, setImage] = useState(DaiToken);
   const themeType = useSelector((state: RootState) => state.app.theme);
   const tokenBalance = useSelector((state: any) => {
-    // return trim(Number(state.account.balances.dai), 2);
     return state.account.balances;
   });
-
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
-
-  const [usdbBond, setUsdbBond] = useState(accountBonds[usdbBondData?.name]);
 
   const isTabletScreen = useMediaQuery("(max-width: 970px)");
 
@@ -165,10 +156,11 @@ export default function Mint() {
   };
 
   useEffect(() => {
-    setAllowance(
-      (bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData)
-        ?.allowance > 0
-    );
+    if (tabState) {
+      setAllowance((bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance > 0);
+    } else {
+      setAllowance((bonds.filter(bond => bond.name === "usdbFhmBurn")[0] as IAllBondData)?.allowance > 0);
+    }
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
   const selectedToken = tabState ? token[0] : token[1];
@@ -194,24 +186,14 @@ export default function Mint() {
     }
   }
 
-  useEffect(() => {
-    setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
-    setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-    setUsdbBond(accountBonds["usdbBuy"]);
-  }, [usdbBondData?.userBonds]);
-
   function setBondState(bool: boolean) {
     if (bool) {
-      setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
-      setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-      setUsdbBond(accountBonds["usdbBuy"]);
+      setUsdbBondData(bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData);
+      setBond(allBonds.filter(bond => bond.name === "usdbBuy")[0] as Bond);
       setImage(DaiToken);
     } else {
-      setUsdbBondData(
-        bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData
-      );
-      setBond(allBonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as Bond);
-      setUsdbBond(accountBonds["usdbFhmBurn"]);
+      setUsdbBondData(bonds.filter(bond => bond.name === "usdbFhmBurn")[0] as IAllBondData);
+      setBond(allBonds.filter(bond => bond.name === "usdbFhmBurn")[0] as Bond);
       setImage(FHMToken);
     }
     setTabState(bool);
@@ -315,7 +297,7 @@ export default function Mint() {
                     src={image}
                     className={style["daiIcon"]}
                     style={{ marginRight: "10px" }}
-                  />
+                    alt={selectedToken.title}/>
                   <div className={style["tokenInfo"]}>
                     <div className={style["tokenName"]}>{selectedToken.name}</div>
                     <div className={style["tokenValue"]}>
