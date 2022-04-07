@@ -18,7 +18,7 @@ import {
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import { DaiToken, FHMToken } from "@fantohm/shared/images";
-import { Box, Grid, Button, Paper, OutlinedInput, InputAdornment } from "@mui/material";
+import { Box, Grid, Button, Paper, OutlinedInput, InputAdornment, Typography, Icon } from "@mui/material";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import Carousel from "react-material-ui-carousel";
 
@@ -36,6 +36,8 @@ import DarkMintFhm0Img from "../../../assets/images/mint/dark-mint-fhm-0.png";
 import DarkMintFhm1Img from "../../../assets/images/mint/dark-mint-fhm-1.png";
 import DarkMintFhm2Img from "../../../assets/images/mint/dark-mint-fhm-2.png";
 import { RootState } from "../../store";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 export default function Mint() {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
@@ -68,23 +70,78 @@ export default function Mint() {
 
   const [usdbBond, setUsdbBond] = useState(accountBonds[usdbBondData?.name]);
 
+  const isTabletScreen = useMediaQuery("(max-width: 970px)");
+
   const token = [
     {
       title: "Mint with DAI",
       name: "DAI",
       total: tokenBalance.dai,
       price: daiPrice,
-      darkBanner: [DarkMintDai0Img, DarkMintDai1Img, DarkMintDai2Img],
-      lightBanner: [LightMintDai0Img, LightMintDai1Img, LightMintDai2Img],
+      darkBanner: [{
+          text: "Mint USDB to unlock the full potential of DeFi.",
+          location: "center",
+          img: DarkMintDai0Img
+        },
+        {
+          text: "USDB is dependable for business solutions and stable for investor confidence.",
+          img: DarkMintDai1Img
+        },
+        {
+          text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
+          img: DarkMintDai2Img
+        }
+      ],
+      lightBanner: [
+        {
+          text: "Mint USDB to unlock the full potential of DeFi.",
+          location: "center",
+          img: LightMintDai0Img
+        },
+        {
+          text: "USDB is dependable for business solutions and stable for investor confidence.",
+          img: LightMintDai1Img
+        },
+        {
+          text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
+          img: LightMintDai2Img
+        }
+      ],
     },
     {
       title: "Mint with FHM",
       name: "FHM",
       total: tokenBalance.fhm,
       price: fhmPrice,
-      darkBanner: [DarkMintFhm0Img, DarkMintFhm1Img, DarkMintFhm2Img],
-      lightBanner: [LightMintFhm0Img, LightMintFhm1Img, LightMintFhm2Img],
-    },
+      darkBanner: [
+        {
+          text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
+          img: DarkMintFhm0Img
+        },
+        {
+          text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
+          img: DarkMintFhm1Img
+        },
+        {
+          text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
+          img: DarkMintFhm2Img
+        }
+      ],
+      lightBanner: [
+        {
+          text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
+          img: LightMintFhm0Img
+        },
+        {
+          text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
+          img: LightMintFhm1Img
+        },
+        {
+          text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
+          img: LightMintFhm2Img
+        }
+      ]
+    }
   ];
 
   useEffect(() => {
@@ -92,8 +149,7 @@ export default function Mint() {
       setDaiPrice(await getTokenPrice("dai"));
       setFhmPrice(await getTokenPrice("fantohm"));
     }
-
-    fetchPrice();
+    fetchPrice().then();
   }, []);
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -176,7 +232,7 @@ export default function Mint() {
           className={style["tapButton"]}
           variant="text"
           onClick={() => setBondState(true)}
-          style={{ borderBottom: `${tabState ? "solid 4px black" : "none"}` }}
+          style={{ borderBottom: `${tabState ? `solid 4px ${themeType === "light" ? "black" : "white"}` : "none"}` }}
         >
           Mint with DAI
         </Button>
@@ -184,7 +240,7 @@ export default function Mint() {
           variant="text"
           className={style["tapButton"]}
           onClick={() => setBondState(false)}
-          style={{ borderBottom: `${tabState ? "none" : "solid 4px black"}` }}
+          style={{ borderBottom: `${tabState ? "none" : `solid 4px ${themeType === "light" ? "black" : "white"}`}` }}
         >
           Mint with FHM
         </Button>
@@ -199,7 +255,7 @@ export default function Mint() {
             }}
           >
             <Carousel
-              sx={{ width: "100%", height: { xs: "270px", md: "550px" } }}
+              sx={{ width: "100%", height: { xs: "330px", md: "550px" } }}
               indicatorContainerProps={{
                 style: {
                   position: "absolute",
@@ -218,45 +274,33 @@ export default function Mint() {
                 },
               }}
             >
-              {themeType === "light"
-                ? selectedToken.lightBanner.map((item: any, index: number) => (
-                    <Box
-                      key={`light_${selectedToken.title}_${index}`}
-                      sx={{
-                        width: "100%",
-                        height: { xs: "270px", md: "550px" },
-                      }}
-                    >
-                      <img
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: "20px",
-                        }}
-                        src={item}
-                      />
+              {
+                selectedToken[themeType === "light" ? "lightBanner" : "darkBanner"].map((item: any, index: number) =>
+                  <Box
+                    display="flex"
+                    justifyContent="center"
+                    key={`${themeType}_${selectedToken.title}_${index}`}
+                    sx={{
+                      backgroundImage: `url(${item.img})`,
+                      backgroundPosition: "center",
+                      backgroundSize: "cover",
+                      backgroundRepeat: "no-repeat",
+                      width: "100%",
+                      height: {
+                        xs: "330px", md: "550px",
+                        borderRadius: "20px"
+                      }
+                    }}>
+                    <Box display="flex" justifyContent="center" sx={{alignItems: item?.location === 'center' ? "center": "end", px: `${isTabletScreen ? "10px" : "0"}`, width: {xs: "100%", md: "70%"}, paddingBottom: item?.location === 'center' ? "0": `${isTabletScreen ? "35px" : "100px"}`}}>
+                      <Box display="flex">
+                        <Icon component={InfoOutlinedIcon} fontSize={isTabletScreen ? "small" : "medium"} sx={{mt: `${isTabletScreen ? "1px" : "3px"}`, mr: `${isTabletScreen ? "5px" : "10px"}`}} />
+                        <Typography variant={isTabletScreen ? "subtitle2" : "h6"} color="primary">
+                          {item.text}
+                        </Typography>
+                      </Box>
                     </Box>
-                  ))
-                : selectedToken.darkBanner.map((item: any, index: number) => (
-                    <Box
-                      key={`dark_${selectedToken.title}_${index}`}
-                      sx={{
-                        width: "100%",
-                        height: { xs: "270px", md: "550px" },
-                      }}
-                    >
-                      <img
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                          objectFit: "cover",
-                          borderRadius: "20px",
-                        }}
-                        src={item}
-                      />
-                    </Box>
-                  ))}
+                  </Box>)
+              }
             </Carousel>
           </Box>
         </Grid>
