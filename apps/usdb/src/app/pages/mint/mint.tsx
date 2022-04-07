@@ -184,7 +184,7 @@ export default function Mint() {
           className={style["tapButton"]}
           variant="text"
           onClick={() => setBondState(true)}
-          style={{ borderBottom: `${tabState ? "solid 4px black" : "none"}` }}
+          style={{ borderBottom: `${tabState ? `solid 4px ${themeType === "light" ? "black" : "white"}` : "none"}` }}
         >
           Mint with DAI
         </Button>
@@ -192,7 +192,7 @@ export default function Mint() {
           variant="text"
           className={style["tapButton"]}
           onClick={() => setBondState(false)}
-          style={{ borderBottom: `${tabState ? "none" : "solid 4px black"}` }}
+          style={{ borderBottom: `${tabState ? "none" : `solid 4px ${themeType === "light" ? "black" : "white"}`}` }}
         >
           Mint with FHM
         </Button>
