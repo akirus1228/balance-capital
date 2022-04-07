@@ -36,10 +36,10 @@ export default function Mint() {
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
   const [bond, setBond] = useState(
-    allBonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as Bond
+    allBonds.filter((bond) => bond.type === BondType.BOND_USDB)[0] as Bond
   );
   const [usdbBondData, setUsdbBondData] = useState(
-    bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData
+    bonds.filter((bond) => bond.type === BondType.BOND_USDB)[0] as IAllBondData
   );
   const [allowance, setAllowance] = useState<boolean>(false);
   const [quantity, setQuantity] = useState<number>(0);
@@ -94,7 +94,7 @@ export default function Mint() {
 
   useEffect(() => {
     setAllowance(
-      (bonds.filter((bond) => bond.type === BondType.Bond_USDB)[0] as IAllBondData)
+      (bonds.filter((bond) => bond.type === BondType.BOND_USDB)[0] as IAllBondData)
         ?.allowance > 0
     );
   }, [bonds, usdbBondData, usdbBondData?.allowance]);

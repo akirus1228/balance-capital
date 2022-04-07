@@ -261,7 +261,7 @@ export const calcBondDetails = createAsyncThunk(
     // Circuit breaking for FHUD bonds
     let isCircuitBroken = false;
     let actualMaxBondPrice = maxBondPrice;
-    if (bond.type === BondType.Bond_USDB) {
+    if (bond.type === BondType.BOND_USDB) {
       const soldBondsLimitUsd = terms.soldBondsLimitUsd / Math.pow(10, 18);
       const circuitBreakerCurrentPayoutUsd =
         (await bondContract["circuitBreakerCurrentPayout"]()) / Math.pow(10, 18);
@@ -296,7 +296,7 @@ export const calcBondDetails = createAsyncThunk(
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,
-      isFhud: bond.type === BondType.Bond_USDB,
+      isFhud: bond.type === BondType.BOND_USDB,
       isRiskFree: bond.isRiskFree,
       isCircuitBroken,
     };
