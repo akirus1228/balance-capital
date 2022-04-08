@@ -371,11 +371,8 @@ export const calculateUserBondDetails = createAsyncThunk(
       const bondMaturationBlock =
         Number(bondDetails["vesting"]) + Number(bondDetails["lastBlock"]);
 
-      // lastBlock.timestamp 
-      // currentblock.timestamp
-      // 
-
-
+      // TODO: If extended bonding with discounts is wanted we need to calculate
+      // the estimated time until completion
       const userBonds =
         Number(amount) > 0.01
           ? [
