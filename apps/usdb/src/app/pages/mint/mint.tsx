@@ -197,11 +197,6 @@ export default function Mint() {
     }
   }
 
-  useEffect(() => {
-    setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
-    setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-  }, [usdbBondData?.userBonds]);
-
   function setBondState(bool: boolean) {
     if (bool) {
       setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
