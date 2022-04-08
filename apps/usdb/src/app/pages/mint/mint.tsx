@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bondAsset,
-  BondType,
   changeApproval,
   error,
   IAllBondData,
@@ -27,7 +26,7 @@ import {
   InputAdornment,
   Typography,
   Icon,
-  useMediaQuery
+  useMediaQuery,
 } from "@mui/material";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
@@ -79,34 +78,35 @@ export default function Mint() {
       name: "DAI",
       total: tokenBalance.dai,
       price: daiPrice,
-      darkBanner: [{
+      darkBanner: [
+        {
           text: "Mint USDB to unlock the full potential of DeFi.",
           location: "center",
-          img: DarkMintDai0Img
+          img: DarkMintDai0Img,
         },
         {
           text: "USDB is dependable for business solutions and stable for investor confidence.",
-          img: DarkMintDai1Img
+          img: DarkMintDai1Img,
         },
         {
           text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
-          img: DarkMintDai2Img
-        }
+          img: DarkMintDai2Img,
+        },
       ],
       lightBanner: [
         {
           text: "Mint USDB to unlock the full potential of DeFi.",
           location: "center",
-          img: LightMintDai0Img
+          img: LightMintDai0Img,
         },
         {
           text: "USDB is dependable for business solutions and stable for investor confidence.",
-          img: LightMintDai1Img
+          img: LightMintDai1Img,
         },
         {
           text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
-          img: LightMintDai2Img
-        }
+          img: LightMintDai2Img,
+        },
       ],
     },
     {
@@ -117,32 +117,32 @@ export default function Mint() {
       darkBanner: [
         {
           text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
-          img: DarkMintFhm0Img
+          img: DarkMintFhm0Img,
         },
         {
           text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
-          img: DarkMintFhm1Img
+          img: DarkMintFhm1Img,
         },
         {
           text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
-          img: DarkMintFhm2Img
-        }
+          img: DarkMintFhm2Img,
+        },
       ],
       lightBanner: [
         {
           text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
-          img: LightMintFhm0Img
+          img: LightMintFhm0Img,
         },
         {
           text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
-          img: LightMintFhm1Img
+          img: LightMintFhm1Img,
         },
         {
           text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
-          img: LightMintFhm2Img
-        }
-      ]
-    }
+          img: LightMintFhm2Img,
+        },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -168,9 +168,15 @@ export default function Mint() {
 
   useEffect(() => {
     if (tabState) {
-      setAllowance((bonds.filter(bond => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance > 0);
+      setAllowance(
+        (bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance >
+          0
+      );
     } else {
-      setAllowance((bonds.filter(bond => bond.name === "usdbFhmBurn")[0] as IAllBondData)?.allowance > 0);
+      setAllowance(
+        (bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData)
+          ?.allowance > 0
+      );
     }
   }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
@@ -228,9 +234,7 @@ export default function Mint() {
           variant="text"
           onClick={() => setBondState(true)}
           style={{
-            borderBottom: `${
-              tabState ? "solid 4px black" : "none"
-            }`,
+            borderBottom: `${tabState ? "solid 4px black" : "none"}`,
           }}
         >
           Mint with DAI
@@ -239,7 +243,11 @@ export default function Mint() {
           variant="text"
           className={style["tapButton"]}
           onClick={() => setBondState(false)}
-          style={{ borderBottom: `${tabState ? "none" : `solid 4px ${themeType === "light" ? "black" : "white"}`}` }}
+          style={{
+            borderBottom: `${
+              tabState ? "none" : `solid 4px ${themeType === "light" ? "black" : "white"}`
+            }`,
+          }}
         >
           Mint with FHM
         </Button>
@@ -273,8 +281,8 @@ export default function Mint() {
                 },
               }}
             >
-              {
-                selectedToken[themeType === "light" ? "lightBanner" : "darkBanner"].map((item: any, index: number) =>
+              {selectedToken[themeType === "light" ? "lightBanner" : "darkBanner"].map(
+                (item: any, index: number) => (
                   <Box
                     display="flex"
                     justifyContent="center"
@@ -286,20 +294,45 @@ export default function Mint() {
                       backgroundRepeat: "no-repeat",
                       width: "100%",
                       height: {
-                        xs: "330px", md: "550px",
-                        borderRadius: "20px"
-                      }
-                    }}>
-                    <Box display="flex" justifyContent="center" sx={{alignItems: item?.location === 'center' ? "center": "end", px: `${isTabletScreen ? "10px" : "0"}`, width: {xs: "100%", md: "70%"}, paddingBottom: item?.location === 'center' ? "0": `${isTabletScreen ? "35px" : "100px"}`}}>
+                        xs: "330px",
+                        md: "550px",
+                        borderRadius: "20px",
+                      },
+                    }}
+                  >
+                    <Box
+                      display="flex"
+                      justifyContent="center"
+                      sx={{
+                        alignItems: item?.location === "center" ? "center" : "end",
+                        px: `${isTabletScreen ? "10px" : "0"}`,
+                        width: { xs: "100%", md: "70%" },
+                        paddingBottom:
+                          item?.location === "center"
+                            ? "0"
+                            : `${isTabletScreen ? "35px" : "100px"}`,
+                      }}
+                    >
                       <Box display="flex">
-                        <Icon component={InfoOutlinedIcon} fontSize={isTabletScreen ? "small" : "medium"} sx={{mt: `${isTabletScreen ? "1px" : "3px"}`, mr: `${isTabletScreen ? "5px" : "10px"}`}} />
-                        <Typography variant={isTabletScreen ? "subtitle2" : "h6"} color="primary">
+                        <Icon
+                          component={InfoOutlinedIcon}
+                          fontSize={isTabletScreen ? "small" : "medium"}
+                          sx={{
+                            mt: `${isTabletScreen ? "1px" : "3px"}`,
+                            mr: `${isTabletScreen ? "5px" : "10px"}`,
+                          }}
+                        />
+                        <Typography
+                          variant={isTabletScreen ? "subtitle2" : "h6"}
+                          color="primary"
+                        >
                           {item.text}
                         </Typography>
                       </Box>
                     </Box>
-                  </Box>)
-              }
+                  </Box>
+                )
+              )}
             </Carousel>
           </Box>
         </Grid>
