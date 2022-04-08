@@ -400,7 +400,7 @@ export const bondAsset = createAsyncThunk(
 );
 
 export const redeemSingleSidedBond = createAsyncThunk(
-  "bonding/redeemBond",
+  "bonding/redeemSingleSidedBond",
   async (
     { value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk,
     { dispatch }
@@ -409,8 +409,6 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(error("Please connect your wallet!"));
       return;
     }
-    console.log("value: ", value);
-
     const signer = provider.getSigner();
     const bondContract = bond.getContractForBondForWrite(networkId, signer);
 
@@ -485,7 +483,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
 );
 
 export const redeemSingleSidedILProtection = createAsyncThunk(
-  "bonding/redeemBond",
+  "bonding/redeemSingleSidedILProtection",
   async ({ address, bond, networkId, provider }: IRedeemBondAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
@@ -544,6 +542,71 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
         dispatch(info("IL Redeem completed."));
+      }
+    }
+  }
+);
+
+export const redeemBondUsdb = createAsyncThunk(
+  "bonding/redeemBondUsdb",
+  async ({ address, bond, networkId, provider }: IRedeemBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+
+    let redeemTx;
+    const uaData = {
+      address: address,
+      type: "Redeem",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      redeemTx = await bondContract["redeem"](address, true);
+      const pendingTxnType = "redeem_" + bond.name;
+      uaData.txHash = redeemTx.hash;
+      dispatch(
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
+      );
+
+      await redeemTx.wait();
+      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: any) {
+      uaData.approved = false;
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
+      ) {
+        dispatch(error("Maximum daily limit for bond reached."));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    } finally {
+      if (redeemTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Redeem completed."));
       }
     }
   }

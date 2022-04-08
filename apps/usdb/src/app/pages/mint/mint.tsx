@@ -13,7 +13,7 @@ import {
   useWeb3Context,
   getTokenPrice,
   allBonds,
-  Bond,
+  Bond, redeemBondUsdb, IRedeemBondAsyncThunk
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import { DaiToken, FHMToken } from "@fantohm/shared/images";
@@ -69,6 +69,11 @@ export default function Mint() {
   const tokenBalance = useSelector((state: any) => {
     return state.account.balances;
   });
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
+
+  const selectedAccountBond = accountBonds[bond.name];
 
   const isTabletScreen = useMediaQuery("(max-width: 970px)");
 
@@ -182,7 +187,7 @@ export default function Mint() {
 
   const selectedToken = tabState ? token[0] : token[1];
 
-  async function handleClick() {
+  async function handleMint() {
     if (Number(quantity) === 0) {
       await dispatch(error("Please enter a value!"));
     } else if (isNaN(Number(quantity))) {
@@ -201,6 +206,17 @@ export default function Mint() {
         } as IBondAssetAsyncThunk)
       );
     }
+  }
+
+  async function handleRedeem() {
+    dispatch(
+      redeemBondUsdb({
+        address,
+        provider,
+        networkId: chainId,
+        bond: bond,
+      } as IRedeemBondAsyncThunk)
+    );
   }
 
   function setBondState(bool: boolean) {
@@ -414,20 +430,43 @@ export default function Mint() {
                   Sold Out
                 </Button>
               ) : allowance ? (
-                <Button
-                  color="primary"
-                  variant="contained"
-                  disableElevation
-                  onClick={handleClick}
-                  disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
-                  className={style["mintButton"]}
-                >
-                  {txnButtonText(
-                    pendingTransactions,
-                    "deposit_" + bond?.name,
-                    "Mint USDB"
-                  )}
-                </Button>
+                <Box display="flex" flexDirection="column" alignItems="center">
+                  <Button
+                    color="primary"
+                    variant="contained"
+                    disableElevation
+                    onClick={handleMint}
+                    disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
+                    className={style["mintButton"]}
+                    sx={{
+                      mb: "20px"
+                    }}
+                  >
+                    {txnButtonText(
+                      pendingTransactions,
+                      "deposit_" + bond?.name,
+                      "Mint USDB"
+                    )}
+                  </Button>
+                  {
+                    selectedAccountBond?.userBonds.length > 0 && Number(selectedAccountBond?.userBonds[0].amount) > 0 && (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        disableElevation
+                        onClick={handleRedeem}
+                        disabled={isPendingTxn(pendingTransactions, "redeem_" + bond?.name)}
+                        className={style["mintButton"]}
+                      >
+                        {txnButtonText(
+                          pendingTransactions,
+                          "redeem_" + bond?.name,
+                          "Redeem"
+                        )}
+                      </Button>
+                    )
+                  }
+                </Box>
               ) : (
                 <Button
                   color="primary"
