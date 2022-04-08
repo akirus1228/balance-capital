@@ -234,7 +234,9 @@ export default function Mint() {
           variant="text"
           onClick={() => setBondState(true)}
           style={{
-            borderBottom: `${tabState ? "solid 4px black" : "none"}`,
+            borderBottom: `${
+              tabState ? `solid 4px ${themeType === "light" ? "black" : "white"}` : "none"
+            }`,
           }}
         >
           Mint with DAI

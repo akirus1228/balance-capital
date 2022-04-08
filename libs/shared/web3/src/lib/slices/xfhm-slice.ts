@@ -272,8 +272,8 @@ export const changeApprovalForXfhm = createAsyncThunk(
       );
       await approveTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -335,8 +335,8 @@ export const changeStakeForXfhm = createAsyncThunk(
       );
       await stakeTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -381,8 +381,8 @@ export const claimForXfhm = createAsyncThunk(
       );
       await claimTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -437,8 +437,8 @@ export const addLiquidity = createAsyncThunk(
       );
       await addLiquidityTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
