@@ -1,4 +1,4 @@
-import { DetailedHTMLProps, ImgHTMLAttributes, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   DarkBankIcon,
@@ -11,8 +11,21 @@ import {
   LightLockIcon,
   DarkShieldIcon,
   LightShieldIcon,
+  DarkCarouselDai0,
+  DarkCarouselDai1,
+  DarkCarouselDai2,
+  LightCarouselDai0,
+  LightCarouselDai1,
+  LightCarouselDai2,
+  DarkCarouselFhm0,
+  DarkCarouselFhm1,
+  DarkCarouselFhm2,
+  LightCarouselFhm0,
+  LightCarouselFhm1,
+  LightCarouselFhm2,
 } from "@fantohm/shared/images";
 import { RootState } from "../../store";
+import { CSSProperties } from "@mui/styles";
 
 type ThemeImage = {
   alt: string;
@@ -50,12 +63,53 @@ const imgMap: ThemeImages = {
     lightIcon: LightShieldIcon,
     darkIcon: DarkShieldIcon,
   },
+  MintCarouselDai0: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselDai0,
+    darkIcon: DarkCarouselDai0,
+  },
+  MintCarouselDai1: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselDai1,
+    darkIcon: DarkCarouselDai1,
+  },
+  MintCarouselDai2: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselDai2,
+    darkIcon: DarkCarouselDai2,
+  },
+  MintCarouselFhm0: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselFhm0,
+    darkIcon: DarkCarouselFhm0,
+  },
+  MintCarouselFhm1: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselFhm1,
+    darkIcon: DarkCarouselFhm1,
+  },
+  MintCarouselFhm2: {
+    alt: "Black background with dai logos and text",
+    lightIcon: LightCarouselFhm2,
+    darkIcon: DarkCarouselFhm2,
+  },
 };
 
 interface ThemeImageProps {
-  image: "BankIcon" | "CardsIcon" | "DoughnutChartIcon" | "LockIcon" | "ShieldIcon";
+  image:
+    | "BankIcon"
+    | "CardsIcon"
+    | "DoughnutChartIcon"
+    | "LockIcon"
+    | "ShieldIcon"
+    | "MintCarouselDai0"
+    | "MintCarouselDai1"
+    | "MintCarouselDai2"
+    | "MintCarouselFhm0"
+    | "MintCarouselFhm1"
+    | "MintCarouselFhm2";
   invertTheme?: boolean;
-  style?: DetailedHTMLProps<ImgHTMLAttributes<HTMLImageElement>, HTMLImageElement>;
+  style?: CSSProperties;
 }
 
 export const ThemeImage = (props: ThemeImageProps): JSX.Element => {

@@ -150,70 +150,13 @@ export const loadAccountDetails = createAsyncThunk(
       };
     }
 
-    // Contracts
-    const ohmContract = new ethers.Contract(
-      addresses[networkId]["OHM_ADDRESS"] as string,
-      ierc20Abi,
-      provider
-    );
-    const sohmContract = new ethers.Contract(
-      addresses[networkId]["SOHM_ADDRESS"] as string,
-      sOHMv2,
-      provider
-    );
-    const wsohmContract = new ethers.Contract(
-      addresses[networkId]["WSOHM_ADDRESS"] as string,
-      wsOHM,
-      provider
-    );
-    const stakingContract = new ethers.Contract(
-      addresses[networkId]["STAKING_ADDRESS"] as string,
-      OlympusStaking,
-      provider
-    );
     const daiContract = new ethers.Contract(
       addresses[networkId]["DAI_ADDRESS"] as string,
       daiAbi,
       provider
     );
-    // Contract Interactions
-    // const [
-    //   ohmBalance,
-    //   stakeAllowance,
-    //   sohmBalance,
-    //   unstakeAllowance,
-    //   poolAllowance,
-    //   wsohmBalance,
-    //   sohmWrappingAllowance,
-    //   wsohmUnwrappingAllowance,
-    //   daiBalance,
-    //   warmupInfo,
-    // ] = await Promise.all([
-    //   ohmContract['balanceOf'](address),
-    //   ohmContract['allowance'](
-    //     address,
-    //     addresses[networkId]['STAKING_HELPER_ADDRESS']
-    //   ),
-    //   sohmContract['balanceOf'](address),
-    //   sohmContract['allowance'](
-    //     address,
-    //     addresses[networkId]['STAKING_ADDRESS']
-    //   ),
-    //   sohmContract['allowance'](
-    //     address,
-    //     addresses[networkId]['PT_PRIZE_POOL_ADDRESS']
-    //   ),
-    //   wsohmContract['balanceOf'](address),
-    //   sohmContract['allowance'](address, addresses[networkId]['WSOHM_ADDRESS']),
-    //   wsohmContract['allowance'](
-    //     address,
-    //     addresses[networkId]['WSOHM_ADDRESS']
-    //   ),
-    //   daiContract['balanceOf'](address),
-    //   stakingContract['warmupInfo'](address),
-    // ]);
+
     const daiBalance = await daiContract["balanceOf"](address);
-    // const fhmBalance = await ohmContract['balanceOf'](address);
     let usdbBalance = 0;
     if (networkId === 250) {
       const usdbContract = new ethers.Contract(
@@ -223,29 +166,6 @@ export const loadAccountDetails = createAsyncThunk(
       );
       usdbBalance = await usdbContract["balanceOf"](address);
     }
-    // const balance = await sohmContract['balanceForGons'](warmupInfo.gons);
-    // const depositAmount = warmupInfo.deposit;
-    // const warmUpAmount = +ethers.utils.formatUnits(balance, 'gwei');
-    // const expiry = warmupInfo.expiry;
-
-    // if (addresses[networkId].PT_TOKEN_ADDRESS) {
-    //   const poolTokenContract = await new ethers.Contract(addresses[networkId].PT_TOKEN_ADDRESS, ierc20Abi, provider);
-    //   poolBalance = await poolTokenContract["balanceOf"](address);
-    // }
-
-    // for (const fuseAddressKey of ["FUSE_6_SOHM", "FUSE_18_SOHM"]) {
-    //   if (addresses[networkId][fuseAddressKey]) {
-    //     const fsohmContract = await new ethers.Contract(
-    //       addresses[networkId][fuseAddressKey] as string,
-    //       fuseProxy,
-    //       provider,
-    //     );
-    //     fsohmContract.signer;
-    //     const exchangeRate = ethers.utils.formatEther(await fsohmContract.exchangeRateStored());
-    //     const balance = ethers.utils.formatUnits(await fsohmContract["balanceOf"](address), "gwei");
-    //     fsohmBalance += Number(balance) * Number(exchangeRate);
-    //   }
-    // }
 
     return {
       balances: {
@@ -253,18 +173,6 @@ export const loadAccountDetails = createAsyncThunk(
         fhm: ethers.utils.formatUnits(0, 18),
         usdb: ethers.utils.formatUnits(usdbBalance, 18),
       },
-      // staking: {
-      //   ohmStake: +stakeAllowance,
-      //   ohmUnstake: +unstakeAllowance,
-      // },
-      // warmup: {
-      //   depositAmount: +ethers.utils.formatUnits(depositAmount, 'gwei'),
-      //   warmUpAmount,
-      //   expiryBlock: expiry,
-      // },
-      // bonding: {
-      //   daiAllowance: 0,
-      // },
     };
   }
 );
@@ -428,6 +336,64 @@ export const calculateUserBondDetails = createAsyncThunk(
           };
         })
       );
+
+      return {
+        bond: bond.name,
+        displayName: bond.displayName,
+        bondIconSvg: bond.bondIconSvg,
+        isLP: bond.isLP,
+        allowance,
+        balance,
+        userBonds,
+        paymentToken: bond.paymentToken,
+        bondAction: bond.bondAction,
+      };
+    } else if (bond.type === BondType.BOND_USDB) {
+      const [bondDetails, pendingPayout, percentVestedFor] = await Promise.all([
+        bondContract["bondInfo"](address),
+        bondContract["pendingPayoutFor"](address),
+        bondContract["percentVestedFor"](address),
+      ]).then(([bondDetails, pendingPayout, percentVestedFor]) => [
+        bondDetails,
+        ethers.utils.formatUnits(pendingPayout, paymentTokenDecimals),
+        Number(percentVestedFor.div(BigNumber.from("100"))),
+      ]);
+
+      const payout = Number(
+        ethers.utils.formatUnits(bondDetails.payout, orgPaymentTokenDecimals)
+      );
+      const pricePaid = Number(
+        ethers.utils.formatUnits(bondDetails.pricePaid, orgPaymentTokenDecimals)
+      );
+
+      const amount = payout * pricePaid;
+      const rewards = pendingPayout - amount;
+      const bondMaturationBlock =
+        Number(bondDetails["vesting"]) + Number(bondDetails["lastBlock"]);
+
+      // TODO: If extended bonding with discounts is wanted we need to calculate
+      // the estimated time until completion
+      const userBonds =
+        Number(amount) > 0.01
+          ? [
+              {
+                amount: amount.toString(), // TODO can we just assume lp is totally balanced?
+                rewards: rewards.toString(),
+                rewardToken: PaymentToken.USDB,
+                rewardsInUsd: rewards.toString(),
+                interestDue: 0,
+                bondMaturationBlock,
+                pendingPayout,
+                secondsToVest: 0,
+                maturationSeconds: 0,
+                percentVestedFor, // No such thing as percentVestedFor for single sided
+                lpTokenAmount: "0",
+                iLBalance: "0",
+                pendingFHM: "0",
+                pricePaid: Number(ethers.utils.formatUnits(bondDetails["pricePaid"])),
+              } as IUserBond,
+            ]
+          : [];
 
       return {
         bond: bond.name,
