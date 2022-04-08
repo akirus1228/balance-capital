@@ -118,8 +118,8 @@ export const changeApproval = createAsyncThunk(
 
       await approveTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -205,8 +205,8 @@ export const changeFHUDApproval = createAsyncThunk(
 
       await approveTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -299,29 +299,23 @@ export const changeStake = createAsyncThunk(
       await stakeTx.wait();
     } catch (e: any) {
       uaData.approved = false;
-      if (
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
         e.error.code === -32603 &&
         e.error.message.indexOf("ds-math-sub-underflow") >= 0
       ) {
-        dispatch(
-          error(
-            "You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"
-          )
-        );
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
       } else {
-        let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
-        } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
-        }
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -383,29 +377,23 @@ export const changeMint = createAsyncThunk(
       await mintTx.wait();
     } catch (e: any) {
       uaData.approved = false;
-      if (
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
         e.error.code === -32603 &&
         e.error.message.indexOf("ds-math-sub-underflow") >= 0
       ) {
-        dispatch(
-          error(
-            "You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"
-          )
-        );
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
       } else {
-        let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
-        } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
-        }
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -445,8 +433,8 @@ export const changeForfeit = createAsyncThunk(
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -498,8 +486,8 @@ export const changeClaim = createAsyncThunk(
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
