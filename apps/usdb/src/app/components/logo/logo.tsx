@@ -1,20 +1,20 @@
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
-import USDBLogoLight from '../../../assets/images/USDB-logo.svg';
-import USDBLogoDark from '../../../assets/images/USDB-logo-dark.svg';
+import USDBLogoLight from "../../../assets/images/USDB-logo.svg";
+import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
 import { HTMLAttributes } from "react";
 
 /* eslint-disable-next-line */
 export interface LogoProps {
-  style?: HTMLAttributes<HTMLDivElement>
+  style?: HTMLAttributes<HTMLDivElement>;
 }
 
 export function Logo(props: LogoProps) {
   const themeType = useSelector((state: RootState) => state.app.theme);
 
   return (
-    <div style={{...props.style}}>
-      <img src={themeType === 'light' ? USDBLogoLight : USDBLogoDark} alt="BUSD Logo" />
+    <div style={{ ...props.style }}>
+      <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="BUSD Logo" />
     </div>
   );
 }

@@ -26,14 +26,9 @@
           "apps/usdb/src/favicon-32x32.png",
           "apps/usdb/src/mstile-150x150.png",
           "apps/usdb/src/safari-pinned-tab.svg",
-          "apps/usdb/src/site.webmanifest",
-          {
-            "input": "libs/shared/assets/images",
-            "glob": "**/*",
-            "output": "assets/images"
-          }
+          "apps/usdb/src/site.webmanifest"
         ],
-        "styles": ["apps/usdb/src/styles.scss","libs/shared/assets/styles/fonts.scss"],
+        "styles": ["apps/usdb/src/styles.scss"],
         "scripts": [],
         "webpackConfig": "apps/usdb/webpack.config.js"
       },

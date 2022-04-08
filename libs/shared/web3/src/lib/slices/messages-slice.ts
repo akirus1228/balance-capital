@@ -16,7 +16,13 @@ interface MessagesState {
   items: Array<Message>;
 }
 // Adds a message to the store
-const createMessage = function (state: MessagesState, severity: string, title: string, text: string, detail = null) {
+const createMessage = function (
+  state: MessagesState,
+  severity: string,
+  title: string,
+  text: string,
+  detail = null
+) {
   const message: Message = {
     id: nb_messages++,
     severity,
@@ -47,9 +53,9 @@ const messagesSlice = createSlice({
     // Creates an swap message
     multiChainSwap(state, action: PayloadAction<any>) {
       if (state.items.length === 0) {
-        createMessage(state, "info", action.payload.title, '', action.payload);
+        createMessage(state, "info", action.payload.title, "", action.payload);
       } else {
-        const index = state.items.findIndex(item => item?.detail?.type === 'swap');
+        const index = state.items.findIndex((item) => item?.detail?.type === "swap");
         if (index >= 0) {
           state.items[index].detail = action.payload;
         }
@@ -57,8 +63,10 @@ const messagesSlice = createSlice({
     },
     // Closes a message
     close(state, action: PayloadAction<Message>) {
-      state.items = state.items.map(message => {
-        return message.id == action.payload.id ? Object.assign({}, message, { open: false }) : message;
+      state.items = state.items.map((message) => {
+        return message.id == action.payload.id
+          ? Object.assign({}, message, { open: false })
+          : message;
       });
     },
     closeAll(state) {
@@ -66,7 +74,7 @@ const messagesSlice = createSlice({
     },
     // Finds and removes obsolete messages
     handle_obsolete(state) {
-      const activeMessages = state.items.filter(message => {
+      const activeMessages = state.items.filter((message) => {
         return Date.now() - message.created < MESSAGES_MAX_DISPLAY_DURATION;
       });
       if (state.items.length != activeMessages.length) {
@@ -76,7 +84,8 @@ const messagesSlice = createSlice({
   },
 });
 
-export const { error, info, close, handle_obsolete, multiChainSwap, closeAll } = messagesSlice.actions;
+export const { error, info, close, handle_obsolete, multiChainSwap, closeAll } =
+  messagesSlice.actions;
 
 export const messagesReducer = messagesSlice.reducer;
 export default messagesSlice.reducer;

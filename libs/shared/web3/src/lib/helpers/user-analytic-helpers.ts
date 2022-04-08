@@ -1,13 +1,13 @@
 import { EnvHelper } from "./environment";
 
 interface ISegmentData {
-    address: string;
-    value?: string;
-    type: string | null;
-    bondName?: string;
-    approved: boolean;
-    txHash: string | null;
-    country?: string;
+  address: string;
+  value?: string;
+  type: string | null;
+  bondName?: string;
+  approved: boolean;
+  txHash: string | null;
+  country?: string;
 }
 
 /**
@@ -39,7 +39,7 @@ export function segmentUA(data: ISegmentData) {
   const thisWindow = window as any;
   // eslint-disable-next-line no-self-assign
   const analytics = (thisWindow.analytics = thisWindow.analytics);
-  countryLookup().then(country => (data.country = country));
+  countryLookup().then((country) => (data.country = country));
 
   // NOTE (appleseed): the analytics object may not exist (if there is no SEGMENT_API_KEY)
   // Passing in combined data directly so as not to have a nested object

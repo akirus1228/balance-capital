@@ -1,5 +1,5 @@
-import { JsonRpcProvider } from '@ethersproject/providers';
-import { NetworkId } from '../networks';
+import { JsonRpcProvider } from "@ethersproject/providers";
+import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
@@ -17,7 +17,9 @@ export interface IInteractiveAsyncThunk {
   readonly provider: JsonRpcProvider;
 }
 
-export interface IChangeApprovalAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
+export interface IChangeApprovalAsyncThunk
+  extends IBaseAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly token: string;
   readonly address: string;
 }
@@ -42,8 +44,12 @@ export interface IBaseAddressAsyncThunk extends IBaseAsyncThunk {
 
 // Account Slice
 
-export interface ICalcUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseBondAsyncThunk {}
-export interface ICalcAllUserBondDetailsAsyncThunk extends IBaseAddressAsyncThunk, IBaseAllBondsAsyncThunk {}
+export interface ICalcUserBondDetailsAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IBaseBondAsyncThunk {}
+export interface ICalcAllUserBondDetailsAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IBaseAllBondsAsyncThunk {}
 
 // Bond Slice
 
@@ -53,30 +59,42 @@ export interface IBaseBondAsyncThunk extends IBaseAsyncThunk {
 
 // Xfhm Slice
 
-export interface IXfhmChangeApprovalAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+export interface IXfhmChangeApprovalAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly address: string;
   readonly token: string;
 }
 
-export interface IXfhmClaimAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+export interface IXfhmClaimAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly address: string;
 }
 
-export interface IXfhmActionValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+export interface IXfhmActionValueAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly value: string;
   readonly action: string;
 }
 
-export interface IXfhmValueAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+export interface IXfhmValueAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly value: string;
 }
 
-export interface IXfhmAddLiquidityAsyncThunk extends IBaseAddressAsyncThunk, IInteractiveAsyncThunk {
+export interface IXfhmAddLiquidityAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly value: string;
   readonly token: AssetToken;
 }
 
-export interface IApproveBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
+export interface IApproveBondAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly address: string;
 }
 
@@ -96,21 +114,30 @@ export interface IBaseAllBondsAsyncThunk {
   readonly allBonds: Bond[];
 }
 
-export interface IBondAssetAsyncThunk extends IBaseBondAsyncThunk, IValueAsyncThunk, IInteractiveAsyncThunk {
+export interface IBondAssetAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IValueAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly slippage: number;
 }
 
-export interface IRedeemBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
+export interface IRedeemBondAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly address: string;
   readonly autostake: boolean;
 }
 
-export interface IRedeemSingleSidedBondAsyncThunk extends IBaseBondAsyncThunk, IInteractiveAsyncThunk {
+export interface IRedeemSingleSidedBondAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly address: string;
   readonly value: string;
 }
 
-export interface IRedeemAllBondsAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
+export interface IRedeemAllBondsAsyncThunk
+  extends IBaseAsyncThunk,
+    IInteractiveAsyncThunk {
   readonly bonds: Bond[];
   readonly address: string;
   readonly autostake: boolean;
@@ -123,6 +150,6 @@ export interface ICancelBondAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyn
 }
 
 export interface IWrapDetails extends IBaseAsyncThunk {
-    isWrap: boolean;
-    value: string;
+  isWrap: boolean;
+  value: string;
 }

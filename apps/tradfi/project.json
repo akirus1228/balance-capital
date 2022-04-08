@@ -17,14 +17,9 @@
         "tsConfig": "apps/tradfi/tsconfig.app.json",
         "assets": [
           "apps/tradfi/src/favicon.ico",
-          "apps/tradfi/src/assets",
-          {
-            "input": "libs/shared/assets/images",
-            "glob": "**/*",
-            "output": "assets/images"
-          }
+          "apps/tradfi/src/assets"
         ],
-        "styles": ["apps/tradfi/src/styles.scss","libs/shared/assets/styles/fonts.scss"],
+        "styles": ["apps/tradfi/src/styles.scss"],
         "scripts": [],
         "webpackConfig": "apps/tradfi/webpack.config.js"
       },
