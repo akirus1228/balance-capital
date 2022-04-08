@@ -340,9 +340,14 @@ export default function Mint() {
                   variant="contained"
                   disableElevation
                   onClick={handleClick}
+                  disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
                   className={style["mintButton"]}
                 >
-                  Mint USDB
+                  {txnButtonText(
+                    pendingTransactions,
+                    "deposit_" + bond?.name,
+                    "Mint USDB"
+                  )}
                 </Button>
               ) : (
                 <Button
