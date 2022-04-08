@@ -261,7 +261,7 @@ export const calcBondDetails = createAsyncThunk(
     // Circuit breaking for FHUD bonds
     let isCircuitBroken = false;
     let actualMaxBondPrice = maxBondPrice;
-    if (bond.type === BondType.Bond_USDB) {
+    if (bond.type === BondType.BOND_USDB) {
       const soldBondsLimitUsd = terms.soldBondsLimitUsd / Math.pow(10, 18);
       const circuitBreakerCurrentPayoutUsd =
         (await bondContract["circuitBreakerCurrentPayout"]()) / Math.pow(10, 18);
@@ -296,7 +296,7 @@ export const calcBondDetails = createAsyncThunk(
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,
-      isFhud: bond.type === BondType.Bond_USDB,
+      isFhud: bond.type === BondType.BOND_USDB,
       isRiskFree: bond.isRiskFree,
       isCircuitBroken,
     };
@@ -645,7 +645,14 @@ export const redeemOneBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeemOne"](address);
+      if (bond.type === BondType.TRADFI) {
+        redeemTx = await bondContract["redeemOne"](address);
+      } else if (bond.type === BondType.BOND_USDB) {
+        redeemTx = await bondContract["redeem"](address, true);
+      } else {
+        dispatch(error(`Unknown Bond Type`));
+      }
+
       const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
       uaData.txHash = redeemTx.hash;
       dispatch(

@@ -8,8 +8,7 @@ export class DebugHelper {
   private static active = DebugHelper.permissions.reduce(
     (active: { [key: string]: boolean }, permission: string) => {
       // Check if enabled via url
-      // eslint-disable-next-line no-restricted-globals
-      const enabled = ~location.href.indexOf(permission)
+      const enabled = ~window.location.href.indexOf(permission)
         ? !~window.location.href.indexOf(permission + "=false")
         : null;
       // if declared, save config to session storage
@@ -29,8 +28,5 @@ export class DebugHelper {
   }
 }
 
-console.debug = DebugHelper.isActive("enable-debug")
-  ? console.log
-  : () => {
-      /* do nothing */
-    };
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+console.debug = DebugHelper.isActive("enable-debug") ? console.log : () => {};

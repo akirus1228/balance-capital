@@ -162,7 +162,8 @@ export const MyAccountActiveInvestmentsCards = ({
                     </Button>
                   </Link>
                 )}
-                {investment.type === BondType.TRADFI &&
+                {(investment.type === BondType.TRADFI ||
+                  investment.type === BondType.BOND_USDB) &&
                   (investment.percentVestedFor >= 100 ? (
                     <Button
                       variant="contained"

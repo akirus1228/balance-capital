@@ -59,7 +59,7 @@ export function useBonds(networkId: NetworkId) {
       .flatMap((bond) => {
         // (4, 4) bonds include additional rebase discount
         if (
-          bond.type === BondType.Bond_44 &&
+          bond.type === BondType.BOND_44 &&
           stakingRebase != null &&
           fhmMarketPrice != null
         ) {
