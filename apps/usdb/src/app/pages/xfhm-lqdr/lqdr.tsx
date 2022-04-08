@@ -1,5 +1,3 @@
-// TODO: remove the eslint-disable from this file and bring up to compliance
-/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Box, Button, Grid, Skeleton, Typography } from "@mui/material";
 import { formatAmount, truncateDecimals } from "@fantohm/shared-helpers";
 import {
@@ -16,6 +14,7 @@ import {
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import { formatCurrency } from "@fantohm/shared-helpers";
+import { AnyAction, ThunkDispatch } from "@reduxjs/toolkit";
 import { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { ethers } from "ethers";
@@ -28,7 +27,7 @@ import "./xfhm-lqdr.module.scss";
 
 export const LqdrPage = (): JSX.Element => {
   const { chainId, address, provider } = useWeb3Context();
-  const dispatch = useDispatch();
+  const dispatch = useDispatch() as ThunkDispatch<unknown, unknown, AnyAction>;
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -88,7 +87,7 @@ export const LqdrPage = (): JSX.Element => {
     if (!assetTokens || !assetTokens?.length || !provider || !chainId) {
       return 0;
     }
-    const maxAmount = await dispatch(
+    return await dispatch(
       calcAssetAmount({
         address,
         action: "calculate-xfhm",
@@ -96,16 +95,14 @@ export const LqdrPage = (): JSX.Element => {
         provider,
         networkId: chainId,
       })
-    );
-    // @ts-ignore
-    return maxAmount?.payload;
+    ).unwrap();
   };
 
-  const calcBTokenAmount = async (aTokenAmount: number): Promise<any> => {
+  const calcBTokenAmount = async (aTokenAmount: number): Promise<number> => {
     if (!assetTokens || !assetTokens?.length || !provider || !chainId) {
       return 0;
     }
-    const maxAmount = await dispatch(
+    return await dispatch(
       calcAssetAmount({
         address,
         action: "calculate-lqdr",
@@ -113,9 +110,7 @@ export const LqdrPage = (): JSX.Element => {
         provider,
         networkId: chainId,
       })
-    );
-    // @ts-ignore
-    return maxAmount?.payload;
+    ).unwrap();
   };
 
   const calcUsdbAmount = async (isSubscribed: boolean) => {
@@ -136,14 +131,11 @@ export const LqdrPage = (): JSX.Element => {
           provider,
           networkId: chainId,
         })
-      );
+      ).unwrap();
       if (isSubscribed) {
-        // @ts-ignore
-        setUsdbAmount(usdbAmount?.payload.toString());
+        setUsdbAmount(usdbAmount || 0);
         setUsdbAmountInUsd(
-          // @ts-ignore
-          (Number(details?.usdbPrice || 0) * Number(usdbAmount?.payload.toString())) /
-            Math.pow(10, 18)
+          (Number(details?.usdbPrice || 0) * (usdbAmount || 0)) / Math.pow(10, 18)
         );
       }
     } catch (e: any) {
@@ -160,7 +152,6 @@ export const LqdrPage = (): JSX.Element => {
       return;
     }
     let bTokenMaxAmount = await calcBTokenAmount(aToken?.balance || 0);
-    // @ts-ignore
     bTokenMaxAmount = formatAmount(bTokenMaxAmount, bToken.decimals, 2, true);
     if (
       bToken.balance &&
@@ -205,8 +196,10 @@ export const LqdrPage = (): JSX.Element => {
     if (!assetTokens || !assetTokens?.length) {
       return;
     }
-    setAToken(assetTokens[0]);
-    setBToken(assetTokens[1]);
+    if (isSubscribed) {
+      setAToken(assetTokens[0]);
+      setBToken(assetTokens[1]);
+    }
     return () => {
       isSubscribed = false;
     };
