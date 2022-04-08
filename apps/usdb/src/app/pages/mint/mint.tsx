@@ -58,10 +58,10 @@ export default function Mint() {
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
   const [bond, setBond] = useState(
-    allBonds.filter((bond) => bond.type === BondType.BOND_USDB)[0] as Bond
+    allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond
   );
   const [usdbBondData, setUsdbBondData] = useState(
-    bonds.filter((bond) => bond.type === BondType.BOND_USDB)[0] as IAllBondData
+    bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData
   );
   const [allowance, setAllowance] = React.useState(false);
   const [quantity, setQuantity] = useState("");
@@ -254,7 +254,7 @@ export default function Mint() {
             }}
           >
             <Carousel
-              sx={{ width: "100%", height: { xs: "270px", md: "550px" } }}
+              sx={{ width: "100%", height: { xs: "330px", md: "550px" } }}
               indicatorContainerProps={{
                 style: {
                   position: "absolute",
