@@ -645,7 +645,14 @@ export const redeemOneBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeemOne"](address);
+      if (bond.type === BondType.TRADFI) {
+        redeemTx = await bondContract["redeemOne"](address);
+      } else if (bond.type === BondType.BOND_USDB) {
+        redeemTx = await bondContract["redeem"](address, true);
+      } else {
+        dispatch(error(`Unknown Bond Type`));
+      }
+
       const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
       uaData.txHash = redeemTx.hash;
       dispatch(
