@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   bondAsset,
@@ -18,8 +18,19 @@ import {
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import { DaiToken, FHMToken } from "@fantohm/shared/images";
-import { Box, Grid, Button, Paper, OutlinedInput, InputAdornment, Typography, Icon } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Button,
+  Paper,
+  OutlinedInput,
+  InputAdornment,
+  Typography,
+  Icon,
+  useMediaQuery
+} from "@mui/material";
 import SettingsOutlinedIcon from "@mui/icons-material/SettingsOutlined";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import Carousel from "react-material-ui-carousel";
 
 import style from "./mint.module.scss";
@@ -44,7 +55,6 @@ export default function Mint() {
   const dispatch = useDispatch();
   const [tabState, setTabState] = React.useState(true);
   const [daiPrice, setDaiPrice] = React.useState(0);
-  const [value, setValue] = React.useState("");
   const [fhmPrice, setFhmPrice] = React.useState(0);
   const { bonds } = useBonds(chainId || 250);
   const [bond, setBond] = useState(
@@ -58,15 +68,10 @@ export default function Mint() {
   const [image, setImage] = useState(DaiToken);
   const themeType = useSelector((state: RootState) => state.app.theme);
   const tokenBalance = useSelector((state: any) => {
-    // return trim(Number(state.account.balances.dai), 2);
     return state.account.balances;
   });
 
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
-
-  const [usdbBond, setUsdbBond] = useState(accountBonds[usdbBondData?.name]);
+  const isTabletScreen = useMediaQuery("(max-width: 970px)");
 
   const token = [
     {
@@ -146,7 +151,7 @@ export default function Mint() {
       setFhmPrice(await getTokenPrice("fantohm"));
     }
 
-    fetchPrice();
+    fetchPrice().then();
   }, []);
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -195,21 +200,18 @@ export default function Mint() {
   useEffect(() => {
     setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
     setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-    setUsdbBond(accountBonds["usdbBuy"]);
   }, [usdbBondData?.userBonds]);
 
   function setBondState(bool: boolean) {
     if (bool) {
       setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
       setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
-      setUsdbBond(accountBonds["usdbBuy"]);
       setImage(DaiToken);
     } else {
       setUsdbBondData(
         bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData
       );
       setBond(allBonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as Bond);
-      setUsdbBond(accountBonds["usdbFhmBurn"]);
       setImage(FHMToken);
     }
     setTabState(bool);
@@ -317,7 +319,7 @@ export default function Mint() {
                     src={image}
                     className={style["daiIcon"]}
                     style={{ marginRight: "10px" }}
-
+                    alt={selectedToken.title}
                   />
                   <div className={style["tokenInfo"]}>
                     <div className={style["tokenName"]}>{selectedToken.name}</div>
