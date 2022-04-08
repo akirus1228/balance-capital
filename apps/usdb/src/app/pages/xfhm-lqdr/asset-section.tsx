@@ -29,8 +29,9 @@ export const AssetSection = (props: any): JSX.Element => {
           props?.token.decimals
         );
         const maxAmount = await props?.calcATokenAmount(bTokenAmount);
+        console.log('maxAmount: ', maxAmount.toString());
         props?.setATokenAmount(
-          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
+          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9, true)
         );
       } else {
         props?.setATokenAmount(e.target.value);
@@ -40,7 +41,7 @@ export const AssetSection = (props: any): JSX.Element => {
         );
         const maxAmount = await props?.calcBTokenAmount(aTokenAmount);
         props?.setBTokenAmount(
-          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
+          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9, true)
         );
       }
     } catch (e) {
