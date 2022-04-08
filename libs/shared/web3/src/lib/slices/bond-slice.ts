@@ -157,7 +157,7 @@ export interface IBondDetails {
   isRiskFree: boolean;
   isFhud: boolean;
   bondDiscountFromRebase?: number;
-  isCircuitBroken: boolean;
+  isCircuitBroken?: boolean;
 }
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
