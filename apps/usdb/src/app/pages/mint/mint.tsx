@@ -80,7 +80,8 @@ export default function Mint() {
     return state.account.bonds;
   });
 
-  const ableToBond = bond.isAvailable[chainId ?? 250] && !bond?.isCircuitBroken && bond.isPurchasable;
+  const ableToBond =
+    bond.isAvailable[chainId ?? 250] && !bond?.isCircuitBroken && bond.isPurchasable;
   const selectedAccountBond = accountBonds[bond.name];
 
   const isTabletScreen = useMediaQuery("(max-width: 970px)");
