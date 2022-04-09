@@ -186,7 +186,7 @@ export const MyAccountActiveInvestmentsTable = ({
                       </Button>
                     </Link>
                   )}
-                  {investment.type === BondType.TRADFI &&
+                  {[BondType.TRADFI, BondType.BOND_USDB].includes(investment.type) &&
                     (investment.percentVestedFor >= 100 ? (
                       <Button
                         variant="contained"

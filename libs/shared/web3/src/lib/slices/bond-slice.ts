@@ -120,8 +120,8 @@ export const changeApproval = createAsyncThunk(
       );
       await approveTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -157,7 +157,7 @@ export interface IBondDetails {
   isRiskFree: boolean;
   isFhud: boolean;
   bondDiscountFromRebase?: number;
-  isCircuitBroken: boolean;
+  isCircuitBroken?: boolean;
 }
 export const calcBondDetails = createAsyncThunk(
   "bonding/calcBondDetails",
@@ -261,7 +261,7 @@ export const calcBondDetails = createAsyncThunk(
     // Circuit breaking for FHUD bonds
     let isCircuitBroken = false;
     let actualMaxBondPrice = maxBondPrice;
-    if (bond.type === BondType.Bond_USDB) {
+    if (bond.type === BondType.BOND_USDB) {
       const soldBondsLimitUsd = terms.soldBondsLimitUsd / Math.pow(10, 18);
       const circuitBreakerCurrentPayoutUsd =
         (await bondContract["circuitBreakerCurrentPayout"]()) / Math.pow(10, 18);
@@ -296,7 +296,7 @@ export const calcBondDetails = createAsyncThunk(
       maxBondPrice: actualMaxBondPrice,
       bondPrice,
       marketPrice: paymentTokenMarketPrice,
-      isFhud: bond.type === BondType.Bond_USDB,
+      isFhud: bond.type === BondType.BOND_USDB,
       isRiskFree: bond.isRiskFree,
       isCircuitBroken,
     };
@@ -371,25 +371,23 @@ export const bondAsset = createAsyncThunk(
         }
       }
     } catch (e: any) {
-      if (
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
         e.error.code === -32603 &&
         e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
       ) {
         dispatch(error("Maximum daily limit for bond reached."));
       } else {
-        let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
-        } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
-        }
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
     } finally {
       if (bondTx) {
@@ -402,7 +400,7 @@ export const bondAsset = createAsyncThunk(
 );
 
 export const redeemSingleSidedBond = createAsyncThunk(
-  "bonding/redeemBond",
+  "bonding/redeemSingleSidedBond",
   async (
     { value, address, bond, networkId, provider }: IRedeemSingleSidedBondAsyncThunk,
     { dispatch }
@@ -411,8 +409,6 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(error("Please connect your wallet!"));
       return;
     }
-    console.log("value: ", value);
-
     const signer = provider.getSigner();
     const bondContract = bond.getContractForBondForWrite(networkId, signer);
 
@@ -463,8 +459,8 @@ export const redeemSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -487,7 +483,7 @@ export const redeemSingleSidedBond = createAsyncThunk(
 );
 
 export const redeemSingleSidedILProtection = createAsyncThunk(
-  "bonding/redeemBond",
+  "bonding/redeemSingleSidedILProtection",
   async ({ address, bond, networkId, provider }: IRedeemBondAsyncThunk, { dispatch }) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
@@ -523,28 +519,94 @@ export const redeemSingleSidedILProtection = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      if (e.error.code === -32603 && e.error.message.indexOf("CLAIMING_TOO_SOON") >= 0) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
+      ) {
         dispatch(error("Maximum daily limit for bond reached."));
       } else {
-        let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
-        } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
-        }
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
     } finally {
       if (redeemTx) {
         segmentUA(uaData);
         dispatch(clearPendingTxn(redeemTx.hash));
         dispatch(info("IL Redeem completed."));
+      }
+    }
+  }
+);
+
+export const redeemBondUsdb = createAsyncThunk(
+  "bonding/redeemBondUsdb",
+  async ({ address, bond, networkId, provider }: IRedeemBondAsyncThunk, { dispatch }) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+
+    let redeemTx;
+    const uaData = {
+      address: address,
+      type: "Redeem",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      redeemTx = await bondContract["redeem"](address, true);
+      const pendingTxnType = "redeem_" + bond.name;
+      uaData.txHash = redeemTx.hash;
+      dispatch(
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: pendingTxnType,
+        })
+      );
+
+      await redeemTx.wait();
+      await dispatch(calculateUserBondDetails({ address, bond, networkId }));
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: any) {
+      uaData.approved = false;
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("CIRCUIT_BREAKER_ACTIVE") >= 0
+      ) {
+        dispatch(error("Maximum daily limit for bond reached."));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    } finally {
+      if (redeemTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Redeem completed."));
       }
     }
   }
@@ -598,8 +660,8 @@ export const claimSingleSidedBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -645,7 +707,14 @@ export const redeemOneBond = createAsyncThunk(
       txHash: null,
     };
     try {
-      redeemTx = await bondContract["redeemOne"](address);
+      if (bond.type === BondType.TRADFI) {
+        redeemTx = await bondContract["redeemOne"](address);
+      } else if (bond.type === BondType.BOND_USDB) {
+        redeemTx = await bondContract["redeem"](address, true);
+      } else {
+        dispatch(error(`Unknown Bond Type`));
+      }
+
       const pendingTxnType = "redeem_bond_" + bond.name + (autostake ? "_autostake" : "");
       uaData.txHash = redeemTx.hash;
       dispatch(
@@ -662,8 +731,8 @@ export const redeemOneBond = createAsyncThunk(
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
       uaData.approved = false;
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -722,8 +791,8 @@ export const redeemAllBonds = createAsyncThunk(
 
       dispatch(getBalances({ address, networkId }));
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -775,8 +844,8 @@ export const cancelBond = createAsyncThunk(
 
       dispatch(calculateUserBondDetails({ address, bond, networkId }));
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
