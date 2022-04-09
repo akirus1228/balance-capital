@@ -51,11 +51,12 @@ export const XfhmPage = (): JSX.Element => {
       return;
     }
     if (action === "stake") {
-      if (isNaN(Number(stakeQuantity)) || Number(stakeQuantity) === 0 || stakeQuantity === "") {
+      if (Number(stakeQuantity) === 0 || stakeQuantity === "") {
         dispatch(error("Please enter a value!"));
         return;
       }
-      if (Number(stakeQuantity) > formatAmount(details?.fhmBalance || 0, "gwei", 4)) {
+      const balance = formatAmount(details?.fhmBalance || 0, "gwei", 4);
+      if (Number(stakeQuantity) > balance) {
         dispatch(error("You cannot stake more than your FHM balance."));
         return;
       }
@@ -69,11 +70,12 @@ export const XfhmPage = (): JSX.Element => {
         })
       );
     } else {
-      if (isNaN(Number(unstakeQuantity)) || Number(unstakeQuantity) === 0 || unstakeQuantity === "") {
+      if (Number(unstakeQuantity) === 0 || unstakeQuantity === "") {
         dispatch(error("Please enter a value!"));
         return;
       }
-      if (Number(unstakeQuantity) > formatAmount(details?.depositAmount || 0, "gwei", 4)) {
+      const depositAmount = formatAmount(details?.depositAmount || 0, "gwei", 4);
+      if (Number(unstakeQuantity) > depositAmount) {
         dispatch(error("You cannot unstake more than your FHM balance."));
         return;
       }
