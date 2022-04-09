@@ -442,9 +442,32 @@ export default function Mint() {
                   Connect Wallet
                 </Button>
               ) : !ableToBond ? (
-                <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
-                  Sold Out
-                </Button>
+                selectedAccountBond?.userBonds.length > 0 &&
+                Number(selectedAccountBond?.userBonds[0].amount) > 0 ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    id="bond-btn"
+                    disableElevation
+                    onClick={handleRedeem}
+                    disabled={isPendingTxn(pendingTransactions, "redeem_" + bond?.name)}
+                  >
+                    {txnButtonText(
+                      pendingTransactions,
+                      "redeem_" + bond?.name,
+                      "Sold Out"
+                    )}
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    id="bond-btn"
+                    disabled={true}
+                  >
+                    Sold Out
+                  </Button>
+                )
               ) : allowance ? (
                 <Box display="flex" flexDirection="column" alignItems="center">
                   <Button
