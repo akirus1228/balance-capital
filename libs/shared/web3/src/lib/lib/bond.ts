@@ -71,6 +71,7 @@ interface BondOpts {
   apy?: number;
   roi: number;
   days: number;
+  isCircuitBroken?: boolean;
 }
 
 // Technically only exporting for the interface
@@ -94,6 +95,7 @@ export abstract class Bond {
   readonly apy?: number;
   readonly roi: number;
   readonly days: number; // FIXME read from vestingTermSeconds
+  isCircuitBroken?: boolean;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: boolean;
@@ -123,6 +125,7 @@ export abstract class Bond {
     this.apr = bondOpts.apr;
     this.apy = bondOpts.apy;
     this.days = bondOpts.days;
+    this.isCircuitBroken = false;
   }
 
   hasBond(networkId: NetworkId): boolean {

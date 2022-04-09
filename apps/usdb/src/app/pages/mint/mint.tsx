@@ -13,7 +13,9 @@ import {
   useWeb3Context,
   getTokenPrice,
   allBonds,
-  Bond, redeemBondUsdb, IRedeemBondAsyncThunk
+  Bond,
+  redeemBondUsdb,
+  IRedeemBondAsyncThunk,
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import {
@@ -30,7 +32,7 @@ import {
   DarkCarouselFhm2,
   LightCarouselFhm0,
   LightCarouselFhm1,
-  LightCarouselFhm2
+  LightCarouselFhm2,
 } from "@fantohm/shared/images";
 import {
   Box,
@@ -78,6 +80,8 @@ export default function Mint() {
     return state.account.bonds;
   });
 
+  const ableToBond =
+    bond.isAvailable[chainId ?? 250] && !bond?.isCircuitBroken && bond.isPurchasable;
   const selectedAccountBond = accountBonds[bond.name];
 
   const isTabletScreen = useMediaQuery("(max-width: 970px)");
@@ -92,32 +96,32 @@ export default function Mint() {
         {
           text: "Mint USDB to unlock the full potential of DeFi.",
           location: "center",
-          img: DarkCarouselDai0
+          img: DarkCarouselDai0,
         },
         {
           text: "USDB is dependable for business solutions and stable for investor confidence.",
-          img: DarkCarouselDai1
+          img: DarkCarouselDai1,
         },
         {
           text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
-          img: DarkCarouselDai2
-        }
+          img: DarkCarouselDai2,
+        },
       ],
       lightBanner: [
         {
           text: "Mint USDB to unlock the full potential of DeFi.",
           location: "center",
-          img: LightCarouselDai0
+          img: LightCarouselDai0,
         },
         {
           text: "USDB is dependable for business solutions and stable for investor confidence.",
-          img: LightCarouselDai1
+          img: LightCarouselDai1,
         },
         {
           text: "USDB is an algorithmic stablecoin catered to the needs DeFi of savvy investors, produced by a team obsessed with adoption.",
-          img: LightCarouselDai2
-        }
-      ]
+          img: LightCarouselDai2,
+        },
+      ],
     },
     {
       title: "Mint with FHM",
@@ -127,32 +131,32 @@ export default function Mint() {
       darkBanner: [
         {
           text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
-          img: DarkCarouselFhm0
+          img: DarkCarouselFhm0,
         },
         {
           text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
-          img: DarkCarouselFhm1
+          img: DarkCarouselFhm1,
         },
         {
           text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
-          img: DarkCarouselFhm2
-        }
+          img: DarkCarouselFhm2,
+        },
       ],
       lightBanner: [
         {
           text: "Minting USDB with FHM helps the protocol in sustaining long term growth potential and its a long term investment strategy",
-          img: LightCarouselFhm0
+          img: LightCarouselFhm0,
         },
         {
           text: "Using FHM to mint USDB helps utilize idle assets in the treasury for asset purchases without affecting market price",
-          img: LightCarouselFhm1
+          img: LightCarouselFhm1,
         },
         {
           text: "Minted by burning FHM, an asset built to capture value during all market conditions.",
-          img: LightCarouselFhm2
-        }
-      ]
-    }
+          img: LightCarouselFhm2,
+        },
+      ],
+    },
   ];
 
   useEffect(() => {
@@ -180,7 +184,7 @@ export default function Mint() {
     if (tabState) {
       setAllowance(
         (bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance >
-        0
+          0
       );
     } else {
       setAllowance(
@@ -207,7 +211,7 @@ export default function Mint() {
           value: quantity.toString(),
           provider,
           networkId: chainId,
-          bond: bond
+          bond: bond,
         } as IBondAssetAsyncThunk)
       );
     }
@@ -219,7 +223,7 @@ export default function Mint() {
         address,
         provider,
         networkId: chainId,
-        bond: bond
+        bond: bond,
       } as IRedeemBondAsyncThunk)
     );
   }
@@ -249,7 +253,7 @@ export default function Mint() {
 
   const goToMyAccount = () => {
     setTimeout(() => navigate("/my-account"), 200);
-  }
+  };
 
   return (
     <Box className={style["hero"]}>
@@ -261,7 +265,7 @@ export default function Mint() {
           style={{
             borderBottom: `${
               tabState ? `solid 4px ${themeType === "light" ? "black" : "white"}` : "none"
-            }`
+            }`,
           }}
         >
           Mint with DAI
@@ -273,7 +277,7 @@ export default function Mint() {
           style={{
             borderBottom: `${
               tabState ? "none" : `solid 4px ${themeType === "light" ? "black" : "white"}`
-            }`
+            }`,
           }}
         >
           Mint with FHM
@@ -285,7 +289,7 @@ export default function Mint() {
             className={style["subCardBorder"]}
             sx={{
               borderRadius: "20px",
-              background: `${themeType === "light" ? "white" : "black"}`
+              background: `${themeType === "light" ? "white" : "black"}`,
             }}
           >
             <Carousel
@@ -294,18 +298,18 @@ export default function Mint() {
                 style: {
                   position: "absolute",
                   bottom: "15px",
-                  zIndex: "1000"
-                }
+                  zIndex: "1000",
+                },
               }}
               indicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "#877979" : "#808080"
-                }
+                  color: themeType === "light" ? "#877979" : "#808080",
+                },
               }}
               activeIndicatorIconButtonProps={{
                 style: {
-                  color: themeType === "light" ? "black" : "white"
-                }
+                  color: themeType === "light" ? "black" : "white",
+                },
               }}
             >
               {selectedToken[themeType === "light" ? "lightBanner" : "darkBanner"].map(
@@ -323,8 +327,8 @@ export default function Mint() {
                       height: {
                         xs: "330px",
                         md: "550px",
-                        borderRadius: "20px"
-                      }
+                        borderRadius: "20px",
+                      },
                     }}
                   >
                     <Box
@@ -337,7 +341,7 @@ export default function Mint() {
                         paddingBottom:
                           item?.location === "center"
                             ? "0"
-                            : `${isTabletScreen ? "35px" : "100px"}`
+                            : `${isTabletScreen ? "35px" : "100px"}`,
                       }}
                     >
                       <Box display="flex">
@@ -346,7 +350,7 @@ export default function Mint() {
                           fontSize={isTabletScreen ? "small" : "medium"}
                           sx={{
                             mt: `${isTabletScreen ? "1px" : "3px"}`,
-                            mr: `${isTabletScreen ? "5px" : "10px"}`
+                            mr: `${isTabletScreen ? "5px" : "10px"}`,
                           }}
                         />
                         <Typography
@@ -365,7 +369,10 @@ export default function Mint() {
         </Grid>
         <Grid item md={6} sx={{ width: "100%" }}>
           <Paper className={`${style["subCard"]} ${style["subCardBorder"]}`}>
-            <SettingsOutlinedIcon onClick={goToMyAccount} className={style["settingIcon"]} />
+            <SettingsOutlinedIcon
+              onClick={goToMyAccount}
+              className={style["settingIcon"]}
+            />
             <div className={style["subTitle"]}>{selectedToken.title}</div>
             <Grid container spacing={1}>
               <Grid item md={4} xs={12}>
@@ -400,9 +407,9 @@ export default function Mint() {
                     inputProps={{
                       classes: {
                         notchedOutline: {
-                          border: "none"
-                        }
-                      }
+                          border: "none",
+                        },
+                      },
                     }}
                     startAdornment={
                       <InputAdornment position="end">
@@ -434,7 +441,7 @@ export default function Mint() {
                 >
                   Connect Wallet
                 </Button>
-              ) : !bond?.isAvailable[chainId ?? 250] ? (
+              ) : !ableToBond ? (
                 <Button variant="contained" color="primary" id="bond-btn" disabled={true}>
                   Sold Out
                 </Button>
@@ -448,7 +455,7 @@ export default function Mint() {
                     disabled={isPendingTxn(pendingTransactions, "deposit_" + bond?.name)}
                     className={style["mintButton"]}
                     sx={{
-                      mb: "20px"
+                      mb: "20px",
                     }}
                   >
                     {txnButtonText(
@@ -457,14 +464,17 @@ export default function Mint() {
                       "Mint USDB"
                     )}
                   </Button>
-                  {
-                    selectedAccountBond?.userBonds.length > 0 && Number(selectedAccountBond?.userBonds[0].amount) > 0 && (
+                  {selectedAccountBond?.userBonds.length > 0 &&
+                    Number(selectedAccountBond?.userBonds[0].amount) > 0 && (
                       <Button
                         color="primary"
                         variant="contained"
                         disableElevation
                         onClick={handleRedeem}
-                        disabled={isPendingTxn(pendingTransactions, "redeem_" + bond?.name)}
+                        disabled={isPendingTxn(
+                          pendingTransactions,
+                          "redeem_" + bond?.name
+                        )}
                         className={style["mintButton"]}
                       >
                         {txnButtonText(
@@ -473,8 +483,7 @@ export default function Mint() {
                           "Redeem"
                         )}
                       </Button>
-                    )
-                  }
+                    )}
                 </Box>
               ) : (
                 <Button
