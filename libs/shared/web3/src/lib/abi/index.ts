@@ -47,27 +47,27 @@ import full_wsOHM from './wsOHM.json';
 import full_xFhm from './xFhm.json';
 
 // reserves
-import full_DAIContract from './reserves/DAIContract.json';
-import full_OhmDai from './reserves/OhmDai.json';
-import full_OhmEth from './reserves/OhmEth.json';
-import full_OhmFrax from './reserves/OhmFrax.json';
-import full_OhmLusd from './reserves/OhmLusd.json';
+import full_DAIContract from "./reserves/DAIContract.json";
+import full_OhmDai from "./reserves/OhmDai.json";
+import full_OhmEth from "./reserves/OhmEth.json";
+import full_OhmFrax from "./reserves/OhmFrax.json";
+import full_OhmLusd from "./reserves/OhmLusd.json";
 
 // 33-together
-import full_AwardAbi from './33-together/AwardAbi.json';
-import full_AwardAbi2 from './33-together/AwardAbi2.json';
-import full_PrizePoolAbi from './33-together/PrizePoolAbi.json';
-import full_PrizePoolAbi2 from './33-together/PrizePoolAbi2.json';
+import full_AwardAbi from "./33-together/AwardAbi.json";
+import full_AwardAbi2 from "./33-together/AwardAbi2.json";
+import full_PrizePoolAbi from "./33-together/PrizePoolAbi.json";
+import full_PrizePoolAbi2 from "./33-together/PrizePoolAbi2.json";
 
 // bonds
-import full_BondDepository from './bonds/BondDepository.json';
-import full_BondsBondStakingDepository from './bonds/BondStakingDepository.json';
-import full_FhudABondDepository from './bonds/FhudABondDepository.json';
-import full_FhudBBondDepository from './bonds/FhudBBondDepository.json';
-import full_SingleSidedLPBondDepository from './bonds/SingleSidedLPBondDepository.json';
-import full_TradFiBondDepository from './bonds/TradFiBondDepository.json';
-import full_UsdbFhmBurnBondDepository from './bonds/UsdbFhmBurnBondDepository.json';
-import full_UsdbABondDepository from './bonds/UsdbABondDepository.json';
+import full_BondDepository from "./bonds/BondDepository.json";
+import full_BondsBondStakingDepository from "./bonds/BondStakingDepository.json";
+import full_FhudABondDepository from "./bonds/FhudABondDepository.json";
+import full_FhudBBondDepository from "./bonds/FhudBBondDepository.json";
+import full_SingleSidedLPBondDepository from "./bonds/SingleSidedLPBondDepository.json";
+import full_TradFiBondDepository from "./bonds/TradFiBondDepository.json";
+import full_UsdbFhmBurnBondDepository from "./bonds/UsdbFhmBurnBondDepository.json";
+import full_UsdbABondDepository from "./bonds/UsdbABondDepository.json";
 
 export const balancerVaultAbi = full_BalancerVault.abi;
 export const balancerWeightedPoolAbi = full_BalancerWeightedPool.abi;

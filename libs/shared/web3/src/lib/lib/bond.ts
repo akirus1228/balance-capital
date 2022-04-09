@@ -21,9 +21,9 @@ export enum BondAssetType {
 }
 
 export enum BondType {
-  Bond_11 = 0,
-  Bond_44= 1,
-  Bond_USDB = 2,
+  BOND_11 = 0,
+  BOND_44 = 1,
+  BOND_USDB = 2,
   TRADFI = 3,
   SINGLE_SIDED = 4,
   SINGLE_SIDED_V1 = 5,
@@ -71,6 +71,7 @@ interface BondOpts {
   apy?: number;
   roi: number;
   days: number;
+  isCircuitBroken?: boolean;
 }
 
 // Technically only exporting for the interface
@@ -94,6 +95,7 @@ export abstract class Bond {
   readonly apy?: number;
   readonly roi: number;
   readonly days: number; // FIXME read from vestingTermSeconds
+  isCircuitBroken?: boolean;
 
   // The following two fields will differ on how they are set depending on bond type
   abstract isLP: boolean;
@@ -123,6 +125,7 @@ export abstract class Bond {
     this.apr = bondOpts.apr;
     this.apy = bondOpts.apy;
     this.days = bondOpts.days;
+    this.isCircuitBroken = false;
   }
 
   hasBond(networkId: NetworkId): boolean {

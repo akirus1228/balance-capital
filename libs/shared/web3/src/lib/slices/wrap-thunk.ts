@@ -6,9 +6,14 @@ import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances } from "./account-slice";
 import { error, info } from "./messages-slice";
-import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError, IWrapDetails } from "./interfaces";
+import {
+  IActionValueAsyncThunk,
+  IChangeApprovalAsyncThunk,
+  IJsonRPCError,
+  IWrapDetails,
+} from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";
-import { chains } from "../providers"
+import { chains } from "../providers";
 
 interface IUAData {
   address: string;
@@ -18,7 +23,11 @@ interface IUAData {
   type: string | null;
 }
 
-function alreadyApprovedToken(token: string, sohmWrappingAllowance: BigNumber, wsohmUnwrappingAllowance: BigNumber) {
+function alreadyApprovedToken(
+  token: string,
+  sohmWrappingAllowance: BigNumber,
+  wsohmUnwrappingAllowance: BigNumber
+) {
   // set defaults
   const bigZero = BigNumber.from("0");
   let applicableAllowance = bigZero;
@@ -36,21 +45,37 @@ function alreadyApprovedToken(token: string, sohmWrappingAllowance: BigNumber, w
   return false;
 }
 
-
 export const changeApproval = createAsyncThunk(
   "wrap/changeApproval",
-  async ({ token, provider, address, networkId }: IChangeApprovalAsyncThunk, { dispatch }) => {
+  async (
+    { token, provider, address, networkId }: IChangeApprovalAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, signer);
-    const wsohmContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, ierc20Abi, signer);
+    const sohmContract = new ethers.Contract(
+      addresses[networkId]["SOHM_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
+    const wsohmContract = new ethers.Contract(
+      addresses[networkId]["WSOHM_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
     let approveTx;
-    let sohmWrappingAllowance = await sohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]);
-    let wsohmUnwrappingAllowance = await wsohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]);
+    let sohmWrappingAllowance = await sohmContract["allowance"](
+      address,
+      addresses[networkId]["WSOHM_ADDRESS"]
+    );
+    let wsohmUnwrappingAllowance = await wsohmContract["allowance"](
+      address,
+      addresses[networkId]["WSOHM_ADDRESS"]
+    );
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, sohmWrappingAllowance, wsohmUnwrappingAllowance)) {
@@ -61,7 +86,7 @@ export const changeApproval = createAsyncThunk(
             sohmWrappingAllowance: +sohmWrappingAllowance,
             wsohmUnwrappingAllowance: +wsohmUnwrappingAllowance,
           },
-        }),
+        })
       );
     }
 
@@ -70,12 +95,12 @@ export const changeApproval = createAsyncThunk(
         // won't run if sohmWrappingAllowance > 0
         approveTx = await sohmContract["approve"](
           addresses[networkId]["WSOHM_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       } else if (token === "wsfhm") {
         approveTx = await wsohmContract["approve"](
           addresses[networkId]["WSOHM_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       }
 
@@ -85,8 +110,8 @@ export const changeApproval = createAsyncThunk(
 
       await approveTx.wait();
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -106,8 +131,14 @@ export const changeApproval = createAsyncThunk(
     }
 
     // go get fresh allowances
-    sohmWrappingAllowance = await sohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]);
-    wsohmUnwrappingAllowance = await wsohmContract["allowance"](address, addresses[networkId]["WSOHM_ADDRESS"]);
+    sohmWrappingAllowance = await sohmContract["allowance"](
+      address,
+      addresses[networkId]["WSOHM_ADDRESS"]
+    );
+    wsohmUnwrappingAllowance = await wsohmContract["allowance"](
+      address,
+      addresses[networkId]["WSOHM_ADDRESS"]
+    );
 
     return dispatch(
       fetchAccountSuccess({
@@ -115,21 +146,28 @@ export const changeApproval = createAsyncThunk(
           sohmWrappingAllowance: +sohmWrappingAllowance,
           wsohmUnwrappingAllowance: +wsohmUnwrappingAllowance,
         },
-      }),
+      })
     );
-  },
+  }
 );
 
 export const changeWrap = createAsyncThunk(
   "wrap/changeWrap",
-  async ({ action, value, provider, address, networkId }: IActionValueAsyncThunk, { dispatch }) => {
+  async (
+    { action, value, provider, address, networkId }: IActionValueAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const wrapContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, WrappingContract, signer);
+    const wrapContract = new ethers.Contract(
+      addresses[networkId]["WSOHM_ADDRESS"] as string,
+      WrappingContract,
+      signer
+    );
 
     let wrapTx;
     const uaData: IUAData = {
@@ -142,41 +180,40 @@ export const changeWrap = createAsyncThunk(
     try {
       if (action === "wrap") {
         uaData.type = "wrap";
-        wrapTx = await wrapContract["wrap"](
-          ethers.utils.parseUnits(value, 9)
-        );
+        wrapTx = await wrapContract["wrap"](ethers.utils.parseUnits(value, 9));
       } else {
         uaData.type = "unwrap";
-        wrapTx = await wrapContract["unwrap"](
-          ethers.utils.parseUnits(value, 18)
-        );
+        wrapTx = await wrapContract["unwrap"](ethers.utils.parseUnits(value, 18));
       }
       const pendingTxnType = action === "wrap" ? "wrap" : "unwrap";
       uaData.txHash = wrapTx.hash;
-      dispatch(fetchPendingTxns({
-        txnHash: wrapTx.hash,
-        text: action === 'wrap' ? 'Wrap sFHM' : 'Unwrap wrapped sFHM',
-        type: pendingTxnType
-      }));
+      dispatch(
+        fetchPendingTxns({
+          txnHash: wrapTx.hash,
+          text: action === "wrap" ? "Wrap sFHM" : "Unwrap wrapped sFHM",
+          type: pendingTxnType,
+        })
+      );
       await wrapTx.wait();
     } catch (e: any) {
       uaData.approved = false;
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to wrap/unwrap more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
-      } else {
+      if (e.error === undefined) {
         let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
         } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
+          message = e.message;
         }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -187,21 +224,31 @@ export const changeWrap = createAsyncThunk(
       }
     }
     dispatch(getBalances({ address, networkId }));
-  },
+  }
 );
 
-export const calcWrapValue = async ({ isWrap, value, networkId }: IWrapDetails): Promise<number> => {
-    const provider = await chains[networkId].provider
-    const amountInWei = isWrap ? ethers.utils.parseUnits(value, "gwei") : ethers.utils.parseEther(value);
-    let wrapValue = 0;
-    const wrapContract = new ethers.Contract(addresses[networkId]["WSOHM_ADDRESS"] as string, WrappingContract, provider);
+export const calcWrapValue = async ({
+  isWrap,
+  value,
+  networkId,
+}: IWrapDetails): Promise<number> => {
+  const provider = await chains[networkId].provider;
+  const amountInWei = isWrap
+    ? ethers.utils.parseUnits(value, "gwei")
+    : ethers.utils.parseEther(value);
+  let wrapValue = 0;
+  const wrapContract = new ethers.Contract(
+    addresses[networkId]["WSOHM_ADDRESS"] as string,
+    WrappingContract,
+    provider
+  );
 
-    if (isWrap) {
-        const sFHMToWrapped = await wrapContract["wsFHMValue"](amountInWei);
-        wrapValue = sFHMToWrapped / Math.pow(10, 18);
-    } else {
-        const wsFHMToUnwrapped = await wrapContract["sFHMValue"](amountInWei);
-        wrapValue = wsFHMToUnwrapped / Math.pow(10, 9);
-    }
-    return wrapValue;
+  if (isWrap) {
+    const sFHMToWrapped = await wrapContract["wsFHMValue"](amountInWei);
+    wrapValue = sFHMToWrapped / Math.pow(10, 18);
+  } else {
+    const wsFHMToUnwrapped = await wrapContract["sFHMValue"](amountInWei);
+    wrapValue = wsFHMToUnwrapped / Math.pow(10, 9);
+  }
+  return wrapValue;
 };

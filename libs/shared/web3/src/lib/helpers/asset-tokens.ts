@@ -1,19 +1,13 @@
 import { JsonRpcSigner } from "@ethersproject/providers";
 import { ethers } from "ethers";
 
-import { getTokenPrice} from "./index";
 import { chains } from "../providers";
 import { NetworkId, NetworkIds, networks } from "../networks";
-import { truncateDecimals } from "../../../../helpers/src/lib/base";
-import {
-  xFhmAbi as XfhmAbi,
-  lqdrAbi as LqdrAbi,
-  ierc20Abi
-} from "../abi";
-import { ReactComponent as OhmImg } from "../../../../assets/tokens/token_OHM.svg";
+import { xFhmAbi as XfhmAbi, lqdrAbi as LqdrAbi } from "../abi";
+import { FHMToken } from "@fantohm/shared/images";
 
 export interface AssetTokenAddress {
-  [key: string]: string
+  [key: string]: string;
 }
 
 interface AssetTokenOpts {
@@ -25,7 +19,7 @@ interface AssetTokenOpts {
   iconSvg: any;
 }
 
-export abstract class AssetToken {
+export class AssetToken {
   // Standard Bond fields regardless of LP bonds or stable bonds.
   readonly name: string;
   readonly displayName: string;
@@ -35,7 +29,7 @@ export abstract class AssetToken {
   readonly iconSvg: any;
   balance: number | null;
 
-  protected constructor(tokenOpts: AssetTokenOpts) {
+  constructor(tokenOpts: AssetTokenOpts) {
     this.name = tokenOpts.name;
     this.displayName = tokenOpts.displayName;
     this.contractABI = tokenOpts.contractABI;
@@ -56,40 +50,38 @@ export abstract class AssetToken {
 
   async getContract(networkId: NetworkId) {
     const address = this.networkAddrs[networkId];
-    return new ethers.Contract(address, this.contractABI, await chains[networkId].provider);
+    return new ethers.Contract(
+      address,
+      this.contractABI,
+      await chains[networkId].provider
+    );
   }
-
 }
 
-// @ts-ignore
 export const xFhmToken = new AssetToken({
   name: "xFhm",
   displayName: "xFhm",
   contractABI: XfhmAbi,
-  iconSvg: OhmImg,
+  iconSvg: FHMToken,
   networkAddrs: {
     [NetworkIds.FantomOpera]: "",
     [NetworkIds.FantomTestnet]: "",
-    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["XFHM_ADDRESS"]
+    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["XFHM_ADDRESS"],
   },
-  decimals: 18
+  decimals: 18,
 });
 
-// @ts-ignore
 export const lqdrToken = new AssetToken({
   name: "LQDR",
   displayName: "LQDR",
   contractABI: LqdrAbi,
-  iconSvg: OhmImg,
+  iconSvg: FHMToken,
   networkAddrs: {
     [NetworkIds.FantomOpera]: "",
     [NetworkIds.FantomTestnet]: "",
-    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["LQDR_ADDRESS"]
+    [NetworkIds.Rinkeby]: networks[NetworkIds.Rinkeby].addresses["LQDR_ADDRESS"],
   },
-  decimals: 18
+  decimals: 18,
 });
 
-export const allAssetTokens = [
-  xFhmToken,
-  lqdrToken
-];
+export const allAssetTokens = [xFhmToken, lqdrToken];

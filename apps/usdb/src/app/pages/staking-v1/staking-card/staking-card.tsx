@@ -423,7 +423,8 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           >
             <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
             <span>
-              You can migrate to newer staking contract by withdraw of your position whenever you want.
+              You can migrate to newer staking contract by withdraw of your position
+              whenever you want.
             </span>
           </Box>
         </Box>

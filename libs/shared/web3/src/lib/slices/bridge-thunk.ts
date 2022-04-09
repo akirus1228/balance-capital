@@ -6,10 +6,14 @@ import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances } from "./account-slice";
 import { error, info } from "./messages-slice";
-import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
+import {
+  IActionValueAsyncThunk,
+  IChangeApprovalAsyncThunk,
+  IJsonRPCError,
+} from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";
-import { NetworkId } from "../networks"
-import { chains } from "../providers"
+import { NetworkId } from "../networks";
+import { chains } from "../providers";
 
 interface IUAData {
   address: string;
@@ -19,7 +23,11 @@ interface IUAData {
   type: string | null;
 }
 
-function alreadyApprovedToken(token: string, bridgeDownstreamAllowance: BigNumber, bridgeUpstreamAllowance: BigNumber) {
+function alreadyApprovedToken(
+  token: string,
+  bridgeDownstreamAllowance: BigNumber,
+  bridgeUpstreamAllowance: BigNumber
+) {
   // set defaults
   const bigZero = BigNumber.from("0");
   let applicableAllowance = bigZero;
@@ -37,39 +45,71 @@ function alreadyApprovedToken(token: string, bridgeDownstreamAllowance: BigNumbe
   return false;
 }
 
-
 export const getBridgeBalances = async (networkId: NetworkId) => {
   const provider = await chains[networkId].provider;
-  const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, provider);
-  const bridgeContract = new ethers.Contract(addresses[networkId]["BRIDGE_TOKEN_ADDRESS"] as string, ierc20Abi, provider);
+  const ohmContract = new ethers.Contract(
+    addresses[networkId]["OHM_ADDRESS"] as string,
+    ierc20Abi,
+    provider
+  );
+  const bridgeContract = new ethers.Contract(
+    addresses[networkId]["BRIDGE_TOKEN_ADDRESS"] as string,
+    ierc20Abi,
+    provider
+  );
   const [ohmAmount, bridgeAmount] = await Promise.all([
     ohmContract["balanceOf"](addresses[networkId]["BRIDGE_ADDRESS"]),
     bridgeContract["balanceOf"](addresses[networkId]["BRIDGE_ADDRESS"]),
   ]);
-  return {ohm: ohmAmount, bridge: bridgeAmount};
-}
+  return { ohm: ohmAmount, bridge: bridgeAmount };
+};
 
 export const getBridgeFee = async (networkId: number) => {
   const provider = await chains[networkId].provider;
-  const bridge = new ethers.Contract(addresses[networkId]["BRIDGE_ADDRESS"] as string, BridgeConverter, provider);
+  const bridge = new ethers.Contract(
+    addresses[networkId]["BRIDGE_ADDRESS"] as string,
+    BridgeConverter,
+    provider
+  );
   return await bridge["fee"]();
-}
+};
 
 export const changeApproval = createAsyncThunk(
   "bridge/changeApproval",
-  async ({ token, provider, address, networkId }: IChangeApprovalAsyncThunk, { dispatch }) => {
+  async (
+    { token, provider, address, networkId }: IChangeApprovalAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, signer);
-    const bridgeContract = new ethers.Contract(addresses[networkId]["BRIDGE_TOKEN_ADDRESS"] as string, ierc20Abi, signer);
-    const convertContract = new ethers.Contract(addresses[networkId]["BRIDGE_ADDRESS"] as string, BridgeConverter, signer);
+    const ohmContract = new ethers.Contract(
+      addresses[networkId]["OHM_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
+    const bridgeContract = new ethers.Contract(
+      addresses[networkId]["BRIDGE_TOKEN_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
+    const convertContract = new ethers.Contract(
+      addresses[networkId]["BRIDGE_ADDRESS"] as string,
+      BridgeConverter,
+      signer
+    );
     let approveTx;
-    let bridgeUpstreamAllowance = await ohmContract["allowance"](address, addresses[networkId]["BRIDGE_ADDRESS"]);
-    let bridgeDownstreamAllowance = await bridgeContract["allowance"](address, addresses[networkId]["BRIDGE_ADDRESS"]);
+    let bridgeUpstreamAllowance = await ohmContract["allowance"](
+      address,
+      addresses[networkId]["BRIDGE_ADDRESS"]
+    );
+    let bridgeDownstreamAllowance = await bridgeContract["allowance"](
+      address,
+      addresses[networkId]["BRIDGE_ADDRESS"]
+    );
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, bridgeDownstreamAllowance, bridgeUpstreamAllowance)) {
@@ -80,7 +120,7 @@ export const changeApproval = createAsyncThunk(
             bridgeUpstreamAllowance: +bridgeUpstreamAllowance,
             bridgeDownstreamAllowance: +bridgeDownstreamAllowance,
           },
-        }),
+        })
       );
     }
 
@@ -89,12 +129,12 @@ export const changeApproval = createAsyncThunk(
         // won't run if bridgeUpstreamAllowance > 0
         approveTx = await ohmContract["approve"](
           addresses[networkId]["BRIDGE_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       } else if (token === "fhm.m") {
         approveTx = await bridgeContract["approve"](
           addresses[networkId]["BRIDGE_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       }
 
@@ -103,8 +143,20 @@ export const changeApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -113,8 +165,14 @@ export const changeApproval = createAsyncThunk(
     }
 
     // go get fresh allowances
-    bridgeUpstreamAllowance = await ohmContract["allowance"](address, addresses[networkId]["BRIDGE_ADDRESS"]);
-    bridgeDownstreamAllowance = await bridgeContract["allowance"](address, addresses[networkId]["BRIDGE_ADDRESS"]);
+    bridgeUpstreamAllowance = await ohmContract["allowance"](
+      address,
+      addresses[networkId]["BRIDGE_ADDRESS"]
+    );
+    bridgeDownstreamAllowance = await bridgeContract["allowance"](
+      address,
+      addresses[networkId]["BRIDGE_ADDRESS"]
+    );
 
     return dispatch(
       fetchAccountSuccess({
@@ -122,21 +180,28 @@ export const changeApproval = createAsyncThunk(
           bridgeUpstreamAllowance: +bridgeUpstreamAllowance,
           bridgeDownstreamAllowance: +bridgeDownstreamAllowance,
         },
-      }),
+      })
     );
-  },
+  }
 );
 
 export const convert = createAsyncThunk(
   "bridge/convert",
-  async ({ action, value, provider, address, networkId }: IActionValueAsyncThunk, { dispatch }) => {
+  async (
+    { action, value, provider, address, networkId }: IActionValueAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const bridge = new ethers.Contract(addresses[networkId]["BRIDGE_ADDRESS"] as string, BridgeConverter, signer);
+    const bridge = new ethers.Contract(
+      addresses[networkId]["BRIDGE_ADDRESS"] as string,
+      BridgeConverter,
+      signer
+    );
 
     let bridgeTx;
     const uaData: IUAData = {
@@ -162,17 +227,33 @@ export const convert = createAsyncThunk(
       }
       const pendingTxnType = action === "downstream" ? "downstream" : "upstream";
       uaData.txHash = bridgeTx.hash;
-      dispatch(fetchPendingTxns({ txnHash: bridgeTx.hash, text: "Bridging FHM", type: pendingTxnType }));
+      dispatch(
+        fetchPendingTxns({
+          txnHash: bridgeTx.hash,
+          text: "Bridging FHM",
+          type: pendingTxnType,
+        })
+      );
       await bridgeTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
       } else {
-        dispatch(error(rpcError.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -183,5 +264,5 @@ export const convert = createAsyncThunk(
       }
     }
     dispatch(getBalances({ address, networkId }));
-  },
+  }
 );

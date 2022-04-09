@@ -22,7 +22,7 @@ export const getLusdData = createAsyncThunk(
         // balance: ethers.utils.formatUnits(sushiOhmLusdBalance, "gwei"),
       };
     }
-  },
+  }
 );
 
 /**
@@ -44,9 +44,9 @@ const lusdSlice = createSlice({
   name: "lusdData",
   initialState,
   reducers: {},
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(getLusdData.pending, state => {
+      .addCase(getLusdData.pending, (state) => {
         state.loading = true;
       })
       .addCase(getLusdData.fulfilled, (state, action) => {
@@ -64,4 +64,4 @@ export const lusdDataReducer = lusdSlice.reducer;
 
 const baseInfo = (state: any) => state.lusdData;
 
-export const getLusdState = createSelector(baseInfo, app => app);
+export const getLusdState = createSelector(baseInfo, (app) => app);

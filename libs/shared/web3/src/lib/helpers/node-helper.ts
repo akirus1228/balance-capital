@@ -24,7 +24,9 @@ export class NodeHelper {
   // use sessionStorage so that we don't have to worry about resetting the invalidNodes list
   static _storage = window.sessionStorage;
 
-  static currentRemovedNodes = JSON.parse(NodeHelper._storage.getItem(NodeHelper._invalidNodesKey) || "{}");
+  static currentRemovedNodes = JSON.parse(
+    NodeHelper._storage.getItem(NodeHelper._invalidNodesKey) || "{}"
+  );
   static currentRemovedNodesURIs = Object.keys(NodeHelper.currentRemovedNodes);
 
   /**
@@ -46,7 +48,8 @@ export class NodeHelper {
     const failedConnectionCount = currentStats.failedConnectionCount || 0;
     if (
       failedConnectionCount > 0 &&
-      currentStats.lastFailedConnectionAt > minutesAgo(NodeHelper._failedConnectionsMinutesLimit)
+      currentStats.lastFailedConnectionAt >
+        minutesAgo(NodeHelper._failedConnectionsMinutesLimit)
     ) {
       // more than 0 failed connections in the last (15) minutes
       currentStats = {
@@ -71,7 +74,10 @@ export class NodeHelper {
     } else {
       // add to list
       currentRemovedNodesObj[providerUrl] = new Date().getTime();
-      NodeHelper._storage.setItem(NodeHelper._invalidNodesKey, JSON.stringify(currentRemovedNodesObj));
+      NodeHelper._storage.setItem(
+        NodeHelper._invalidNodesKey,
+        JSON.stringify(currentRemovedNodesObj)
+      );
       // remove connection stats for this Node
       NodeHelper._storage.removeItem(providerKey);
     }
@@ -88,8 +94,11 @@ export class NodeHelper {
   static logBadConnectionWithTimer(providerUrl: string) {
     const providerKey: string = "-nodeHelper:" + providerUrl;
 
-    let currentConnectionStats = JSON.parse(NodeHelper._storage.getItem(providerKey) || "{}");
-    currentConnectionStats = NodeHelper._updateConnectionStatsForProvider(currentConnectionStats);
+    let currentConnectionStats = JSON.parse(
+      NodeHelper._storage.getItem(providerKey) || "{}"
+    );
+    currentConnectionStats =
+      NodeHelper._updateConnectionStatsForProvider(currentConnectionStats);
 
     if (currentConnectionStats.failedConnectionCount > NodeHelper._maxFailedConnections) {
       // then remove this node from our provider list for 24 hours
@@ -107,7 +116,7 @@ export class NodeHelper {
     const invalidNodes = NodeHelper.currentRemovedNodesURIs;
     // filter invalidNodes out of allURIs
     // this allows duplicates in allURIs, removes both if invalid, & allows both if valid
-    allURIs = allURIs.filter(item => !invalidNodes.includes(item));
+    allURIs = allURIs.filter((item) => !invalidNodes.includes(item));
 
     // return the remaining elements
     if (allURIs.length === 0) {
@@ -126,9 +135,9 @@ export class NodeHelper {
    */
   static checkAllNodesStatus = async () => {
     return await Promise.all(
-      NodeHelper.getNodesUris().map(async URI => {
+      NodeHelper.getNodesUris().map(async (URI) => {
         return await NodeHelper.checkNodeStatus(URI);
-      }),
+      })
     );
   };
 
@@ -149,7 +158,12 @@ export class NodeHelper {
         // https://documenter.getpostman.com/view/4117254/ethereum-json-rpc/RVu7CT5J
         // chainId works... but is net_version lighter-weight?
         // body: JSON.stringify({ method: "eth_chainId", params: [], id: 42, jsonrpc: "2.0" }),
-        body: JSON.stringify({ method: "net_version", params: [], id: 67, jsonrpc: "2.0" }),
+        body: JSON.stringify({
+          method: "net_version",
+          params: [],
+          id: 67,
+          jsonrpc: "2.0",
+        }),
       });
       if (resp.status >= 400) {
         // probably 403 or 429 -> no more alchemy capacity

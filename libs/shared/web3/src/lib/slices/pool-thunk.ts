@@ -95,8 +95,8 @@ const changeApproval = createAsyncThunk(
         await approveTx.wait();
       }
     } catch (e: any) {
-      let message;
-      if (!e.error || e.error === undefined || isNaN(e.error)) {
+      if (e.error === undefined) {
+        let message;
         if (e.message === "Internal JSON-RPC error.") {
           message = e.data.message;
         } else {
@@ -156,22 +156,23 @@ export const poolDeposit = createAsyncThunk(
         console.log("unrecognized action: ", action);
       }
     } catch (e: any) {
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
-      } else {
+      if (e.error === undefined) {
         let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
         } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
+          message = e.message;
         }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -249,22 +250,23 @@ export const poolWithdraw = createAsyncThunk(
         console.log("unrecognized action: ", action);
       }
     } catch (e: any) {
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
-      } else {
+      if (e.error === undefined) {
         let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
         } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
+          message = e.message;
         }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -305,22 +307,23 @@ export const awardProcess = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: poolTx.hash, text: text, type: pendingTxnType }));
       await poolTx.wait();
     } catch (e: any) {
-      if (e.error.code === -32603 && e.error.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),);
-      } else {
+      if (e.error === undefined) {
         let message;
-        if (!e.error || e.error === undefined || isNaN(e.error)) {
-          if (e.message === "Internal JSON-RPC error.") {
-            message = e.data.message;
-          } else {
-            message = e.message;
-          }
-          if (typeof message === "string") {
-            dispatch(error(`Unknown error: ${message}`));
-          }
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
         } else {
-          dispatch(error(`Unknown error: ${e.error.message}`));
+          message = e.message;
         }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
