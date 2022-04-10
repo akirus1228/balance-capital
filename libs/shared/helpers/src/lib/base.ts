@@ -70,7 +70,7 @@ export const formatAmount = (
   if (truncate) {
     return truncateDecimals(result, length);
   } else {
-    return parseInt(result);
+    return Number(result);
   }
 };
 
