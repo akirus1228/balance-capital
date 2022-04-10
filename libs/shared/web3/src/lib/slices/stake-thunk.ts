@@ -1,14 +1,27 @@
 import { ethers, BigNumber } from "ethers";
 import { addresses } from "../constants";
-import { stakingHelperAbi, fhudContractAbi, usdbMinterAbi, olympusStakingv2Abi, ierc20Abi } from "../abi";
-import { clearPendingTxn, fetchPendingTxns, getStakingTypeText } from "./pending-txns-slice";
+import {
+  stakingHelperAbi,
+  fhudContractAbi,
+  usdbMinterAbi,
+  olympusStakingv2Abi,
+  ierc20Abi,
+} from "../abi";
+import {
+  clearPendingTxn,
+  fetchPendingTxns,
+  getStakingTypeText,
+} from "./pending-txns-slice";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { fetchAccountSuccess, getBalances, loadAccountDetails } from "./account-slice";
 import { error, info } from "./messages-slice";
-import { IActionValueAsyncThunk, IChangeApprovalAsyncThunk, IJsonRPCError } from "./interfaces";
+import {
+  IActionValueAsyncThunk,
+  IChangeApprovalAsyncThunk,
+  IJsonRPCError,
+} from "./interfaces";
 import { segmentUA } from "../helpers/user-analytic-helpers";
 import { sleep } from "../helpers/sleep";
-
 
 interface IUAData {
   address: string;
@@ -18,7 +31,11 @@ interface IUAData {
   type: string | null;
 }
 
-function alreadyApprovedToken(token: string, stakeAllowance: BigNumber, unstakeAllowance: BigNumber) {
+function alreadyApprovedToken(
+  token: string,
+  stakeAllowance: BigNumber,
+  unstakeAllowance: BigNumber
+) {
   // set defaults
   const bigZero = BigNumber.from("0");
   let applicableAllowance = bigZero;
@@ -38,18 +55,35 @@ function alreadyApprovedToken(token: string, stakeAllowance: BigNumber, unstakeA
 
 export const changeApproval = createAsyncThunk(
   "stake/changeApproval",
-  async ({ token, provider, address, networkId }: IChangeApprovalAsyncThunk, { dispatch }) => {
+  async (
+    { token, provider, address, networkId }: IChangeApprovalAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const ohmContract = new ethers.Contract(addresses[networkId]["OHM_ADDRESS"] as string, ierc20Abi, signer);
-    const sohmContract = new ethers.Contract(addresses[networkId]["SOHM_ADDRESS"] as string, ierc20Abi, signer);
+    const ohmContract = new ethers.Contract(
+      addresses[networkId]["OHM_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
+    const sohmContract = new ethers.Contract(
+      addresses[networkId]["SOHM_ADDRESS"] as string,
+      ierc20Abi,
+      signer
+    );
     let approveTx;
-    let stakeAllowance = await ohmContract["allowance"](address, addresses[networkId]["STAKING_HELPER_ADDRESS"]);
-    let unstakeAllowance = await sohmContract["allowance"](address, addresses[networkId]["STAKING_ADDRESS"]);
+    let stakeAllowance = await ohmContract["allowance"](
+      address,
+      addresses[networkId]["STAKING_HELPER_ADDRESS"]
+    );
+    let unstakeAllowance = await sohmContract["allowance"](
+      address,
+      addresses[networkId]["STAKING_ADDRESS"]
+    );
 
     // return early if approval has already happened
     if (alreadyApprovedToken(token, stakeAllowance, unstakeAllowance)) {
@@ -60,7 +94,7 @@ export const changeApproval = createAsyncThunk(
             ohmStake: +stakeAllowance,
             ohmUnstake: +unstakeAllowance,
           },
-        }),
+        })
       );
     }
 
@@ -69,12 +103,12 @@ export const changeApproval = createAsyncThunk(
         // won't run if stakeAllowance > 0
         approveTx = await ohmContract["approve"](
           addresses[networkId]["STAKING_HELPER_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       } else if (token === "sfhm") {
         approveTx = await sohmContract["approve"](
           addresses[networkId]["STAKING_ADDRESS"],
-          ethers.utils.parseUnits("1000000000", "gwei").toString(),
+          ethers.utils.parseUnits("1000000000", "gwei").toString()
         );
       }
 
@@ -83,8 +117,20 @@ export const changeApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -93,8 +139,14 @@ export const changeApproval = createAsyncThunk(
     }
 
     // go get fresh allowances
-    stakeAllowance = await ohmContract["allowance"](address, addresses[networkId]["STAKING_HELPER_ADDRESS"]);
-    unstakeAllowance = await sohmContract["allowance"](address, addresses[networkId]["STAKING_ADDRESS"]);
+    stakeAllowance = await ohmContract["allowance"](
+      address,
+      addresses[networkId]["STAKING_HELPER_ADDRESS"]
+    );
+    unstakeAllowance = await sohmContract["allowance"](
+      address,
+      addresses[networkId]["STAKING_ADDRESS"]
+    );
 
     return dispatch(
       fetchAccountSuccess({
@@ -102,14 +154,17 @@ export const changeApproval = createAsyncThunk(
           ohmStake: +stakeAllowance,
           ohmUnstake: +unstakeAllowance,
         },
-      }),
+      })
     );
-  },
+  }
 );
 
 export const changeFHUDApproval = createAsyncThunk(
   "stake/changeApproval",
-  async ({ token, provider, address, networkId }: IChangeApprovalAsyncThunk, { dispatch }) => {
+  async (
+    { token, provider, address, networkId }: IChangeApprovalAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -119,17 +174,28 @@ export const changeFHUDApproval = createAsyncThunk(
     let approveTx;
     let fhudAllowance = 0;
     if (networkId === 250) {
-      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
-      fhudAllowance = await fhudContract["allowance"](address, addresses[networkId]["USDB_MINTER"]);
+      const fhudContract = new ethers.Contract(
+        addresses[networkId]["FHUD_ADDRESS"] as string,
+        fhudContractAbi,
+        signer
+      );
+      fhudAllowance = await fhudContract["allowance"](
+        address,
+        addresses[networkId]["USDB_MINTER"]
+      );
     }
 
     try {
       if (networkId === 250) {
-        const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
+        const fhudContract = new ethers.Contract(
+          addresses[networkId]["FHUD_ADDRESS"] as string,
+          fhudContractAbi,
+          signer
+        );
 
         approveTx = await fhudContract["approve"](
           addresses[networkId]["USDB_MINTER"],
-          ethers.utils.parseUnits("100000000000000000000000000000000").toString(),
+          ethers.utils.parseUnits("100000000000000000000000000000000").toString()
         );
       }
 
@@ -138,8 +204,20 @@ export const changeFHUDApproval = createAsyncThunk(
       dispatch(fetchPendingTxns({ txnHash: approveTx.hash, text, type: pendingTxnType }));
 
       await approveTx.wait();
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (approveTx) {
@@ -150,33 +228,47 @@ export const changeFHUDApproval = createAsyncThunk(
     // go get fresh allowances
 
     if (networkId === 250) {
-      const fhudContract = new ethers.Contract(addresses[networkId]["FHUD_ADDRESS"] as string, fhudContractAbi, signer);
-      fhudAllowance = await fhudContract["allowance"](address, addresses[networkId]["USDB_MINTER"]);
+      const fhudContract = new ethers.Contract(
+        addresses[networkId]["FHUD_ADDRESS"] as string,
+        fhudContractAbi,
+        signer
+      );
+      fhudAllowance = await fhudContract["allowance"](
+        address,
+        addresses[networkId]["USDB_MINTER"]
+      );
     }
     return dispatch(
       fetchAccountSuccess({
         staking: {
           fhudAllowance: +fhudAllowance,
         },
-      }),
+      })
     );
-  },
+  }
 );
 
 export const changeStake = createAsyncThunk(
   "stake/changeStake",
-  async ({ action, value, provider, address, networkId }: IActionValueAsyncThunk, { dispatch }) => {
+  async (
+    { action, value, provider, address, networkId }: IActionValueAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
+    const staking = new ethers.Contract(
+      addresses[networkId]["STAKING_ADDRESS"] as string,
+      olympusStakingv2Abi,
+      signer
+    );
     const stakingHelper = new ethers.Contract(
       addresses[networkId]["STAKING_HELPER_ADDRESS"] as string,
       stakingHelperAbi,
-      signer,
+      signer
     );
 
     let stakeTx;
@@ -197,17 +289,33 @@ export const changeStake = createAsyncThunk(
       }
       const pendingTxnType = action === "stake" ? "staking" : "unstaking";
       uaData.txHash = stakeTx.hash;
-      dispatch(fetchPendingTxns({ txnHash: stakeTx.hash, text: getStakingTypeText(action), type: pendingTxnType }));
+      dispatch(
+        fetchPendingTxns({
+          txnHash: stakeTx.hash,
+          text: getStakingTypeText(action),
+          type: pendingTxnType,
+        })
+      );
       await stakeTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to stake more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
       } else {
-        dispatch(error(rpcError.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -219,12 +327,15 @@ export const changeStake = createAsyncThunk(
       }
     }
     dispatch(getBalances({ address, networkId }));
-  },
+  }
 );
 
 export const changeMint = createAsyncThunk(
   "stake/changeMint",
-  async ({ action, value, provider, address, networkId }: IActionValueAsyncThunk, { dispatch }) => {
+  async (
+    { action, value, provider, address, networkId }: IActionValueAsyncThunk,
+    { dispatch }
+  ) => {
     if (!provider) {
       dispatch(error("Please connect your wallet!"));
       return;
@@ -235,7 +346,11 @@ export const changeMint = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const usdbMinter = new ethers.Contract(addresses[networkId]["USDB_MINTER"] as string, usdbMinterAbi, signer);
+    const usdbMinter = new ethers.Contract(
+      addresses[networkId]["USDB_MINTER"] as string,
+      usdbMinterAbi,
+      signer
+    );
 
     let mintTx;
     const uaData: IUAData = {
@@ -252,17 +367,33 @@ export const changeMint = createAsyncThunk(
       }
       const pendingTxnType = "minting";
       uaData.txHash = mintTx.hash;
-      dispatch(fetchPendingTxns({ txnHash: mintTx.hash, text: "Minting USDB", type: pendingTxnType }));
+      dispatch(
+        fetchPendingTxns({
+          txnHash: mintTx.hash,
+          text: "Minting USDB",
+          type: pendingTxnType,
+        })
+      );
       await mintTx.wait();
-    } catch (e: unknown) {
+    } catch (e: any) {
       uaData.approved = false;
-      const rpcError = e as IJsonRPCError;
-      if (rpcError.code === -32603 && rpcError.message.indexOf("ds-math-sub-underflow") >= 0) {
-        dispatch(
-          error("You may be trying to mint more than your balance! Error code: 32603. Message: ds-math-sub-underflow"),
-        );
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else if (
+        e.error.code === -32603 &&
+        e.error.message.indexOf("ds-math-sub-underflow") >= 0
+      ) {
+        dispatch(error("You may be trying to bridge more than your balance! Error code: 32603. Message: ds-math-sub-underflow"));
       } else {
-        dispatch(error(rpcError.message));
+        dispatch(error(`Unknown error: ${e.error.message}`));
       }
       return;
     } finally {
@@ -274,7 +405,7 @@ export const changeMint = createAsyncThunk(
       }
     }
     dispatch(getBalances({ address, networkId }));
-  },
+  }
 );
 
 export const changeForfeit = createAsyncThunk(
@@ -286,7 +417,11 @@ export const changeForfeit = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
+    const staking = new ethers.Contract(
+      addresses[networkId]["STAKING_ADDRESS"] as string,
+      olympusStakingv2Abi,
+      signer
+    );
     let forfeitTx;
 
     try {
@@ -297,8 +432,20 @@ export const changeForfeit = createAsyncThunk(
       await forfeitTx.wait();
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (forfeitTx) {
@@ -311,7 +458,7 @@ export const changeForfeit = createAsyncThunk(
         return;
       }
     }
-  },
+  }
 );
 
 export const changeClaim = createAsyncThunk(
@@ -323,7 +470,11 @@ export const changeClaim = createAsyncThunk(
     }
 
     const signer = provider.getSigner();
-    const staking = new ethers.Contract(addresses[networkId]["STAKING_ADDRESS"] as string, olympusStakingv2Abi, signer);
+    const staking = new ethers.Contract(
+      addresses[networkId]["STAKING_ADDRESS"] as string,
+      olympusStakingv2Abi,
+      signer
+    );
     let claimTx;
 
     try {
@@ -334,8 +485,20 @@ export const changeClaim = createAsyncThunk(
       await claimTx.wait();
       // dispatch(info('Your transaction was successful'));
       await sleep(10);
-    } catch (e: unknown) {
-      dispatch(error((e as IJsonRPCError).message));
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
       return;
     } finally {
       if (claimTx) {
@@ -348,5 +511,5 @@ export const changeClaim = createAsyncThunk(
         return;
       }
     }
-  },
+  }
 );

@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import Bond from './bond';
+import Bond from "./bond";
 
-describe('Bond', () => {
-  it('should render successfully', () => {
+describe("Bond", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<Bond />);
     expect(baseElement).toBeTruthy();
   });

@@ -1,9 +1,9 @@
-import { render } from '@testing-library/react';
+import { render } from "@testing-library/react";
 
-import InputWrapper from './input-wrapper';
+import InputWrapper from "./input-wrapper";
 
-describe('InputWrapper', () => {
-  it('should render successfully', () => {
+describe("InputWrapper", () => {
+  it("should render successfully", () => {
     const { baseElement } = render(<InputWrapper />);
     expect(baseElement).toBeTruthy();
   });

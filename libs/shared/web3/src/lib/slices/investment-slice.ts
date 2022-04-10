@@ -10,9 +10,16 @@ export interface IInvestmentDetails {
 }
 export const calcInvestmentDetails = createAsyncThunk(
   "investments/calcInvestmentDetails",
-  async ({ investment }: ICalcInvestmentDetailsAsyncThunk, { dispatch }): Promise<IInvestmentDetails> => {
+  async (
+    { investment }: ICalcInvestmentDetailsAsyncThunk,
+    { dispatch }
+  ): Promise<IInvestmentDetails> => {
     // Calculate investments treasuryBalance
-    const [assetPrice, assetBalance, treasuryBalance] = await Promise.all([investment.assetPrice, investment.assetBalance, investment.treasuryBalance]);
+    const [assetPrice, assetBalance, treasuryBalance] = await Promise.all([
+      investment.assetPrice,
+      investment.assetBalance,
+      investment.treasuryBalance,
+    ]);
 
     return {
       investment: investment.name,
@@ -21,7 +28,7 @@ export const calcInvestmentDetails = createAsyncThunk(
       treasuryBalance,
       isLpToken: investment.isLp,
     };
-  },
+  }
 );
 
 // Note(zx): this is a barebones interface for the state. Update to be more accurate
@@ -50,9 +57,9 @@ const investmentsSlice = createSlice({
     },
   },
 
-  extraReducers: builder => {
+  extraReducers: (builder) => {
     builder
-      .addCase(calcInvestmentDetails.pending, state => {
+      .addCase(calcInvestmentDetails.pending, (state) => {
         state["loading"] = true;
       })
       .addCase(calcInvestmentDetails.fulfilled, (state, action) => {

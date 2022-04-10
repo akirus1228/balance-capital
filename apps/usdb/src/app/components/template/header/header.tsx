@@ -7,35 +7,32 @@ import {
   trim,
   defaultNetworkId,
   enabledNetworkIds,
-} from '@fantohm/shared-web3';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import { Skeleton } from '@mui/material';
-import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import Container from '@mui/material/Container';
-import Button from '@mui/material/Button';
-import Tooltip from '@mui/material/Tooltip';
-import MenuItem from '@mui/material/MenuItem';
-import { SvgIcon, SxProps, Theme } from '@mui/material';
-import AnalyticsIcon from '@mui/icons-material/Analytics';
-import WbSunnyOutlinedIcon from '@mui/icons-material/WbSunnyOutlined';
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import MenuLink from './menu-link';
-import { RootState } from '../../../store';
-import {
-  setCheckedConnection,
-  setTheme,
-} from '../../../store/reducers/app-slice';
-import USDBLogoLight from '../../../../assets/images/USDB-logo.svg';
-import USDBLogoDark from '../../../../assets/images/USDB-logo-dark.svg';
-import styles from './header.module.scss';
-import { NetworkMenu } from './network-menu';
+} from "@fantohm/shared-web3";
+import AppBar from "@mui/material/AppBar";
+import Box from "@mui/material/Box";
+import { Skeleton } from "@mui/material";
+import Toolbar from "@mui/material/Toolbar";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
+import Menu from "@mui/material/Menu";
+import MenuIcon from "@mui/icons-material/Menu";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
+import Tooltip from "@mui/material/Tooltip";
+import MenuItem from "@mui/material/MenuItem";
+import { SvgIcon, SxProps, Theme } from "@mui/material";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
+import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import MenuLink from "./menu-link";
+import { RootState } from "../../../store";
+import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
+import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
+import styles from "./header.module.scss";
+import { NetworkMenu } from "./network-menu";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -49,33 +46,27 @@ type Pages = {
 };
 
 const pages: Pages[] = [
-  { title: 'Traditional Finance', href: '/trad-fi', params:{comingSoon:false}},
-  { title: 'Staking', href: '/staking', params:{comingSoon:false} },
-  { title: 'xFHM', href: '/xfhm?enable-testnet=true', params:{comingSoon:true} },
-  { title: 'Mint USDB', href: '/mint', params:{comingSoon:true} },
-  { title: 'USDB bank', href: '', params:{comingSoon:true} },
+  { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
+  { title: "Staking", href: "/staking", params: { comingSoon: false } },
+  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
+  { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
+  { title: "USDB bank", href: "", params: { comingSoon: true } },
   {
-    title: 'Bridge',
-    href: 'https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1',
-    params:{comingSoon:false}
+    title: "Bridge",
+    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
+    params: { comingSoon: false },
   },
 ];
 export const Header = (): JSX.Element => {
-  const {
-    connect,
-    disconnect,
-    connected,
-    address,
-    hasCachedProvider,
-    chainId,
-  } = useWeb3Context();
+  const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
+    useWeb3Context();
   const dispatch = useDispatch();
   const allowedChain = chainId && enabledNetworkIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElProductsMenu, setAnchorElProductsMenu] =
-    useState<null | HTMLElement>(null);
-  const [connectButtonText, setConnectButtonText] =
-    useState<string>('Connect Wallet');
+  const [anchorElProductsMenu, setAnchorElProductsMenu] = useState<null | HTMLElement>(
+    null
+  );
+  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
   const [accountBondsLoading, setAccountBondsLoading] = useState<boolean>(true);
   const [totalBalances, setTotalBalances] = useState<number>(0);
 
@@ -105,20 +96,18 @@ export const Header = (): JSX.Element => {
       try {
         await connect();
       } catch (e) {
-        console.log('Connection metamask error', e);
+        console.log("Connection metamask error", e);
       }
     }
   }, [connected, disconnect, connect]);
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(
-      getBalances({ address: address, networkId: chainId || defaultNetworkId })
-    );
+    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
     if (connected) {
-      setConnectButtonText('Disconnect');
+      setConnectButtonText("Disconnect");
     } else {
-      setConnectButtonText('Connect Wallet');
+      setConnectButtonText("Connect Wallet");
     }
   }, [connected, address, dispatch]);
 
@@ -128,7 +117,7 @@ export const Header = (): JSX.Element => {
       try {
         connect();
       } catch (e) {
-        console.log('Connection metamask error', e);
+        console.log("Connection metamask error", e);
       }
     }
     // if there's a cached provider and it has connected, connection check is good.
@@ -141,14 +130,14 @@ export const Header = (): JSX.Element => {
   }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
-    const type = themeType === 'light' ? 'dark' : 'light';
+    const type = themeType === "light" ? "dark" : "light";
     dispatch(setTheme(type));
-    localStorage.setItem('use-theme', type);
+    localStorage.setItem("use-theme", type);
   }, [dispatch, themeType]);
 
-  const useTheme = localStorage.getItem('use-theme');
+  const useTheme = localStorage.getItem("use-theme");
   if (useTheme) {
-    dispatch(setTheme(useTheme === 'dark' ? 'dark' : 'light'));
+    dispatch(setTheme(useTheme === "dark" ? "dark" : "light"));
   }
 
   const handleCloseProductsMenu = () => {
@@ -179,12 +168,7 @@ export const Header = (): JSX.Element => {
   }, [address, allBondsLoaded, accountLoading]);
 
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      style={{ margin: 0 }}
-    >
+    <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <Typography
@@ -192,19 +176,19 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{
               mr: 2,
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
+              display: { xs: "none", md: "flex" },
+              alignItems: "center",
             }}
           >
             <Link to="/">
               <img
-                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
                 alt="USDB logo"
               />
             </Link>
           </Typography>
 
-          <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
             <IconButton
               size="large"
               aria-label="account of current user"
@@ -219,19 +203,19 @@ export const Header = (): JSX.Element => {
               id="menu-appbar"
               anchorEl={anchorElNav}
               anchorOrigin={{
-                vertical: 'bottom',
-                horizontal: 'left',
+                vertical: "bottom",
+                horizontal: "left",
               }}
               keepMounted
               transformOrigin={{
-                vertical: 'top',
-                horizontal: 'left',
+                vertical: "top",
+                horizontal: "left",
               }}
-              className={`${styles['navWrap']}`}
+              className={`${styles["navWrap"]}`}
               open={Boolean(anchorElNav)}
               onClose={handleCloseNavMenu}
               sx={{
-                display: { xs: 'block', md: 'none' },
+                display: { xs: "block", md: "none" },
               }}
             >
               {pages.map((page: Pages) => (
@@ -241,44 +225,44 @@ export const Header = (): JSX.Element => {
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
-                  <Typography textAlign="center" style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}>
-                    <Button style={{ width: '100%' }}>{page.title}</Button>
+                  <Typography
+                    textAlign="center"
+                    style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}
+                  >
+                    <Button style={{ width: "100%" }}>{page.title}</Button>
                   </Typography>
                 </MenuLink>
               ))}
 
               <MenuItem
-                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
                 onClick={handleCloseNavMenu}
-                className={`${styles['mobileConnect']}`}
+                className={`${styles["mobileConnect"]}`}
               >
                 <Typography textAlign="center">
                   <Button onClick={handleConnect}>{connectButtonText}</Button>
                 </Typography>
               </MenuItem>
               <MenuItem
-                sx={{ display: 'flex', justifyContent: 'start', padding: '0' }}
+                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
                 onClick={handleCloseNavMenu}
-                className={`${styles['mobileTheme']}`}
+                className={`${styles["mobileTheme"]}`}
               >
                 <Typography textAlign="center">
                   <Button onClick={toggleTheme}>
-                    <SvgIcon
-                      component={WbSunnyOutlinedIcon}
-                      fontSize="medium"
-                    />
+                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="medium" />
                   </Button>
                 </Typography>
               </MenuItem>
 
               <MenuItem
                 sx={{
-                  display: 'flex',
-                  justifyContent: 'start',
-                  paddingLeft: '20px',
+                  display: "flex",
+                  justifyContent: "start",
+                  paddingLeft: "20px",
                 }}
                 onClick={handleCloseNavMenu}
-                className={`${styles['mobilePortfolio']}`}
+                className={`${styles["mobilePortfolio"]}`}
               >
                 <Typography textAlign="center">
                   <Link to="/my-account">
@@ -286,7 +270,12 @@ export const Header = (): JSX.Element => {
                       <Box display="flex" alignItems="center" mr="10px">
                         <SvgIcon component={AnalyticsIcon} fontSize="large" />
                       </Box>
-                      <Box display="flex" alignItems="center" mt="2px" className={`${styles['portfolioText']}`}>
+                      <Box
+                        display="flex"
+                        alignItems="center"
+                        mt="2px"
+                        className={`${styles["portfolioText"]}`}
+                      >
                         My Portfolio:&nbsp;
                       </Box>
                       {!accountBondsLoading ? (
@@ -304,28 +293,28 @@ export const Header = (): JSX.Element => {
           </Box>
           <Typography
             component="div"
-            sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}
+            sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             <Link to="/">
               <img
-                src={themeType === 'light' ? USDBLogoLight : USDBLogoDark}
+                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
                 alt="USDB logo"
-                className={`${styles['usdbLogo']}`}
+                className={`${styles["usdbLogo"]}`}
               />
             </Link>
           </Typography>
           <Box
             sx={{
               flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-              justifyContent: 'flex-start',
-              alignItems: 'center',
-              flexDirection: 'row',
+              display: { xs: "none", md: "flex" },
+              justifyContent: "flex-start",
+              alignItems: "center",
+              flexDirection: "row",
             }}
           >
             <Box>
               <Button
-                className={`menuButton ${styles['productsButton']}`}
+                className={`menuButton ${styles["productsButton"]}`}
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
                 Products
@@ -336,7 +325,7 @@ export const Header = (): JSX.Element => {
                 open={Boolean(anchorElProductsMenu)}
                 onClose={handleCloseProductsMenu}
                 MenuListProps={{
-                  'aria-labelledby': 'products-button',
+                  "aria-labelledby": "products-button",
                 }}
               >
                 {pages.map((page: any) => {
@@ -347,8 +336,11 @@ export const Header = (): JSX.Element => {
                       onClick={handleCloseProductsMenu}
                       key={page.title}
                     >
-                      <Typography textAlign="center" style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}>
-                        <Button style={{ width: '100%' }}>{page.title}</Button>
+                      <Typography
+                        textAlign="center"
+                        style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}
+                      >
+                        <Button style={{ width: "100%" }}>{page.title}</Button>
                       </Typography>
                     </MenuLink>
                   );
@@ -365,7 +357,7 @@ export const Header = (): JSX.Element => {
               <Link to="/my-account">
                 <Button
                   className="portfolio"
-                  sx={{ display: { xs: 'none', md: 'flex' } }}
+                  sx={{ display: { xs: "none", md: "flex" } }}
                 >
                   <Box display="flex" alignItems="center" mr="10px">
                     <SvgIcon component={AnalyticsIcon} fontSize="large" />
@@ -374,7 +366,7 @@ export const Header = (): JSX.Element => {
                     display="flex"
                     alignItems="center"
                     mt="2px"
-                    sx={{ display: { xs: 'none', lg: 'flex' } }}
+                    sx={{ display: { xs: "none", lg: "flex" } }}
                   >
                     My Portfolio:&nbsp;
                   </Box>
@@ -393,7 +385,7 @@ export const Header = (): JSX.Element => {
           <Tooltip title="Connect Wallet">
             <Button
               onClick={handleConnect}
-              sx={{ px: '3em', display: { xs: 'none', md: 'flex' } }}
+              sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
               color="primary"
               className="menuButton"
             >
@@ -403,9 +395,9 @@ export const Header = (): JSX.Element => {
           <Tooltip title="Toggle Light/Dark Mode">
             <Button
               onClick={toggleTheme}
-              sx={{ display: { xs: 'none', md: 'flex' } }}
+              sx={{ display: { xs: "none", md: "flex" } }}
               color="primary"
-              className={`menuButton ${styles['toggleTheme']}`}
+              className={`menuButton ${styles["toggleTheme"]}`}
             >
               <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
             </Button>
@@ -413,7 +405,7 @@ export const Header = (): JSX.Element => {
         </Toolbar>
       </Container>
       {!allowedChain && connected && (
-        <div className={styles['errorNav']}>
+        <div className={styles["errorNav"]}>
           Network unsupported. Please change to one of: [Fantom, Ethereum]
         </div>
       )}

@@ -26,7 +26,8 @@
     "quotes": ["error", "double"],
     "node/no-unpublished-import": "off",
     "node/no-missing-import": "off",
-    "react-hooks/exhaustive-deps": "off"
+    "react-hooks/exhaustive-deps": "off",
+    "node/no-unpublished-require": ["warn"]
   },
   "parser": "@typescript-eslint/parser",
   "overrides": [

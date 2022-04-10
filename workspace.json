@@ -1,13 +1,10 @@
 {
   "version": 2,
   "projects": {
-    "shared-assets": "libs/shared/assets",
     "shared-helpers": "libs/shared/helpers",
     "shared-images": "libs/shared/images",
     "shared-ui-themes": "libs/shared/ui-themes",
     "shared-web3": "libs/shared/web3",
-    "tradfi": "apps/tradfi",
-    "tradfi-e2e": "apps/tradfi-e2e",
     "usdb": "apps/usdb",
     "usdb-e2e": "apps/usdb-e2e"
   }
