@@ -14,7 +14,7 @@
       <path id="Polygon_1" data-name="Polygon 1" d="M9.5,0,19,13H0Z" transform="translate(1664 1977) rotate(180)" fill="#1a1a1a"/>
       <g id="Group_11541" data-name="Group 11541" transform="translate(1601.342 1922.228)">
         <circle id="Ellipse_326" data-name="Ellipse 326" cx="7" cy="7" r="7" transform="translate(-14.341 6.773)" fill="url(#linear-gradient)"/>
-        <text id="USDB:_32.5_" data-name="USDB: 32.5%" transform="translate(4.658 19.773)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="18" font-family="SegoeUI, Segoe UI" letter-spacing="-0.01em"><tspan x="0" y="0">USDB: 32.5%</tspan></text>
+        <text id="USDB:_32.25_" data-name="USDB: 32.25%" transform="translate(4.658 19.773)" fill="#929ba0" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="18" font-family="SegoeUI, Segoe UI" letter-spacing="-0.01em"><tspan x="0" y="0">USDB: 32.25%</tspan></text>
       </g>
     </g>
     <g id="Group_12242" data-name="Group 12242" transform="translate(7 21)">
@@ -46,9 +46,9 @@
           </g>
         </g>
         <text id="UST_APY" data-name="UST APY" transform="translate(1075 2059)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-100.239" y="0">UST APY</tspan></text>
-        <text id="S_P_500_APR_based_on_5y_avg" data-name="S&amp;P 500 APR 
+        <text id="S_P_500_APR_based_on_5y_avg" data-name="S&amp;P 500 APR
 based on 5y avg" transform="translate(1035 1986)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-92.007" y="0">S&amp;P 500 APR </tspan><tspan x="-108.091" y="22">based on 5y avg</tspan></text>
-        <text id="US_Money_Market_6mo._APR" data-name="US Money Market 
+        <text id="US_Money_Market_6mo._APR" data-name="US Money Market
 6mo. APR" transform="translate(1035 1920)" fill="#696c80" stroke="rgba(0,0,0,0)" stroke-width="1" font-size="15" font-family="SegoeUI, Segoe UI"><tspan x="-123.149" y="0">US Money Market </tspan><tspan x="-64.204" y="22">6mo. APR</tspan></text>
       </g>
     </g>
