@@ -4,13 +4,11 @@ import { useLocation } from "react-router-dom";
 export const ScrollToTop = (): JSX.Element => {
   const routePath = useLocation();
   const onTop = () => {
-    window.scrollTo({top: 0, behavior: 'smooth'});
-  }
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
   useEffect(() => {
-    onTop()
+    onTop();
   }, [routePath]);
 
-  return (
-    <></>
-  );
+  return <></>;
 };

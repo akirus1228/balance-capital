@@ -39,7 +39,10 @@ export const Footer = (): JSX.Element => {
       pages: [
         { title: "My Account", href: "/my-account" },
         { title: "Documentation", href: "https://fantohm.gitbook.io/documentation" },
-        { title: "Audits", href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit" },
+        {
+          title: "Audits",
+          href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit",
+        },
         { title: "FantOHM", href: "https://fantohm.com" },
       ],
     },
