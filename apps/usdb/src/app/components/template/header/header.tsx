@@ -1,5 +1,4 @@
 import {
-  allBonds,
   useWeb3Context,
   setWalletConnected,
   getBalances,
@@ -23,7 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { SvgIcon, SxProps, Theme } from "@mui/material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
@@ -39,13 +38,13 @@ type PageParams = {
   comingSoon?: boolean;
 };
 
-type Pages = {
+type Page = {
   title: string;
   params: PageParams;
   href?: string;
 };
 
-const pages: Pages[] = [
+const pages: Page[] = [
   { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
   { title: "Staking", href: "/staking", params: { comingSoon: false } },
   { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
@@ -218,7 +217,7 @@ export const Header = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page: Pages) => (
+              {pages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
                   href={page.params.comingSoon ? "#" : page.href}
