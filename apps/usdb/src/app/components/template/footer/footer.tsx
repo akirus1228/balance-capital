@@ -28,7 +28,6 @@ export const Footer = (): JSX.Element => {
         { title: "Tradfi", href: "/trad-fi" },
         { title: "Staking", href: "/staking" },
         { title: "xFHM", href: "/xfhm" },
-        { title: "USDB bank", href: "" },
         {
           title: "Bridge",
           href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
@@ -39,10 +38,9 @@ export const Footer = (): JSX.Element => {
       label: "Useful Links",
       pages: [
         { title: "My Account", href: "/my-account" },
-        { title: "About", href: "" },
         { title: "Documentation", href: "https://fantohm.gitbook.io/documentation" },
-        { title: "Audits", href: "" },
-        { title: "FantOHM", href: "http://fantohm.com" },
+        { title: "Audits", href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit" },
+        { title: "FantOHM", href: "https://fantohm.com" },
       ],
     },
     {
@@ -126,7 +124,7 @@ export const Footer = (): JSX.Element => {
         }}
       >
         <Typography color="white" textAlign="center">
-          2022 USD Balance
+          &copy; 2022 USD Balance
         </Typography>
         <Box sx={{ display: "flex" }}>
           <Box
