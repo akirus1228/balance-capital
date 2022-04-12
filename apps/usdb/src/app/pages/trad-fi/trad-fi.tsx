@@ -134,7 +134,7 @@ export const TradFi = (): JSX.Element => {
               elevation={0}
             >
               <ThemeImage image="ShieldIcon" />
-              <span>Low risk of capital loss</span>
+              <span>Low risk</span>
             </Paper>
           </Grid>
         </Box>

@@ -30,7 +30,7 @@ export const AssetSection = (props: any): JSX.Element => {
         );
         const maxAmount = await props?.calcATokenAmount(bTokenAmount);
         props?.setATokenAmount(
-          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
+          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9, true)
         );
       } else {
         props?.setATokenAmount(e.target.value);
@@ -40,7 +40,7 @@ export const AssetSection = (props: any): JSX.Element => {
         );
         const maxAmount = await props?.calcBTokenAmount(aTokenAmount);
         props?.setBTokenAmount(
-          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9)
+          formatAmount(maxAmount || 0, props?.pairToken.decimals, 9, true)
         );
       }
     } catch (e) {
@@ -71,7 +71,12 @@ export const AssetSection = (props: any): JSX.Element => {
           >
             <Box display="flex" alignItems="center">
               <Box display="flex" alignItems="center">
-                <SvgIcon viewBox="0 0 32 32" component={props?.token?.iconSvg} />
+                <img
+                  width="32px"
+                  height="32px"
+                  src={props?.token?.iconSvg}
+                  alt={props?.token?.name}
+                />
               </Box>
               <Box ml="10px" width="55px">
                 <Typography
