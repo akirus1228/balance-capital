@@ -19,7 +19,7 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
-import { SvgIcon, SxProps, Theme } from "@mui/material";
+import { SvgIcon } from "@mui/material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
@@ -32,30 +32,8 @@ import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
 import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
+import { headerPages, Page } from "../../../constants/nav";
 
-type PageParams = {
-  sx?: SxProps<Theme> | undefined;
-  comingSoon?: boolean;
-};
-
-type Page = {
-  title: string;
-  params: PageParams;
-  href?: string;
-};
-
-const pages: Page[] = [
-  { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
-  { title: "Staking", href: "/staking", params: { comingSoon: false } },
-  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
-  { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "USDB bank", href: "", params: { comingSoon: true } },
-  {
-    title: "Bridge",
-    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
-    params: { comingSoon: false },
-  },
-];
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
     useWeb3Context();
@@ -217,16 +195,16 @@ export const Header = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page: Page) => (
+              {headerPages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
-                  href={page.params.comingSoon ? "#" : page.href}
+                  href={page?.params?.comingSoon ? "#" : page.href}
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
                   <Typography
                     textAlign="center"
-                    style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}
+                    style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
                   >
                     <Button style={{ width: "100%" }}>{page.title}</Button>
                   </Typography>
@@ -327,7 +305,7 @@ export const Header = (): JSX.Element => {
                   "aria-labelledby": "products-button",
                 }}
               >
-                {pages.map((page: any) => {
+                {headerPages.map((page: any) => {
                   return (
                     <MenuLink
                       // href={page.href ? page.href : '#'}

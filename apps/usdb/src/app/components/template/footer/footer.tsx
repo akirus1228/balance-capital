@@ -2,63 +2,14 @@ import { AppBar, Toolbar, Container, Grid, Box, Typography } from "@mui/material
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
+import { Logo } from "../../logo/logo";
 import MenuLink from "../header/menu-link";
 import { RootState } from "../../../store";
+import { FooterItem, Page, footerItems } from "../../../constants/nav";
 import style from "./footer.module.scss";
-
-type Page = {
-  title: string;
-  href?: string;
-};
-
-type FooterItem = {
-  label: string;
-  pages: Page[];
-};
 
 export const Footer = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
-
-  const footerItems: FooterItem[] = [
-    {
-      label: "Products",
-      pages: [
-        { title: "Tradfi", href: "/trad-fi" },
-        { title: "Staking", href: "/staking" },
-        { title: "xFHM", href: "/xfhm" },
-        {
-          title: "Bridge",
-          href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
-        },
-      ],
-    },
-    {
-      label: "Useful Links",
-      pages: [
-        { title: "My Account", href: "/my-account" },
-        { title: "Documentation", href: "https://fantohm.gitbook.io/documentation" },
-        {
-          title: "Audits",
-          href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit",
-        },
-        { title: "FantOHM", href: "https://fantohm.com" },
-      ],
-    },
-    {
-      label: "Community",
-      pages: [
-        { title: "Twitter", href: "https://twitter.com/usdb_" },
-        { title: "Discord", href: "https://discord.com/invite/8wAQWZgjCv" },
-        {
-          title: "Youtube",
-          href: "https://www.youtube.com/channel/UCa1eJEgcVnFhfLNdjw3yr4g",
-        },
-        { title: "Reddit", href: "https://www.reddit.com/r/USDB_OFFICIAL/" },
-      ],
-    },
-  ];
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -69,10 +20,7 @@ export const Footer = (): JSX.Element => {
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Box width="220px" mb="30px">
                   <Link to="/">
-                    <img
-                      src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
-                      alt="USDB logo"
-                    />
+                    <Logo />
                   </Link>
                   <Typography
                     variant="subtitle2"
@@ -88,7 +36,7 @@ export const Footer = (): JSX.Element => {
             <Grid item xs={12} md={7}>
               <Grid container spacing={2}>
                 {footerItems.map((item: FooterItem, index: number) => (
-                  <Grid item xs={6} md={4} key={`footer-item-${index}`}>
+                  <Grid item xs={6} sm={6} md={4} key={`footer-item-${index}`}>
                     <Box sx={{ display: "flex", flexDirection: "column" }}>
                       <Typography
                         variant="h6"
