@@ -16,6 +16,7 @@ import {
   Bond,
   redeemBondUsdb,
   IRedeemBondAsyncThunk,
+  defaultNetworkId,
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import {
@@ -57,11 +58,13 @@ export default function Mint() {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
   const navigate = useNavigate();
 
-  const { provider, address, connected, connect, chainId } = useWeb3Context();
+  const { provider, address, connected, connect, chainId, switchEthereumChain } =
+    useWeb3Context();
   const dispatch = useDispatch();
-  const [tabState, setTabState] = React.useState(true);
-  const [daiPrice, setDaiPrice] = React.useState(0);
-  const [fhmPrice, setFhmPrice] = React.useState(0);
+
+  const [tabState, setTabState] = useState(true);
+  const [daiPrice, setDaiPrice] = useState(0);
+  const [fhmPrice, setFhmPrice] = useState(0);
   const { bonds } = useBonds(chainId || 250);
   const [bond, setBond] = useState(
     allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond
@@ -80,8 +83,8 @@ export default function Mint() {
     return state.account.bonds;
   });
 
-  const ableToBond =
-    bond.isAvailable[chainId ?? 250] && !bond?.isCircuitBroken && bond.isPurchasable;
+  // bond.isAvailable[chainId ?? 250] &&
+  const ableToBond = !bond?.isCircuitBroken && bond.isPurchasable;
   const selectedAccountBond = accountBonds[bond.name];
 
   const isTabletScreen = useMediaQuery("(max-width: 970px)");
@@ -159,14 +162,16 @@ export default function Mint() {
     },
   ];
 
-  useEffect(() => {
-    async function fetchPrice() {
-      setDaiPrice(await getTokenPrice("dai"));
-      setFhmPrice(await getTokenPrice("fantohm"));
+  const changeNetworks = async (chainId: number) => {
+    if (!switchEthereumChain) return;
+    const result = await switchEthereumChain(chainId || defaultNetworkId);
+    if (!result) {
+      const errorMessage =
+        "Unable to switch networks. Please change network using provider.";
+      console.error(errorMessage);
+      dispatch(error(errorMessage));
     }
-
-    fetchPrice().then();
-  }, []);
+  };
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -180,23 +185,9 @@ export default function Mint() {
     }
   };
 
-  useEffect(() => {
-    if (tabState) {
-      setAllowance(
-        (bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance >
-          0
-      );
-    } else {
-      setAllowance(
-        (bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData)
-          ?.allowance > 0
-      );
-    }
-  }, [bonds, usdbBondData, usdbBondData?.allowance]);
-
   const selectedToken = tabState ? token[0] : token[1];
 
-  async function handleMint() {
+  const handleMint = async () => {
     if (Number(quantity) === 0) {
       await dispatch(error("Please enter a value!"));
     } else if (isNaN(Number(quantity))) {
@@ -215,9 +206,9 @@ export default function Mint() {
         } as IBondAssetAsyncThunk)
       );
     }
-  }
+  };
 
-  async function handleRedeem() {
+  const handleRedeem = async () => {
     dispatch(
       redeemBondUsdb({
         address,
@@ -226,10 +217,10 @@ export default function Mint() {
         bond: bond,
       } as IRedeemBondAsyncThunk)
     );
-  }
+  };
 
-  function setBondState(bool: boolean) {
-    if (bool) {
+  const setBondState = (state: boolean) => {
+    if (state) {
       setUsdbBondData(bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData);
       setBond(allBonds.filter((bond) => bond.name === "usdbBuy")[0] as Bond);
       setImage(DaiToken);
@@ -240,8 +231,8 @@ export default function Mint() {
       setBond(allBonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as Bond);
       setImage(FHMToken);
     }
-    setTabState(bool);
-  }
+    setTabState(state);
+  };
 
   const setMax = () => {
     if (selectedToken === token[0]) {
@@ -254,6 +245,29 @@ export default function Mint() {
   const goToMyAccount = () => {
     setTimeout(() => navigate("/my-account"), 200);
   };
+
+  useEffect(() => {
+    async function fetchPrice() {
+      setDaiPrice(await getTokenPrice("dai"));
+      setFhmPrice(await getTokenPrice("fantohm"));
+    }
+
+    fetchPrice().then();
+  }, []);
+
+  useEffect(() => {
+    if (tabState) {
+      setAllowance(
+        (bonds.filter((bond) => bond.name === "usdbBuy")[0] as IAllBondData)?.allowance >
+          0
+      );
+    } else {
+      setAllowance(
+        (bonds.filter((bond) => bond.name === "usdbFhmBurn")[0] as IAllBondData)
+          ?.allowance > 0
+      );
+    }
+  }, [bonds, usdbBondData, usdbBondData?.allowance]);
 
   return (
     <Box className={style["hero"]}>
@@ -440,6 +454,15 @@ export default function Mint() {
                   onClick={connect}
                 >
                   Connect Wallet
+                </Button>
+              ) : !bond.isAvailable[chainId ?? 250] ? (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  id="bond-btn"
+                  onClick={() => changeNetworks(defaultNetworkId).then()}
+                >
+                  Switch network
                 </Button>
               ) : !ableToBond ? (
                 selectedAccountBond?.userBonds.length > 0 &&
