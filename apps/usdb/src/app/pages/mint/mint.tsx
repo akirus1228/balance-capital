@@ -52,7 +52,7 @@ import { useNavigate } from "react-router-dom";
 import Carousel from "react-material-ui-carousel";
 
 import style from "./mint.module.scss";
-import store, { RootState } from "../../store";
+import { RootState } from "../../store";
 
 export default function Mint() {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
@@ -169,7 +169,7 @@ export default function Mint() {
       const errorMessage =
         "Unable to switch networks. Please change network using provider.";
       console.error(errorMessage);
-      store.dispatch(error(errorMessage));
+      dispatch(error(errorMessage));
     }
   };
 
