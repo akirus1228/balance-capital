@@ -410,31 +410,29 @@ export const XfhmPage = (): JSX.Element => {
             )}
           </Box>
         </Box>
+      ) : !connected ? (
+        <Box display="flex" justifyContent="center">
+          <Button
+            className="thin"
+            color="primary"
+            variant="contained"
+            onClick={() => handleConnect()}
+          >
+            Connect Wallet
+          </Button>
+        </Box>
       ) : (
-        !connected ? (
-          <Box display="flex" justifyContent="center">
-            <Button
-              className="thin"
-              color="primary"
-              variant="contained"
-              onClick={() => handleConnect()}
-            >
-              Connect Wallet
-            </Button>
-          </Box>
-        ) : (
-          <Box display="flex" justifyContent="center">
-            <Button
-              className="thin"
-              color="primary"
-              variant="contained"
-              disabled={!address || isPendingTxn(pendingTransactions, "approve-fhm")}
-              onClick={() => onSeekApproval()}
-            >
-              {txnButtonText(pendingTransactions, "approve-fhm", "Approve FHM")}
-            </Button>
-          </Box>
-        )
+        <Box display="flex" justifyContent="center">
+          <Button
+            className="thin"
+            color="primary"
+            variant="contained"
+            disabled={!address || isPendingTxn(pendingTransactions, "approve-fhm")}
+            onClick={() => onSeekApproval()}
+          >
+            {txnButtonText(pendingTransactions, "approve-fhm", "Approve FHM")}
+          </Button>
+        </Box>
       )}
     </Box>
   );
