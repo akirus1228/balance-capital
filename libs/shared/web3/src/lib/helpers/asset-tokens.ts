@@ -4,7 +4,7 @@ import { ethers } from "ethers";
 import { chains } from "../providers";
 import { NetworkId, NetworkIds, networks } from "../networks";
 import { xFhmAbi as XfhmAbi, lqdrAbi as LqdrAbi } from "../abi";
-import { xFhmIcon, LQDRToken } from "@fantohm/shared/images";
+import { FHMToken } from "@fantohm/shared/images";
 
 export interface AssetTokenAddress {
   [key: string]: string;
@@ -62,7 +62,7 @@ export const xFhmToken = new AssetToken({
   name: "xFhm",
   displayName: "xFhm",
   contractABI: XfhmAbi,
-  iconSvg: xFhmIcon,
+  iconSvg: FHMToken,
   networkAddrs: {
     [NetworkIds.FantomOpera]: "",
     [NetworkIds.FantomTestnet]: "",
@@ -75,7 +75,7 @@ export const lqdrToken = new AssetToken({
   name: "LQDR",
   displayName: "LQDR",
   contractABI: LqdrAbi,
-  iconSvg: LQDRToken,
+  iconSvg: FHMToken,
   networkAddrs: {
     [NetworkIds.FantomOpera]: "",
     [NetworkIds.FantomTestnet]: "",
