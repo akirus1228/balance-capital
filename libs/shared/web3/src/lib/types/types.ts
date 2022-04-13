@@ -3,7 +3,7 @@ import Web3Modal from "web3modal";
 import { NetworkId } from "../networks";
 
 type onChainProvider = {
-  connect: () => void;
+  connect: (forceSwitch?: boolean, forceNetworkId?: NetworkId) => void;
   disconnect: () => void;
   provider: JsonRpcProvider | null;
   address: string;

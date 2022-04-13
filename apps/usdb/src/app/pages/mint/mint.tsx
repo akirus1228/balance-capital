@@ -451,7 +451,7 @@ export default function Mint() {
                   variant="contained"
                   color="primary"
                   id="bond-btn"
-                  onClick={connect}
+                  onClick={() => connect(true)}
                 >
                   Connect Wallet
                 </Button>
