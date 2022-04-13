@@ -2,13 +2,9 @@ import { Box, Container, Grid, Icon } from "@mui/material";
 import style from "./home-page.module.scss";
 import IconGrid from "./icon-grid/icon-grid";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { useSelector } from "react-redux";
-import store, { RootState } from "../../store";
 import { Logo } from "@fantohm/shared/ui-components";
 
 export const HomePage = (): JSX.Element => {
-  const themeType = useSelector((state: RootState) => state.app.theme);
-
   return (
     <Container
       maxWidth="xl"
@@ -61,7 +57,7 @@ export const HomePage = (): JSX.Element => {
                   display: { xs: "none", md: "flex" },
                 }}
               >
-                <Logo store={store} />
+                <Logo />
               </Box>
               <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>
               <h3 className={style["heroSubtitle"]}>

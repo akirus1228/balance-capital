@@ -1,15 +1,10 @@
 import {
   useWeb3Context,
   setWalletConnected,
-  getBalances,
-  useBonds,
-  trim,
-  defaultNetworkId,
   enabledNetworkIds,
 } from "@fantohm/shared-web3";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
-import { Skeleton } from "@mui/material";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
@@ -26,7 +21,7 @@ import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
-import store, { RootState } from "../../../store";
+import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
@@ -44,16 +39,8 @@ type Page = {
 };
 
 const pages: Page[] = [
-  { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
-  { title: "Staking", href: "/staking", params: { comingSoon: false } },
-  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
-  { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "USDB bank", href: "", params: { comingSoon: true } },
-  {
-    title: "Bridge",
-    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
-    params: { comingSoon: false },
-  },
+  { title: "Borrow", href: "/borrow", params: { comingSoon: false } },
+  { title: "Lend", href: "/lend", params: { comingSoon: false } },
 ];
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
@@ -65,20 +52,9 @@ export const Header = (): JSX.Element => {
     null
   );
   const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
-  const [accountBondsLoading, setAccountBondsLoading] = useState<boolean>(true);
-  const [totalBalances, setTotalBalances] = useState<number>(0);
 
-  const themeType = useSelector((state: RootState) => state.app.theme);
-  const { bonds } = useBonds(chainId ?? defaultNetworkId);
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
-  const allBondsLoaded = useSelector((state: RootState) => {
-    return state.account.allBondsLoaded;
-  });
-  const accountLoading = useSelector((state: RootState) => {
-    return state.account.loading;
-  });
+  const themeType = useSelector((state: RootState) => state.theme.mode);
+
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -101,7 +77,6 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
     if (connected) {
       setConnectButtonText("Disconnect");
     } else {
@@ -133,37 +108,9 @@ export const Header = (): JSX.Element => {
     localStorage.setItem("use-theme", type);
   }, [dispatch, themeType]);
 
-  const useTheme = localStorage.getItem("use-theme");
-  if (useTheme) {
-    dispatch(setTheme(useTheme === "dark" ? "dark" : "light"));
-  }
-
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
   };
-
-  useEffect(() => {
-    // FIXME hack
-    // if (Object.keys(accountBonds).length < allBonds.length) {
-    //   return;
-    // }
-    if (allBondsLoaded) {
-      const balances = bonds.reduce((prevBalance, bond) => {
-        const bondName = bond.name;
-        const accountBond = accountBonds[bondName];
-        if (accountBond) {
-          const userBonds = accountBond.userBonds;
-          return (
-            prevBalance +
-            userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
-          );
-        }
-        return prevBalance;
-      }, 0);
-      setTotalBalances(balances);
-      setAccountBondsLoading(false);
-    }
-  }, [address, allBondsLoaded, accountLoading]);
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -179,7 +126,7 @@ export const Header = (): JSX.Element => {
             }}
           >
             <Link to="/">
-              <Logo store={store} />
+              <Logo />
             </Link>
           </Typography>
 
@@ -273,13 +220,6 @@ export const Header = (): JSX.Element => {
                       >
                         My Portfolio:&nbsp;
                       </Box>
-                      {!accountBondsLoading ? (
-                        <Box display="flex" alignItems="center" mt="2px">
-                          ${trim(totalBalances, 2)}
-                        </Box>
-                      ) : (
-                        <Skeleton width="100px" />
-                      )}
                     </Button>
                   </Link>
                 </Typography>
@@ -291,7 +231,7 @@ export const Header = (): JSX.Element => {
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
             <Link to="/">
-              <Logo store={store} className={`${styles["usdbLogo"]}`} />
+              <Logo className={`${styles["usdbLogo"]}`} />
             </Link>
           </Typography>
           <Box
@@ -343,35 +283,6 @@ export const Header = (): JSX.Element => {
           <Box mr="1em">
             <NetworkMenu />
           </Box>
-          {connected && (
-            <Tooltip title={`My Portfolio: $${totalBalances}`}>
-              <Link to="/my-account">
-                <Button
-                  className="portfolio"
-                  sx={{ display: { xs: "none", md: "flex" } }}
-                >
-                  <Box display="flex" alignItems="center" mr="10px">
-                    <SvgIcon component={AnalyticsIcon} fontSize="large" />
-                  </Box>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    mt="2px"
-                    sx={{ display: { xs: "none", lg: "flex" } }}
-                  >
-                    My Portfolio:&nbsp;
-                  </Box>
-                  {!accountBondsLoading ? (
-                    <Box display="flex" alignItems="center" mt="2px">
-                      ${trim(totalBalances, 2)}
-                    </Box>
-                  ) : (
-                    <Skeleton width="100px" />
-                  )}
-                </Button>
-              </Link>
-            </Tooltip>
-          )}
 
           <Tooltip title="Connect Wallet">
             <Button
