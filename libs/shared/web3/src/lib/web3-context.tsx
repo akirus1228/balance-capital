@@ -1,11 +1,10 @@
-import React, { useState, ReactElement, useContext, useMemo, useCallback } from "react";
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Web3ContextData } from "./types/types";
-import { NetworkId, NetworkIds, enabledNetworkIds } from "../lib/networks";
+import { enabledNetworkIds, NetworkId, NetworkIds } from "./networks";
 import { chains } from "./providers";
 import { isIframe } from "@fantohm/shared-helpers";
 
@@ -20,7 +19,7 @@ export const useWeb3Context = () => {
   if (!web3Context) {
     throw new Error(
       "useWeb3Context() can only be used inside of <Web3ContextProvider />, " +
-        "please declare it at a higher level."
+      "please declare it at a higher level."
     );
   }
   const { onChainProvider } = web3Context;
@@ -48,8 +47,8 @@ const getSavedNetworkId = () => {
 };
 
 export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
-  children,
-}) => {
+                                                                            children
+                                                                          }) => {
   const [connected, setConnected] = useState(false);
 
   const defaultNetworkId = getSavedNetworkId() || NetworkIds.FantomOpera;
@@ -71,10 +70,10 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         walletconnect: {
           package: WalletConnectProvider,
           options: {
-            rpc: rpcUris,
-          },
-        },
-      },
+            rpc: rpcUris
+          }
+        }
+      }
     })
   );
 
@@ -92,7 +91,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       if (!rawProvider.on) {
         return;
       }
-      rawProvider.on("accountsChanged", async (accounts: string[]) => {
+      rawProvider.on("accountsChanged", async () => {
         setTimeout(() => window.location.reload(), 1);
       });
 
@@ -106,7 +105,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         }
         setChainId(newChainId);
         if (!_checkNetwork(newChainId)) {
-          disconnect();
+          await disconnect();
         }
         setTimeout(() => window.location.reload(), 1);
       });
@@ -141,7 +140,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       try {
         await window.ethereum.request({
           method: "wallet_switchEthereumChain",
-          params: [{ chainId }],
+          params: [{ chainId }]
         });
         return true;
       } catch (e: any) {
@@ -160,12 +159,12 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
                   chainName: chainDetails.networkName,
                   nativeCurrency: {
                     symbol: chainDetails.symbol,
-                    decimals: chainDetails.decimals,
+                    decimals: chainDetails.decimals
                   },
                   blockExplorerUrls: chainDetails.blockExplorerUrls,
-                  rpcUrls: chainDetails.rpcUrls,
-                },
-              ],
+                  rpcUrls: chainDetails.rpcUrls
+                }
+              ]
             });
             return true;
           } catch (addError) {
@@ -185,8 +184,12 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     }
   };
 
+  const isTradfiPage = () => {
+    return window.location.href.indexOf('trad-fi') >= 0;
+  }
+
   // connect - only runs for WalletProviders
-  const connect = useCallback(async () => {
+  const connect = useCallback(async (forceSwitch = false, forceNetworkId = NetworkIds.FantomOpera) => {
     // handling Ledger Live;
     let rawProvider;
     if (isIframe()) {
@@ -204,14 +207,18 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       .then((network) => network.chainId);
     const connectedAddress = await connectedProvider.getSigner().getAddress();
     const validNetwork = _checkNetwork(chainId);
+    let networkId = forceSwitch ? forceNetworkId : defaultNetworkId;
+    if (isTradfiPage() && validNetwork) {
+      networkId = validNetwork ? defaultNetworkId : forceNetworkId;
+    }
+    const switched = await switchEthereumChain(networkId, true);
+    if (!switched) {
+      web3Modal.clearCachedProvider();
+      const errorMessage = "Unable to connect. Please change network using provider.";
+      console.error(errorMessage);
+      //store.dispatch(error(errorMessage));
+    }
     if (!validNetwork) {
-      const switched = await switchEthereumChain(defaultNetworkId, true);
-      if (!switched) {
-        web3Modal.clearCachedProvider();
-        const errorMessage = "Unable to connect. Please change network using provider.";
-        console.error(errorMessage);
-        //store.dispatch(error(errorMessage));
-      }
       return;
     }
     // Save everything after we've validated the right network.
@@ -245,7 +252,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       connected,
       address,
       chainId,
-      web3Modal,
+      web3Modal
     }),
     [
       connect,
@@ -255,7 +262,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       connected,
       address,
       chainId,
-      web3Modal,
+      web3Modal
     ]
   );
 

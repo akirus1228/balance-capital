@@ -1,5 +1,4 @@
 import {
-  allBonds,
   useWeb3Context,
   setWalletConnected,
   getBalances,
@@ -23,7 +22,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { SvgIcon, SxProps, Theme } from "@mui/material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import { MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
@@ -94,7 +93,7 @@ export const Header = (): JSX.Element => {
       await disconnect();
     } else {
       try {
-        await connect();
+        await connect(true);
       } catch (e) {
         console.log("Connection metamask error", e);
       }

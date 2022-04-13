@@ -73,7 +73,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                       color="primary"
                       id="bond-btn"
                       className="paperButton transaction-button"
-                      onClick={connect}
+                      onClick={() => connect(true)}
                     >
                       Connect Wallet
                     </Button>
