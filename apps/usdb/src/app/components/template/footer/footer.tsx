@@ -1,16 +1,12 @@
 import { AppBar, Toolbar, Container, Grid, Box, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import { Logo } from "../../logo/logo";
 import MenuLink from "../header/menu-link";
-import { RootState } from "../../../store";
 import { FooterItem, Page, footerItems } from "../../../constants/nav";
 import style from "./footer.module.scss";
 
 export const Footer = (): JSX.Element => {
-  const themeType = useSelector((state: RootState) => state.app.theme);
-
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
       <Container maxWidth="xl" sx={{ my: "100px" }}>
