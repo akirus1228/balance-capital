@@ -10,7 +10,7 @@ import {
   IUserBond,
   redeemOneBond,
   useBonds,
-  useWeb3Context
+  useWeb3Context,
 } from "@fantohm/shared-web3";
 import { useEffect, useMemo, useState } from "react";
 import { RootState } from "../../store";

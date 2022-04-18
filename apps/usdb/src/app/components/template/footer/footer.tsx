@@ -7,7 +7,6 @@ import { FooterItem, footerItems, Page } from "../../../constants/nav";
 import style from "./footer.module.scss";
 
 export const Footer = (): JSX.Element => {
-
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
       <Container maxWidth="xl" sx={{ my: { xs: "30px", sm: "100px" } }}>
