@@ -165,8 +165,6 @@ const appSlice = createSlice({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const baseInfo = (state: RootState) => state.app;
 
 export const appReducer = appSlice.reducer;

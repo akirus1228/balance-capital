@@ -38,13 +38,13 @@ type PageParams = {
   comingSoon?: boolean;
 };
 
-type Pages = {
+type Page = {
   title: string;
   params: PageParams;
   href?: string;
 };
 
-const pages: Pages[] = [
+const pages: Page[] = [
   { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
   { title: "Staking", href: "/staking", params: { comingSoon: false } },
   { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
@@ -217,7 +217,7 @@ export const Header = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page: Pages) => (
+              {pages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
                   href={page.params.comingSoon ? "#" : page.href}
