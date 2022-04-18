@@ -21,7 +21,7 @@ export const headerPages: Page[] = [
   { title: "Staking", href: "/staking", params: { comingSoon: false } },
   { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
   { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "USDB bank", href: "", params: { comingSoon: true } },
+  { title: "USDB Bank", href: "", params: { comingSoon: true } },
   {
     title: "Bridge",
     href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
@@ -35,7 +35,8 @@ export const footerItems: FooterItem[] = [
     pages: [
       { title: "Tradfi", href: "/trad-fi" },
       { title: "Staking", href: "/staking" },
-      { title: "xFHM", href: "/xfhm" },
+      { title: "xFHM", href: "", params: { comingSoon: true } },
+      { title: "USDB Bank", href: "", params: { comingSoon: true } },
       {
         title: "Bridge",
         href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
