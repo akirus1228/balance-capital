@@ -1,5 +1,4 @@
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import { Routes, Route, Navigate, useLocation, useMatch } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
@@ -19,7 +18,8 @@ import {
   calculateAllUserBondDetails,
 } from "@fantohm/shared-web3";
 import { StakingChoicePage } from "./pages/staking-choice/staking-choice";
-import { Header } from "./components/template";
+import { Header, Footer } from "./components/template";
+import { ScrollToTop } from "./components/scroll-to-top/scroll-to-top";
 import { Messages } from "./components/messages/messages";
 import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
 import { HomePage } from "./pages/home/home-page";
@@ -92,6 +92,7 @@ export const App = (): JSX.Element => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
+        <ScrollToTop />
         <Messages />
         <Header />
         <Routes>
@@ -113,6 +114,7 @@ export const App = (): JSX.Element => {
             }
           />
         </Routes>
+        <Footer />
       </Box>
     </ThemeProvider>
   );

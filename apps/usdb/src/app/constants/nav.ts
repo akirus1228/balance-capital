@@ -18,10 +18,10 @@ export type FooterItem = {
 
 export const headerPages: Page[] = [
   { title: "Traditional Finance", href: "/trad-fi", params: { comingSoon: false } },
-  { title: "Staking", href: "/staking", params: { comingSoon: false } },
+  { title: "Stablecoin Farming", href: "/staking", params: { comingSoon: false } },
   { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
   { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "USDB bank", href: "", params: { comingSoon: true } },
+  { title: "USDB Bank", href: "", params: { comingSoon: true } },
   {
     title: "Bridge",
     href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
@@ -34,8 +34,9 @@ export const footerItems: FooterItem[] = [
     label: "Products",
     pages: [
       { title: "Tradfi", href: "/trad-fi" },
-      { title: "Staking", href: "/staking" },
-      { title: "xFHM", href: "/xfhm" },
+      { title: "Stablecoin Farming", href: "/staking" },
+      { title: "xFHM", href: "", params: { comingSoon: true } },
+      { title: "USDB Bank", href: "", params: { comingSoon: true } },
       {
         title: "Bridge",
         href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",

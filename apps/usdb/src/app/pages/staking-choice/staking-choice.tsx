@@ -1,14 +1,10 @@
-import { useEffect, useState } from "react";
-import { Box, Button, Grid, Skeleton } from "@mui/material";
+import { Box, Button, Grid } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq, { FaqItem } from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
-import { numberWithCommas, getStakedTVL } from "@fantohm/shared-web3";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import { DaiToken } from "@fantohm/shared/images";
 import Logo from "../../components/logo/logo";
 
@@ -48,16 +44,6 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const StakingChoicePage = (): JSX.Element => {
-  const [assetBalance, setAssetBalance] = useState(-1);
-
-  useEffect(() => {
-    async function getBalance() {
-      const balance = await getStakedTVL();
-      setAssetBalance(balance);
-    }
-
-    getBalance();
-  }, []);
 
   const heroContent = {
     hero: true,

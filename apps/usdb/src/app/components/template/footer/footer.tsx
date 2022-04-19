@@ -1,15 +1,15 @@
-import { AppBar, Toolbar, Container, Grid, Box, Typography } from "@mui/material";
+import { AppBar, Box, Container, Grid, Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 
 import { Logo } from "../../logo/logo";
 import MenuLink from "../header/menu-link";
-import { FooterItem, Page, footerItems } from "../../../constants/nav";
+import { FooterItem, footerItems, Page } from "../../../constants/nav";
 import style from "./footer.module.scss";
 
 export const Footer = (): JSX.Element => {
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
-      <Container maxWidth="xl" sx={{ my: "100px" }}>
+      <Container maxWidth="xl" sx={{ my: { xs: "30px", sm: "100px" } }}>
         <Toolbar disableGutters>
           <Grid container spacing={2} sx={{ px: { xs: "40px", md: "0" } }}>
             <Grid item xs={12} md={5}>
@@ -44,11 +44,16 @@ export const Footer = (): JSX.Element => {
                       </Typography>
                       {item.pages.map((page: Page) => (
                         <MenuLink
-                          href={page.href ? page.href : "#"}
+                          href={page?.params?.comingSoon ? "#" : page.href}
                           key={page.title}
                           style={{ marginBottom: "10px" }}
                         >
-                          <Typography color="textPrimary">{page.title}</Typography>
+                          <Typography
+                            color="textPrimary"
+                            style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
+                          >
+                            {page.title}
+                          </Typography>
                         </MenuLink>
                       ))}
                     </Box>
