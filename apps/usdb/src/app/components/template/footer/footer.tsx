@@ -84,8 +84,8 @@ export const Footer = (): JSX.Element => {
             <Typography color="white">*</Typography>
           </Box>
           <Typography color="white" textAlign="center">
-            <a href="mailto:hello@balanceusdb.com" style={{ color: "white" }}>
-              hello@balanceusdb.com
+            <a href="mailto:hello@usdbalance.com" style={{ color: "white" }}>
+              hello@usdbalance.com
             </a>
           </Typography>
           <Box
