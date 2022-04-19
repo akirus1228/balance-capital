@@ -5,6 +5,7 @@ import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
 import { DaiToken } from "@fantohm/shared/images";
+import Logo from "../../components/logo/logo";
 
 export const StakingV1Page = (): JSX.Element => {
   const heroContent = {
@@ -70,6 +71,7 @@ export const StakingV1Page = (): JSX.Element => {
       </Box>
       <Box className={style["__section"]}>
         <Headline {...simpleSafe} sx={{ mb: "2em" }} />
+        <Logo />
       </Box>
     </>
   );
