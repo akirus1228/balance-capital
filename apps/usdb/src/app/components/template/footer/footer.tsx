@@ -90,7 +90,7 @@ export const Footer = (): JSX.Element => {
           </Box>
           <Typography color="white" textAlign="center">
             <a href="mailto:hello@usdbalance.com" style={{ color: "white" }}>
-              hello@usdbalance.com
+              info@usdbalance.com
             </a>
           </Typography>
           <Box
@@ -99,15 +99,8 @@ export const Footer = (): JSX.Element => {
               mt: "3px",
               display: { xs: "none", sm: "block" },
             }}
-          >
-            <Typography color="white">*</Typography>
-          </Box>
+          ></Box>
         </Box>
-        <MenuLink href="#">
-          <Typography color="white" textAlign="center">
-            Privacy Policy
-          </Typography>
-        </MenuLink>
       </Box>
     </AppBar>
   );
