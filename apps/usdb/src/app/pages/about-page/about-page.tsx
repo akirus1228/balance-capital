@@ -13,6 +13,13 @@ const heroContent = {
   ],
 };
 
+const sectionText = {
+  title: "Two layers of multisig protection",
+  subtitle: [
+    "USDB is protected by two layers of multisig protection, Fantom Safe and OpenZeppelin Defender.",
+  ],
+};
+
 export const AboutPage = (): JSX.Element => {
   // mailchimp integration
   useEffect(() => {
@@ -87,6 +94,18 @@ export const AboutPage = (): JSX.Element => {
             </Grid>
           </Grid>
         </Grid>
+      </Box>
+      <Box className={`${style["__section"]} flexCenterRow`} sx={{ margin: "0 auto" }}>
+        <Box className={style["bannerBox"]}>
+          <h1>Discover how USDB can strengthen your product or service.</h1>
+          <p>
+            Are you part of a financial institution or a DeFi protocol? Speak with a
+            member of our team today to learn more.
+          </p>
+        </Box>
+      </Box>
+      <Box className={`${style["__section"]} flexCenterRow`} sx={{ margin: "0 auto" }}>
+        <Headline {...sectionText} />
       </Box>
     </>
   );
