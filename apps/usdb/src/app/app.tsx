@@ -82,6 +82,7 @@ export const App = (): JSX.Element => {
       case "/":
       case "/trad-fi":
       case "/staking":
+      case "/about":
         document.body.classList.add("heroBackground");
         break;
       default:
