@@ -29,6 +29,7 @@ import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 import { loadAppDetails } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
+import AboutPage from "./pages/about-page/about-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -105,6 +106,7 @@ export const App = (): JSX.Element => {
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
           <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route
             path="*"
             element={
