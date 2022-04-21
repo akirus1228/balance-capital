@@ -1,9 +1,13 @@
-import { Box, Grid, Icon } from "@mui/material";
+import { Box, Button, Grid, Icon, Paper } from "@mui/material";
 import { useEffect } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Headline from "../../components/headline/headline";
 import Logo from "../../components/logo/logo";
 import style from "./about-page.module.scss";
+import {
+  TeammateProfile,
+  Teammate,
+} from "../../components/teammate-profile/teammate-profile";
 
 const heroContent = {
   hero: true,
@@ -19,6 +23,33 @@ const sectionText = {
     "USDB is protected by two layers of multisig protection, Fantom Safe and OpenZeppelin Defender.",
   ],
 };
+
+const teammates: Teammate[] = [
+  {
+    name: "pwntr0n",
+    details: "Lead developer",
+  },
+  {
+    name: "Kanan",
+    details: "Web dev & designer",
+  },
+  {
+    name: "Rayne",
+    details: "Marketing specialist",
+  },
+  {
+    name: "AtomicSwap",
+    details: "KuramaDAO",
+  },
+  {
+    name: "lilbobross",
+    details: "Cityroots.io, OtterClam, NovaDAO, SneakyCapital",
+  },
+  {
+    name: "Sleepy Neko",
+    details: "Trusted Shiba Inu Community Member",
+  },
+];
 
 export const AboutPage = (): JSX.Element => {
   // mailchimp integration
@@ -44,10 +75,7 @@ export const AboutPage = (): JSX.Element => {
           <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
         </a>
       </Box>
-      <Box
-        className={`${style["__section"]} ${style["info1"]} flexCenterRow`}
-        sx={{ margin: "0 auto" }}
-      >
+      <Box className={`${style["__section"]} ${style["info1"]} flexCenterRow`}>
         <Grid container columnSpacing={6}>
           <Grid item xs={12} sm={6} md={5}>
             <h2>Building an open financial system</h2>
@@ -86,7 +114,7 @@ export const AboutPage = (): JSX.Element => {
                   A long-term investment vehicle to safely park funds and earn stable
                   yields
                 </p>
-                <a href="/about#" className={style["learnMore"]}>
+                <a href="mailto:info@usdbalance.com" className={style["learnMore"]}>
                   Get in touch
                   <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
                 </a>
@@ -95,16 +123,49 @@ export const AboutPage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-      <Box className={`${style["__section"]} flexCenterRow`} sx={{ margin: "0 auto" }}>
-        <Box className={style["bannerBox"]}>
-          <h1>Discover how USDB can strengthen your product or service.</h1>
-          <p>
-            Are you part of a financial institution or a DeFi protocol? Speak with a
-            member of our team today to learn more.
-          </p>
-        </Box>
+      <Box className={`${style["__section"]} ${style["info2"]} flexCenterRow`}>
+        <Paper className={`${style["usdbBanner"]} usdbBanner `}>
+          <Box sx={{ width: "40%" }}>
+            <h1>Discover how USDB can strengthen your product or service.</h1>
+            <p>
+              Are you part of a financial institution or a DeFi protocol? Speak with a
+              member of our team today to learn more.
+            </p>
+          </Box>
+          <Button
+            href="mailto:info@usdbalance.com"
+            variant="contained"
+            className={`${style["bannerButton"]} inverted`}
+          >
+            Get in touch
+          </Button>
+        </Paper>
       </Box>
-      <Box className={`${style["__section"]} flexCenterRow`} sx={{ margin: "0 auto" }}>
+      <Box
+        className={`${style["__section"]} flexCenterRow`}
+        sx={{ margin: "0 auto" }}
+        maxWidth="md"
+      >
+        <Headline {...sectionText} />
+      </Box>
+      <Box
+        className={`${style["__section"]} flexCenterRow`}
+        sx={{ margin: "0 auto" }}
+        maxWidth="md"
+      >
+        <Grid container rowSpacing={6}>
+          {teammates.map((teammate, index) => (
+            <Grid item xs={12} sm={6} md={4} key={`teammate-${index}`}>
+              <TeammateProfile teammate={teammate} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+      <Box
+        className={`${style["__section"]} flexCenterRow`}
+        sx={{ margin: "0 auto" }}
+        maxWidth="md"
+      >
         <Headline {...sectionText} />
       </Box>
     </>

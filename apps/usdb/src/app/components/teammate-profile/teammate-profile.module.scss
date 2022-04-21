@@ -1,0 +1,22 @@
+.initial {
+    font-size: 32px;
+    border: 2px solid #FFF;
+    border-radius: 50%;
+    height: 2.5em;
+    width: 2.5em;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.name { 
+    margin-top: 1em;
+    font-size: 28px;
+    font-weight: 500;
+}
+
+.details {
+    margin-top: 0.5em;
+    font-weight: 200;
+}

@@ -54,6 +54,9 @@
 }
 
 .info1 {
+    text-align: left;
+    margin: 0 auto 250px auto;
+
     h2, h4 { 
         font-weight: 400;
     }
@@ -68,6 +71,28 @@
 
     p {
         color: #8A99A8;
+    }
+}
 
+.info2 {
+    text-align: left;
+    margin: 0 auto 250px auto;
+}
+
+.usdbBanner {
+    text-align: left;
+
+    h1 {
+        margin-top: 0;
+        font-size: 24px;
+        color: #000;   
+    }
+
+    p {
+        font-weight: 200;
+    }
+
+    .bannerButton {
+        padding: 1em 3em;
     }
 }

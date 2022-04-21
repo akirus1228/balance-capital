@@ -3,6 +3,7 @@ import { ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
+import { DarkUSDBBanner1, LightUSDBBanner1 } from "@fantohm/shared/images";
 
 export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
   root: {
@@ -92,6 +93,12 @@ const globalTheme: ThemeOptions = {
           "&.MuiAccordion-root, &.MuiAccordion-root:last-of-type": {
             padding: "1.75em 0 1em 0",
             borderRadius: "0",
+          },
+          "&.usdbBanner": {
+            backgroundPosition: "center",
+            backgroundSize: "100%",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
           },
         },
       },
@@ -311,6 +318,10 @@ const USDBLightBase: ThemeOptions = {
             color: usdbLightColors.color,
             background: usdbLightColors.iconButtonBg,
           },
+          "&.inverted": {
+            color: usdbLightColors.color,
+            background: usdbDarkColors.color,
+          },
         },
       },
     },
@@ -324,6 +335,9 @@ const USDBLightBase: ThemeOptions = {
           },
           "&.MuiAccordion-root": {
             borderBottom: "2px solid #00000040",
+          },
+          "&.usdbBanner": {
+            backgroundImage: `url(${LightUSDBBanner1})`,
           },
         },
       },
@@ -399,6 +413,10 @@ const USDBDarkBase: ThemeOptions = {
             color: usdbDarkColors.color,
             background: usdbDarkColors.iconButtonBg,
           },
+          "&.inverted": {
+            color: usdbDarkColors.color,
+            background: usdbLightColors.color,
+          },
         },
       },
     },
@@ -412,6 +430,9 @@ const USDBDarkBase: ThemeOptions = {
           },
           "&.MuiAccordion-root": {
             borderBottom: "2px solid #FFFFFF40",
+          },
+          "&.usdbBanner": {
+            backgroundImage: `url(${DarkUSDBBanner1})`,
           },
         },
       },
