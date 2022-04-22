@@ -63,7 +63,7 @@ export const AboutPage = (): JSX.Element => {
   useEffect(() => {
     const script = document.createElement("script");
     script.src =
-      "https://chimpstatic.com/mcjs-connected/js/users/30ce909d3542b1d245b54e5b8/31faed079e8d768a93c14ffc0.js";
+      "https://chimpstatic.com/mcjs-connected/js/users/30ce909d3542b1d245b54e5b8/8e00ffff339710be3d1981967.js%22";
     script.async = true;
     document.body.appendChild(script);
   }, []);
