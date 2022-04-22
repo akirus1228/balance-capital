@@ -273,7 +273,6 @@ const globalTheme: ThemeOptions = {
             marginBottom: "0.5em",
           },
           "&.outlined": {
-            border: "3px solid #FFF",
             borderRadius: "2em",
             padding: "1em",
             ":before,:after": {
@@ -381,6 +380,15 @@ const USDBLightBase: ThemeOptions = {
         },
       },
     },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.outlined": {
+            border: "3px solid #000",
+          },
+        },
+      },
+    },
   },
 };
 
@@ -476,6 +484,15 @@ const USDBDarkBase: ThemeOptions = {
       styleOverrides: {
         "&.heroBackground": {
           backgroundImage: `url(${darkBG})`,
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.outlined": {
+            border: "3px solid #FFF",
+          },
         },
       },
     },
