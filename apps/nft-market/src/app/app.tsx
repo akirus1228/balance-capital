@@ -14,6 +14,8 @@ import { Header, Footer } from "./components/template";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
 import { ScrollToTop } from "@fantohm/shared/ui-helpers";
+import BorrowPage from "./pages/borrow-page/borrow-page";
+import LendPage from "./pages/lend-page/lend-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -43,6 +45,8 @@ export const App = (): JSX.Element => {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/borrow" element={<BorrowPage />} />
+          <Route path="/lend" element={<LendPage />} />
           <Route
             path="*"
             element={
