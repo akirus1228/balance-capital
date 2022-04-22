@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Icon, Paper } from "@mui/material";
+import { Box, Button, Grid, Icon, Input, Paper } from "@mui/material";
 import { useEffect } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Headline from "../../components/headline/headline";
@@ -21,6 +21,13 @@ const sectionText = {
   title: "Two layers of multisig protection",
   subtitle: [
     "USDB is protected by two layers of multisig protection, Fantom Safe and OpenZeppelin Defender.",
+  ],
+};
+
+const partnerProgram = {
+  title: "Join our partner program",
+  subtitle: [
+    "Are you part of a financial institution or a DeFi protocol? Get in touch to discuss how USDB and your organization can work together.",
   ],
 };
 
@@ -166,7 +173,25 @@ export const AboutPage = (): JSX.Element => {
         sx={{ margin: "0 auto" }}
         maxWidth="md"
       >
-        <Headline {...sectionText} />
+        <Headline {...partnerProgram} />
+        <Box width="512px">
+          <Input
+            placeholder="What's your name? *"
+            sx={{ marginTop: "4em" }}
+            className="contact"
+            required
+          />
+          <Input
+            placeholder="What's your email address? *"
+            className="contact"
+            required
+          />
+          <Input placeholder="What's your organization's name?" className="contact" />
+          <Input placeholder="What's your website url?" className="contact" />
+          <Button variant="outlined" sx={{ marginTop: "4em", padding: "1em 6em" }}>
+            Submit
+          </Button>
+        </Box>
       </Box>
     </>
   );

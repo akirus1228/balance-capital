@@ -257,6 +257,18 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.contact": {
+            width: "100%",
+            paddingBottom: "1em",
+            fontSize: "24px",
+            marginBottom: "0.5em",
+          },
+        },
+      },
+    },
   },
 };
 
