@@ -20,7 +20,6 @@ import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
-import { loadAppDetails } from "./store/reducers/app-slice";
 import { ScrollToTop } from "@fantohm/shared/ui-helpers";
 
 export const App = (): JSX.Element => {
