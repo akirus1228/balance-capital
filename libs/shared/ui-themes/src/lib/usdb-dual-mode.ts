@@ -1,6 +1,6 @@
 import { createTheme } from "@mui/material/styles";
-import { ThemeOptions } from "@mui/material";
-import { makeStyles } from "@mui/styles";
+import { makeStyles, ThemeOptions } from "@mui/material";
+
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
 import {
@@ -10,7 +10,7 @@ import {
   LightUSDBBanner2,
 } from "@fantohm/shared/images";
 
-export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
+export const noBorderOutlinedInputStyles = makeStyles(() => ({
   root: {
     "& $notchedOutline": {
       border: "none",
@@ -25,6 +25,8 @@ export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
   focused: {},
   notchedOutline: {},
 }));
+
+const theme = createTheme();
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -106,7 +108,7 @@ const globalTheme: ThemeOptions = {
             width: "100%",
           },
           "&.usdbBanner2": {
-            backgroundPosition: "center",
+            backgroundPosition: "85%",
             backgroundSize: "fill",
             backgroundRepeat: "no-repeat",
             width: "100%",
@@ -384,6 +386,9 @@ const USDBLightBase: ThemeOptions = {
           },
           "&.usdbBanner2": {
             backgroundImage: `url(${LightUSDBBanner2})`,
+            [theme.breakpoints.down("sm")]: {
+              background: "#f5f5f5",
+            },
           },
         },
       },
@@ -499,7 +504,12 @@ const USDBDarkBase: ThemeOptions = {
             backgroundImage: `url(${DarkUSDBBanner1})`,
           },
           "&.usdbBanner2": {
-            backgroundImage: `url(${DarkUSDBBanner2})`,
+            //backgroundImage: `url(${DarkUSDBBanner2})`,
+            background: `no-repeat right 85% url(${DarkUSDBBanner2}), padding-box linear-gradient(to right, black, black), border-box linear-gradient(165deg, rgba(50,121,112,1) 0%, rgba(0,0,0,1) 50%, rgba(60,34,134,1) 100%)`,
+            [theme.breakpoints.down("sm")]: {
+              background: "#000",
+            },
+            border: "4px solid transparent",
           },
         },
       },

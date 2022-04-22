@@ -73,7 +73,10 @@ export const AboutPage = (): JSX.Element => {
       <Box
         className={`${style["__heading"]} flexCenterRow`}
         maxWidth="md"
-        sx={{ margin: "0 auto 490px auto" }}
+        sx={{
+          margin: { xs: "0 auto 10em auto", md: "0 auto 490px auto" },
+          padding: { xs: "45px" },
+        }}
       >
         <Logo style={{ width: "424px", paddingBottom: "2em" }} />
         <Headline {...heroContent} />
@@ -135,7 +138,7 @@ export const AboutPage = (): JSX.Element => {
       </Box>
       <Box className={`${style["__section"]} ${style["banners"]} flexCenterRow`}>
         <Paper className={`${style["usdbBanner"]} usdbBanner`}>
-          <Box sx={{ width: "40%" }}>
+          <Box sx={{ width: { md: "40%" } }}>
             <h1>Discover how USDB can strengthen your product or service.</h1>
             <p>
               Are you part of a financial institution or a DeFi protocol? Speak with a
@@ -171,7 +174,7 @@ export const AboutPage = (): JSX.Element => {
       >
         <Grid container rowSpacing={6}>
           {teammates.map((teammate, index) => (
-            <Grid item xs={12} sm={6} md={4} key={`teammate-${index}`}>
+            <Grid item xs={6} sm={6} md={4} key={`teammate-${index}`}>
               <TeammateProfile teammate={teammate} />
             </Grid>
           ))}
@@ -184,7 +187,7 @@ export const AboutPage = (): JSX.Element => {
         id="contact"
       >
         <Headline {...partnerProgram} />
-        <Box width="512px">
+        <Box maxWidth="512px">
           <Input
             placeholder="What's your name? *"
             sx={{ marginTop: "4em" }}
@@ -212,7 +215,7 @@ export const AboutPage = (): JSX.Element => {
           <Input
             className="outlined"
             placeholder="Enter your email address"
-            sx={{ marginRight: "2em", width: "300px" }}
+            sx={{ marginRight: "2em", width: "300px", marginBottom: { xs: "1em" } }}
           />
           <Button variant="outlined">Subscribe</Button>
           <p>No spam. Never shared. Opt out at any time.</p>
