@@ -279,6 +279,9 @@ const globalTheme: ThemeOptions = {
             ":before,:after": {
               border: "none",
             },
+            ":hover:before,:hover:after": {
+              border: "none",
+            },
           },
         },
       },

@@ -115,3 +115,10 @@
         padding: 1em 3em;
     }
 }
+
+.networkSafe {
+    margin-right: 1em !important;
+}
+.networkSafe:last-of-type {
+    margin-right: 0em !important;
+}
