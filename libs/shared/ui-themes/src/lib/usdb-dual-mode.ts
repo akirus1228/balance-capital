@@ -285,6 +285,16 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          fontSize: "32px",
+          borderRadius: "50%",
+          height: "2.5em",
+          width: "2.5em",
+        },
+      },
+    },
   },
 };
 
@@ -386,6 +396,15 @@ const USDBLightBase: ThemeOptions = {
           "&.outlined": {
             border: "3px solid #000",
           },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          border: "2px solid #000",
+          color: "#FFF",
+          backgroundColor: "#000",
         },
       },
     },
@@ -493,6 +512,15 @@ const USDBDarkBase: ThemeOptions = {
           "&.outlined": {
             border: "3px solid #FFF",
           },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          border: "2px solid #FFF",
+          color: "#FFF",
+          backgroundColor: "transparent",
         },
       },
     },
