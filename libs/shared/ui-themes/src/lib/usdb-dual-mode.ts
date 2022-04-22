@@ -150,6 +150,16 @@ const globalTheme: ThemeOptions = {
             margin: "auto 0 auto 1em",
             fontSize: "1em",
           },
+          "&.thinButton": {
+            height: "1em",
+            paddingTop: "1em",
+            paddingBottom: "1em",
+            paddingLeft: "1.25em",
+            paddingRight: "1.25em",
+            borderRadius: "1.5em",
+            margin: "auto 0 auto 1em",
+            fontSize: "1em",
+          },
           "&.cardActionButton": {
             width: "100%",
           },
@@ -349,6 +359,11 @@ const USDBLightBase: ThemeOptions = {
           "&.menuButton": {
             border: "1px solid #000",
           },
+          "&.thinButton": {
+            background: "#000",
+            color: "#FFF",
+            border: "1px solid #000",
+          },
           "&.border": {
             border: "1px solid #000",
             color: "#000",
@@ -463,6 +478,11 @@ const USDBDarkBase: ThemeOptions = {
             backgroundColor: "#000",
           },
           "&.menuButton": {
+            border: "1px solid #FFF",
+          },
+          "&.thinButton": {
+            background: "transparent",
+            color: "#FFF",
             border: "1px solid #FFF",
           },
           "&.border": {

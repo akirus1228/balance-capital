@@ -161,10 +161,34 @@ export const AboutPage = (): JSX.Element => {
       >
         <Headline {...sectionText} />
         <Box className="flexCenterRow" sx={{ flexWrap: "wrap" }}>
-          <Button className={`${style["networkSafe"]} menuButton`}>ETH safe</Button>
-          <Button className={`${style["networkSafe"]} menuButton`}>FTM safe</Button>
-          <Button className={`${style["networkSafe"]} menuButton`}>BSC safe</Button>
-          <Button className={`${style["networkSafe"]} menuButton`}>MOVR safe</Button>
+          <Button
+            className={`${style["networkSafe"]} thinButton`}
+            variant="contained"
+            color="primary"
+          >
+            ETH safe
+          </Button>
+          <Button
+            className={`${style["networkSafe"]} thinButton`}
+            variant="contained"
+            color="primary"
+          >
+            FTM safe
+          </Button>
+          <Button
+            className={`${style["networkSafe"]} thinButton`}
+            variant="contained"
+            color="primary"
+          >
+            BSC safe
+          </Button>
+          <Button
+            className={`${style["networkSafe"]} thinButton`}
+            variant="contained"
+            color="primary"
+          >
+            MOVR safe
+          </Button>
         </Box>
       </Box>
       <Box
