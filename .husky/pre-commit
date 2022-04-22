@@ -2,4 +2,4 @@
 . "$(dirname "$0")/_/husky.sh"
 
 #nx run-many --all --target=lint
-nx run-many --projects=usdb,shared-ui-themes,shared-images --target=lint
+nx run-many --projects=usdb,shared-ui-themes,shared-images,shared-ui-components,shared-helpers,shared-ui-helpers --target=lint
