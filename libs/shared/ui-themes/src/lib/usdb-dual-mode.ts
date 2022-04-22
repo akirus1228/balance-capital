@@ -3,7 +3,12 @@ import { ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
-import { DarkUSDBBanner1, DarkUSDBBanner2, LightUSDBBanner1, LightUSDBBanner2 } from "@fantohm/shared/images";
+import {
+  DarkUSDBBanner1,
+  DarkUSDBBanner2,
+  LightUSDBBanner1,
+  LightUSDBBanner2,
+} from "@fantohm/shared/images";
 
 export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
   root: {
