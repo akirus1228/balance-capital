@@ -82,7 +82,10 @@ export const AboutPage = (): JSX.Element => {
           <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
         </a>
       </Box>
-      <Box className={`${style["__section"]} ${style["info1"]} flexCenterRow`}>
+      <Box
+        className={`${style["__section"]} ${style["info1"]} flexCenterRow`}
+        id="details"
+      >
         <Grid container columnSpacing={6}>
           <Grid item xs={12} sm={6} md={5}>
             <h2>Building an open financial system</h2>
@@ -99,7 +102,7 @@ export const AboutPage = (): JSX.Element => {
                   A liquidity solution to help businesses to expand and grow, while
                   mitigationg risk.
                 </p>
-                <a href="/about#" className={style["learnMore"]}>
+                <a href="/about#contact" className={style["learnMore"]}>
                   Get in touch
                   <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
                 </a>
@@ -110,7 +113,7 @@ export const AboutPage = (): JSX.Element => {
                   A high-interest earning opportunity of up to 32.5% without the
                   complexity.
                 </p>
-                <a href="/about#" className={style["learnMore"]}>
+                <a href="/staking" className={style["learnMore"]}>
                   Learn more
                   <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
                 </a>
@@ -121,8 +124,8 @@ export const AboutPage = (): JSX.Element => {
                   A long-term investment vehicle to safely park funds and earn stable
                   yields
                 </p>
-                <a href="mailto:info@usdbalance.com" className={style["learnMore"]}>
-                  Get in touch
+                <a href="/trad-fi" className={style["learnMore"]}>
+                  Learn More
                   <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
                 </a>
               </Grid>
@@ -130,8 +133,8 @@ export const AboutPage = (): JSX.Element => {
           </Grid>
         </Grid>
       </Box>
-      <Box className={`${style["__section"]} ${style["info2"]} flexCenterRow`}>
-        <Paper className={`${style["usdbBanner"]} usdbBanner `}>
+      <Box className={`${style["__section"]} ${style["banners"]} flexCenterRow`}>
+        <Paper className={`${style["usdbBanner"]} usdbBanner`}>
           <Box sx={{ width: "40%" }}>
             <h1>Discover how USDB can strengthen your product or service.</h1>
             <p>
@@ -140,7 +143,7 @@ export const AboutPage = (): JSX.Element => {
             </p>
           </Box>
           <Button
-            href="mailto:info@usdbalance.com"
+            href="/about#contact"
             variant="contained"
             className={`${style["bannerButton"]} inverted`}
           >
@@ -157,7 +160,7 @@ export const AboutPage = (): JSX.Element => {
       </Box>
       <Box
         className={`${style["__section"]} flexCenterRow`}
-        sx={{ margin: "0 auto" }}
+        sx={{ margin: "0 auto 10em auto" }}
         maxWidth="md"
       >
         <Grid container rowSpacing={6}>
@@ -170,8 +173,9 @@ export const AboutPage = (): JSX.Element => {
       </Box>
       <Box
         className={`${style["__section"]} flexCenterRow`}
-        sx={{ margin: "0 auto" }}
+        sx={{ margin: "0 auto 10em auto" }}
         maxWidth="md"
+        id="contact"
       >
         <Headline {...partnerProgram} />
         <Box width="512px">
@@ -192,6 +196,21 @@ export const AboutPage = (): JSX.Element => {
             Submit
           </Button>
         </Box>
+      </Box>
+      <Box
+        className={`${style["__section"]} ${style["banners"]} flexCenterRow`}
+        sx={{ margin: "0 auto 10em auto" }}
+      >
+        <Paper className={`${style["usdbBanner2"]} usdbBanner2`}>
+          <h1>Receive email updates</h1>
+          <Input
+            className="outlined"
+            placeholder="Enter your email address"
+            sx={{ marginRight: "2em", width: "300px" }}
+          />
+          <Button variant="outlined">Subscribe</Button>
+          <p>No spam. Never shared. Opt out at any time.</p>
+        </Paper>
       </Box>
     </>
   );

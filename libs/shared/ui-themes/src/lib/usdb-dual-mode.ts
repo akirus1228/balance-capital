@@ -3,7 +3,7 @@ import { ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
-import { DarkUSDBBanner1, LightUSDBBanner1 } from "@fantohm/shared/images";
+import { DarkUSDBBanner1, DarkUSDBBanner2, LightUSDBBanner1, LightUSDBBanner2 } from "@fantohm/shared/images";
 
 export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
   root: {
@@ -95,6 +95,12 @@ const globalTheme: ThemeOptions = {
             borderRadius: "0",
           },
           "&.usdbBanner": {
+            backgroundPosition: "center",
+            backgroundSize: "100%",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+          },
+          "&.usdbBanner2": {
             backgroundPosition: "center",
             backgroundSize: "100%",
             backgroundRepeat: "no-repeat",
@@ -266,6 +272,14 @@ const globalTheme: ThemeOptions = {
             fontSize: "24px",
             marginBottom: "0.5em",
           },
+          "&.outlined": {
+            border: "3px solid #FFF",
+            borderRadius: "2em",
+            padding: "1em",
+            ":before,:after": {
+              border: "none",
+            },
+          },
         },
       },
     },
@@ -350,6 +364,9 @@ const USDBLightBase: ThemeOptions = {
           },
           "&.usdbBanner": {
             backgroundImage: `url(${LightUSDBBanner1})`,
+          },
+          "&.usdbBanner2": {
+            backgroundImage: `url(${LightUSDBBanner2})`,
           },
         },
       },
@@ -445,6 +462,9 @@ const USDBDarkBase: ThemeOptions = {
           },
           "&.usdbBanner": {
             backgroundImage: `url(${DarkUSDBBanner1})`,
+          },
+          "&.usdbBanner2": {
+            backgroundImage: `url(${DarkUSDBBanner2})`,
           },
         },
       },
