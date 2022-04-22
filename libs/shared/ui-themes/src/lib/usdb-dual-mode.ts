@@ -1,5 +1,6 @@
 import { createTheme } from "@mui/material/styles";
-import { makeStyles, ThemeOptions } from "@mui/material";
+import { ThemeOptions } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
