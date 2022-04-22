@@ -96,13 +96,13 @@ const globalTheme: ThemeOptions = {
           },
           "&.usdbBanner": {
             backgroundPosition: "center",
-            backgroundSize: "100%",
+            backgroundSize: "cover",
             backgroundRepeat: "no-repeat",
             width: "100%",
           },
           "&.usdbBanner2": {
             backgroundPosition: "center",
-            backgroundSize: "100%",
+            backgroundSize: "fill",
             backgroundRepeat: "no-repeat",
             width: "100%",
           },
