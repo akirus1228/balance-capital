@@ -18,8 +18,6 @@ type FooterItem = {
 };
 
 export const Footer = (): JSX.Element => {
-  const themeType = useSelector((state: RootState) => state.app.theme);
-
   const footerItems: FooterItem[] = [
     {
       label: "Products",

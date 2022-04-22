@@ -1,31 +1,39 @@
-import {
-  useWeb3Context,
-  setWalletConnected,
-  enabledNetworkIds,
-} from "@fantohm/shared-web3";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
-import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import Tooltip from "@mui/material/Tooltip";
-import MenuItem from "@mui/material/MenuItem";
-import { SvgIcon, SxProps, Theme } from "@mui/material";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
+import {
+  AppBar,
+  Box,
+  Skeleton,
+  Toolbar,
+  IconButton,
+  Typography,
+  Menu,
+  Container,
+  Button,
+  Tooltip,
+  MenuItem,
+  SvgIcon,
+  SxProps,
+  Theme,
+} from "@mui/material";
+import AnalyticsIcon from "@mui/icons-material/Analytics";
+import MenuIcon from "@mui/icons-material/Menu";
+import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
+import {
+  useWeb3Context,
+  setWalletConnected,
+  getBalances,
+  trim,
+  defaultNetworkId,
+  enabledNetworkIds,
+} from "@fantohm/shared-web3";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
-import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import { setCheckedConnection } from "../../../store/reducers/app-slice";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
-import { Logo } from "@fantohm/shared/ui-components";
+import { setTheme } from "@fantohm/shared-ui-themes";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -39,8 +47,13 @@ type Page = {
 };
 
 const pages: Page[] = [
-  { title: "Borrow", href: "/borrow", params: { comingSoon: false } },
   { title: "Lend", href: "/lend", params: { comingSoon: false } },
+  { title: "Borrow", href: "/borrow", params: { comingSoon: false } },
+  {
+    title: "Bridge",
+    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
+    params: { comingSoon: false },
+  },
 ];
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
@@ -68,7 +81,7 @@ export const Header = (): JSX.Element => {
       await disconnect();
     } else {
       try {
-        await connect();
+        await connect(true);
       } catch (e) {
         console.log("Connection metamask error", e);
       }
@@ -77,6 +90,7 @@ export const Header = (): JSX.Element => {
 
   useEffect(() => {
     dispatch(setWalletConnected(connected));
+    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
     if (connected) {
       setConnectButtonText("Disconnect");
     } else {
@@ -105,7 +119,6 @@ export const Header = (): JSX.Element => {
   const toggleTheme = useCallback(() => {
     const type = themeType === "light" ? "dark" : "light";
     dispatch(setTheme(type));
-    localStorage.setItem("use-theme", type);
   }, [dispatch, themeType]);
 
   const handleCloseProductsMenu = () => {
@@ -125,9 +138,7 @@ export const Header = (): JSX.Element => {
               alignItems: "center",
             }}
           >
-            <Link to="/">
-              <Logo />
-            </Link>
+            <Link to="/">Logo</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -212,14 +223,6 @@ export const Header = (): JSX.Element => {
                       <Box display="flex" alignItems="center" mr="10px">
                         <SvgIcon component={AnalyticsIcon} fontSize="large" />
                       </Box>
-                      <Box
-                        display="flex"
-                        alignItems="center"
-                        mt="2px"
-                        className={`${styles["portfolioText"]}`}
-                      >
-                        My Portfolio:&nbsp;
-                      </Box>
                     </Button>
                   </Link>
                 </Typography>
@@ -230,9 +233,7 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <Link to="/">
-              <Logo className={`${styles["usdbLogo"]}`} />
-            </Link>
+            <Link to="/">Logo</Link>
           </Typography>
           <Box
             sx={{
