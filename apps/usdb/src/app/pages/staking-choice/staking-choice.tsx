@@ -44,7 +44,6 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const StakingChoicePage = (): JSX.Element => {
-
   const heroContent = {
     hero: true,
     title: "Earn up to 20% on Dai",
