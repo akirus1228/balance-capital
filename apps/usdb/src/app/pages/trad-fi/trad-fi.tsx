@@ -108,6 +108,14 @@ export const TradFi = (): JSX.Element => {
       </Box>
       <Box className={style["__section"]}>
         <Headline {...simpleSafe} />
+        <div className="embed-container">
+          <iframe
+            src="https://www.youtube.com/embed/Zkdce6v94vg"
+            frameBorder="0"
+            allowFullScreen
+            title="Single Sided Staking is Live & USDB Is Stronger For It!"
+          ></iframe>
+        </div>
         <Graph style={{ margin: "auto" }} />
         <Box className={style["__icons"]}>
           <Grid item xs={12} md={4}>
