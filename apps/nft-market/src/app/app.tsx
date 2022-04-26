@@ -7,7 +7,7 @@ import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import {
   useWeb3Context,
   defaultNetworkId,
-  loadWallet,
+  loadWalletCurrencies,
   loadWalletAssets,
 } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
@@ -34,7 +34,7 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     if (address) {
       console.log("app-chainId, address: ", chainId, address);
-      dispatch(loadWallet({ networkId: chainId || defaultNetworkId, address }));
+      dispatch(loadWalletCurrencies({ networkId: chainId || defaultNetworkId, address }));
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [chainId, address, dispatch]);
@@ -55,6 +55,7 @@ export const App = (): JSX.Element => {
             path="*"
             element={
               <main style={{ padding: "1rem" }}>
+                <h1>404</h1>
                 <p>There's nothing here!</p>
               </main>
             }

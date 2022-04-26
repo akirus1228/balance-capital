@@ -1,4 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { ethers } from "ethers";
+import { ierc20Abi } from "../abi";
+import { addresses } from "../constants";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
 import { getWalletAssets, Asset } from "./opensea";
@@ -14,7 +17,7 @@ export enum AcceptedCurrencies {
 export interface Currency {
   symbol: AcceptedCurrencies;
   name: string;
-  balance: number;
+  balance: string;
 }
 
 export interface WalletData {
@@ -23,12 +26,6 @@ export interface WalletData {
   readonly currencies: Currency[];
 }
 
-const initialState: WalletData = {
-  status: "idle",
-  assets: [],
-  currencies: [],
-};
-
 /* 
 loadWalletBalance: loads balances
 params: 
@@ -36,13 +33,26 @@ params:
 - address: string
 returns: void
 */
-export const loadWallet = createAsyncThunk(
-  "account/loadWalletBalances",
+export const loadWalletCurrencies = createAsyncThunk(
+  "account/loadWalletCurrencies",
   async ({ networkId, address }: IBaseAddressAsyncThunk) => {
-    console.log("loading wallet balances");
+    // console.log("loading wallet balances");
     const provider = await chains[networkId].provider;
-    console.log(await provider.lookupAddress(address));
-    return {};
+
+    const usdbContract = new ethers.Contract(
+      addresses[networkId]["USDB_ADDRESS"] as string,
+      ierc20Abi,
+      provider
+    );
+
+    const usdbBalance = await usdbContract["balanceOf"](address);
+    return [
+      {
+        symbol: AcceptedCurrencies.USDB,
+        name: "USDBalance",
+        balance: ethers.utils.formatUnits(usdbBalance, "gwei"),
+      } as Currency,
+    ];
   }
 );
 
@@ -56,16 +66,33 @@ export const loadWalletAssets = createAsyncThunk(
   "account/loadWalletAssets",
   async ({ address }: IBaseAddressAsyncThunk) => {
     const walletContents = await getWalletAssets(address);
-    console.log(walletContents);
+    // console.log(walletContents);
     return walletContents;
   }
 );
+
+const initialState: WalletData = {
+  status: "idle",
+  assets: [],
+  currencies: [],
+};
 
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
   reducers: {},
   extraReducers: (builder) => {
+    builder.addCase(loadWalletCurrencies.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(loadWalletCurrencies.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      // console.log(action.payload);
+      state.currencies = action.payload;
+    });
+    builder.addCase(loadWalletCurrencies.rejected, (state, action) => {
+      state.status = "failed";
+    });
     builder.addCase(loadWalletAssets.pending, (state, action) => {
       state.status = "loading";
     });
