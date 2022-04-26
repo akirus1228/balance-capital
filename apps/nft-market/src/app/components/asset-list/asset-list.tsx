@@ -16,6 +16,7 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
         <div key={`asset-${index}`}>
           collection: {asset.collection.name}
           id: {asset.token_id}
+          <img src={asset.image_url} alt={asset.name}/>
         </div>
       ))}
     </div>
