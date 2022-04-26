@@ -72,7 +72,7 @@ const walletSlice = createSlice({
     builder.addCase(loadWalletAssets.fulfilled, (state, action) => {
       state.status = "succeeded";
       state.assets = action.payload;
-      console.log(action);
+      //console.log(action);
     });
     builder.addCase(loadWalletAssets.rejected, (state, action) => {
       state.status = "failed";
