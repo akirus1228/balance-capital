@@ -1,55 +1,84 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
+import { getWalletAssets, Asset } from "./opensea";
 
-export interface Token {
-  contract: string;
+export enum AcceptedCurrencies {
+  USDB,
+  WETH,
+  DAI,
+  FTM,
+  USDC,
+}
+
+export interface Currency {
+  symbol: AcceptedCurrencies;
   name: string;
-  symbol: string;
-  maxSupply: string;
-}
-
-export interface Nft extends Token {
-  nft: boolean;
-}
-
-export interface Currency extends Token {
-  currency: boolean;
+  balance: number;
 }
 
 export interface WalletData {
   readonly status: "idle" | "loading" | "succeeded" | "failed";
-  readonly nfts: Nft[];
+  readonly assets: Asset[];
   readonly currencies: Currency[];
 }
 
 const initialState: WalletData = {
   status: "idle",
-  nfts: [],
+  assets: [],
   currencies: [],
 };
 
+/* 
+loadWalletBalance: loads balances
+params: 
+- networkId: number
+- address: string
+returns: void
+*/
 export const loadWallet = createAsyncThunk(
-  "account/loadWallet",
-  async ({ networkId, address }: IBaseAddressAsyncThunk, { dispatch }) => {
+  "account/loadWalletBalances",
+  async ({ networkId, address }: IBaseAddressAsyncThunk) => {
+    console.log("loading wallet balances");
     const provider = await chains[networkId].provider;
     console.log(await provider.lookupAddress(address));
     return {};
   }
 );
 
+/* 
+loadWalletNfts: loads nfts owned by specific address
+params: 
+- address: string
+returns: void
+*/
+export const loadWalletAssets = createAsyncThunk(
+  "account/loadWalletAssets",
+  async ({ address }: IBaseAddressAsyncThunk) => {
+    const walletContents = await getWalletAssets(address);
+    console.log(walletContents);
+    return walletContents;
+  }
+);
+
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {
-    setNfts: (state, action: PayloadAction<Nft[]>) => {
-      state.nfts = action.payload;
-    },
-    setCurrencies: (state, action: PayloadAction<Currency[]>) => {
-      state.currencies = action.payload;
-    },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder.addCase(loadWalletAssets.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(loadWalletAssets.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      state.assets = action.payload;
+      console.log(action);
+    });
+    builder.addCase(loadWalletAssets.rejected, (state, action) => {
+      state.status = "failed";
+    });
   },
 });
 
 export const walletReducer = walletSlice.reducer;
-export const { setNfts, setCurrencies } = walletSlice.actions;
+//export const {} = walletSlice.actions;

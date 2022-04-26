@@ -4,7 +4,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId, loadWallet } from "@fantohm/shared-web3";
+import {
+  useWeb3Context,
+  defaultNetworkId,
+  loadWallet,
+  loadWalletAssets,
+} from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -30,6 +35,7 @@ export const App = (): JSX.Element => {
     if (address) {
       console.log("app-chainId, address: ", chainId, address);
       dispatch(loadWallet({ networkId: chainId || defaultNetworkId, address }));
+      dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [chainId, address, dispatch]);
 

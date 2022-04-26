@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import { appReducer } from "./reducers/app-slice";
 import { saveState } from "./localstorage";
 import { themeReducer } from "@fantohm/shared-ui-themes";
+import { walletReducer } from "@fantohm/shared-web3";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -9,6 +10,7 @@ import { themeReducer } from "@fantohm/shared-ui-themes";
 const store = configureStore({
   reducer: {
     app: appReducer,
+    wallet: walletReducer,
     theme: themeReducer,
   },
   middleware: (getDefaultMiddleware) =>
