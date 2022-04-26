@@ -153,3 +153,8 @@ export interface IWrapDetails extends IBaseAsyncThunk {
   isWrap: boolean;
   value: string;
 }
+
+// nft-marketplace slice
+export interface SignerAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {}

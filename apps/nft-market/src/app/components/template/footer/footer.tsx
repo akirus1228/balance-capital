@@ -1,9 +1,7 @@
 import { AppBar, Toolbar, Container, Grid, Box, Typography } from "@mui/material";
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import MenuLink from "../header/menu-link";
-import store, { RootState } from "../../../store";
 import style from "./footer.module.scss";
 import { Logo } from "@fantohm/shared/ui-components";
 
@@ -22,9 +20,6 @@ export const Footer = (): JSX.Element => {
     {
       label: "Products",
       pages: [
-        { title: "Tradfi", href: "/trad-fi" },
-        { title: "Staking", href: "/staking" },
-        { title: "xFHM", href: "/xfhm" },
         {
           title: "Bridge",
           href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
@@ -65,9 +60,7 @@ export const Footer = (): JSX.Element => {
             <Grid item xs={12} md={5}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
                 <Box width="220px" mb="30px">
-                  <Link to="/">
-                    <Logo store={store} />
-                  </Link>
+                  <Link to="/">Logo</Link>
                   <Typography
                     variant="subtitle2"
                     color="primary"

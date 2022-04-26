@@ -71,12 +71,14 @@ export const loadWalletAssets = createAsyncThunk(
   }
 );
 
+// initial wallet slice state
 const initialState: WalletData = {
   status: "idle",
   assets: [],
   currencies: [],
 };
 
+// create slice and initialize reducers
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
@@ -108,4 +110,5 @@ const walletSlice = createSlice({
 });
 
 export const walletReducer = walletSlice.reducer;
+// actions are automagically generated and exported by the builder/thunk
 //export const {} = walletSlice.actions;
