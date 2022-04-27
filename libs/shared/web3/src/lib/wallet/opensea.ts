@@ -13,11 +13,10 @@ export interface OpenSeaAsset {
   traits: OpenSeaTrait[]; // A list of traits associated with the item
   last_sale: string | null; // When this item was last sold (null if there was no last sale)
   collection: OpenSeaCollection; // Dictionary of collection information
-  descripton?: string;
+  description?: string;
   animation_original_url?: string;
   animation_url?: string;
   is_nsfw: boolean;
-  
 }
 
 export interface OpenSeaContract {
@@ -101,8 +100,10 @@ export const openSeaToInternalAsset = (asset: OpenSeaAsset): Asset => {
     tokenId: asset.token_id.toString(),
     description: asset.description || "",
     imageUrl: asset.image_url || "",
-    videoUrl:
-    threeDUrl: 
+    videoUrl: "",
+    threeDUrl: "",
+    mediaType: "",
+    isOwned: true,
 
   }
 };
