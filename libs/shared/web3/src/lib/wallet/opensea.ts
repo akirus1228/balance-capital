@@ -17,6 +17,7 @@ export interface OpenSeaAsset {
   animation_original_url?: string;
   animation_url?: string;
   is_nsfw: boolean;
+  
 }
 
 export interface OpenSeaContract {
@@ -98,7 +99,11 @@ export const openSeaToInternalAsset = (asset: OpenSeaAsset): Asset => {
     status: AssetStatus.READY,
     openseaId: asset.id.toString(),
     tokenId: asset.token_id.toString(),
-    
+    description: asset.description || "",
+    imageUrl: asset.image_url || "",
+    videoUrl:
+    threeDUrl: 
+
   }
 };
 
