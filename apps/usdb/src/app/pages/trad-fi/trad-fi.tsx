@@ -110,7 +110,7 @@ export const TradFi = (): JSX.Element => {
         <Headline {...simpleSafe} />
         <div className="embed-container">
           <iframe
-            src="https://www.youtube.com/embed/Zkdce6v94vg"
+            src="https://www.youtube.com/embed/MJjdoQBGig4"
             frameBorder="0"
             allowFullScreen
             title="Single Sided Staking is Live & USDB Is Stronger For It!"
