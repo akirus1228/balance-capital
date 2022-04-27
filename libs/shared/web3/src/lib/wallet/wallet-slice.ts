@@ -4,7 +4,7 @@ import { ierc20Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
-import { getWalletAssets, Asset } from "./opensea";
+import { getWalletAssets, OpenSeaAsset } from "./opensea";
 
 export enum AcceptedCurrencies {
   USDB,
@@ -22,7 +22,7 @@ export interface Currency {
 
 export interface WalletData {
   readonly status: "idle" | "loading" | "succeeded" | "failed";
-  readonly assets: Asset[];
+  readonly assets: OpenSeaAsset[];
   readonly currencies: Currency[];
 }
 

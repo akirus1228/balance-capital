@@ -1,4 +1,7 @@
-import { Asset } from "../wallet/opensea";
+// request types
+export interface AssetListingRequest extends Listing {
+  term: Terms; //convert terms to term for api
+}
 
 // response types
 export type LoginResponse = {
@@ -17,15 +20,62 @@ export type AllListingsResponse = {
   count: number;
 };
 
-// request types
-export interface AssetListingRequest extends Listing {
-  id?: string;
-  status?: string;
-  createdAt?: string;
-  updatedAt?: string;
+// data models
+export enum AssetStatus {
+  READY,
+  LISTED,
+  LOCKED,
 }
 
-// data models
+export enum AssetMediaType {
+  IMAGE,
+  VIDEO,
+  GIF,
+  THREE_D,
+}
+
+export enum AssetChain {
+  eth,
+  sol,
+}
+
+export type Asset = {
+  id?: string;
+  owner: Owner;
+  status: AssetStatus;
+  openseaId: string;
+  tokenId: string;
+  name?: string;
+  description?: string;
+  mediaType: AssetMediaType;
+  frameUrl?: string;
+  imageUrl?: string;
+  videoUrl?: string;
+  threeDUrl?: string;
+  gifUrl?: string;
+  isOwned: boolean;
+  dateCreated: string;
+  dateLastTransferred: string;
+  externalLink: string;
+  permaLink: string;
+  assetContractAddress: string;
+  chain: AssetChain;
+  wallet: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+export type Owner = {
+  id?: string;
+  address: string;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string;
+  email?: string;
+  description?: string;
+  profileImageUrl?: string;
+};
+
 export type Terms = {
   id: string;
   amount: number;
@@ -36,7 +86,18 @@ export type Terms = {
   updatedAt: string;
 };
 
+export enum ListingStatus {
+  Pending,
+  LISTED,
+  COMPLETED,
+  Cancelled,
+}
+
 export interface Listing {
+  id?: string;
   asset: Asset;
-  term: Terms;
+  terms: Terms;
+  status: ListingStatus;
+  createdAt?: string;
+  updatedAt?: string;
 }

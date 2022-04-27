@@ -1,8 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
-import { SignerAsyncThunk } from "../slices/interfaces";
-import getListings, { doLogin, handleSignMessage } from "./backend-api";
-import { LoginResponse } from "./backend-types";
+import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
+import { BackendApi } from ".";
+import { Listing, ListingStatus, LoginResponse } from "./backend-types";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
@@ -25,9 +25,12 @@ export const authorizeAccount = createAsyncThunk(
     { address, networkId, provider }: SignerAsyncThunk,
     { dispatch, rejectWithValue, getState }
   ) => {
-    const loginResponse: LoginResponse = await doLogin(address);
+    const loginResponse: LoginResponse = await BackendApi.doLogin(address);
     if (loginResponse.id) {
-      const signature = await handleSignMessage(address, provider);
+      const signature = await BackendApi.handleSignMessage(address, provider);
+      if (!signature) {
+        rejectWithValue("Login Failed");
+      }
       return signature;
     } else {
       rejectWithValue("Login Failed");
@@ -52,8 +55,38 @@ export const loadListings = createAsyncThunk(
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
-      console.log(await getListings(address, thisState.nftMarketplace.authSignature));
+      console.log(
+        await BackendApi.getListings(address, thisState.nftMarketplace.authSignature)
+      );
     } else {
+      rejectWithValue("No authorization found.");
+    }
+  }
+);
+
+/* 
+createListing: loads all listings
+params: 
+- networkId: number
+- address: string
+- provider: JsonRpcProvider
+returns: void
+*/
+export const createListing = createAsyncThunk(
+  "marketplaceApi/createListing",
+  async ({ asset, terms }: ListingAsyncThunk, { getState, rejectWithValue }) => {
+    console.log("backend-slice: createListing");
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.authSignature) {
+      const listing: Listing = {
+        asset,
+        terms,
+        status: ListingStatus.LISTED
+      };
+      console.log(listing);
+      BackendApi.createListing(thisState.nftMarketplace.authSignature, listing);
+    } else {
+      console.warn("no auth");
       rejectWithValue("No authorization found.");
     }
   }

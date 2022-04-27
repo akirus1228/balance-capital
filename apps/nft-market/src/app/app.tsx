@@ -51,7 +51,7 @@ export const App = (): JSX.Element => {
       chainId &&
       connected &&
       wallet.status === "succeeded" &&
-      backend.accountStatus === "unknown" &&
+      ["unknown", "failed"].includes(backend.accountStatus) &&
       backend.authSignature === null
     ) {
       dispatch(

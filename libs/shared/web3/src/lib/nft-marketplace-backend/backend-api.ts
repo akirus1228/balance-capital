@@ -1,9 +1,14 @@
 // external libs
 import axios, { AxiosResponse } from "axios";
-import { JsonRpcProvider, Provider } from "@ethersproject/providers";
+import { JsonRpcProvider } from "@ethersproject/providers";
 
 // internal libs
-import { AllListingsResponse, AssetListingRequest, Listing, LoginResponse } from "./backend-types";
+import {
+  AllListingsResponse,
+  AssetListingRequest,
+  Listing,
+  LoginResponse,
+} from "./backend-types";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -36,15 +41,13 @@ export const getListings = (address: string, signature: string): Promise<Listing
 };
 
 export const createListing = (
-  address: string,
   signature: string,
   listing: Listing
 ): Promise<Listing[]> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  // console.log(url);
   const postParams: AssetListingRequest = {
     ...listing,
+    term: listing.terms,
   };
   return axios
     .post(url, postParams, {
@@ -52,9 +55,9 @@ export const createListing = (
         Authorization: `Bearer ${signature}`,
       },
     })
-    .then((resp: AxiosResponse<AllListingsResponse>) => {
-      // console.log(resp);
-      return resp.data.data;
+    .then((resp: AxiosResponse<any>) => {
+      console.log(resp);
+      return resp.data;
     });
 };
 
@@ -69,5 +72,3 @@ export const handleSignMessage = (
     console.warn(err);
   }
 };
-
-export default getListings;
