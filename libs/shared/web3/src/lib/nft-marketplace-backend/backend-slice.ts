@@ -1,10 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { IBaseAddressAsyncThunk, SignerAsyncThunk } from "../slices/interfaces";
-import getListings, {
-  doLogin,
-  handleSignMessage,
-  LoginResponse,
-} from "./marketplace-api";
+import { loadState } from "../helpers/localstorage";
+import { SignerAsyncThunk } from "../slices/interfaces";
+import getListings, { doLogin, handleSignMessage } from "./backend-api";
+import { LoginResponse } from "./backend-types";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
@@ -13,18 +11,19 @@ export interface MarketplaceApiData {
 }
 
 /* 
-authorizeAccount: calls the auth/login function adding the address to our db if non-existant
-  upon success
+authorizeAccount: generates user account if non existant 
+  requests signature to create bearer token
 params: 
 - networkId: number
 - address: string
+- provider: JsonRpcProvider
 returns: void
 */
 export const authorizeAccount = createAsyncThunk(
   "marketplaceApi/authorizeAccount",
   async (
     { address, networkId, provider }: SignerAsyncThunk,
-    { dispatch, rejectWithValue }
+    { dispatch, rejectWithValue, getState }
   ) => {
     const loginResponse: LoginResponse = await doLogin(address);
     if (loginResponse.id) {
@@ -37,28 +36,36 @@ export const authorizeAccount = createAsyncThunk(
 );
 
 /* 
-loadListings: loads balances
+loadListings: loads all listings
 params: 
 - networkId: number
 - address: string
+- provider: JsonRpcProvider
 returns: void
 */
 export const loadListings = createAsyncThunk(
   "marketplaceApi/loadListings",
-  async ({ address, provider, networkId }: SignerAsyncThunk, { getState }) => {
+  async (
+    { address, provider, networkId }: SignerAsyncThunk,
+    { getState, rejectWithValue }
+  ) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
       console.log(await getListings(address, thisState.nftMarketplace.authSignature));
+    } else {
+      rejectWithValue("No authorization found.");
     }
   }
 );
 
 // initial wallet slice state
+const previousState = loadState("nftMarketplace");
 const initialState: MarketplaceApiData = {
   accountStatus: "unknown",
   status: "idle",
   authSignature: null,
+  ...previousState,
 };
 
 // create slice and initialize reducers
@@ -74,8 +81,6 @@ const marketplaceApiSlice = createSlice({
       if (action.payload) {
         state.accountStatus = "ready";
         state.authSignature = action.payload;
-      } else if (action.payload === "Login Failed") {
-        state.accountStatus = "failed";
       }
     });
     builder.addCase(authorizeAccount.rejected, (state, action) => {

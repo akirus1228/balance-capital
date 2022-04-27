@@ -19,7 +19,8 @@ const store = configureStore({
 });
 
 store.subscribe(() => {
-  saveState(store.getState().app);
+  saveState("app", store.getState().app);
+  saveState("nftMarketplace", store.getState().nftMarketplace);
 });
 
 export type RootState = ReturnType<typeof store.getState>;

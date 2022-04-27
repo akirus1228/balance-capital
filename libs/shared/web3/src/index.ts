@@ -29,4 +29,4 @@ export * from "./lib/helpers/environment";
 export { changeMint } from "./lib/slices/stake-thunk";
 export * from "./lib/wallet/wallet-slice";
 export * from "./lib/wallet/opensea";
-export * from "./lib/nft-marketplace";
+export * from "./lib/nft-marketplace-backend";

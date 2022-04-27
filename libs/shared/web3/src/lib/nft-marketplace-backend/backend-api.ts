@@ -3,27 +3,13 @@ import axios, { AxiosResponse } from "axios";
 import { JsonRpcProvider, Provider } from "@ethersproject/providers";
 
 // internal libs
-import { Asset } from "../wallet/opensea";
+import { AllListingsResponse, AssetListingRequest, Listing, LoginResponse } from "./backend-types";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
+// TODO: use production env to determine correct endpoint
 export const NFT_MARKETPLACE_API_URL =
   "https://usdb-nft-lending-backend.herokuapp.com/api";
-
-export type LoginResponse = {
-  address: string;
-  createdAt: string;
-  description?: string;
-  email?: string;
-  id: string;
-  name?: string;
-  profileImageUrl?: string;
-  updatedAt: string;
-};
-
-export interface Listing {
-  asset: Asset;
-}
 
 export const doLogin = (address: string): Promise<LoginResponse> => {
   const url = `${NFT_MARKETPLACE_API_URL}/auth/login`;
@@ -33,20 +19,42 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
   });
 };
 
-// TODO: use production env to determine correct endpoint
 export const getListings = (address: string, signature: string): Promise<Listing[]> => {
-  console.log(address);
+  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all`;
-  console.log(url);
+  // console.log(url);
   return axios
     .get(url, {
       headers: {
         Authorization: `Bearer ${signature}`,
       },
     })
-    .then((resp: AxiosResponse<any>) => {
-      console.log(resp);
-      return resp.data.assets;
+    .then((resp: AxiosResponse<AllListingsResponse>) => {
+      // console.log(resp);
+      return resp.data.data;
+    });
+};
+
+export const createListing = (
+  address: string,
+  signature: string,
+  listing: Listing
+): Promise<Listing[]> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
+  // console.log(url);
+  const postParams: AssetListingRequest = {
+    ...listing,
+  };
+  return axios
+    .post(url, postParams, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllListingsResponse>) => {
+      // console.log(resp);
+      return resp.data.data;
     });
 };
 
