@@ -1,10 +1,13 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
+import { Collectible, FetchNFTClient } from "@audius/fetch-nft";
 import { ierc20Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
-import { getWalletAssets, OpenSeaAsset } from "./opensea";
+import { env } from "process";
+
+const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
 export enum AcceptedCurrencies {
   USDB,
@@ -22,7 +25,7 @@ export interface Currency {
 
 export interface WalletData {
   readonly status: "idle" | "loading" | "succeeded" | "failed";
-  readonly assets: OpenSeaAsset[];
+  readonly assets: Collectible[];
   readonly currencies: Currency[];
 }
 
@@ -65,9 +68,17 @@ returns: void
 export const loadWalletAssets = createAsyncThunk(
   "account/loadWalletAssets",
   async ({ address }: IBaseAddressAsyncThunk) => {
-    const walletContents = await getWalletAssets(address);
-    // console.log(walletContents);
-    return walletContents;
+    const isDev = !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
+    const openSeaConfig: any = {
+      apiKey: isDev ? "" : OPENSEA_API_KEY,
+    };
+    if (isDev) {
+      openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
+    }
+    const client = new FetchNFTClient({ openSeaConfig });
+    const walletContents = await client.getEthereumCollectibles([address]);
+    console.log(walletContents);
+    return walletContents[address];
   }
 );
 

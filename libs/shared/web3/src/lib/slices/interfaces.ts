@@ -1,4 +1,5 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
+import { Collectible } from "@audius/fetch-nft";
 import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
@@ -161,7 +162,7 @@ export interface SignerAsyncThunk
     IInteractiveAsyncThunk {}
 
 export interface AssetAsyncThunk {
-  readonly asset: Asset;
+  readonly asset: Collectible;
 }
 
 export interface TermsAsyncThunk {

@@ -2,6 +2,7 @@ import { Asset, createListing, Terms } from "@fantohm/shared-web3";
 import { Box, Button, Input } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useDispatch } from "react-redux";
+import { Collectible } from "@audius/fetch-nft";
 import style from "./borrower-asset.module.scss";
 
 export const NoImg = (): JSX.Element => {
@@ -52,7 +53,7 @@ type BorrowerAssetState = {
 };
 
 export interface BorrowerAssetProps {
-  asset: Asset;
+  asset: Collectible;
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
@@ -82,13 +83,16 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
 
   return (
     <div style={{ borderBottom: "1px solid #000" }}>
-      <span>Collection</span>: <span>{props.asset.collection.name}</span>
+      <span>Collection</span>: <span>{props.asset.name}</span>
       <br />
-      <span>Token id</span>: <span>{props.asset.token_id}</span>
-      {props.asset.image_url && (
-        <PreviewImg url={props.asset.image_url} name={props.asset.name} />
+      <span>Token id</span>: <span>{props.asset.tokenId}</span>
+      {props.asset.imageUrl && (
+        <PreviewImg
+          url={props.asset.imageUrl}
+          name={props.asset.name || "placeholder name"}
+        />
       )}
-      {!props.asset.image_url && <NoImg />}
+      {!props.asset.imageUrl && <NoImg />}
       <Input
         type="number"
         placeholder="amount"

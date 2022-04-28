@@ -1,3 +1,5 @@
+import { Collectible } from "@audius/fetch-nft";
+
 // request types
 export interface AssetListingRequest extends Listing {
   term: Terms; //convert terms to term for api
@@ -95,9 +97,11 @@ export enum ListingStatus {
 
 export interface Listing {
   id?: string;
-  asset: Asset;
+  asset: Collectible;
   terms: Terms;
   status: ListingStatus;
   createdAt?: string;
   updatedAt?: string;
 }
+
+export { Collectible } from "@audius/fetch-nft";

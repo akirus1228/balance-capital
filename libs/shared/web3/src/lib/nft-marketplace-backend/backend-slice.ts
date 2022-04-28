@@ -81,7 +81,7 @@ export const createListing = createAsyncThunk(
       const listing: Listing = {
         asset,
         terms,
-        status: ListingStatus.LISTED
+        status: ListingStatus.LISTED,
       };
       console.log(listing);
       BackendApi.createListing(thisState.nftMarketplace.authSignature, listing);
