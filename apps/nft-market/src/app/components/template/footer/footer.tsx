@@ -36,8 +36,8 @@ export const Footer = (): JSX.Element => {
   ];
 
   return (
-    <FooterBar position="static" elevation={0} style={{ margin: 0 }}>
-      <Container maxWidth="xl" sx={{ my: "100px" }}>
+    <FooterBar elevation={0} position="sticky" style={{ marginTop: "auto" }}>
+      <Container maxWidth="xl" sx={{ my: "2em" }}>
         <Toolbar sx={{ display: "flex", flexDirection: "row" }}>
           {footerItems.map((footerItem: Page, index: number) => {
             return (

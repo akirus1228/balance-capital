@@ -60,16 +60,13 @@ export const CustomInnerSwitch = styled(Switch)(({ theme }) => ({
 }));
 
 export const FooterBar = styled(AppBar)(({ theme }) => ({
-  "& .MuiPaper-root": {
-    borderRadius: 0,
-    backgroundColor: "#000",
-  },
-  "& .MuiSwitch-thumb": {
-    boxShadow: "none",
-    width: 12,
-    height: 12,
-    margin: 4,
-    backgroundColor: "#4f4ff2",
+  borderRadius: 0,
+  padding: "2em 0",
+  marginTop: 0,
+  "& a": {
+    color: "#FFF",
+    fontSize: "14px",
+    fontWeight: 400,
   },
 }));
 
@@ -140,102 +137,28 @@ const globalTheme: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
-          borderRadius: "30px",
-          padding: "1em 1.25em",
+          borderRadius: "36px",
+          padding: "1em 3em",
           fontSize: "1em",
           textTransform: "unset",
-          "&.paperButton": {
-            width: "100%",
-            padding: "1em 1.25em",
-          },
-          "&.menuButton": {
-            height: "1em",
-            paddingTop: "1em",
-            paddingBottom: "1em",
-            paddingLeft: "1.25em",
-            paddingRight: "1.25em",
-            borderRadius: "1.5em",
-            margin: "auto 0 auto 1em",
-            fontSize: "1em",
-          },
-          "&.cardActionButton": {
-            width: "100%",
-          },
-          "&.thin": {
-            padding: "15px 27px",
-          },
-          "&.border": {
-            background: "none",
-          },
-          "&.ultraThin": {
-            padding: "5px 27px",
-          },
-          "&.portfolio": {
-            height: "38px",
-            paddingTop: "1em",
-            paddingBottom: "1em",
-            paddingRight: "1.5em",
-            fontSize: "0.8em",
-            background: "#384bff",
-            color: "#FFF",
-          },
-          "&.portfolio svg": {
-            height: "20px",
-            width: "20px",
-          },
-          "&.fill": {
-            fontSize: "14px",
-            backgroundColor: "#000",
-            borderRadius: "1.5em",
-            color: "#FFF",
-            padding: "15px 27px",
-          },
-          "&.inputButton": {
-            height: "3em",
-            borderRadius: "2em",
-            width: "245px",
-          },
           "&.Mui-disabled": {
             backgroundColor: "rgba(0, 0, 0, 0.25)",
           },
         },
         outlined: {
-          borderRadius: "30px",
-          padding: "1em 1.25em",
+          borderRadius: "36px",
+          padding: "1em 3em",
           fontSize: "1em",
+          borderWidth: "1px",
         },
         contained: {
-          "&.closeButton": {
-            borderRadius: "50%",
-            p: "0.5em",
-            boxSizing: "border-box",
-            minWidth: "16px",
-          },
-          "&.MuiButton-containedError": {
-            color: "#CC335C",
-            background: "#CC335C40",
-          },
-          "&.MuiButton-containedError:disabled": {
-            color: "#CC335C",
-            background: "#CC335C40",
-          },
-          "&:disabled": {
-            background: "#696C8029",
-            color: "#696C80",
-          },
+          borderRadius: "36px",
+          padding: "1em 3em",
+          fontSize: "1em",
         },
       },
       defaultProps: {
         autoCapitalize: "none",
-      },
-    },
-    MuiButtonBase: {
-      styleOverrides: {
-        root: {
-          "&.MuiAccordionSummary-root": {
-            paddingLeft: "0",
-          },
-        },
       },
     },
     MuiTab: {
@@ -332,7 +255,7 @@ const USDBLightBase: ThemeOptions = {
         },
         outlined: {
           "&, &:hover": {
-            border: "3px solid #000",
+            border: "2px solid #000",
           },
         },
         contained: {
@@ -420,7 +343,7 @@ const USDBDarkBase: ThemeOptions = {
         },
         outlined: {
           "&, &:hover": {
-            border: "3px solid #FFF",
+            border: "2px solid #FFF",
           },
         },
         contained: {
