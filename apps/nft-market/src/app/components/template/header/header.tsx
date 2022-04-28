@@ -1,17 +1,15 @@
-import { MouseEvent, useCallback, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { MouseEvent, useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import {
   AppBar,
   Box,
-  Skeleton,
   Toolbar,
   IconButton,
   Typography,
   Menu,
   Container,
   Button,
-  Tooltip,
   MenuItem,
   SvgIcon,
   SxProps,
@@ -19,21 +17,12 @@ import {
 } from "@mui/material";
 import AnalyticsIcon from "@mui/icons-material/Analytics";
 import MenuIcon from "@mui/icons-material/Menu";
-import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
-import {
-  useWeb3Context,
-  setWalletConnected,
-  getBalances,
-  trim,
-  defaultNetworkId,
-  enabledNetworkIds,
-} from "@fantohm/shared-web3";
+import { useWeb3Context, enabledNetworkIds } from "@fantohm/shared-web3";
 import MenuLink from "./menu-link";
-import { RootState } from "../../../store";
 import { setCheckedConnection } from "../../../store/reducers/app-slice";
 import styles from "./header.module.scss";
-import { NetworkMenu } from "./network-menu";
-import { setTheme } from "@fantohm/shared-ui-themes";
+import UserMenu from "./user-menu";
+import NotificationMenu from "./notification-menu";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -42,31 +31,23 @@ type PageParams = {
 
 type Page = {
   title: string;
-  params: PageParams;
+  params?: PageParams;
   href?: string;
 };
 
 const pages: Page[] = [
-  { title: "Lend", href: "/lend", params: { comingSoon: false } },
-  { title: "Borrow", href: "/borrow", params: { comingSoon: false } },
-  {
-    title: "Bridge",
-    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
-    params: { comingSoon: false },
-  },
+  { title: "Lend", href: "/lend" },
+  { title: "Borrow", href: "/borrow" },
+  { title: "Learn", href: "/learn" },
+  { title: "Account", href: "/my-account" },
+  { title: "About", href: "/about" },
 ];
+
 export const Header = (): JSX.Element => {
-  const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
-    useWeb3Context();
+  const { connect, connected, hasCachedProvider, chainId } = useWeb3Context();
   const dispatch = useDispatch();
   const allowedChain = chainId && enabledNetworkIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
-  const [anchorElProductsMenu, setAnchorElProductsMenu] = useState<null | HTMLElement>(
-    null
-  );
-  const [connectButtonText, setConnectButtonText] = useState<string>("Connect Wallet");
-
-  const themeType = useSelector((state: RootState) => state.theme.mode);
 
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
@@ -75,28 +56,6 @@ export const Header = (): JSX.Element => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  const handleConnect = useCallback(async () => {
-    if (connected) {
-      await disconnect();
-    } else {
-      try {
-        await connect();
-      } catch (e) {
-        console.log("Connection metamask error", e);
-      }
-    }
-  }, [connected, disconnect, connect]);
-
-  useEffect(() => {
-    dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
-    if (connected) {
-      setConnectButtonText("Disconnect");
-    } else {
-      setConnectButtonText("Connect Wallet");
-    }
-  }, [connected, address, dispatch]);
 
   useEffect(() => {
     // if there's a cached provider, try and connect
@@ -115,15 +74,6 @@ export const Header = (): JSX.Element => {
     if (hasCachedProvider && !hasCachedProvider() && !connected)
       dispatch(setCheckedConnection(true));
   }, [connected, hasCachedProvider, connect]);
-
-  const toggleTheme = useCallback(() => {
-    const type = themeType === "light" ? "dark" : "light";
-    dispatch(setTheme(type));
-  }, [dispatch, themeType]);
-
-  const handleCloseProductsMenu = () => {
-    setAnchorElProductsMenu(null);
-  };
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -174,39 +124,18 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
-                  href={page.params.comingSoon ? "#" : page.href}
+                  href={page?.params?.comingSoon ? "#" : page.href}
                   onClick={handleCloseNavMenu}
                   key={page.title}
                 >
                   <Typography
                     textAlign="center"
-                    style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}
+                    style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
                   >
                     <Button style={{ width: "100%" }}>{page.title}</Button>
                   </Typography>
                 </MenuLink>
               ))}
-
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileConnect"]}`}
-              >
-                <Typography textAlign="center">
-                  <Button onClick={handleConnect}>{connectButtonText}</Button>
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileTheme"]}`}
-              >
-                <Typography textAlign="center">
-                  <Button onClick={toggleTheme}>
-                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="medium" />
-                  </Button>
-                </Typography>
-              </MenuItem>
 
               <MenuItem
                 sx={{
@@ -244,67 +173,22 @@ export const Header = (): JSX.Element => {
               flexDirection: "row",
             }}
           >
-            <Box>
-              <Button
-                className={`menuButton ${styles["productsButton"]}`}
-                onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
-              >
-                Products
-              </Button>
-              <Menu
-                id="products-menu"
-                anchorEl={anchorElProductsMenu}
-                open={Boolean(anchorElProductsMenu)}
-                onClose={handleCloseProductsMenu}
-                MenuListProps={{
-                  "aria-labelledby": "products-button",
-                }}
-              >
-                {pages.map((page: any) => {
-                  return (
-                    <MenuLink
-                      // href={page.href ? page.href : '#'}
-                      href={page.params.comingSoon ? "#" : page.href}
-                      onClick={handleCloseProductsMenu}
-                      key={page.title}
-                    >
-                      <Typography
-                        textAlign="center"
-                        style={{ opacity: page.params.comingSoon ? 0.2 : 1 }}
-                      >
-                        <Button style={{ width: "100%" }}>{page.title}</Button>
-                      </Typography>
-                    </MenuLink>
-                  );
-                })}
-              </Menu>
+            <Box sx={{ display: "flex", flexDirection: "row" }}>
+              {pages.map((page: any, index: number) => {
+                return (
+                  <Typography
+                    key={`pagebtn-${index}`}
+                    textAlign="center"
+                    style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
+                  >
+                    <Button style={{ width: "100%" }}>{page.title}</Button>
+                  </Typography>
+                );
+              })}
             </Box>
           </Box>
-
-          <Box mr="1em">
-            <NetworkMenu />
-          </Box>
-
-          <Tooltip title="Connect Wallet">
-            <Button
-              onClick={handleConnect}
-              sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
-              color="primary"
-              className="menuButton"
-            >
-              {connectButtonText}
-            </Button>
-          </Tooltip>
-          <Tooltip title="Toggle Light/Dark Mode">
-            <Button
-              onClick={toggleTheme}
-              sx={{ display: { xs: "none", md: "flex" } }}
-              color="primary"
-              className={`menuButton ${styles["toggleTheme"]}`}
-            >
-              <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
-            </Button>
-          </Tooltip>
+          <NotificationMenu />
+          <UserMenu />
         </Toolbar>
       </Container>
       {!allowedChain && connected && (

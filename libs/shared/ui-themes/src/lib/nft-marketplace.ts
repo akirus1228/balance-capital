@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { ThemeOptions } from "@mui/material";
+import { AppBar, styled, Switch, ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
@@ -26,7 +26,7 @@ const nftLightColors = {
   invertedColor: "#FFF",
   errorColor: "#CC335C",
   errorBackground: "#CC335C40",
-  backgroundColor: "#FFF",
+  backgroundColor: "#fdfefe",
   paperBg: "#FFF",
   gray: "#696C80",
   iconButtonBg: "#181A1C0F",
@@ -43,6 +43,35 @@ const nftDarkColors = {
   gray: "#929BA0",
   iconButtonBg: "#181A1CD4",
 };
+
+export const CustomInnerSwitch = styled(Switch)(({ theme }) => ({
+  padding: 8,
+  "& .MuiSwitch-track": {
+    borderRadius: 22 / 2,
+    backgroundColor: "#4f4ff2",
+  },
+  "& .MuiSwitch-thumb": {
+    boxShadow: "none",
+    width: 12,
+    height: 12,
+    margin: 4,
+    backgroundColor: "#4f4ff2",
+  },
+}));
+
+export const FooterBar = styled(AppBar)(({ theme }) => ({
+  "& .MuiPaper-root": {
+    borderRadius: 0,
+    backgroundColor: "#000",
+  },
+  "& .MuiSwitch-thumb": {
+    boxShadow: "none",
+    width: 12,
+    height: 12,
+    margin: 4,
+    backgroundColor: "#4f4ff2",
+  },
+}));
 
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {

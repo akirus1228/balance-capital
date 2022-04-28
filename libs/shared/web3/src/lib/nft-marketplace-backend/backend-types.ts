@@ -41,32 +41,6 @@ export enum AssetChain {
   sol,
 }
 
-export type Asset = {
-  id?: string;
-  owner: Owner;
-  status: AssetStatus;
-  openseaId: string;
-  tokenId: string;
-  name?: string;
-  description?: string;
-  mediaType: AssetMediaType;
-  frameUrl?: string;
-  imageUrl?: string;
-  videoUrl?: string;
-  threeDUrl?: string;
-  gifUrl?: string;
-  isOwned: boolean;
-  dateCreated: string;
-  dateLastTransferred: string;
-  externalLink: string;
-  permaLink: string;
-  assetContractAddress: string;
-  chain: AssetChain;
-  wallet: string;
-  createdAt: string;
-  updatedAt: string;
-};
-
 export type Owner = {
   id?: string;
   address: string;
@@ -104,4 +78,6 @@ export interface Listing {
   updatedAt?: string;
 }
 
-export { Collectible } from "@audius/fetch-nft";
+export interface Asset extends Collectible {
+  status: AssetStatus;
+}

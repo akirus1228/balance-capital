@@ -5,7 +5,7 @@ import { ierc20Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
-import { env } from "process";
+import { Asset } from "../nft-marketplace-backend";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -25,7 +25,7 @@ export interface Currency {
 
 export interface WalletData {
   readonly status: "idle" | "loading" | "succeeded" | "failed";
-  readonly assets: Collectible[];
+  readonly assets: Asset[];
   readonly currencies: Currency[];
 }
 
@@ -78,7 +78,7 @@ export const loadWalletAssets = createAsyncThunk(
     const client = new FetchNFTClient({ openSeaConfig });
     const walletContents = await client.getEthereumCollectibles([address]);
     console.log(walletContents);
-    return walletContents[address];
+    return walletContents[address] as Asset[];
   }
 );
 
