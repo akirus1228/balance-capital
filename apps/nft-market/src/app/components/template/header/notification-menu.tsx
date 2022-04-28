@@ -1,5 +1,5 @@
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { IconButton, Menu, MenuItem } from "@mui/material";
+import { Badge, IconButton, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 
 export const NotificationMenu = (): JSX.Element => {
@@ -15,9 +15,20 @@ export const NotificationMenu = (): JSX.Element => {
 
   return (
     <>
-      <IconButton onClick={handleClick} sx={{ background: "#FFF" }}>
-        <NotificationsNoneOutlinedIcon />
+      <IconButton
+        onClick={handleClick}
+        sx={{ background: "#FFF", mr: "10px", padding: "10px" }}
+      >
+        <Badge
+          overlap="circular"
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          variant="dot"
+          color="success"
+        >
+          <NotificationsNoneOutlinedIcon sx={{ fontSize: "38px", color: "#000" }} />
+        </Badge>
       </IconButton>
+
       <Menu
         id="user-menu"
         anchorEl={anchorEl}

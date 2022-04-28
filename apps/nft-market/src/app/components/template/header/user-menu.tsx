@@ -23,6 +23,7 @@ import CreditCardOutlinedIcon from "@mui/icons-material/CreditCardOutlined";
 import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import { addressEllipsis } from "@fantohm/shared-helpers";
 import { RootState } from "../../../store";
+import AvatarPlaceholder from "../../../../assets/images/temp-avatar.png";
 
 export const UserMenu = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -58,9 +59,9 @@ export const UserMenu = (): JSX.Element => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        sx={{ background: "#FFF" }}
+        sx={{ background: "#FFF", px: "20px", py: "0.5em" }}
       >
-        <Avatar sx={{ mr: "1em" }}></Avatar>
+        <Avatar sx={{ mr: "1em" }} src={AvatarPlaceholder}></Avatar>
         {addressEllipsis(address)}
         <Icon sx={{ ml: "1em" }} component={ArrowDropDownIcon}></Icon>
       </Button>
