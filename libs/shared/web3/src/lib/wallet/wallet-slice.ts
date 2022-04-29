@@ -24,7 +24,8 @@ export interface Currency {
 }
 
 export interface WalletData {
-  readonly status: "idle" | "loading" | "succeeded" | "failed";
+  readonly assetStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly currencyStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly assets: Asset[];
   readonly currencies: Currency[];
 }
@@ -82,7 +83,7 @@ export const loadWalletAssets = createAsyncThunk(
       return walletContents[address] as Asset[];
     } catch (err) {
       console.log(err);
-      rejectWithValue("No authorization found.");
+      rejectWithValue("Unable to load assets.");
       return [] as Asset[];
     }
   }
@@ -90,7 +91,8 @@ export const loadWalletAssets = createAsyncThunk(
 
 // initial wallet slice state
 const initialState: WalletData = {
-  status: "idle",
+  currencyStatus: "idle",
+  assetStatus: "idle",
   assets: [],
   currencies: [],
 };
@@ -102,26 +104,26 @@ const walletSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loadWalletCurrencies.pending, (state, action) => {
-      state.status = "loading";
+      state.currencyStatus = "loading";
     });
     builder.addCase(loadWalletCurrencies.fulfilled, (state, action) => {
-      state.status = "succeeded";
+      state.currencyStatus = "succeeded";
       // console.log(action.payload);
       state.currencies = action.payload;
     });
     builder.addCase(loadWalletCurrencies.rejected, (state, action) => {
-      state.status = "failed";
+      state.currencyStatus = "failed";
     });
     builder.addCase(loadWalletAssets.pending, (state, action) => {
-      state.status = "loading";
+      state.assetStatus = "loading";
     });
     builder.addCase(loadWalletAssets.fulfilled, (state, action) => {
-      state.status = "succeeded";
+      state.assetStatus = "succeeded";
       state.assets = action.payload;
       //console.log(action);
     });
     builder.addCase(loadWalletAssets.rejected, (state, action) => {
-      state.status = "failed";
+      state.assetStatus = "failed";
     });
   },
 });

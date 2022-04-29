@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Icon, Typography } from "@mui/material";
+import { Box, Button, Grid, Icon, SxProps, Theme, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import style from "./asset-list.module.scss";
@@ -18,6 +18,7 @@ import AssetCategoryFilter from "../asset-category-filter/asset-category-filter"
 
 export interface AssetListProps {
   address?: string;
+  sx?: SxProps<Theme>;
 }
 
 export const AssetList = (props: AssetListProps): JSX.Element => {
@@ -29,39 +30,46 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
   // Load assets and nfts in current wallet
   useEffect(() => {
     console.log("load wallet assets effect triggered");
-    if (address && ["failed", "idle"].includes(wallet.status)) {
+    console.log(`address: ${address}`);
+    console.log(`assetStatus: ${wallet.assetStatus}`);
+    if (address && ["failed", "idle"].includes(wallet.assetStatus)) {
       console.log("load wallet assets condition met, loading...");
       console.log("app-chainId, address: ", chainId, address);
-      dispatch(loadWalletCurrencies({ networkId: chainId || defaultNetworkId, address }));
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
-  }, [chainId, address, wallet.status]);
+  }, [chainId, address, wallet.assetStatus]);
 
   return (
-    <Grid container maxWidth="xl" columnSpacing={5}>
-      <Grid item xs={0} md={3}>
-        <AssetFilter />
+    <Box sx={props.sx}>
+      <Grid container maxWidth="xl" columnSpacing={5}>
+        <Grid item xs={0} md={2}>
+          <AssetFilter />
+        </Grid>
+        <Grid item xs={12} md={10}>
+          <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <AssetCategoryFilter />
+            <Button>
+              <GridViewOutlinedIcon />
+              <Typography>Grid View</Typography>
+            </Button>
+            <Button>
+              <FormatListBulletedOutlinedIcon />
+              <Typography>List view</Typography>
+            </Button>
+          </Box>
+          <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+            {wallet.assets &&
+              wallet.assets.map((asset: Asset, index: number) => (
+                <BorrowerAsset key={`asset-${index}`} asset={asset} />
+              ))}
+            {wallet.assetStatus === "succeeded" &&
+              (!wallet.assets || wallet.assets.length < 1) && (
+                <h1>No assets available for listing.</h1>
+              )}
+          </Box>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={9}>
-        <Box sx={{ display: "flex", flexDirection: "row" }}>
-          <AssetCategoryFilter />
-          <Button>
-            <GridViewOutlinedIcon />
-            <Typography>Grid View</Typography>
-          </Button>
-          <Button>
-            <FormatListBulletedOutlinedIcon />
-            <Typography>List view</Typography>
-          </Button>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
-          {wallet.assets &&
-            wallet.assets.map((asset: Asset, index: number) => (
-              <BorrowerAsset key={`asset-${index}`} asset={asset} />
-            ))}
-        </Box>
-      </Grid>
-    </Grid>
+    </Box>
   );
 };
 

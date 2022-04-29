@@ -10,8 +10,10 @@ export const AssetCategoryFilter = (props: AssetCategoryFilterProps): JSX.Elemen
   return (
     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
       <ToggleButton value="All">All assets</ToggleButton>
-      {assetCategories.map((cat) => (
-        <ToggleButton value={cat}>{cat}</ToggleButton>
+      {assetCategories.map((cat: string, index: number) => (
+        <ToggleButton value={cat} key={`catfilter-${index}`}>
+          {cat}
+        </ToggleButton>
       ))}
     </Box>
   );

@@ -4,9 +4,9 @@ import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
   return (
-    <Container>
+    <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
       <h1>Choose an asset to collateralize</h1>
-      <AssetList />
+      <AssetList sx={{ mt: "2em" }} />
     </Container>
   );
 };

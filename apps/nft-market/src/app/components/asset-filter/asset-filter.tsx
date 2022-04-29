@@ -18,7 +18,7 @@ export interface AssetFilterProps {}
 
 export const AssetFilter = (props: AssetFilterProps): JSX.Element => {
   return (
-    <Box sx={{maxWidth:"250px", ml:"auto"}}>
+    <Box sx={{ maxWidth: "250px", mr: "auto" }}>
       <Select
         labelId="asset-sort-by"
         label="Sort by"

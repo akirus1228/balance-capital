@@ -152,6 +152,19 @@ const globalTheme: ThemeOptions = {
         autoCapitalize: "none",
       },
     },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          border: "2px solid #0000001F",
+          borderRadius: "3em",
+          fontSize: "12px",
+          width: "125px",
+          padding: "0.5em 2em",
+          textTransform: "none",
+          height: "fit-content",
+        },
+      },
+    },
     MuiTab: {
       styleOverrides: {
         root: {
@@ -254,6 +267,13 @@ const USDBLightBase: ThemeOptions = {
             color: nftLightColors.color,
             background: nftLightColors.iconButtonBg,
           },
+        },
+      },
+    },
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          color: nftLightColors.color,
         },
       },
     },
