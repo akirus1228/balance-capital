@@ -67,7 +67,7 @@ returns: void
 */
 export const loadWalletAssets = createAsyncThunk(
   "account/loadWalletAssets",
-  async ({ address }: IBaseAddressAsyncThunk) => {
+  async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue }) => {
     const isDev = !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
     const openSeaConfig: any = {
       apiKey: isDev ? "" : OPENSEA_API_KEY,
@@ -75,10 +75,16 @@ export const loadWalletAssets = createAsyncThunk(
     if (isDev) {
       openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
     }
-    const client = new FetchNFTClient({ openSeaConfig });
-    const walletContents = await client.getEthereumCollectibles([address]);
-    console.log(walletContents);
-    return walletContents[address] as Asset[];
+    try {
+      const client = new FetchNFTClient({ openSeaConfig });
+      const walletContents = await client.getEthereumCollectibles([address]);
+      console.log(walletContents);
+      return walletContents[address] as Asset[];
+    } catch (err) {
+      console.log(err);
+      rejectWithValue("No authorization found.");
+      return [] as Asset[];
+    }
   }
 );
 

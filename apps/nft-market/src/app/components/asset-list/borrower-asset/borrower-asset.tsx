@@ -5,28 +5,12 @@ import { useDispatch } from "react-redux";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import style from "./borrower-asset.module.scss";
-
-export const NoImg = (): JSX.Element => {
-  return (
-    <Box
-      sx={{
-        height: "300px",
-        width: "300px",
-        border: "1px solid #000",
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <span>No Preview Available</span>
-    </Box>
-  );
-};
+import { Link } from "react-router-dom";
 
 export interface PreviewImageProps {
   url: string;
   name: string;
+  assetId: string;
 }
 
 export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
@@ -34,12 +18,14 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
     >
-      <img
-        className={style["assetImg"]}
-        src={props.url}
-        alt={props.name}
-        style={{ height: "100%", width: "auto" }}
-      />
+      <Link to={`/borrow/${props.assetId}`}>
+        <img
+          className={style["assetImg"]}
+          src={props.url}
+          alt={props.name}
+          style={{ height: "100%", width: "auto" }}
+        />
+      </Link>
     </Box>
   );
 };
@@ -127,6 +113,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         <PreviewImg
           url={props.asset.imageUrl}
           name={props.asset.name || "placeholder name"}
+          assetId={props.asset.id}
         />
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>

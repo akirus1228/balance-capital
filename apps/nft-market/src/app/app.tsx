@@ -26,7 +26,6 @@ export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
-  const wallet = useSelector((state: RootState) => state.wallet);
   const backend = useSelector((state: RootState) => state.nftMarketplace);
 
   const [theme, setTheme] = useState(NftLight);
@@ -36,22 +35,11 @@ export const App = (): JSX.Element => {
     setTheme(themeType === "light" ? NftLight : NftDark);
   }, [themeType]);
 
-  // Load assets and nfts in current wallet
-  useEffect(() => {
-    if (address) {
-      console.log("app-chainId, address: ", chainId, address);
-      dispatch(loadWalletCurrencies({ networkId: chainId || defaultNetworkId, address }));
-      dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
-    }
-  }, [chainId, address, dispatch]);
-
-  // login to the backend api
+  // when a user connects their wallet login to the backend api
   useEffect(() => {
     if (
       provider &&
-      chainId &&
       connected &&
-      wallet.status === "succeeded" &&
       ["unknown", "failed"].includes(backend.accountStatus) &&
       backend.authSignature === null
     ) {
@@ -59,21 +47,21 @@ export const App = (): JSX.Element => {
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [provider, wallet.status, backend.accountStatus]);
+  }, [address, backend.accountStatus]);
 
-  // load listings from backend api
-  useEffect(() => {
-    if (
-      provider &&
-      backend.accountStatus === "ready" &&
-      backend.status === "idle" &&
-      backend.authSignature
-    ) {
-      dispatch(
-        loadListings({ networkId: chainId || defaultNetworkId, address, provider })
-      );
-    }
-  }, [backend.authSignature]);
+  // // load listings from backend api
+  // useEffect(() => {
+  //   if (
+  //     provider &&
+  //     backend.accountStatus === "ready" &&
+  //     backend.status === "idle" &&
+  //     backend.authSignature
+  //   ) {
+  //     dispatch(
+  //       loadListings({ networkId: chainId || defaultNetworkId, address, provider })
+  //     );
+  //   }
+  // }, [backend.authSignature]);
 
   return (
     <ThemeProvider theme={theme}>
