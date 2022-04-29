@@ -1,6 +1,7 @@
 import { Box, Button, Container, Typography } from "@mui/material";
 import style from "./home-page.module.scss";
 import BgImg from "../../../assets/images/temp-homepage-bg.png";
+import { Link } from "react-router-dom";
 
 export const HomePage = (): JSX.Element => {
   return (
@@ -35,10 +36,14 @@ export const HomePage = (): JSX.Element => {
             mb: "8em",
           }}
         >
-          <Button variant="contained" sx={{ mr: "10px" }}>
-            Borrow
-          </Button>
-          <Button variant="outlined">Lend</Button>
+          <Link to="/borrow">
+            <Button variant="contained" sx={{ mr: "10px" }}>
+              Borrow
+            </Button>
+          </Link>
+          <Link to="/lend">
+            <Button variant="outlined">Lend</Button>
+          </Link>
         </Box>
         <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
           <Box
