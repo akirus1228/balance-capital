@@ -34,7 +34,12 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
     >
-      <img src={props.url} alt={props.name} style={{ height: "100%", width: "auto" }} />
+      <img
+        className={style["assetImg"]}
+        src={props.url}
+        alt={props.name}
+        style={{ height: "100%", width: "auto" }}
+      />
     </Box>
   );
 };
@@ -99,6 +104,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
             position: "relative",
             top: "15px",
             left: "20px",
+            zIndex: 10,
           }}
           label={props.asset.status || "Unlisted"}
         />
@@ -111,6 +117,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
             left: "250px",
             backgroundColor: "#FFFFFF40",
             color: "#000",
+            zIndex: 10,
           }}
         >
           <MoreHorizOutlinedIcon />
