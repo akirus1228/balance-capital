@@ -20,6 +20,7 @@ import { ScrollToTop } from "@fantohm/shared/ui-helpers";
 import BorrowPage from "./pages/borrow-page/borrow-page";
 import LendPage from "./pages/lend-page/lend-page";
 import MyAccountPage from "./pages/my-account-page/my-account-page";
+import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -84,6 +85,7 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
+          <Route path="/borrow/:assetId" element={<BorrowerAssetDetailsPage />} />
           <Route path="/lend" element={<LendPage />} />
           <Route path="/my-account" element={<MyAccountPage />} />
           <Route

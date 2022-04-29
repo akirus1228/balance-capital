@@ -5,7 +5,7 @@ import BgImg from "../../../assets/images/temp-homepage-bg.png";
 export const HomePage = (): JSX.Element => {
   return (
     <Container
-      maxWidth="xl"
+      maxWidth="lg"
       className={style["heroContainer"]}
       sx={{
         display: "flex",
@@ -18,14 +18,13 @@ export const HomePage = (): JSX.Element => {
       <Box
         sx={{
           marginLeft: "auto",
-          maxWidth: "40vw",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
-          px: "50px",
+          pr: 4,
         }}
       >
-        <Box sx={{ maxWidth: "450px" }}>
+        <Box>
           <h1>Unlock the liquidity you need with the NFTs you already own</h1>
         </Box>
         <Box
@@ -63,15 +62,13 @@ export const HomePage = (): JSX.Element => {
       <Box
         sx={{
           marginRight: "auto",
-          maxWidth: "40vw",
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
           background: "#f2f3f3",
           pl: "50px",
-          pr: "150px",
           position: "relative",
-          top: "-116px",
+          top: "-176px",
           zIndex: "-1",
         }}
       >
@@ -80,6 +77,19 @@ export const HomePage = (): JSX.Element => {
           style={{ marginTop: "250px" }}
           alt="Coloful rectangles with rounded corners stacked"
         />
+        <Box
+          sx={{
+            position: "fixed",
+            zIndex: "-2",
+            height: "100vh",
+            top: "-176",
+            right: "0",
+            width: "50vw",
+            background: "#f2f3f3",
+          }}
+        >
+          &nbsp;
+        </Box>
       </Box>
     </Container>
   );

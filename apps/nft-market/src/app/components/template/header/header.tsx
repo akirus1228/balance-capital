@@ -76,16 +76,23 @@ export const Header = (): JSX.Element => {
   }, [connected, hasCachedProvider, connect]);
 
   return (
-    <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
-      <Container maxWidth="xl">
+    <AppBar
+      position="static"
+      color="transparent"
+      elevation={0}
+      sx={{ margin: { md: "2em" }, width: "auto" }}
+    >
+      <Container maxWidth={false} sx={{ maxWidth: "1550px" }}>
         <Toolbar disableGutters>
           <Typography
             noWrap
             component="div"
             sx={{
-              mr: 2,
+              mr: 4,
               display: { xs: "none", md: "flex" },
               alignItems: "center",
+              fontSize: "28px",
+              minWidth: "71px",
             }}
           >
             <Link to="/">Logo</Link>
@@ -136,26 +143,6 @@ export const Header = (): JSX.Element => {
                   </Typography>
                 </MenuLink>
               ))}
-
-              <MenuItem
-                sx={{
-                  display: "flex",
-                  justifyContent: "start",
-                  paddingLeft: "20px",
-                }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobilePortfolio"]}`}
-              >
-                <Typography textAlign="center">
-                  <Link to="/my-account">
-                    <Button className="portfolio">
-                      <Box display="flex" alignItems="center" mr="10px">
-                        <SvgIcon component={AnalyticsIcon} fontSize="large" />
-                      </Box>
-                    </Button>
-                  </Link>
-                </Typography>
-              </MenuItem>
             </Menu>
           </Box>
           <Typography
@@ -174,15 +161,17 @@ export const Header = (): JSX.Element => {
             }}
           >
             <Box sx={{ display: "flex", flexDirection: "row" }}>
-              {pages.map((page: any, index: number) => {
+              {pages.map((page: Page, index: number) => {
                 return (
                   <Typography
                     key={`pagebtn-${index}`}
                     textAlign="center"
                     style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
                   >
-                    <Link to={page.href}>
-                      <Button style={{ width: "100%" }}>{page.title}</Button>
+                    <Link to={page.href || "#"}>
+                      <Button style={{ minWidth: "110px", padding: "1em 1em" }}>
+                        {page.title}
+                      </Button>
                     </Link>
                   </Typography>
                 );

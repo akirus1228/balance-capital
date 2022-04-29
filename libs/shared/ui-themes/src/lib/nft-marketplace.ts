@@ -99,17 +99,6 @@ const globalTheme: ThemeOptions = {
           padding: "2.5em",
           "&.MuiAppBar-root": {
             padding: "0",
-            marginTop: "2em",
-          },
-          "&.dai": {
-            border: "1px solid #F3AC28",
-            borderRadius: "2em",
-            background: "transparent",
-            width: "100%",
-            maxWidth: "525px",
-          },
-          "&.softGradient": {
-            borderRadius: "2em",
           },
           "&.MuiMenu-paper": {
             marginTop: "1em",
