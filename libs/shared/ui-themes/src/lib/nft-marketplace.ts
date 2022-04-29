@@ -112,8 +112,10 @@ const globalTheme: ThemeOptions = {
             borderRadius: "2em",
           },
           "&.MuiMenu-paper": {
+            marginTop: "1em",
             borderRadius: "10px",
             padding: "0.5em",
+            boxShadow: "2px 12px 33px rgb(0 0 0 / 20%)",
           },
           "&.MuiAccordion-root, &.MuiAccordion-root:last-of-type": {
             padding: "1.75em 0 1em 0",

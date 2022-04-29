@@ -17,7 +17,7 @@ export const NotificationMenu = (): JSX.Element => {
     <>
       <IconButton
         onClick={handleClick}
-        sx={{ background: "#FFF", mr: "10px", padding: "10px" }}
+        sx={{ background: "#FFF", mr: "10px", padding: "12px" }}
       >
         <Badge
           overlap="circular"
@@ -25,7 +25,7 @@ export const NotificationMenu = (): JSX.Element => {
           variant="dot"
           color="success"
         >
-          <NotificationsNoneOutlinedIcon sx={{ fontSize: "38px", color: "#000" }} />
+          <NotificationsNoneOutlinedIcon sx={{ fontSize: "32px", color: "#000" }} />
         </Badge>
       </IconButton>
 

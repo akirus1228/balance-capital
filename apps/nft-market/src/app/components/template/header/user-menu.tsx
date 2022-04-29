@@ -59,7 +59,7 @@ export const UserMenu = (): JSX.Element => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        sx={{ background: "#FFF", px: "20px", py: "0.5em" }}
+        sx={{ background: "#FFF", minWidth: "300px", py: "0.5em", fontSize: "16px" }}
       >
         <Avatar sx={{ mr: "1em" }} src={AvatarPlaceholder}></Avatar>
         {addressEllipsis(address)}
@@ -126,7 +126,18 @@ export const UserMenu = (): JSX.Element => {
     </>
   ) : (
     <Box>
-      <Button onClick={onClickConnect}>Connect</Button>
+      <Button
+        onClick={onClickConnect}
+        sx={{
+          backgroundColor: "#FFF",
+          color: "#000",
+          padding: "0.9em",
+          minWidth: "300px",
+          fontSize: "16px",
+        }}
+      >
+        Connect
+      </Button>
     </Box>
   );
 };

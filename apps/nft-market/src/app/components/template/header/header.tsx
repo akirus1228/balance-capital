@@ -181,7 +181,9 @@ export const Header = (): JSX.Element => {
                     textAlign="center"
                     style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
                   >
-                    <Button style={{ width: "100%" }}>{page.title}</Button>
+                    <Link to={page.href}>
+                      <Button style={{ width: "100%" }}>{page.title}</Button>
+                    </Link>
                   </Typography>
                 );
               })}
