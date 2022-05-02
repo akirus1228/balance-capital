@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
 
-import IconGrid from "./icon-grid";
+import BorrowPage from "./borrow-page";
 
-describe("IconGrid", () => {
+describe("BorrowPage", () => {
   it("should render successfully", () => {
-    const { baseElement } = render(<IconGrid />);
+    const { baseElement } = render(<BorrowPage />);
     expect(baseElement).toBeTruthy();
   });
 });

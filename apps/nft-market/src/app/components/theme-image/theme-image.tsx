@@ -113,7 +113,7 @@ interface ThemeImageProps {
 }
 
 export const ThemeImage = (props: ThemeImageProps): JSX.Element => {
-  const themeType = useSelector((state: RootState) => state.app.theme);
+  const themeType = useSelector((state: RootState) => state.theme.mode);
   const [imgSrc, setImgSrc] = useState("");
 
   useEffect(() => {

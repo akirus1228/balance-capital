@@ -1,17 +1,16 @@
-import { Box, Container, Grid, Icon } from "@mui/material";
+import { Box, Button, Container, Typography } from "@mui/material";
 import style from "./home-page.module.scss";
-import IconGrid from "./icon-grid/icon-grid";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import { Logo } from "@fantohm/shared/ui-components";
+import BgImg from "../../../assets/images/temp-homepage-bg.png";
+import { Link } from "react-router-dom";
 
 export const HomePage = (): JSX.Element => {
   return (
     <Container
-      maxWidth="xl"
+      maxWidth="lg"
       className={style["heroContainer"]}
       sx={{
         display: "flex",
-        flexDirection: "column",
+        flexDirection: "row",
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
@@ -19,58 +18,83 @@ export const HomePage = (): JSX.Element => {
     >
       <Box
         sx={{
+          marginLeft: "auto",
           display: "flex",
-          justifyContent: "center",
           flexDirection: "column",
-          alignItems: "center",
-          paddingTop: { xs: "52px", md: "112px" },
+          justifyContent: "center",
+          pr: 4,
         }}
-        className={style["hero"]}
       >
-        <Grid
-          container
-          className={style["heroWrap"]}
-          sx={{ marginTop: "55px" }}
-          columnSpacing={2}
-          rowSpacing={{ xs: 4, md: 0 }}
+        <Box>
+          <h1>Unlock the liquidity you need with the NFTs you already own</h1>
+        </Box>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            mb: "8em",
+          }}
         >
-          <Grid
-            item
-            lg={6}
-            md={12}
-            order={{ lg: 1, xs: 2 }}
-            className={style["iconsElement"]}
+          <Link to="/borrow">
+            <Button variant="contained" sx={{ mr: "10px" }}>
+              Borrow
+            </Button>
+          </Link>
+          <Link to="/lend">
+            <Button variant="outlined">Lend</Button>
+          </Link>
+        </Box>
+        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
+          <Box
+            sx={{
+              borderTop: "1px solid #f2f3f3",
+              borderRight: "1px solid #f2f3f3",
+              padding: "50px",
+            }}
           >
-            <IconGrid />
-          </Grid>
-          <Grid
-            item
-            lg={6}
-            md={12}
-            order={{ lg: 2, xs: 1 }}
-            className={style["heroTextContent"]}
-          >
-            <Box className={style["heroRight"]}>
-              <Box
-                sx={{
-                  height: { xs: "132px", md: "180px" },
-                  display: { xs: "none", md: "flex" },
-                }}
-              >
-                <Logo />
-              </Box>
-              <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>
-              <h3 className={style["heroSubtitle"]}>
-                USDB provides a wide range of financial tools and services to individuals
-                and institutions
-              </h3>
-              <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">
-                Learn more
-                <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-              </a>
-            </Box>
-          </Grid>
-        </Grid>
+            <Typography>
+              Borrow against the value of your NFTs without selling them.
+            </Typography>
+          </Box>
+          <Box sx={{ borderTop: "1px solid #f2f3f3", padding: "50px" }}>
+            <Typography>
+              Lend with USDB and earn a passive yield, on your own terms.
+            </Typography>
+          </Box>
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          marginRight: "auto",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          background: "#f2f3f3",
+          pl: "50px",
+          position: "relative",
+          top: "-176px",
+          zIndex: "-1",
+        }}
+      >
+        <img
+          src={BgImg}
+          style={{ marginTop: "250px" }}
+          alt="Coloful rectangles with rounded corners stacked"
+        />
+        <Box
+          sx={{
+            position: "fixed",
+            zIndex: "-2",
+            height: "100vh",
+            top: "-176",
+            right: "0",
+            width: "50vw",
+            background: "#f2f3f3",
+          }}
+        >
+          &nbsp;
+        </Box>
       </Box>
     </Container>
   );

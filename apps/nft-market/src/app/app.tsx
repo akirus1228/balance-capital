@@ -1,83 +1,67 @@
-import { Routes, Route, useLocation } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
-import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
+import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
 import {
   useWeb3Context,
-  calcBondDetails,
-  useBonds,
-  calcGlobalBondDetails,
-  calcInvestmentDetails,
-  useInvestments,
-  fetchTokenPrice,
-  loadAccountDetails,
   defaultNetworkId,
-  calculateAllUserBondDetails,
+  loadWalletCurrencies,
+  loadWalletAssets,
+  loadListings,
+  authorizeAccount,
 } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
-import { loadAppDetails } from "./store/reducers/app-slice";
 import { ScrollToTop } from "@fantohm/shared/ui-helpers";
+import BorrowPage from "./pages/borrow-page/borrow-page";
+import LendPage from "./pages/lend-page/lend-page";
+import MyAccountPage from "./pages/my-account-page/my-account-page";
+import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
-  const themeType = useSelector((state: RootState) => state.app.theme);
-  const [theme, setTheme] = useState(USDBDark);
-  const { address, chainId, connected } = useWeb3Context();
-  const { bonds, allBonds } = useBonds(chainId || defaultNetworkId);
-  const { investments } = useInvestments();
+  const themeType = useSelector((state: RootState) => state.theme.mode);
+  const backend = useSelector((state: RootState) => state.nftMarketplace);
+
+  const [theme, setTheme] = useState(NftLight);
+  const { address, chainId, connected, provider } = useWeb3Context();
 
   useEffect(() => {
-    setTheme(themeType === "light" ? USDBLight : USDBDark);
+    setTheme(themeType === "light" ? NftLight : NftDark);
   }, [themeType]);
 
+  // when a user connects their wallet login to the backend api
   useEffect(() => {
-    // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
-    if (!connected || !chainId) return;
-    dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
-    bonds.map((bond) => {
+    if (
+      provider &&
+      connected &&
+      ["unknown", "failed"].includes(backend.accountStatus) &&
+      backend.authSignature === null
+    ) {
       dispatch(
-        calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
-      );
-    });
-    dispatch(calcGlobalBondDetails({ allBonds }));
-    investments.map((investment) => {
-      dispatch(calcInvestmentDetails({ investment }));
-      dispatch(fetchTokenPrice({ investment }));
-    });
-  }, [chainId, address, dispatch, connected]);
-
-  // Load account details
-  useEffect(() => {
-    if (address) {
-      console.log("app-chainId, address: ", chainId, address);
-      dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
-      dispatch(
-        calculateAllUserBondDetails({
-          address,
-          allBonds: bonds,
-          networkId: chainId || defaultNetworkId,
-        })
+        authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [chainId, address, dispatch]);
+  }, [address, backend.accountStatus]);
 
-  const location = useLocation();
-  useEffect(() => {
-    //console.log(location.pathname);
-    switch (location.pathname) {
-      case "/":
-        document.body.classList.add("heroBackground");
-        break;
-      default:
-        document.body.classList.remove("heroBackground");
-    }
-  }, [location]);
+  // // load listings from backend api
+  // useEffect(() => {
+  //   if (
+  //     provider &&
+  //     backend.accountStatus === "ready" &&
+  //     backend.status === "idle" &&
+  //     backend.authSignature
+  //   ) {
+  //     dispatch(
+  //       loadListings({ networkId: chainId || defaultNetworkId, address, provider })
+  //     );
+  //   }
+  // }, [backend.authSignature]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -88,10 +72,15 @@ export const App = (): JSX.Element => {
         <Header />
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/borrow" element={<BorrowPage />} />
+          <Route path="/borrow/:assetId" element={<BorrowerAssetDetailsPage />} />
+          <Route path="/lend" element={<LendPage />} />
+          <Route path="/my-account" element={<MyAccountPage />} />
           <Route
             path="*"
             element={
               <main style={{ padding: "1rem" }}>
+                <h1>404</h1>
                 <p>There's nothing here!</p>
               </main>
             }
