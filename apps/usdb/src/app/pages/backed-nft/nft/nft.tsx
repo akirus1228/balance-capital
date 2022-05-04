@@ -47,41 +47,76 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
     fetchPrice().then();
   }, []);
 
-  if (nftDetails === null) return <Skeleton />;
+  if (nftDetails === null)
+    return (
+      <Grid container spacing={0} flex={1}>
+        <Grid item xs={12} md={5} flex={1}>
+          <Box className={style["nftImageBox"]}>
+            <Skeleton />
+          </Box>
+        </Grid>
+        <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
+          <Box className={style["vestingDescription"]}>
+            <span style={{ flex: 1 }}>Vesting period</span>
+            <Skeleton />
+          </Box>
+          <Box className={style["vestingDescription"]}>
+            <span style={{ flex: 1 }}>Invested</span>
+            <Skeleton />
+          </Box>
+          <Box className={style["vestingDescription"]}>
+            <span style={{ flex: 1 }}>Current value</span>
+            <Skeleton />
+          </Box>
+          <Box className={style["vestingDescription"]}>
+            <span style={{ flex: 1 }}>Time remaining</span>
+            <Skeleton />
+          </Box>
+        </Grid>
+      </Grid>
+    );
 
   const getCurrentValue = () => {
     if (!nftDetails) return 0;
-    return trim(
-      nftDetails?.pricePaid * Number(ethers.utils.formatUnits(nftDetails?.fhmPayout, 9)),
-      2
-    );
+    const fhmPayout = ethers.utils.formatUnits(nftDetails?.fhmPayout, 9);
+    return trim(nftDetails?.pricePaid * Number(fhmPayout), 2);
+  };
+
+  const getUsdValue = () => {
+    return fhmPrice * nftDetails.sFhmBalance + Number(getCurrentValue());
   };
 
   return (
     <Grid container spacing={0} flex={1}>
       <Grid item xs={12} md={5} flex={1}>
-        <Box className={style["nftImageBox"]}>
+        <Box className={style["nftItemImageBox"]} sx={{ pt: "40%" }}>
           <label>NFT Image here</label>
         </Box>
       </Grid>
       <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
-        <Box className={style["vestingDescription"]}>
-          <span style={{ flex: 1 }}>Vesting period</span>
-          <span>{Math.floor(nftDetails.vestingSeconds / (3600 * 24))} days</span>
-        </Box>
-        <Box className={style["vestingDescription"]}>
-          <span style={{ flex: 1 }}>Invested</span>
-          <span>{trim(nftDetails.usdbAmount, 2)} USDB</span>
-        </Box>
+        {nftDetails.secondsToVest > 0 ? (
+          <>
+            <Box className={style["vestingDescription"]}>
+              <span style={{ flex: 1 }}>Vesting period</span>
+              <span>{Math.floor(nftDetails.vestingSeconds / (3600 * 24))} days</span>
+            </Box>
+            <Box className={style["vestingDescription"]}>
+              <span style={{ flex: 1 }}>Invested</span>
+              <span>{trim(nftDetails.usdbAmount, 2)} USDB</span>
+            </Box>
+          </>
+        ) : null}
         <Box className={style["vestingDescription"]}>
           <span style={{ flex: 1 }}>Current value</span>
-          <span>
-            {getCurrentValue()} USDB
+          <div>
+            <span>
+              {getCurrentValue()} USDB
+              <br />
+              {trim(nftDetails.sFhmBalance, 2)} sFHM
+            </span>
             <br />
-            {trim(nftDetails.sFhmBalance, 2)} sFHM
-            <br />
-            ~$ {trim(fhmPrice * nftDetails.sFhmBalance + Number(getCurrentValue()), 2)}
-          </span>
+            <span>~$ {trim(getUsdValue(), 2)}</span>
+          </div>
         </Box>
         <Box className={style["vestingDescription"]}>
           <span style={{ flex: 1 }}>Time remaining</span>

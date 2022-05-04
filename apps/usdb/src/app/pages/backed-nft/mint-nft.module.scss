@@ -14,14 +14,44 @@
   }
 }
 
+.nftItemImageBox {
+  width: 250px;
+  height: 250px;
+  background: #111;
+  text-align: center;
+  overflow: hidden;
+  color: #fff;
+  border-radius: 10px;
+  img {
+    width: 100%;
+  }
+}
+
 .vestingDescription {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
+  padding-bottom: 10px;
+  div {
+    text-align: right;
+    & > span:nth-child(1) {
+      font-weight: bold;
+      text-align: right;
+    }
+    & > span:last-child {
+      font-size: 13px;
+    }
+  }
 }
+
+.vestingDescription > span:nth-child(1) {
+  font-size: 15px;
+}
+
 .vestingDescription > span:nth-child(2) {
   font-weight: bold;
+  text-align: right;
 }
 
 .infoBox {

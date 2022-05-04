@@ -323,13 +323,11 @@ export const MintNftPage = (): JSX.Element => {
         </Box>
       </Box>
       <Box className="w100" flex={1}>
-        <Grid container spacing={0} flex={1}>
-          <Grid item xs={12} md={6} flex={1}>
+        <Grid container flex={1}>
+          <Grid item xs={12} md={3}></Grid>
+          <Grid item xs={12} md={6}>
             <NftItem nftId={0} />
           </Grid>
-          {/* <Grid item xs={12} md={6} flex={1}>
-            <NftItem nftId={0} />
-          </Grid> */}
         </Grid>
       </Box>
     </>
