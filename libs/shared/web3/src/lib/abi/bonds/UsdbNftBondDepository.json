@@ -386,11 +386,6 @@
           "internalType": "address",
           "name": "_depositor",
           "type": "address"
-        },
-        {
-          "internalType": "string",
-          "name": "_nftTokenUri",
-          "type": "string"
         }
       ],
       "name": "deposit",

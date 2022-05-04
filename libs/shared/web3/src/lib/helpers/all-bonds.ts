@@ -255,7 +255,7 @@ export const usdbNft30 = new StableBond({
       reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x68D4C2c333baB7487227C0D92A66c9307259CB65",
+      bondAddress: "0xf358822DEeda9093553499dCc19Aa7a453F69475",
       reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
     },
   },
@@ -289,7 +289,7 @@ export const usdbNft60 = new StableBond({
       reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x68D4C2c333baB7487227C0D92A66c9307259CB65",
+      bondAddress: "0xf358822DEeda9093553499dCc19Aa7a453F69475",
       reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
     },
   },
@@ -323,7 +323,7 @@ export const usdbNft90 = new StableBond({
       reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
     },
     [NetworkIds.Rinkeby]: {
-      bondAddress: "0x68D4C2c333baB7487227C0D92A66c9307259CB65",
+      bondAddress: "0xf358822DEeda9093553499dCc19Aa7a453F69475",
       reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
     },
   },

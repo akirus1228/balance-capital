@@ -869,14 +869,7 @@ export const cancelBond = createAsyncThunk(
 export const investUsdbNftBond = createAsyncThunk(
   "bonding/investUsdbNftBond",
   async (
-    {
-      value,
-      address,
-      nftImageUri,
-      bond,
-      networkId,
-      provider,
-    }: IInvestUsdbNftBondAsyncThunk,
+    { value, address, bond, networkId, provider }: IInvestUsdbNftBondAsyncThunk,
     { dispatch }
   ) => {
     if (!provider) {
@@ -904,13 +897,12 @@ export const investUsdbNftBond = createAsyncThunk(
       const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
 
       const overrides = {
-        value: ethers.utils.parseEther("0.1"),
+        value: ethers.utils.parseEther("0.001"),
       };
       investTx = await bondContract["deposit"](
         valueInWei,
         maxPremium,
         depositorAddress,
-        nftImageUri,
         overrides
       );
       dispatch(

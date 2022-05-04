@@ -29,9 +29,16 @@ import {
   useBonds,
   useWeb3Context,
   getNftList,
+  getNftTokenUri,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
+
+export interface NftMetadata {
+  name: string;
+  image: string;
+  description: string;
+}
 
 export const MintNftPage = (): JSX.Element => {
   const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
@@ -48,9 +55,8 @@ export const MintNftPage = (): JSX.Element => {
   const [valueRoi, setValueRoi] = useState("3.0");
   const [valueApy, setValueApy] = useState(42.58);
   const dispatch = useDispatch();
-  const nftMetadataUri =
-    "https://vids.invidme.com/nft-metadata/6faab9b2-96df-44f6-bd1e-fe7a9838632a";
-  const [nftImageUri, setNftImageUri] = useState("");
+  const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
+  const [nftIds, setNftIds] = useState<Array<number>>([]);
 
   useEffect(() => {
     setTokenBalance(usdbBalance);
@@ -59,27 +65,28 @@ export const MintNftPage = (): JSX.Element => {
     return state.account.bonds;
   });
 
-  const fetchNftImageUri = async () => {
-    const resp = await axios.get(nftMetadataUri);
-    setNftImageUri(resp.data["image"]);
-  };
-
-  useEffect(() => {
-    fetchNftImageUri();
-  }, [nftMetadataUri]);
-
   useEffect(() => {
     if (!connected || !address) return;
     dispatch(
       getNftList({
         address,
         networkId: chainId ?? defaultNetworkId,
-        callback: (list: any) => {
-          console.log("NFT LIST", list);
+        callback: (list: Array<number>) => {
+          setNftIds(list);
         },
       })
     );
-  }, [connected, address]);
+
+    dispatch(
+      getNftTokenUri({
+        id: 0,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (metadata: NftMetadata) => {
+          setNftMetadata(metadata);
+        },
+      })
+    );
+  }, [connected, address, usdbBalance]);
 
   const usdbNftBondData = useMemo(() => {
     return allBonds.filter(
@@ -142,7 +149,7 @@ export const MintNftPage = (): JSX.Element => {
         networkId: chainId || defaultNetworkId,
         provider,
         address,
-        nftImageUri: nftMetadataUri,
+        // nftImageUri: nftMetadataUri,
       } as IInvestUsdbNftBondAsyncThunk)
     );
   };
@@ -172,7 +179,7 @@ export const MintNftPage = (): JSX.Element => {
                 <Grid item xs={12} md={5} flex={1}>
                   <Box className={style["nftImageBox"]}>
                     {/* <label>NFT Image here</label> */}
-                    {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
+                    {nftMetadata ? <img src={nftMetadata?.image} /> : <Skeleton />}
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
@@ -336,12 +343,14 @@ export const MintNftPage = (): JSX.Element => {
         </Box>
       </Box>
       <Box className="w100" flex={1}>
-        <Grid container flex={1}>
-          <Grid item xs={12} md={3}></Grid>
-          <Grid item xs={12} md={6}>
-            <NftItem nftId={0} />
+        {nftIds.map((id: number) => (
+          <Grid container flex={1} key={`${id}`}>
+            <Grid item xs={12} md={3}></Grid>
+            <Grid item xs={12} md={6}>
+              <NftItem nftId={id} />
+            </Grid>
           </Grid>
-        </Grid>
+        ))}
       </Box>
     </>
   );

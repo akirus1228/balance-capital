@@ -17,6 +17,7 @@ import { setAll, trim } from "../helpers";
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   IBaseAddressAsyncThunk,
+  IBaseAsyncThunk,
   ICalcAllUserBondDetailsAsyncThunk,
   ICalcUserBondDetailsAsyncThunk,
   IUsdbNftInfoAsyncThunk,
@@ -521,11 +522,12 @@ export const getNftList = createAsyncThunk(
       usdbNftAbi,
       provider
     );
-    const nftInfo = await usdbNftContract["getTokenIds"](address);
-    callback(nftInfo);
+    let nftIds = await usdbNftContract["getTokenIds"](address);
+    nftIds = nftIds.map((id: any) => Number(id) + 1);
+    callback(nftIds);
 
     return {
-      nfts: nftInfo,
+      nfts: nftIds,
     };
   }
 );
@@ -624,6 +626,28 @@ export const redeemNft = createAsyncThunk(
       provider
     );
     await usdbNftContract["withdraw"](nftId, address);
+    return {};
+  }
+);
+
+export const getNftTokenUri = createAsyncThunk(
+  "account/redeemNft",
+  async ({ id, networkId, callback }: IUsdbNftInfoAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    let tokenId = id;
+    if (!tokenId) tokenId = await usdbNftContract["getTokenIdForMint"]();
+    const base64Metadata = await usdbNftContract["tokenURI"](tokenId);
+    const json = atob(base64Metadata.substring(29));
+    const metadata = JSON.parse(json);
+    callback(metadata);
     return {};
   }
 );
