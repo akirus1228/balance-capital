@@ -68,11 +68,12 @@ export const MintNftPage = (): JSX.Element => {
     fetchNftImageUri();
   }, [nftMetadataUri]);
 
-  const usdbNft = allBonds.filter((bond) => bond.type === BondType.USDB_NFT)[0] as Bond;
+  const usdbNftBondData = useMemo(() => {
+    return allBonds.filter(
+      (bond) => bond.type === BondType.USDB_NFT && bond.days === vestingPeriod
+    )[0] as IAllBondData;
+  }, [vestingPeriod]);
 
-  const usdbNftBondData = bonds.filter(
-    (bond) => bond.type === BondType.USDB_NFT
-  )[0] as IAllBondData;
   const usdbNftBond = accountBonds[usdbNftBondData?.name];
 
   const pendingTransactions = useSelector((state: RootState) => {
@@ -111,7 +112,7 @@ export const MintNftPage = (): JSX.Element => {
       dispatch(
         changeApproval({
           address,
-          bond: usdbNft,
+          bond: usdbNftBondData,
           provider,
           networkId: chainId ?? defaultNetworkId,
         })
@@ -124,7 +125,7 @@ export const MintNftPage = (): JSX.Element => {
     await dispatch(
       investUsdbNftBond({
         value: String(amount),
-        bond: usdbNft,
+        bond: usdbNftBondData,
         networkId: chainId || defaultNetworkId,
         provider,
         address,
@@ -284,7 +285,7 @@ export const MintNftPage = (): JSX.Element => {
                 color={stdButtonColor}
                 className="paperButton cardActionButton"
                 disabled={
-                  isPendingTxn(pendingTransactions, "invest_" + usdbNft.name) ||
+                  isPendingTxn(pendingTransactions, "invest_" + usdbNftBondData.name) ||
                   isOverBalance ||
                   amount === "" ||
                   amount === "0" ||
@@ -296,7 +297,7 @@ export const MintNftPage = (): JSX.Element => {
                   ? "Insufficient Balance"
                   : txnButtonText(
                       pendingTransactions,
-                      "invest_" + usdbNft.name,
+                      "invest_" + usdbNftBondData.name,
                       "Invest"
                     )}
               </Button>
@@ -305,10 +306,17 @@ export const MintNftPage = (): JSX.Element => {
                 variant="contained"
                 color="primary"
                 className="paperButton cardActionButton"
-                disabled={isPendingTxn(pendingTransactions, "approve_" + usdbNft.name)}
+                disabled={isPendingTxn(
+                  pendingTransactions,
+                  "approve_" + usdbNftBondData.name
+                )}
                 onClick={onSeekApproval}
               >
-                {txnButtonText(pendingTransactions, "approve_" + usdbNft.name, "Approve")}
+                {txnButtonText(
+                  pendingTransactions,
+                  "approve_" + usdbNftBondData.name,
+                  "Approve"
+                )}
               </Button>
             )}
           </DaiCard>
