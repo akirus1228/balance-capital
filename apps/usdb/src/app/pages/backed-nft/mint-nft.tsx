@@ -21,7 +21,6 @@ import {
   changeApproval,
   defaultNetworkId,
   IAllBondData,
-  IBondAssetAsyncThunk,
   IInvestUsdbNftBondAsyncThunk,
   investUsdbNftBond,
   isPendingTxn,
@@ -29,6 +28,7 @@ import {
   txnButtonText,
   useBonds,
   useWeb3Context,
+  getNftInfo,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -317,11 +317,11 @@ export const MintNftPage = (): JSX.Element => {
       <Box className="w100" flex={1}>
         <Grid container spacing={0} flex={1}>
           <Grid item xs={12} md={6} flex={1}>
-            <NftItem />
+            <NftItem nftId={0} />
           </Grid>
-          <Grid item xs={12} md={6} flex={1}>
-            <NftItem />
-          </Grid>
+          {/* <Grid item xs={12} md={6} flex={1}>
+            <NftItem nftId={0} />
+          </Grid> */}
         </Grid>
       </Box>
     </>
