@@ -32,6 +32,7 @@ export const Footer = (): JSX.Element => {
           title: "Bridge",
           href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
         },
+        { title: "Backed NFT", href: "/backed-nft" },
       ],
     },
     {

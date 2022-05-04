@@ -55,6 +55,7 @@ const pages: Page[] = [
     href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
     params: { comingSoon: false },
   },
+  { title: "Backed NFT", href: "/backed-nft", params: { comingSoon: false } },
 ];
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
