@@ -178,7 +178,17 @@ export interface IInvestUsdbNftBondAsyncThunk
   readonly nftImageUri: string;
 }
 
+export interface IUsdbNftListAsyncThunk extends IBaseAsyncThunk {
+  readonly address: string;
+  readonly networkId: NetworkId;
+  readonly callback: any;
+}
 export interface IUsdbNftInfoAsyncThunk extends IBaseAsyncThunk {
   readonly id: number;
   readonly callback: any;
+}
+
+export interface IUsdbNftRedeemAsyncThunk extends IBaseAsyncThunk {
+  readonly nftId: number;
+  readonly address: string;
 }

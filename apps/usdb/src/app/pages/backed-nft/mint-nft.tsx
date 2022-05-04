@@ -28,7 +28,7 @@ import {
   txnButtonText,
   useBonds,
   useWeb3Context,
-  getNftInfo,
+  getNftList,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -67,6 +67,19 @@ export const MintNftPage = (): JSX.Element => {
   useEffect(() => {
     fetchNftImageUri();
   }, [nftMetadataUri]);
+
+  useEffect(() => {
+    if (!connected || !address) return;
+    dispatch(
+      getNftList({
+        address,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (list: any) => {
+          console.log("NFT LIST", list);
+        },
+      })
+    );
+  }, [connected, address]);
 
   const usdbNftBondData = useMemo(() => {
     return allBonds.filter(

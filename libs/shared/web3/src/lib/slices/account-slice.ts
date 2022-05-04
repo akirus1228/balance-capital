@@ -20,6 +20,8 @@ import {
   ICalcAllUserBondDetailsAsyncThunk,
   ICalcUserBondDetailsAsyncThunk,
   IUsdbNftInfoAsyncThunk,
+  IUsdbNftListAsyncThunk,
+  IUsdbNftRedeemAsyncThunk,
 } from "./interfaces";
 import { chains } from "../providers";
 import { BondAction, BondType, PaymentToken } from "../lib/bond";
@@ -507,6 +509,27 @@ export const calculateUserBondDetails = createAsyncThunk(
   }
 );
 
+export const getNftList = createAsyncThunk(
+  "account/getNftList",
+  async ({ address, networkId, callback }: IUsdbNftListAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    const nftInfo = await usdbNftContract["getTokenIds"](address);
+    callback(nftInfo);
+
+    return {
+      nfts: nftInfo,
+    };
+  }
+);
+
 export const getNftInfo = createAsyncThunk(
   "account/getNftInfo",
   async ({ id, networkId, callback }: IUsdbNftInfoAsyncThunk) => {
@@ -585,6 +608,23 @@ export const getNftInfo = createAsyncThunk(
     //     usdb: ethers.utils.formatUnits(usdbBalance, 18),
     //   },
     // };
+  }
+);
+
+export const redeemNft = createAsyncThunk(
+  "account/redeemNft",
+  async ({ nftId, address, networkId }: IUsdbNftRedeemAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    await usdbNftContract["withdraw"](nftId, address);
+    return {};
   }
 );
 

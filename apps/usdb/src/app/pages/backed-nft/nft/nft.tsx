@@ -11,15 +11,18 @@ import {
   useWeb3Context,
   trim,
   getTokenPrice,
+  redeemNft,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { useNavigate } from "react-router-dom";
 
 interface INftItemParams {
   nftId: number;
 }
 
 export const NftItem = (props: INftItemParams): JSX.Element => {
+  const navigate = useNavigate();
   const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
   const { nftId } = props;
   const dispatch = useDispatch();
@@ -86,6 +89,21 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
     return fhmPrice * nftDetails.sFhmBalance + Number(getCurrentValue());
   };
 
+  const onRedeem = () => {
+    dispatch(
+      redeemNft({
+        nftId,
+        address,
+        networkId: chainId ?? defaultNetworkId,
+      })
+    );
+  };
+
+  const onTrade = () => {
+    const url = `https://opensea.io/`;
+    window.open(url);
+  };
+
   return (
     <Grid container spacing={0} flex={1}>
       <Grid item xs={12} md={5} flex={1}>
@@ -127,22 +145,22 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
           </span>
         </Box>
         {nftDetails.secondsToVest < 0 ? (
-          <Box sx={{ display: "flex", mt: "1em" }}>
+          <Box sx={{ display: "flex", mt: "3em" }}>
             <Button
               variant="contained"
               color="primary"
-              className="border"
-              sx={{ flex: 1, margin: "10px" }}
-              onClick={() => {}}
+              sx={{ flex: 1, margin: "10px", padding: "5px" }}
+              className={`${style["nft-item-prop"]} border`}
+              onClick={() => onRedeem()}
             >
-              Sell
+              Redeem
             </Button>
             <Button
               variant="contained"
               color="primary"
-              className="border"
-              sx={{ flex: 1, margin: "10px" }}
-              onClick={() => {}}
+              className={`${style["nft-item-prop"]} border`}
+              sx={{ flex: 1, margin: "10px", padding: "5px" }}
+              onClick={() => onTrade()}
             >
               Trade
             </Button>
