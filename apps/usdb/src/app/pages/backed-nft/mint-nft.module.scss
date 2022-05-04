@@ -2,12 +2,16 @@
 @import url(../staking-choice/staking-card/staking-card.module.scss);
 
 .nftImageBox {
-  height: 210px;
+  width: 200px;
+  height: 200px;
   background: #111;
   text-align: center;
-  padding-top: 45%;
+  overflow: hidden;
   color: #fff;
   border-radius: 10px;
+  img {
+    width: 100%;
+  }
 }
 
 .vestingDescription {
@@ -73,4 +77,40 @@
 
 .smokeyToggle:not(.active) {
   border: 1px solid #ccc;
+}
+
+.currencySelector {
+  border: 2px solid rgba(105, 108, 128, 0.2);
+  padding: 1em;
+  border-radius: 3em;
+  height: 60px;
+  display: flex;
+  flex-direction: row;
+  justify-content: left;
+  text-align:left;
+  width:100% !important;
+  max-width:100%;
+  .name {
+    font-size: 13px;
+    flex: 1;
+  }
+  .amount {
+    font-size: 13px;
+    // color: #696c80;
+    @media (max-width:600px) {
+      max-width: 170px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align:left;
+    }
+  }
+  input {
+    width: 100%;
+  }
+  input,
+  input:focus {
+    border: none;
+    background: transparent;
+    outline: none;
+  }
 }

@@ -170,3 +170,10 @@ export interface TermsAsyncThunk {
 }
 
 export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}
+export interface IInvestUsdbNftBondAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly address: string;
+  readonly value: string;
+  readonly nftImageUri: string;
+}

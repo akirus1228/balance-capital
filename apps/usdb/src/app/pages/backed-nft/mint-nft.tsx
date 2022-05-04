@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   Button,
@@ -13,23 +14,123 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import style from "./mint-nft.module.scss";
 import { USDBToken } from "@fantohm/shared/images";
 import { NftItem } from "./nft/nft";
+import {
+  allBonds,
+  Bond,
+  BondType,
+  changeApproval,
+  defaultNetworkId,
+  IAllBondData,
+  IBondAssetAsyncThunk,
+  IInvestUsdbNftBondAsyncThunk,
+  investUsdbNftBond,
+  isPendingTxn,
+  trim,
+  txnButtonText,
+  useBonds,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export const MintNftPage = (): JSX.Element => {
+  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const { bonds } = useBonds(chainId || defaultNetworkId);
+
+  const usdbBalance = useSelector((state: RootState) => {
+    return trim(Number(state.account.balances.usdb), 2);
+  });
+  const [stdButtonColor, setStdButtonColor] = useState<"primary" | "error">("primary");
+  const [tokenBalance, setTokenBalance] = useState(usdbBalance);
+  const [amount, setAmount] = useState("");
+
   const [vestingPeriod, setVestingPeriod] = useState(30);
-  const [valueRoi, setValueRoi] = useState(3);
+  const [valueRoi, setValueRoi] = useState("3.0");
   const [valueApy, setValueApy] = useState(42.58);
+  const dispatch = useDispatch();
+  const nftMetadataUri =
+    "https://vids.invidme.com/nft-metadata/6faab9b2-96df-44f6-bd1e-fe7a9838632a";
+  const [nftImageUri, setNftImageUri] = useState("");
+
+  useEffect(() => {
+    setTokenBalance(usdbBalance);
+  }, [usdbBalance]);
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
+
+  const fetchNftImageUri = async () => {
+    const resp = await axios.get(nftMetadataUri);
+    setNftImageUri(resp.data["image"]);
+  };
+
+  useEffect(() => {
+    fetchNftImageUri();
+  }, [nftMetadataUri]);
+
+  const usdbNft = allBonds.filter((bond) => bond.type === BondType.USDB_NFT)[0] as Bond;
+
+  const usdbNftBondData = bonds.filter(
+    (bond) => bond.type === BondType.USDB_NFT
+  )[0] as IAllBondData;
+  const usdbNftBond = accountBonds[usdbNftBondData?.name];
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const hasAllowance = useCallback(() => {
+    return usdbNftBondData?.allowance > 0;
+  }, [usdbNftBondData, connected, usdbNftBond]);
+
+  const isOverBalance: boolean = useMemo(() => {
+    if (Number(tokenBalance) < Number(amount)) return true;
+
+    return false;
+  }, [tokenBalance, amount]);
 
   const updateVestingPeriod = (period: number) => {
     const values = {
-      30: [3, 42.58],
-      60: [3, 42.58],
-      90: [3, 42.58],
+      30: ["3.0", 42.58],
+      60: ["6.5", 45.91],
+      90: ["10.0", 46.41],
     };
     setVestingPeriod(period);
 
     const value = values[period as keyof typeof values];
-    setValueRoi(value[0]);
-    setValueApy(value[1]);
+    setValueRoi(value[0] as string);
+    setValueApy(value[1] as number);
+  };
+
+  const setMax = () => {
+    setAmount(tokenBalance);
+  };
+
+  const onSeekApproval = () => {
+    if (provider) {
+      dispatch(
+        changeApproval({
+          address,
+          bond: usdbNft,
+          provider,
+          networkId: chainId ?? defaultNetworkId,
+        })
+      );
+    }
+  };
+
+  const onInvest = async () => {
+    const slippage = 0;
+    await dispatch(
+      investUsdbNftBond({
+        value: String(amount),
+        bond: usdbNft,
+        networkId: chainId || defaultNetworkId,
+        provider,
+        address,
+        nftImageUri: nftMetadataUri,
+      } as IInvestUsdbNftBondAsyncThunk)
+    );
   };
 
   return (
@@ -56,7 +157,8 @@ export const MintNftPage = (): JSX.Element => {
               <Grid container spacing={0} flex={1}>
                 <Grid item xs={12} md={5} flex={1}>
                   <Box className={style["nftImageBox"]}>
-                    <label>NFT Image here</label>
+                    {/* <label>NFT Image here</label> */}
+                    {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
@@ -110,25 +212,24 @@ export const MintNftPage = (): JSX.Element => {
                 <img
                   src={USDBToken}
                   style={{ height: "31px", marginRight: "1em" }}
-                  alt="DAI Token Symbol"
+                  alt="USDB Token Symbol"
                 />
                 <Box
                   sx={{
                     display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "left",
+                    width: "100%",
                   }}
                 >
-                  <span className={style["name"]}>USDB balance</span>
-                  {/* <span className={style["amount"]}>
-                    {tokenBalance === "null" ? (
-                      <Skeleton />
-                    ) : (
-                      <>
-                        {tokenBalance} {token}{" "}
-                      </>
-                    )}
-                  </span> */}
+                  <span className={style["name"]}>
+                    Asset
+                    <br />
+                    <b>USDB balance</b>
+                  </span>
+                  <span className={style["amount"]}>
+                    Balance
+                    <br />
+                    {tokenBalance === "null" ? <Skeleton /> : <b>{usdbBalance}</b>}
+                  </span>
                 </Box>
               </Box>
             </Box>
@@ -138,10 +239,10 @@ export const MintNftPage = (): JSX.Element => {
                 type="number"
                 placeholder="Enter an amount"
                 className={`stake-input ${style["styledInput"]}`}
-                // value={quantity}
+                value={amount}
                 onChange={(e) => {
-                  // if (Number(e.target.value) < 0 || e.target.value === "-") return;
-                  // setQuantity(e.target.value);
+                  if (Number(e.target.value) < 0 || e.target.value === "-") return;
+                  setAmount(e.target.value);
                 }}
                 inputProps={{
                   classes: {
@@ -155,7 +256,7 @@ export const MintNftPage = (): JSX.Element => {
                     <Button
                       className={style["no-padding"]}
                       variant="text"
-                      // onClick={setMax}
+                      onClick={setMax}
                       color="inherit"
                     >
                       Max
@@ -177,14 +278,39 @@ export const MintNftPage = (): JSX.Element => {
               <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
               <span>If needed</span>
             </Box>
-            <Button
-              variant="contained"
-              color="primary"
-              id="bond-btn"
-              className="paperButton transaction-button"
-            >
-              Invest
-            </Button>
+            {hasAllowance() ? (
+              <Button
+                variant="contained"
+                color={stdButtonColor}
+                className="paperButton cardActionButton"
+                disabled={
+                  isPendingTxn(pendingTransactions, "invest_" + usdbNft.name) ||
+                  isOverBalance ||
+                  amount === "" ||
+                  amount === "0" ||
+                  Number(tokenBalance) === 0
+                }
+                onClick={onInvest}
+              >
+                {isOverBalance
+                  ? "Insufficient Balance"
+                  : txnButtonText(
+                      pendingTransactions,
+                      "invest_" + usdbNft.name,
+                      "Invest"
+                    )}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                className="paperButton cardActionButton"
+                disabled={isPendingTxn(pendingTransactions, "approve_" + usdbNft.name)}
+                onClick={onSeekApproval}
+              >
+                {txnButtonText(pendingTransactions, "approve_" + usdbNft.name, "Approve")}
+              </Button>
+            )}
           </DaiCard>
         </Box>
       </Box>

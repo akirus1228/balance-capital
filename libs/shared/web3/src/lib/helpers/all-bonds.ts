@@ -7,6 +7,7 @@ import {
   fantohmProBondDepositoryAbi,
   usdbABondDepositoryAbi,
   usdbFhmBurnBondDepositoryAbi,
+  usdbNftBondDepositoryAbi,
 } from "../abi";
 
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
@@ -226,6 +227,40 @@ export const usdbBuy = new StableBond({
   },
 });
 
+export const usdbNft = new StableBond({
+  apr: 0,
+  days: 0,
+  name: "usdbNft",
+  type: BondType.USDB_NFT,
+  displayName: "USDB ➜ NFT",
+  bondToken: "USDB",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: usdbNftBondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x68D4C2c333baB7487227C0D92A66c9307259CB65",
+      reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
+    },
+  },
+});
+
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
@@ -240,6 +275,7 @@ export const allBonds = [
   lqdrUsdbPol,
   usdbFhmBurn,
   usdbBuy,
+  usdbNft,
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };

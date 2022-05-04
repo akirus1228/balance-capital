@@ -11,6 +11,7 @@ import {
   IBondAssetAsyncThunk,
   ICalcBondDetailsAsyncThunk,
   ICancelBondAsyncThunk,
+  IInvestUsdbNftBondAsyncThunk,
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
@@ -860,6 +861,89 @@ export const cancelBond = createAsyncThunk(
     } finally {
       if (cancelTx) {
         dispatch(clearPendingTxn(cancelTx.hash));
+      }
+    }
+  }
+);
+
+export const investUsdbNftBond = createAsyncThunk(
+  "bonding/investUsdbNftBond",
+  async (
+    {
+      value,
+      address,
+      nftImageUri,
+      bond,
+      networkId,
+      provider,
+    }: IInvestUsdbNftBondAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+    const depositorAddress = address;
+    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.decimals);
+    const slippage = 1;
+    const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
+
+    let investTx;
+    const uaData = {
+      address: address,
+      value: value,
+      type: "Bond",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      const calculatePremium = await bondContract["bondPrice"]();
+      const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
+
+      const overrides = {
+        value: ethers.utils.parseEther("0.1"),
+      };
+      investTx = await bondContract["deposit"](
+        valueInWei,
+        maxPremium,
+        depositorAddress,
+        nftImageUri,
+        overrides
+      );
+      dispatch(
+        fetchPendingTxns({
+          txnHash: investTx.hash,
+          text: "Invest " + bond.displayName,
+          type: "invest_" + bond.name,
+        })
+      );
+      uaData.txHash = investTx.hash;
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: any) {
+      console.log(e);
+      uaData.approved = false;
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    } finally {
+      if (investTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(investTx.hash));
+        dispatch(info("Invest completed."));
       }
     }
   }
