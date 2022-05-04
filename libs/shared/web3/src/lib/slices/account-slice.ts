@@ -9,7 +9,7 @@ import {
   olympusStakingv2Abi as OlympusStaking,
   masterChefAbi as masterchefAbi,
   usdbNftAbi,
-  sFantohmAbi,
+  sOhmAbi,
 } from "../abi";
 
 import { setAll, trim } from "../helpers";
@@ -579,8 +579,8 @@ export const getNftInfo = createAsyncThunk(
     nftDetails.secondsToVest = maturationSeconds - latestBlockTimestamp;
 
     const sFantohmContract = new ethers.Contract(
-      addresses[networkId]["SFANTOHM_ADDRESS"] as string,
-      sFantohmAbi,
+      addresses[networkId]["SOHM_ADDRESS"] as string,
+      sOhmAbi,
       provider
     );
     const sFhmBalance = await sFantohmContract["balanceForGons"](nftInfo.gonsPayout);

@@ -46,7 +46,6 @@ import full_sOhmv2 from "./sOhmv2.json";
 import full_wMEMO from "./wMEMO.json";
 import full_wsOHM from "./wsOHM.json";
 import full_xFhm from "./xFhm.json";
-import full_sFantohm from "./sFantohm.json";
 
 // reserves
 import full_DAIContract from "./reserves/DAIContract.json";
@@ -119,7 +118,6 @@ export const sOhmAbi = full_sOHM.abi;
 export const sOhmv2Abi = full_sOhmv2.abi;
 export const wMemoAbi = full_wMEMO.abi;
 export const wsOhmAbi = full_wsOHM.abi;
-export const sFantohmAbi = full_sFantohm.abi;
 export const xFhmAbi = full_xFhm.abi;
 export const daiContractAbi = full_DAIContract.abi;
 export const ohmDaiAbi = full_OhmDai.abi;
