@@ -1,4 +1,4 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
@@ -87,6 +87,29 @@ export const createListing = createAsyncThunk(
       BackendApi.createListing(thisState.nftMarketplace.authSignature, listing);
     } else {
       console.warn("no auth");
+      rejectWithValue("No authorization found.");
+    }
+  }
+);
+
+/* 
+loadAsset: loads all listings
+params: 
+- networkId: number
+- address: string
+- provider: JsonRpcProvider
+returns: void
+*/
+export const loadAsset = createAsyncThunk(
+  "marketplaceApi/loadAsset",
+  async (assetId: string, { getState, rejectWithValue }) => {
+    //const signature = await handleSignMessage(address, provider);
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.authSignature) {
+      console.log(
+        await BackendApi.getAsset(assetId, thisState.nftMarketplace.authSignature)
+      );
+    } else {
       rejectWithValue("No authorization found.");
     }
   }

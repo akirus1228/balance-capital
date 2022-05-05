@@ -1,10 +1,10 @@
 import { JsonRpcProvider } from "@ethersproject/providers";
-import { Collectible } from "@audius/fetch-nft";
 import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
 import { Terms } from "../nft-marketplace-backend/backend-types";
+import { Asset } from "../nft-marketplace-backend";
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -162,7 +162,7 @@ export interface SignerAsyncThunk
     IInteractiveAsyncThunk {}
 
 export interface AssetAsyncThunk {
-  readonly asset: Collectible;
+  readonly asset: Asset;
 }
 
 export interface TermsAsyncThunk {

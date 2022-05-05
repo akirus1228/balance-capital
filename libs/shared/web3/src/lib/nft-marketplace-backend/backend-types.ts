@@ -17,6 +17,11 @@ export type LoginResponse = {
   updatedAt: string;
 };
 
+export type AllAssetsResponse = {
+  data: Listing[];
+  count: number;
+};
+
 export type AllListingsResponse = {
   data: Listing[];
   count: number;

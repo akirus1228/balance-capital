@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-import { Collectible, FetchNFTClient } from "@audius/fetch-nft";
+import { FetchNFTClient } from "@danny-jin/fetch-nft";
 import { ierc20Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
