@@ -113,12 +113,16 @@ export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
     //const signature = await handleSignMessage(address, provider);
+    console.log("loadAssest called"); 
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
+      console.log("sig found");
       const apiAsset = await BackendApi.getAsset(
         asset.id,
         thisState.nftMarketplace.authSignature
       );
+      console.log('apiAsset');
+      console.log(apiAsset);
       if (!apiAsset.id) {
         // nothing found by the API, merge in default state
         dispatch(updateAsset({...asset, status: AssetStatus.READY }));

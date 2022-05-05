@@ -29,7 +29,7 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
     } else {
       return {} as Asset;
     }
-  }, [wallet.assets]);
+  }, [JSON.stringify(wallet.assets)]);
 
   useEffect(() => {
     if (backend.authSignature !== null && currentAsset && address) {

@@ -37,8 +37,15 @@ export const getAsset = (assetId: string, signature: string): Promise<Asset> => 
       },
     })
     .then((resp: AxiosResponse<AllAssetsResponse>) => {
+      console.log("");
       console.log(resp);
       return resp.data.data[0];
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
     });
 };
 

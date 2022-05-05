@@ -109,6 +109,8 @@ const walletSlice = createSlice({
   initialState,
   reducers: {
     updateAsset: (state, action: PayloadAction<Asset>) => {
+      console.log("Update asset");
+      console.log(action.payload);
       state.assets = state.assets.map((asset: Asset) => {
         if (asset.id === action.payload.id) {
           return { ...asset, ...action.payload };
