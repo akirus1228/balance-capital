@@ -138,6 +138,7 @@ const walletSlice = createSlice({
       loadWalletAssets.fulfilled,
       (state, action: PayloadAction<Asset[]>) => {
         state.assetStatus = "succeeded";
+        console.log(action.payload);
         state.assets = [...state.assets, ...action.payload];
       }
     );
