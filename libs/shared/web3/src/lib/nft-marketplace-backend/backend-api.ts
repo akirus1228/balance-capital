@@ -5,6 +5,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 // internal libs
 import {
   AllListingsResponse,
+  AllNotificationsResponse,
   AssetListingRequest,
   Listing,
   LoginResponse,
@@ -71,4 +72,23 @@ export const handleSignMessage = (
   } catch (err) {
     console.warn(err);
   }
+};
+
+export const getNotifications = (
+  address: string,
+  signature: string
+): Promise<AllNotificationsResponse> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notifications/all`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllNotificationsResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
 };

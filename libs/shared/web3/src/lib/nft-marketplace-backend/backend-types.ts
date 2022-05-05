@@ -81,3 +81,30 @@ export interface Listing {
 export interface Asset extends Collectible {
   status: AssetStatus;
 }
+
+export enum NotificationStatus {
+  Read = "READ",
+  Unread = "UNREAD",
+}
+
+export enum Importance {
+  High = "HIGH",
+  Medium = "MEDIUM",
+  Low = "LOW",
+}
+
+export type AllNotificationsResponse = {
+  data: Notification[];
+  count: number;
+};
+
+export type Notification = {
+  id?: string;
+  user: LoginResponse;
+  importance: Importance;
+  message: string;
+  status: NotificationStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  deletedAt?: string;
+};
