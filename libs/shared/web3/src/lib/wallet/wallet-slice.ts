@@ -1,11 +1,12 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-import { FetchNFTClient } from "@danny-jin/fetch-nft";
+
 import { ierc20Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
 import { IBaseAddressAsyncThunk } from "../slices/interfaces";
 import { Asset } from "../nft-marketplace-backend";
+import { FetchNFTClient } from "@fantohm/shared/fetch-nft";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -38,7 +39,7 @@ params:
 returns: void
 */
 export const loadWalletCurrencies = createAsyncThunk(
-  "account/loadWalletCurrencies",
+  "wallet/loadWalletCurrencies",
   async ({ networkId, address }: IBaseAddressAsyncThunk) => {
     // console.log("loading wallet balances");
     const provider = await chains[networkId].provider;
@@ -67,8 +68,11 @@ params:
 returns: void
 */
 export const loadWalletAssets = createAsyncThunk(
-  "account/loadWalletAssets",
+  "wallet/loadWalletAssets",
   async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue }) => {
+    if (!address) {
+      return rejectWithValue("No wallet address");
+    }
     const isDev = !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
     const openSeaConfig: any = {
       apiKey: isDev ? "" : OPENSEA_API_KEY,
@@ -79,7 +83,9 @@ export const loadWalletAssets = createAsyncThunk(
     try {
       const client = new FetchNFTClient({ openSeaConfig });
       const walletContents = await client.getEthereumCollectibles([address]);
-      console.log(walletContents);
+      if (!walletContents) {
+        return [] as Asset[];
+      }
       return walletContents[address] as Asset[];
     } catch (err) {
       console.log(err);
@@ -101,7 +107,16 @@ const initialState: WalletData = {
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {},
+  reducers: {
+    updateAsset: (state, action: PayloadAction<Asset>) => {
+      state.assets = state.assets.map((asset: Asset) => {
+        if (asset.id === action.payload.id) {
+          return { ...asset, ...action.payload };
+        }
+        return asset;
+      });
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(loadWalletCurrencies.pending, (state, action) => {
       state.currencyStatus = "loading";
@@ -117,11 +132,13 @@ const walletSlice = createSlice({
     builder.addCase(loadWalletAssets.pending, (state, action) => {
       state.assetStatus = "loading";
     });
-    builder.addCase(loadWalletAssets.fulfilled, (state, action) => {
-      state.assetStatus = "succeeded";
-      state.assets = action.payload;
-      //console.log(action);
-    });
+    builder.addCase(
+      loadWalletAssets.fulfilled,
+      (state, action: PayloadAction<Asset[]>) => {
+        state.assetStatus = "succeeded";
+        state.assets = [...state.assets, ...action.payload];
+      }
+    );
     builder.addCase(loadWalletAssets.rejected, (state, action) => {
       state.assetStatus = "failed";
     });
@@ -130,4 +147,4 @@ const walletSlice = createSlice({
 
 export const walletReducer = walletSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-//export const {} = walletSlice.actions;
+export const { updateAsset } = walletSlice.actions;

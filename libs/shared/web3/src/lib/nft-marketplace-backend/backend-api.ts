@@ -6,6 +6,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   AllAssetsResponse,
   AllListingsResponse,
+  Asset,
   AssetListingRequest,
   Listing,
   LoginResponse,
@@ -25,7 +26,7 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
   });
 };
 
-export const getAsset = (assetId: string, signature: string): Promise<Listing[]> => {
+export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
   // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
   // console.log(url);
@@ -36,8 +37,8 @@ export const getAsset = (assetId: string, signature: string): Promise<Listing[]>
       },
     })
     .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      // console.log(resp);
-      return resp.data.data;
+      console.log(resp);
+      return resp.data.data[0];
     });
 };
 

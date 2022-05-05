@@ -7,7 +7,6 @@ import {
   Asset,
   defaultNetworkId,
   loadWalletAssets,
-  loadWalletCurrencies,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
@@ -29,12 +28,7 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
 
   // Load assets and nfts in current wallet
   useEffect(() => {
-    console.log("load wallet assets effect triggered");
-    console.log(`address: ${address}`);
-    console.log(`assetStatus: ${wallet.assetStatus}`);
     if (address && ["failed", "idle"].includes(wallet.assetStatus)) {
-      console.log("load wallet assets condition met, loading...");
-      console.log("app-chainId, address: ", chainId, address);
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [chainId, address, wallet.assetStatus]);

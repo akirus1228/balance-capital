@@ -18,7 +18,7 @@ export type LoginResponse = {
 };
 
 export type AllAssetsResponse = {
-  data: Listing[];
+  data: Asset[];
   count: number;
 };
 

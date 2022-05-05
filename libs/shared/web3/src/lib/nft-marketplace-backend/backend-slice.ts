@@ -1,13 +1,21 @@
-import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+  AsyncThunk,
+  createAsyncThunk,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Listing, ListingStatus, LoginResponse } from "./backend-types";
+import { Asset, AssetStatus, Listing, ListingStatus, LoginResponse } from "./backend-types";
+import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
+  readonly loadAssetStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
+  listings: Listing[];
 }
 
 /* 
@@ -55,11 +63,12 @@ export const loadListings = createAsyncThunk(
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
-      console.log(
-        await BackendApi.getListings(address, thisState.nftMarketplace.authSignature)
+      return await BackendApi.getListings(
+        address,
+        thisState.nftMarketplace.authSignature
       );
     } else {
-      rejectWithValue("No authorization found.");
+      return rejectWithValue("No authorization found.");
     }
   }
 );
@@ -102,15 +111,24 @@ returns: void
 */
 export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
-  async (assetId: string, { getState, rejectWithValue }) => {
+  async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
-      console.log(
-        await BackendApi.getAsset(assetId, thisState.nftMarketplace.authSignature)
+      const apiAsset = await BackendApi.getAsset(
+        asset.id,
+        thisState.nftMarketplace.authSignature
       );
+      if (!apiAsset.id) {
+        // nothing found by the API, merge in default state
+        dispatch(updateAsset({...asset, status: AssetStatus.READY }));
+      } else {
+        dispatch(updateAsset(apiAsset));
+      }
+
+      return true;
     } else {
-      rejectWithValue("No authorization found.");
+      return rejectWithValue("No authorization found.");
     }
   }
 );
@@ -120,6 +138,7 @@ const previousState = loadState("nftMarketplace");
 const initialState: MarketplaceApiData = {
   accountStatus: "unknown",
   status: "idle",
+  loadAssetStatis: "idle",
   authSignature: null,
   ...previousState,
 };
@@ -145,12 +164,25 @@ const marketplaceApiSlice = createSlice({
     builder.addCase(loadListings.pending, (state, action) => {
       state.status = "loading";
     });
-    builder.addCase(loadListings.fulfilled, (state, action) => {
-      state.status = "succeeded";
-      // console.log(action.payload);
-      //state.currencies = action.payload;
-    });
+    builder.addCase(
+      loadListings.fulfilled,
+      (state, action: PayloadAction<Listing[] | undefined>) => {
+        state.status = "succeeded";
+        if (action.payload) {
+          state.listings = [...state.listings, ...action.payload];
+        }
+      }
+    );
     builder.addCase(loadListings.rejected, (state, action) => {
+      state.status = "failed";
+    });
+    builder.addCase(loadAsset.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(loadAsset.fulfilled, (state, action) => {
+      state.status = "succeeded";
+    });
+    builder.addCase(loadAsset.rejected, (state, action) => {
       state.status = "failed";
     });
   },

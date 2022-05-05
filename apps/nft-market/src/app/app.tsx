@@ -7,9 +7,6 @@ import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
 import {
   useWeb3Context,
   defaultNetworkId,
-  loadWalletCurrencies,
-  loadWalletAssets,
-  loadListings,
   authorizeAccount,
 } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
