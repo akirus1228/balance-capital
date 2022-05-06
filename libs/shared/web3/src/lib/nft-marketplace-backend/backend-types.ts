@@ -29,6 +29,7 @@ export type AllListingsResponse = {
 
 // data models
 export enum AssetStatus {
+  NEW,
   READY,
   LISTED,
   LOCKED,
@@ -58,13 +59,13 @@ export type Owner = {
 };
 
 export type Terms = {
-  id: string;
+  id?: string;
   amount: number;
   apr: number;
   duration: number;
-  expirationAt: string;
-  createdAt: string;
-  updatedAt: string;
+  expirationAt?: string;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export enum ListingStatus {
@@ -85,4 +86,6 @@ export interface Listing {
 
 export interface Asset extends Collectible {
   status: AssetStatus;
+  hasPermission?: boolean;
+
 }

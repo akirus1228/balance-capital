@@ -7,7 +7,13 @@ import {
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Asset, AssetStatus, Listing, ListingStatus, LoginResponse } from "./backend-types";
+import {
+  Asset,
+  AssetStatus,
+  Listing,
+  ListingStatus,
+  LoginResponse,
+} from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
@@ -113,7 +119,7 @@ export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
     //const signature = await handleSignMessage(address, provider);
-    console.log("loadAssest called"); 
+    console.log("loadAssest called");
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
       console.log("sig found");
@@ -121,11 +127,11 @@ export const loadAsset = createAsyncThunk(
         asset.id,
         thisState.nftMarketplace.authSignature
       );
-      console.log('apiAsset');
+      console.log("apiAsset");
       console.log(apiAsset);
       if (!apiAsset.id) {
         // nothing found by the API, merge in default state
-        dispatch(updateAsset({...asset, status: AssetStatus.READY }));
+        dispatch(updateAsset({ ...asset, status: AssetStatus.NEW }));
       } else {
         dispatch(updateAsset(apiAsset));
       }

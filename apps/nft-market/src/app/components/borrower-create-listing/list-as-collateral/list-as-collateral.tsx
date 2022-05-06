@@ -71,9 +71,7 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
       </Box>
       <Box className={`flex fc ${style["body"]}`}>
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
-        {dialogState === DialogState.TERMS && (
-          <TermsForm values={{}} asset={props.asset} />
-        )}
+        {dialogState === DialogState.TERMS && <TermsForm asset={props.asset} />}
       </Box>
     </Dialog>
   );

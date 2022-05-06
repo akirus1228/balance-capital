@@ -31,6 +31,8 @@ export interface Currency {
 export interface WalletData {
   readonly assetStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly currencyStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly checkPermStatus: "idle" | "loading" | "failed";
+  readonly requestPermStatus: "idle" | "loading" | "failed";
   readonly assets: Asset[];
   readonly currencies: Currency[];
   readonly isDev: boolean;
@@ -117,14 +119,47 @@ export const requestNftPermission = createAsyncThunk(
     }
     try {
       const signer = provider.getSigner();
-
       const nftContract = new ethers.Contract(assetAddress, ierc721Abi, signer);
       const response = await nftContract["approve"](
         addresses[networkId]["USDB_LENDING_ADDRESS"] as string,
         tokenId
       );
       console.log(response);
-      return true;
+      return { assetAddress, tokenId };
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue("Unable to load create listing.");
+    }
+  }
+);
+
+/* 
+checkNftPermission: loads nfts owned by specific address
+params: 
+- networkId: string
+- provider: JsonRpcProvider
+- walletAddress: string
+- assetAddress: string
+- tokenId: string
+returns: void
+*/
+export const checkNftPermission = createAsyncThunk(
+  "wallet/checkNftPermission",
+  async (
+    { networkId, provider, walletAddress, assetAddress, tokenId }: AssetLocAsyncThunk,
+    { rejectWithValue }
+  ) => {
+    if (!walletAddress || !assetAddress || !tokenId) {
+      return rejectWithValue("Addresses and id required");
+    }
+    try {
+      const nftContract = new ethers.Contract(assetAddress, ierc721Abi, provider);
+      const response = await nftContract["getApproved"](tokenId);
+      console.log(response);
+      const hasPermission = response.includes(
+        addresses[networkId]["USDB_LENDING_ADDRESS"]
+      );
+      return { assetAddress, tokenId, hasPermission };
     } catch (err) {
       console.log(err);
       return rejectWithValue("Unable to load create listing.");
@@ -136,6 +171,8 @@ export const requestNftPermission = createAsyncThunk(
 const initialState: WalletData = {
   currencyStatus: "idle",
   assetStatus: "idle",
+  checkPermStatus: "idle",
+  requestPermStatus: "idle",
   assets: [],
   currencies: [],
   isDev: !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development",
@@ -182,6 +219,62 @@ const walletSlice = createSlice({
     );
     builder.addCase(loadWalletAssets.rejected, (state, action) => {
       state.assetStatus = "failed";
+    });
+    builder.addCase(checkNftPermission.pending, (state, action) => {
+      state.checkPermStatus = "loading";
+    });
+    builder.addCase(
+      checkNftPermission.fulfilled,
+      (
+        state,
+        action: PayloadAction<{
+          assetAddress: string;
+          tokenId: string;
+          hasPermission: boolean;
+        }>
+      ) => {
+        state.checkPermStatus = "idle";
+        console.log(action.payload);
+        state.assets = state.assets.map((asset: Asset) => {
+          if (
+            asset.assetContractAddress === action.payload.assetAddress &&
+            asset.tokenId === action.payload.tokenId
+          ) {
+            asset.hasPermission = action.payload.hasPermission;
+          }
+          return asset;
+        });
+      }
+    );
+    builder.addCase(checkNftPermission.rejected, (state, action) => {
+      state.checkPermStatus = "failed";
+    });
+    builder.addCase(requestNftPermission.pending, (state, action) => {
+      state.requestPermStatus = "loading";
+    });
+    builder.addCase(
+      requestNftPermission.fulfilled,
+      (
+        state,
+        action: PayloadAction<{
+          assetAddress: string;
+          tokenId: string;
+        }>
+      ) => {
+        state.requestPermStatus = "idle";
+        state.assets = state.assets.map((asset: Asset) => {
+          if (
+            asset.assetContractAddress === action.payload.assetAddress &&
+            asset.tokenId === action.payload.tokenId
+          ) {
+            asset.hasPermission = true;
+          }
+          return asset;
+        });
+      }
+    );
+    builder.addCase(requestNftPermission.rejected, (state, action) => {
+      state.requestPermStatus = "failed";
     });
   },
 });
