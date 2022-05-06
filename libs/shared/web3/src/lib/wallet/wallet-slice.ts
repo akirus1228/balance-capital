@@ -1,10 +1,14 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 
-import { ierc20Abi } from "../abi";
+import { ierc20Abi, ierc721Abi, usdbLending } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
-import { IBaseAddressAsyncThunk } from "../slices/interfaces";
+import {
+  AssetAsyncThunk,
+  AssetLocAsyncThunk,
+  IBaseAddressAsyncThunk,
+} from "../slices/interfaces";
 import { Asset } from "../nft-marketplace-backend";
 import { FetchNFTClient } from "@fantohm/shared/fetch-nft";
 
@@ -29,6 +33,7 @@ export interface WalletData {
   readonly currencyStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly assets: Asset[];
   readonly currencies: Currency[];
+  readonly isDev: boolean;
 }
 
 /* 
@@ -95,12 +100,45 @@ export const loadWalletAssets = createAsyncThunk(
   }
 );
 
+/* 
+requestNftPermission: loads nfts owned by specific address
+params: 
+- address: string
+returns: void
+*/
+export const requestNftPermission = createAsyncThunk(
+  "wallet/requestNftPermission",
+  async (
+    { networkId, provider, walletAddress, assetAddress, tokenId }: AssetLocAsyncThunk,
+    { rejectWithValue }
+  ) => {
+    if (!walletAddress || !assetAddress || !tokenId) {
+      return rejectWithValue("Addresses and id required");
+    }
+    try {
+      const signer = provider.getSigner();
+
+      const nftContract = new ethers.Contract(assetAddress, ierc721Abi, signer);
+      const response = await nftContract["approve"](
+        addresses[networkId]["USDB_LENDING_ADDRESS"] as string,
+        tokenId
+      );
+      console.log(response);
+      return true;
+    } catch (err) {
+      console.log(err);
+      return rejectWithValue("Unable to load create listing.");
+    }
+  }
+);
+
 // initial wallet slice state
 const initialState: WalletData = {
   currencyStatus: "idle",
   assetStatus: "idle",
   assets: [],
   currencies: [],
+  isDev: !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development",
 };
 
 // create slice and initialize reducers

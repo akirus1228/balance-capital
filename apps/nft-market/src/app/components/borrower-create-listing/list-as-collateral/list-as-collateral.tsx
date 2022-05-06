@@ -3,10 +3,12 @@ import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import style from "./list-as-collateral.module.scss";
 import { useState } from "react";
 import { TermsForm } from "./terms-form/terms-form";
+import { Asset } from "@fantohm/shared-web3";
 
 /* eslint-disable-next-line */
 export interface ListAsCollateralProps {
   open: boolean;
+  asset: Asset;
   onClose: (value: boolean) => void;
 }
 
@@ -69,7 +71,9 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
       </Box>
       <Box className={`flex fc ${style["body"]}`}>
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
-        {dialogState === DialogState.TERMS && <TermsForm values={{}} />}
+        {dialogState === DialogState.TERMS && (
+          <TermsForm values={{}} asset={props.asset} />
+        )}
       </Box>
     </Dialog>
   );

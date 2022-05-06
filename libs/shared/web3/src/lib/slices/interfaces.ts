@@ -170,3 +170,9 @@ export interface TermsAsyncThunk {
 }
 
 export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}
+
+export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
+  readonly walletAddress: string;
+  readonly assetAddress: string;
+  readonly tokenId: string;
+}

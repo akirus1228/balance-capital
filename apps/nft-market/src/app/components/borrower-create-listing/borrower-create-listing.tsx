@@ -23,7 +23,11 @@ export const BorrowerCreateListing = (props: BorrowerCreateListingProps): JSX.El
 
   return (
     <Container sx={props.sx}>
-      <ListAsCollateral onClose={onListDialogClose} open={dialogOpen} />
+      <ListAsCollateral
+        onClose={onListDialogClose}
+        open={dialogOpen}
+        asset={props.asset}
+      />
       <Paper>
         <Box className="flex fr fj-sa fw">
           <Button variant="contained" onClick={onClickButton}>

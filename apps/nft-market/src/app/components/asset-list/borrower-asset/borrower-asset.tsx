@@ -51,30 +51,6 @@ export interface BorrowerAssetProps {
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
-  const dispatch = useDispatch();
-  const initialState: BorrowerAssetState = {
-    amount: 100,
-    apr: 20,
-    duration: 100,
-    status: BorrowerAssetStatus.IDLE,
-  };
-  const [state, setState] = useState<BorrowerAssetState>(initialState);
-
-  const onCreateListingClick = useCallback(() => {
-    console.log("create listing");
-    console.log(props.asset);
-    dispatch(
-      createListing({
-        asset: props.asset,
-        terms: {
-          amount: state.amount,
-          apr: state.apr,
-          duration: state.duration,
-        } as Terms,
-      })
-    );
-  }, [props.asset, state.duration, state.apr, state.amount]);
-
   return (
     <Paper
       style={{
