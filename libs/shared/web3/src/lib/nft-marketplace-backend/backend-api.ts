@@ -8,6 +8,7 @@ import {
   AllListingsResponse,
   Asset,
   AssetListingRequest,
+  CreateAssetResponse,
   Listing,
   LoginResponse,
 } from "./backend-types";
@@ -40,6 +41,28 @@ export const getAsset = (assetId: string, signature: string): Promise<Asset> => 
       console.log("");
       console.log(resp);
       return resp.data.data[0];
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
+    });
+};
+
+export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset`;
+  return axios
+    .post(url, asset, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<CreateAssetResponse>) => {
+      console.log("");
+      console.log(resp);
+      return resp.data.asset;
     })
     .catch((err) => {
       // most likely a 400 (not in our database)

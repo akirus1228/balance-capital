@@ -96,7 +96,7 @@ export const createListing = createAsyncThunk(
       const listing: Listing = {
         asset,
         terms,
-        status: ListingStatus.LISTED,
+        status: "LISTED",
       };
       console.log(listing);
       BackendApi.createListing(thisState.nftMarketplace.authSignature, listing);
@@ -131,7 +131,7 @@ export const loadAsset = createAsyncThunk(
       console.log(apiAsset);
       if (!apiAsset.id) {
         // nothing found by the API, merge in default state
-        dispatch(updateAsset({ ...asset, status: AssetStatus.NEW }));
+        dispatch(updateAsset({ ...asset, status: AssetStatus.New }));
       } else {
         dispatch(updateAsset(apiAsset));
       }

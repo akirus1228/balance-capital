@@ -1,7 +1,11 @@
 import {
   Asset,
+  AssetStatus,
   checkNftPermission,
+  createListing,
+  ListingStatus,
   requestNftPermission,
+  Terms,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import {
@@ -36,7 +40,6 @@ export const termTypes: TermTypes = {
 export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const dispatch = useDispatch();
   const { address, chainId, provider } = useWeb3Context();
-  const [hasApproval, setHasApproval] = useState(false);
   const [pending, setPending] = useState(false);
   const [duration, setDuration] = useState(1);
   const [durationType, setDurationType] = useState("days");
@@ -47,6 +50,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   const { checkPermStatus } = useSelector((state: RootState) => state.wallet);
 
+  // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
     console.log("request permissions");
     if (
@@ -101,6 +105,23 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   const handleCreateListing = () => {
     console.log("create listing");
+    // send listing data to backend
+    setPending(true);
+    let asset: Asset;
+    if (props.asset.status === AssetStatus.New) {
+      asset = { ...props.asset, owner: { address } };
+    } else {
+      asset = props.asset;
+    }
+    const expirationAt = new Date();
+    expirationAt.setDate(expirationAt.getDate() + 1);
+    const terms: Terms = {
+      amount,
+      apr,
+      duration,
+      expirationAt
+    };
+    dispatch(createListing({ terms, asset: asset }));
   };
 
   const handleDurationChange = (event: BaseSyntheticEvent) => {
@@ -127,6 +148,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setAmount(event.target.value);
   };
 
+  // calculate repayment totals
   useEffect(() => {
     const wholePercent = ((termTypes[durationType] * duration) / 365) * apr;
     const realPercent = wholePercent / 100;

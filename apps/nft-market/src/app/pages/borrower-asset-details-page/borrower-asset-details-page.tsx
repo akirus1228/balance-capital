@@ -43,10 +43,10 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
     <>
       <AssetDetails asset={currentAsset} />
       {!currentAsset && <h1>Loading...</h1>}
-      {[AssetStatus.READY, AssetStatus.NEW].includes(currentAsset?.status) && (
+      {[AssetStatus.Ready, AssetStatus.New].includes(currentAsset?.status) && (
         <BorrowerCreateListing asset={currentAsset} sx={{ mt: "3em" }} />
       )}
-      {currentAsset?.status === AssetStatus.LISTED && (
+      {currentAsset?.status === AssetStatus.Listed && (
         <BorrowerLoanDetails asset={currentAsset} sx={{ mt: "3em" }} />
       )}
     </>

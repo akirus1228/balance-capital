@@ -7,6 +7,7 @@ export type CollectibleMediaType = "IMAGE" | "VIDEO" | "GIF" | "THREE_D";
 export type Collectible = {
   id: string;
   tokenId: string;
+  openseaId?: string;
   name: Nullable<string>;
   description: Nullable<string>;
   mediaType: CollectibleMediaType;

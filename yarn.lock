@@ -9,13 +9,6 @@
   dependencies:
     "@jridgewell/trace-mapping" "^0.3.0"
 
-"@audius/fetch-nft@^0.1.7":
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/@audius/fetch-nft/-/fetch-nft-0.1.7.tgz#a482f020fde6f727d58b9d15a265f156a194f93e"
-  integrity sha512-PPdZnMJgaccb+ugloaO0RAkTGWPRsAaUNhv39CK5iomHNEDgYLFwjyRGgiB6XBjzkS6kDvzUvHslAfHPrgl0ew==
-  dependencies:
-    cross-fetch "^3.1.4"
-
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.10.4", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.16.7", "@babel/code-frame@^7.5.5", "@babel/code-frame@^7.8.3":
   version "7.16.7"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.16.7.tgz#44416b6bd7624b998f5b1af5d470856c40138789"

@@ -14,7 +14,6 @@
     "node": ">=12.9.0"
   },
   "dependencies": {
-    "@audius/fetch-nft": "^0.1.7",
     "@danny-jin/fetch-nft": "^0.0.2",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",

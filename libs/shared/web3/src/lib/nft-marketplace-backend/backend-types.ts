@@ -1,4 +1,4 @@
-import { Collectible } from "@audius/fetch-nft";
+import { Collectible } from "@fantohm/shared/fetch-nft";
 
 // request types
 export interface AssetListingRequest extends Listing {
@@ -22,6 +22,10 @@ export type AllAssetsResponse = {
   count: number;
 };
 
+export type CreateAssetResponse = {
+  asset: Asset;
+};
+
 export type AllListingsResponse = {
   data: Listing[];
   count: number;
@@ -29,17 +33,17 @@ export type AllListingsResponse = {
 
 // data models
 export enum AssetStatus {
-  NEW,
-  READY,
-  LISTED,
-  LOCKED,
+  New = "NEW",
+  Ready = "READY",
+  Listed = "LISTED",
+  Locked = "LOCKED",
 }
 
-export enum AssetMediaType {
-  IMAGE,
-  VIDEO,
-  GIF,
-  THREE_D,
+export enum CollectibleMediaType {
+  Image = "IMAGE",
+  Video = "VIDEO",
+  Gif = "GIF",
+  ThreeD = "THREE_D",
 }
 
 export enum AssetChain {
@@ -63,18 +67,12 @@ export type Terms = {
   amount: number;
   apr: number;
   duration: number;
-  expirationAt?: string;
+  expirationAt: Date;
   createdAt?: string;
   updatedAt?: string;
 };
 
-export enum ListingStatus {
-  Pending,
-  LISTED,
-  COMPLETED,
-  Cancelled,
-}
-
+export type ListingStatus = "Pending" | "LISTED" | "COMPLETED" | "Cancelled";
 export interface Listing {
   id?: string;
   asset: Collectible;
@@ -87,5 +85,5 @@ export interface Listing {
 export interface Asset extends Collectible {
   status: AssetStatus;
   hasPermission?: boolean;
-
+  owner?: Owner;
 }
