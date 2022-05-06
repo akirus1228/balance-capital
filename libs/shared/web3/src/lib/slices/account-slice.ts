@@ -29,6 +29,7 @@ import { BondAction, BondType, PaymentToken } from "../lib/bond";
 
 import { findOrLoadMarketPrice } from "./bond-slice";
 import { truncateDecimals } from "@fantohm/shared-helpers";
+import { error, info } from "./messages-slice";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -615,23 +616,43 @@ export const getNftInfo = createAsyncThunk(
 
 export const redeemNft = createAsyncThunk(
   "account/redeemNft",
-  async ({ nftId, address, networkId }: IUsdbNftRedeemAsyncThunk) => {
+  async (
+    { nftId, address, networkId, provider }: IUsdbNftRedeemAsyncThunk,
+    { dispatch }
+  ) => {
     if (!networkId) {
-      return null;
+      return;
     }
-    const provider = await chains[networkId].provider;
+    const signer = provider.getSigner(address);
     const usdbNftContract = new ethers.Contract(
       addresses[networkId]["USDB_NFT_ADDRESS"] as string,
       usdbNftAbi,
-      provider
+      signer
     );
-    await usdbNftContract["withdraw"](nftId, address);
-    return {};
+    try {
+      const result = await usdbNftContract["withdraw"](nftId, address);
+      dispatch(info("Redeem NFT completed."));
+    } catch (e: any) {
+      console.log(e);
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    }
   }
 );
 
 export const getNftTokenUri = createAsyncThunk(
-  "account/redeemNft",
+  "account/getNftTokenUri",
   async ({ id, networkId, callback }: IUsdbNftInfoAsyncThunk) => {
     if (!networkId) {
       return null;

@@ -190,4 +190,5 @@ export interface IUsdbNftInfoAsyncThunk extends IBaseAsyncThunk {
 export interface IUsdbNftRedeemAsyncThunk extends IBaseAsyncThunk {
   readonly nftId: number;
   readonly address: string;
+  readonly provider: JsonRpcProvider;
 }

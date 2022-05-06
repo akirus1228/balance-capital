@@ -13,6 +13,7 @@ import {
   getTokenPrice,
   redeemNft,
   getNftTokenUri,
+  IUsdbNftRedeemAsyncThunk,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
@@ -99,14 +100,17 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
     return fhmPrice * nftDetails.sFhmBalance + Number(getCurrentValue());
   };
 
-  const onRedeem = () => {
-    dispatch(
-      redeemNft({
-        nftId,
-        address,
-        networkId: chainId ?? defaultNetworkId,
-      })
-    );
+  const onRedeem = async () => {
+    if (provider) {
+      await dispatch(
+        redeemNft({
+          nftId,
+          address,
+          networkId: chainId ?? defaultNetworkId,
+          provider,
+        } as IUsdbNftRedeemAsyncThunk)
+      );
+    }
   };
 
   const onTrade = () => {
