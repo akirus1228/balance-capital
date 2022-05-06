@@ -30,6 +30,7 @@ import { RootState } from "./store";
 import { loadAppDetails } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
 import { MintNftPage } from "./pages/backed-nft/mint-nft";
+import AboutPage from "./pages/about-page/about-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -83,6 +84,7 @@ export const App = (): JSX.Element => {
       case "/trad-fi":
       case "/staking":
       case "/backed-nft":
+      case "/about":
         document.body.classList.add("heroBackground");
         break;
       default:
@@ -108,6 +110,7 @@ export const App = (): JSX.Element => {
           <Route path="/mint" element={<Mint />} />
           <Route path="/backed-nft" element={<MintNftPage />} />
           <Route path="/my-account" element={<MyAccount />} />
+          <Route path="/about" element={<AboutPage />} />
           <Route
             path="*"
             element={
