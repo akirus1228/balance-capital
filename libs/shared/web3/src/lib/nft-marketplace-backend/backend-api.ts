@@ -91,12 +91,15 @@ export const getListings = (address: string, signature: string): Promise<Listing
 export const createListing = (
   signature: string,
   listing: Listing
-): Promise<Listing[]> => {
+): Promise<Listing[] | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const postParams: AssetListingRequest = {
+  // convert terms to term
+  const tempListing: AssetListingRequest = {
     ...listing,
     term: listing.terms,
   };
+  const { terms, ...postParams } = tempListing;
+  // post
   return axios
     .post(url, postParams, {
       headers: {
@@ -106,6 +109,10 @@ export const createListing = (
     .then((resp: AxiosResponse<any>) => {
       console.log(resp);
       return resp.data;
+    })
+    .catch((err: any) => {
+      console.log(err);
+      return false;
     });
 };
 

@@ -1,19 +1,8 @@
-import {
-  AsyncThunk,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import {
-  Asset,
-  AssetStatus,
-  Listing,
-  ListingStatus,
-  LoginResponse,
-} from "./backend-types";
+import { Asset, AssetStatus, Listing, LoginResponse } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
@@ -93,16 +82,20 @@ export const createListing = createAsyncThunk(
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
+      const { id, ...tmpAsset } = asset;
       const listing: Listing = {
-        asset,
+        asset: { ...tmpAsset, status: AssetStatus.Ready },
         terms,
         status: "LISTED",
       };
       console.log(listing);
-      BackendApi.createListing(thisState.nftMarketplace.authSignature, listing);
+      if (!BackendApi.createListing(thisState.nftMarketplace.authSignature, listing)) {
+        return rejectWithValue("Failed to create listing");
+      }
+      return true;
     } else {
       console.warn("no auth");
-      rejectWithValue("No authorization found.");
+      return rejectWithValue("No authorization found.");
     }
   }
 );
@@ -118,6 +111,9 @@ returns: void
 export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
+    if (!asset.id) {
+      return false;
+    }
     //const signature = await handleSignMessage(address, provider);
     console.log("loadAssest called");
     const thisState: any = getState();

@@ -119,7 +119,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       amount,
       apr,
       duration,
-      expirationAt
+      expirationAt,
     };
     dispatch(createListing({ terms, asset: asset }));
   };
@@ -201,12 +201,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           </Box>
         </Box>
       </Box>
-      {!props.asset.hasPermission && (
+      {!props.asset.hasPermission && !pending && (
         <Button variant="contained" onClick={handlePermissionRequest}>
           Allow [name] to Access your NFT
         </Button>
       )}
-      {props.asset.hasPermission && (
+      {props.asset.hasPermission && !pending && (
         <Button variant="contained" onClick={handleCreateListing}>
           List as collateral
         </Button>

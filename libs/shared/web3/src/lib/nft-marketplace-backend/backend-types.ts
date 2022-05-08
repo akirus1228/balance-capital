@@ -75,7 +75,7 @@ export type Terms = {
 export type ListingStatus = "Pending" | "LISTED" | "COMPLETED" | "Cancelled";
 export interface Listing {
   id?: string;
-  asset: Collectible;
+  asset: Asset;
   terms: Terms;
   status: ListingStatus;
   createdAt?: string;
