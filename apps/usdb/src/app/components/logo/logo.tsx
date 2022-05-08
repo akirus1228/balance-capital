@@ -2,11 +2,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import USDBLogoLight from "../../../assets/images/USDB-logo.svg";
 import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
-import { HTMLAttributes } from "react";
+import { CSSProperties } from "react";
 
 /* eslint-disable-next-line */
 export interface LogoProps {
-  style?: HTMLAttributes<HTMLDivElement>;
+  style?: CSSProperties;
 }
 
 export function Logo(props: LogoProps) {
