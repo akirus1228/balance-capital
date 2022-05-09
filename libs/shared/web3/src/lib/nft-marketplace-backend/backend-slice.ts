@@ -2,13 +2,20 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Asset, AssetStatus, Listing, ListingStatus, LoginResponse } from "./backend-types";
+import {
+  Asset,
+  AssetStatus,
+  Listing,
+  ListingStatus,
+  LoginResponse,
+} from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
   listings: Listing[];
 }
@@ -82,13 +89,9 @@ export const createListing = createAsyncThunk(
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
-      const listing: Listing = {
-        asset: { ...asset, status: AssetStatus.Ready },
-        terms,
-        status: ListingStatus.LISTED,
-      };
-      console.log(listing);
-      if (!BackendApi.createListing(thisState.nftMarketplace.authSignature, listing)) {
+      if (
+        !BackendApi.createListing(thisState.nftMarketplace.authSignature, asset, terms)
+      ) {
         return rejectWithValue("Failed to create listing");
       }
       return true;
@@ -110,7 +113,7 @@ returns: void
 export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
-    if (!asset.id) {
+    if (!asset.openseaId) {
       return false;
     }
     //const signature = await handleSignMessage(address, provider);
@@ -118,17 +121,18 @@ export const loadAsset = createAsyncThunk(
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
       console.log("sig found");
-      const apiAsset = await BackendApi.getAsset(
-        asset.id,
+      const apiAsset = await BackendApi.getAssetFromOpenseaId(
+        asset.openseaId,
         thisState.nftMarketplace.authSignature
       );
       console.log("apiAsset");
       console.log(apiAsset);
       if (!apiAsset.id) {
         // nothing found by the API, merge in default state
-        dispatch(updateAsset({ ...asset, status: AssetStatus.New }));
+        console.log("No asset found. New asset");
+        dispatch(updateAsset({ ...asset, status: AssetStatus.New, backendLoaded: true }));
       } else {
-        dispatch(updateAsset(apiAsset));
+        dispatch(updateAsset({ ...apiAsset, backendLoaded: true }));
       }
 
       return true;
@@ -189,6 +193,15 @@ const marketplaceApiSlice = createSlice({
     });
     builder.addCase(loadAsset.rejected, (state, action) => {
       state.status = "failed";
+    });
+    builder.addCase(createListing.pending, (state, action) => {
+      state.createListingStatus = "loading";
+    });
+    builder.addCase(createListing.fulfilled, (state, action) => {
+      state.createListingStatus = "succeeded";
+    });
+    builder.addCase(createListing.rejected, (state, action) => {
+      state.createListingStatus = "failed";
     });
   },
 });

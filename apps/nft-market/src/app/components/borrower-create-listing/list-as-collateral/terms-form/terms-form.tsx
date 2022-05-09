@@ -3,7 +3,6 @@ import {
   AssetStatus,
   checkNftPermission,
   createListing,
-  ListingStatus,
   requestNftPermission,
   Terms,
   useWeb3Context,
@@ -18,7 +17,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { RootState } from "apps/nft-market/src/app/store";
+import { RootState } from "../../../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";

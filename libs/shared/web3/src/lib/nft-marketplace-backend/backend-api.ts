@@ -13,6 +13,7 @@ import {
   Listing,
   ListingStatus,
   LoginResponse,
+  Terms,
 } from "./backend-types";
 
 export const WEB3_SIGN_MESSAGE =
@@ -32,6 +33,32 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
 export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
   // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllAssetsResponse>) => {
+      console.log("");
+      console.log(resp);
+      return resp.data.data[0];
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
+    });
+};
+
+export const getAssetFromOpenseaId = (
+  openseaId: string,
+  signature: string
+): Promise<Asset> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaId}`;
   // console.log(url);
   return axios
     .get(url, {
@@ -92,10 +119,11 @@ export const getListings = (address: string, signature: string): Promise<Listing
 
 export const createListing = (
   signature: string,
-  listing: Listing
+  asset: Asset,
+  terms: Terms
 ): Promise<Listing[] | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const listingParams = listingToCreateListingRequest(listing);
+  const listingParams = listingToCreateListingRequest(asset, terms);
   // post
   return axios
     .post(url, listingParams, {
@@ -125,12 +153,15 @@ export const handleSignMessage = (
   }
 };
 
-const listingToCreateListingRequest = (listing: Listing): CreateListingRequest => {
+const listingToCreateListingRequest = (
+  asset: Asset,
+  terms: Terms
+): CreateListingRequest => {
   // convert terms to term
   const tempListing: CreateListingRequest = {
-    asset: listing.asset,
-    term: listing.terms,
-    status: listing.status,
+    asset: asset,
+    term: terms,
+    status: ListingStatus.LISTED,
   };
   // if the asset isn't in the database we need to pass the asset without the ID
   // if the asset is in the database we need to pass just the ID
@@ -139,6 +170,7 @@ const listingToCreateListingRequest = (listing: Listing): CreateListingRequest =
     tempListing.asset.status === AssetStatus.New
   ) {
     delete tempListing.asset.id;
+    tempListing.asset.status = AssetStatus.Listed;
   } else if (
     typeof tempListing.asset !== "string" &&
     tempListing.asset.status !== AssetStatus.New &&

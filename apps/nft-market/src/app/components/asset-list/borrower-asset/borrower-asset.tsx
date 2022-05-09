@@ -1,7 +1,5 @@
-import { Asset, createListing, Terms } from "@fantohm/shared-web3";
+import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, IconButton, Paper } from "@mui/material";
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import style from "./borrower-asset.module.scss";
@@ -29,23 +27,6 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     </Box>
   );
 };
-
-enum BorrowerAssetStatus {
-  IDLE,
-  LOADING,
-  PENDING_USER,
-  PENDING_TXN,
-  TXN_SUCCESS,
-  TXN_REJECTED,
-}
-
-type BorrowerAssetState = {
-  amount: number;
-  apr: number;
-  duration: number;
-  status: BorrowerAssetStatus;
-};
-
 export interface BorrowerAssetProps {
   asset: Asset;
 }

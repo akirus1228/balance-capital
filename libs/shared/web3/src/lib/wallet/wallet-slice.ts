@@ -11,6 +11,7 @@ import {
 } from "../slices/interfaces";
 import { Asset } from "../nft-marketplace-backend";
 import { FetchNFTClient } from "@fantohm/shared/fetch-nft";
+import { NetworkIds } from "../networks";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -141,7 +142,7 @@ params:
 - walletAddress: string
 - assetAddress: string
 - tokenId: string
-returns: void
+returns: RejectWithValue<unknown,unknown> | { assetAddress: string, tokenId: string, hasPermission: boolean}
 */
 export const checkNftPermission = createAsyncThunk(
   "wallet/checkNftPermission",
@@ -151,6 +152,12 @@ export const checkNftPermission = createAsyncThunk(
   ) => {
     if (!walletAddress || !assetAddress || !tokenId) {
       return rejectWithValue("Addresses and id required");
+    }
+    if (networkId != NetworkIds.Ethereum && networkId != NetworkIds.Rinkeby) {
+      await window.ethereum.request({
+        method: "wallet_switchEthereumChain",
+        params: [{ chainId: NetworkIds.Rinkeby }],
+      });
     }
     try {
       const nftContract = new ethers.Contract(assetAddress, ierc721Abi, provider);

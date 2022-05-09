@@ -32,7 +32,12 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
   }, [JSON.stringify(wallet.assets)]);
 
   useEffect(() => {
-    if (backend.authSignature !== null && currentAsset && address) {
+    if (
+      backend.authSignature !== null &&
+      currentAsset &&
+      address &&
+      currentAsset.backendLoaded !== true
+    ) {
       dispatch(loadAsset(currentAsset));
     } else if (backend.authSignature !== null && !currentAsset) {
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));

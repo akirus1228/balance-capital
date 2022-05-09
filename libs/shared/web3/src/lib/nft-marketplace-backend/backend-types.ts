@@ -94,6 +94,7 @@ export type Chain = "eth" | "sol";
 
 export interface Asset {
   status: AssetStatus;
+  backendLoaded?: boolean;
   hasPermission?: boolean;
   owner?: Owner;
   id?: string;
