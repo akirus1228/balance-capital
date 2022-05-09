@@ -21,7 +21,6 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
 
   const params = useParams();
   const asset = useAsset(params["contractAddress"], params["tokenId"]);
-  console.log(asset);
 
   if (typeof asset === "undefined" || asset === null) {
     return <h1>Loading...</h1>;

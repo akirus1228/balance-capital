@@ -23,7 +23,6 @@ export interface AssetListProps {
 export const AssetList = (props: AssetListProps): JSX.Element => {
   const dispatch = useDispatch();
   const wallet = useSelector((state: RootState) => state.wallet);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
   const { address, chainId } = useWeb3Context();
 
   // Load assets and nfts in current wallet
@@ -31,7 +30,7 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
     if (
       address &&
       ["failed", "idle"].includes(wallet.assetStatus) &&
-      wallet.assetStatus != "loading"
+      wallet.assetStatus !== "loading"
     ) {
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
@@ -58,7 +57,11 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
           <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
             {wallet.assets &&
               wallet.assets.map((asset: Asset, index: number) => (
-                <BorrowerAsset key={`asset-${index}`} asset={asset} />
+                <BorrowerAsset
+                  key={`asset-${index}`}
+                  contractAddress={asset.assetContractAddress}
+                  tokenId={asset.tokenId}
+                />
               ))}
             {wallet.assetStatus === "succeeded" &&
               (!wallet.assets || wallet.assets.length < 1) && (

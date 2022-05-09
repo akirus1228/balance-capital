@@ -21,6 +21,7 @@ const store = configureStore({
 store.subscribe(() => {
   saveState("app", store.getState().app);
   saveState("nftMarketplace", store.getState().nftMarketplace);
+  saveState("wallet", store.getState().wallet);
 });
 
 export type RootState = ReturnType<typeof store.getState>;

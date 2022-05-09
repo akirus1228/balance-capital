@@ -4,6 +4,7 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
+import { useAsset } from "../../../hooks/useAsset";
 
 export interface PreviewImageProps {
   url: string;
@@ -29,10 +30,17 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
   );
 };
 export interface BorrowerAssetProps {
-  asset: Asset;
+  contractAddress: string;
+  tokenId: string;
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
+  const asset = useAsset(props.contractAddress, props.tokenId);
+
+  if (asset === null) {
+    return <h3>Loading...</h3>;
+  }
+
   return (
     <Paper
       style={{
@@ -50,7 +58,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
             left: "20px",
             zIndex: 10,
           }}
-          label={props.asset.status || "Unlisted"}
+          label={asset.status || "Unlisted"}
         />
       </Box>
       <Box sx={{ position: "absolute" }}>
@@ -67,17 +75,17 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
           <MoreHorizOutlinedIcon />
         </IconButton>
       </Box>
-      {props.asset.imageUrl && props.asset.openseaId && (
+      {asset.imageUrl && asset.openseaId && (
         <PreviewImg
-          url={props.asset.imageUrl}
-          name={props.asset.name || "placeholder name"}
-          contractAddress={props.asset.assetContractAddress}
-          tokenId={props.asset.tokenId}
+          url={asset.imageUrl}
+          name={asset.name || "placeholder name"}
+          contractAddress={asset.assetContractAddress}
+          tokenId={asset.tokenId}
         />
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <span style={{ fontWeight: "700", fontSize: "20px", margin: "2em 0" }}>
-          {props.asset.name}
+          {asset.name}
         </span>
       </Box>
     </Paper>

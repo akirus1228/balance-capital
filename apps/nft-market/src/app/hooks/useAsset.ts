@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Asset, loadAsset, loadWalletAssets, useWeb3Context } from "@fantohm/shared-web3";
+import {
+  Asset,
+  AssetLoadStatus,
+  BackendLoadingStatus,
+  loadAsset,
+  loadWalletAssets,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 
@@ -8,9 +15,21 @@ export const useAsset = (
   tokenId: string | undefined
 ): Asset | null => {
   console.log("useAsset");
-  const [asset, setAsset] = useState<Asset | null>(null);
   const dispatch = useDispatch();
   const wallet = useSelector((state: RootState) => state.wallet);
+  const backendLoadStatus = useSelector((state: RootState) =>
+    state.nftMarketplace.loadAssetStatus.find(
+      (assetLoadStatus: AssetLoadStatus) =>
+        assetLoadStatus.assetId === `${tokenId}:::${contractAddress}`
+    )
+  );
+  const asset = useSelector((state: RootState) =>
+    state.wallet.assets.find(
+      (walletAsset: Asset) =>
+        walletAsset.assetContractAddress === contractAddress &&
+        walletAsset.tokenId === tokenId
+    )
+  );
   const backend = useSelector((state: RootState) => state.nftMarketplace);
   const { chainId, address } = useWeb3Context();
 
@@ -19,8 +38,10 @@ export const useAsset = (
     if (
       chainId &&
       address &&
-      (wallet.assetStatus === "idle" || wallet.assetStatus === "failed")
+      (wallet.assetStatus === "idle" || wallet.assetStatus === "failed") &&
+      wallet.nextOpenseaLoad < Date.now()
     ) {
+      console.log("loading wallet assets");
       dispatch(loadWalletAssets({ address, networkId: chainId }));
     }
   }, [address, wallet.assetStatus, contractAddress, tokenId]);
@@ -28,20 +49,19 @@ export const useAsset = (
   // wallet assets loaded from opensea
   // check the database for a match and merge in data
   useEffect(() => {
-    console.log("loadAsset effect");
-    console.log(`chainId ${chainId}`);
-    console.log(`address ${address}`);
-    console.log(`wallet.assetStatus ${wallet.assetStatus}`);
-    console.log(`backend.loadAssetStatus ${backend.loadAssetStatus}`);
-    console.log(`asset?.backendLoaded ${asset?.backendLoaded}`);
-    console.log(asset);
+    // console.log("loadAsset effect");
+    // console.log(`chainId ${chainId}`);
+    // console.log(`address ${address}`);
+    // console.log(`wallet.assetStatus ${wallet.assetStatus}`);
+    // console.log(`backendLoadStatus?.status ${backendLoadStatus?.status}`);
+    // console.log(asset);
     if (
       asset &&
       chainId &&
-      address &&
-      wallet.assetStatus === "succeeded" &&
-      (backend.loadAssetStatus === "idle" || backend.loadAssetStatus === "failed") &&
-      (typeof asset.backendLoaded === "undefined" || asset?.backendLoaded === false)
+      address && // is there an address?
+      wallet.assetStatus === "succeeded" && // have we loaded from opensea already?
+      (typeof asset.cacheExpire === "undefined" || asset.cacheExpire < Date.now()) && // is the asset needing a backend refresh?
+      backendLoadStatus?.status !== BackendLoadingStatus.loading // is it already loading?
     ) {
       console.log("loadAsset");
       dispatch(loadAsset(asset));
@@ -50,23 +70,11 @@ export const useAsset = (
     address,
     wallet.assetStatus,
     backend.loadAssetStatus,
-    asset,
+    asset?.openseaLoaded,
     contractAddress,
     tokenId,
+    backendLoadStatus?.status,
   ]);
 
-  // look in the wallet assets to see if our current target is found
-  useEffect(() => {
-    console.log("asset match effect");
-    console.log(wallet.assets);
-    const currentAsset = wallet.assets.filter(
-      (asset) =>
-        asset.assetContractAddress === contractAddress && asset.tokenId === tokenId
-    )[0] as Asset;
-    console.log(`currentAsset`);
-    console.log(currentAsset);
-    setAsset(currentAsset);
-  }, [JSON.stringify(wallet.assets)]);
-
-  return asset;
+  return asset || ({} as Asset);
 };

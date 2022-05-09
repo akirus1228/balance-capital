@@ -7,6 +7,7 @@ import { AssetLocAsyncThunk, IBaseAddressAsyncThunk } from "../slices/interfaces
 import { Asset } from "../nft-marketplace-backend";
 import { Collectible, FetchNFTClient } from "@fantohm/shared/fetch-nft";
 import { NetworkIds } from "../networks";
+import { loadState } from "../helpers/localstorage";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -32,7 +33,10 @@ export interface WalletData {
   readonly assets: Asset[];
   readonly currencies: Currency[];
   readonly isDev: boolean;
+  readonly nextOpenseaLoad: number;
 }
+
+const cacheTime = 300 * 1000; // 5 minutes
 
 /* 
 loadWalletBalance: loads balances
@@ -84,15 +88,24 @@ export const loadWalletAssets = createAsyncThunk(
       openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
     }
     try {
+      // see if opensea has any assets listed for this address
       const client = new FetchNFTClient({ openSeaConfig });
       const openseaData = await client.getEthereumCollectibles([address]);
       if (!openseaData) {
         return [] as Asset[];
       }
-      const walletContents = openseaData[address].map((collectible: Collectible) => {
-        const { id, ...asset } = collectible;
-        return asset as Asset;
-      });
+
+      // convertCollectible to Asset
+      const walletContents = openseaData[address].map(
+        (collectible: Collectible): Asset => {
+          const { id, ...tmpCollectible } = collectible;
+          const asset = {
+            ...tmpCollectible,
+            openseaLoaded: Date.now() + cacheTime,
+          } as Asset;
+          return asset;
+        }
+      );
       return walletContents as Asset[];
     } catch (err) {
       console.log(err);
@@ -174,14 +187,17 @@ export const checkNftPermission = createAsyncThunk(
 );
 
 // initial wallet slice state
+const previousState = loadState("wallet");
 const initialState: WalletData = {
-  currencyStatus: "idle",
-  assetStatus: "idle",
-  checkPermStatus: "idle",
-  requestPermStatus: "idle",
   assets: [],
   currencies: [],
   isDev: !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development",
+  ...previousState, // overwrite assets and currencies from cache if recent
+  currencyStatus: "idle", // always reset states on reload
+  assetStatus: "idle",
+  checkPermStatus: "idle",
+  requestPermStatus: "idle",
+  nextOpenseaLoad: 0,
 };
 
 // create slice and initialize reducers
@@ -223,8 +239,21 @@ const walletSlice = createSlice({
       loadWalletAssets.fulfilled,
       (state, action: PayloadAction<Asset[]>) => {
         state.assetStatus = "succeeded";
-        console.log(action.payload);
-        state.assets = [...state.assets, ...action.payload];
+        state.nextOpenseaLoad = Date.now() + cacheTime;
+        action.payload.map((newAsset: Asset) => {
+          let dupAsset = state.assets.find(
+            (stateAsset: Asset) =>
+              stateAsset.tokenId === newAsset.tokenId &&
+              stateAsset.assetContractAddress === newAsset.assetContractAddress
+          );
+          // if exists, update
+          if (dupAsset) {
+            dupAsset = { ...dupAsset, ...newAsset };
+          } else {
+            // if new, push
+            state.assets.push(newAsset);
+          }
+        });
       }
     );
     builder.addCase(loadWalletAssets.rejected, (state, action) => {

@@ -9,15 +9,17 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import { useListing } from "../../hooks/useListing";
 import style from "./borrower-loan-details.module.scss";
 
-/* eslint-disable-next-line */
 export interface BorrowerLoanDetailsProps {
   asset: Asset;
   sx?: SxProps<Theme>;
 }
 
 export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Element => {
+  //const listing = useListing(props.asset.assetContractAddress, props.asset.tokenId);
+
   return (
     <Container sx={props.sx}>
       <Paper>

@@ -5,15 +5,28 @@ import { BackendApi } from ".";
 import { Asset, AssetStatus, Listing, LoginResponse } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
+export enum BackendLoadingStatus {
+  idle = "idle",
+  loading = "loading",
+  succeeded = "succeeded",
+  failed = "failed",
+}
+
+export type AssetLoadStatus = {
+  assetId: string;
+  status: BackendLoadingStatus;
+};
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
-  readonly loadAssetStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly loadAssetStatus: AssetLoadStatus[];
   readonly loadListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
   listings: Listing[];
 }
+
+const cacheTime = 300 * 1000; // 5 minutes
 
 /* 
 authorizeAccount: generates user account if non existant 
@@ -113,6 +126,11 @@ export const loadAsset = createAsyncThunk(
       console.log("no id");
       return false;
     }
+    if (asset.cacheExpire && asset.cacheExpire > Date.now()) {
+      // recently loaded, use cache
+      console.log("Using cache");
+      return false;
+    }
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
       console.log("sig found");
@@ -122,12 +140,18 @@ export const loadAsset = createAsyncThunk(
       );
       console.log("apiAsset");
       console.log(apiAsset);
-      if (!apiAsset.id) {
+      if (typeof apiAsset === "undefined" || !apiAsset.id) {
         // nothing found by the API, merge in default state
         console.log("No asset found. New asset");
-        dispatch(updateAsset({ ...asset, status: AssetStatus.New, backendLoaded: true }));
+        dispatch(
+          updateAsset({
+            ...asset,
+            status: AssetStatus.New,
+            cacheExpire: Date.now() + cacheTime,
+          })
+        );
       } else {
-        dispatch(updateAsset({ ...apiAsset, backendLoaded: true }));
+        dispatch(updateAsset({ ...apiAsset, cacheExpire: Date.now() + cacheTime }));
       }
 
       return true;
@@ -144,7 +168,7 @@ const initialState: MarketplaceApiData = {
   authSignature: null,
   ...previousState,
   status: "idle",
-  loadAssetStatus: "idle",
+  loadAssetStatus: [],
   loadListingStatus: "idle",
   createListingStatus: "idle",
 };
@@ -183,13 +207,34 @@ const marketplaceApiSlice = createSlice({
       state.loadListingStatus = "failed";
     });
     builder.addCase(loadAsset.pending, (state, action) => {
-      state.loadAssetStatus = "loading";
+      console.log(action.meta.arg);
+      const currentAsset = action.meta.arg as Asset;
+      state.loadAssetStatus.push({
+        assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
+        status: BackendLoadingStatus.loading,
+      });
+      console.log(state.loadAssetStatus.length);
+      console.log(state.loadAssetStatus[0]);
     });
     builder.addCase(loadAsset.fulfilled, (state, action) => {
-      state.loadAssetStatus = "succeeded";
+      console.log(action.meta.arg);
+      const currentAsset = action.meta.arg as Asset;
+      state.loadAssetStatus.push({
+        assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
+        status: BackendLoadingStatus.succeeded,
+      });
+      console.log(state.loadAssetStatus.length);
+      console.log(state.loadAssetStatus[0]);
     });
     builder.addCase(loadAsset.rejected, (state, action) => {
-      state.loadAssetStatus = "failed";
+      console.log(action.meta.arg);
+      const currentAsset = action.meta.arg as Asset;
+      state.loadAssetStatus.push({
+        assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
+        status: BackendLoadingStatus.failed,
+      });
+      console.log(state.loadAssetStatus.length);
+      console.log(state.loadAssetStatus[0]);
     });
     builder.addCase(createListing.pending, (state, action) => {
       state.createListingStatus = "loading";
