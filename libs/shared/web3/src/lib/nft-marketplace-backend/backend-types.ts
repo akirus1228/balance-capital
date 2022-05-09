@@ -113,7 +113,7 @@ export interface Asset {
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;
   permaLink: Nullable<string>;
-  assetContractAddress: Nullable<string>;
+  assetContractAddress: string;
   chain: Chain;
   wallet: string;
 }

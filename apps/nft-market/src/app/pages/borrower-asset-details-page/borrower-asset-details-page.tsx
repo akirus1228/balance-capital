@@ -14,50 +14,27 @@ import { RootState } from "../../store";
 import AssetDetails from "../../components/asset-details/asset-details";
 import BorrowerLoanDetails from "../../components/borrower-loan-details/borrower-loan-details";
 import BorrowerCreateListing from "../../components/borrower-create-listing/borrower-create-listing";
+import { useAsset } from "../../hooks/useAsset";
 
 export const BorrowerAssetDetailsPage = (): JSX.Element => {
+  console.log("BorrowerAssetDetailsPage Render");
+
   const params = useParams();
-  const dispatch = useDispatch();
+  const asset = useAsset(params["contractAddress"], params["tokenId"]);
+  console.log(asset);
 
-  const wallet = useSelector((state: RootState) => state.wallet);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
-  const { chainId, address } = useWeb3Context();
-
-  const currentAsset: Asset = useMemo(() => {
-    if (params["openseaId"] && wallet.assets) {
-      return wallet.assets.filter((asset) => asset.openseaId === params["openseaId"])[0];
-    } else {
-      return {} as Asset;
-    }
-  }, [JSON.stringify(wallet.assets)]);
-
-  useEffect(() => {
-    if (
-      backend.authSignature !== null &&
-      currentAsset &&
-      address &&
-      currentAsset.backendLoaded !== true &&
-      backend.loadAssetStatus !== "loading"
-    ) {
-      dispatch(loadAsset(currentAsset));
-    } else if (
-      backend.authSignature !== null &&
-      !currentAsset &&
-      wallet.assetStatus !== "loading"
-    ) {
-      dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
-    }
-  }, [currentAsset, address]);
-
+  if (typeof asset === "undefined" || asset === null) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <>
-      <AssetDetails asset={currentAsset} />
-      {!currentAsset && <h1>Loading...</h1>}
-      {[AssetStatus.Ready, AssetStatus.New].includes(currentAsset?.status) && (
-        <BorrowerCreateListing asset={currentAsset} sx={{ mt: "3em" }} />
+      <AssetDetails asset={asset} />
+      {!asset && <h1>Loading...</h1>}
+      {[AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
+        <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
       )}
-      {currentAsset?.status === AssetStatus.Listed && (
-        <BorrowerLoanDetails asset={currentAsset} sx={{ mt: "3em" }} />
+      {asset?.status === AssetStatus.Listed && (
+        <BorrowerLoanDetails asset={asset} sx={{ mt: "3em" }} />
       )}
     </>
   );

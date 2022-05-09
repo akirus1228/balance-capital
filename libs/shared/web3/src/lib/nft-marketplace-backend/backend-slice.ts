@@ -114,11 +114,6 @@ export const loadAsset = createAsyncThunk(
       return false;
     }
     const thisState: any = getState();
-    if (thisState.nftMarketplace.loadAssetState === "loading") {
-      console.log("already loading");
-      return false;
-    }
-    //const signature = await handleSignMessage(address, provider);
     if (thisState.nftMarketplace.authSignature) {
       console.log("sig found");
       const apiAsset = await BackendApi.getAssetFromOpenseaId(
@@ -146,10 +141,12 @@ export const loadAsset = createAsyncThunk(
 const previousState = loadState("nftMarketplace");
 const initialState: MarketplaceApiData = {
   accountStatus: "unknown",
-  status: "idle",
-  loadAssetStatis: "idle",
   authSignature: null,
   ...previousState,
+  status: "idle",
+  loadAssetStatus: "idle",
+  loadListingStatus: "idle",
+  createListingStatus: "idle",
 };
 
 // create slice and initialize reducers

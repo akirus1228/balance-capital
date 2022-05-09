@@ -8,7 +8,8 @@ import { Link } from "react-router-dom";
 export interface PreviewImageProps {
   url: string;
   name: string;
-  openseaId: string;
+  contractAddress: string;
+  tokenId: string;
 }
 
 export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
@@ -17,7 +18,7 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
     >
-      <Link to={`/borrow/${props.openseaId}`}>
+      <Link to={`/borrow/${props.contractAddress}/${props.tokenId}`}>
         <img
           className={style["assetImg"]}
           src={props.url}
@@ -71,7 +72,8 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         <PreviewImg
           url={props.asset.imageUrl}
           name={props.asset.name || "placeholder name"}
-          openseaId={props.asset.openseaId}
+          contractAddress={props.asset.assetContractAddress}
+          tokenId={props.asset.tokenId}
         />
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>

@@ -193,7 +193,10 @@ const walletSlice = createSlice({
       console.log("Update asset");
       console.log(action.payload);
       state.assets = state.assets.map((asset: Asset) => {
-        if (asset.openseaId === action.payload.openseaId) {
+        if (
+          asset.assetContractAddress === action.payload.assetContractAddress &&
+          asset.tokenId === action.payload.tokenId
+        ) {
           console.log("Found update match");
           return { ...asset, ...action.payload };
         }
