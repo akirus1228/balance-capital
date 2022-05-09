@@ -2,12 +2,13 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Listing, ListingStatus, LoginResponse } from "./backend-types";
+import { Listing, ListingStatus, LoginResponse, Notification } from "./backend-types";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
+  readonly notifications: Notification[] | null;
 }
 
 /*
@@ -162,7 +163,7 @@ const marketplaceApiSlice = createSlice({
     builder.addCase(loadNotifications.fulfilled, (state, action) => {
       state.status = "succeeded";
       // console.log(action.payload);
-      //state.currencies = action.payload;
+      //state.notifications = action.payload;
     });
     builder.addCase(loadNotifications.rejected, (state, action) => {
       state.status = "failed";

@@ -108,3 +108,15 @@ export type Notification = {
   updatedAt?: string;
   deletedAt?: string;
 };
+
+export type ApiResponse = {
+  success: boolean;
+  message: string;
+};
+
+export type EditNotificationRequest = {
+  id: string;
+  importance: Importance;
+  message: string;
+  status: NotificationStatus;
+};

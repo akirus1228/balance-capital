@@ -6,9 +6,13 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   AllListingsResponse,
   AllNotificationsResponse,
+  ApiResponse,
   AssetListingRequest,
+  EditNotificationRequest,
   Listing,
   LoginResponse,
+  Notification,
+  NotificationStatus,
 } from "./backend-types";
 
 export const WEB3_SIGN_MESSAGE =
@@ -79,7 +83,7 @@ export const getNotifications = (
   signature: string
 ): Promise<AllNotificationsResponse> => {
   // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/user-notifications/all`;
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/all`;
   // console.log(url);
   return axios
     .get(url, {
@@ -88,6 +92,54 @@ export const getNotifications = (
       },
     })
     .then((resp: AxiosResponse<AllNotificationsResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
+};
+
+export const deleteNotification = async (
+  address: string,
+  signature: string,
+  id: string | undefined
+): Promise<ApiResponse | null> => {
+  // console.log(address);
+  if (typeof id !== "string") return null;
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${id}`;
+  // console.log(url);
+  return await axios
+    .delete(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<ApiResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
+};
+
+export const markAsRead = async (
+  address: string,
+  signature: string,
+  notification: Notification | undefined
+): Promise<ApiResponse | null> => {
+  // console.log(address);
+  if (!notification || typeof notification.id !== "string") return null;
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${notification.id}`;
+  // console.log(url);
+  const putParams: EditNotificationRequest = {
+    id: notification.id,
+    importance: notification.importance,
+    message: notification.message,
+    status: NotificationStatus.Read,
+  };
+  return await axios
+    .put(url, putParams, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<ApiResponse>) => {
       // console.log(resp);
       return resp.data;
     });
