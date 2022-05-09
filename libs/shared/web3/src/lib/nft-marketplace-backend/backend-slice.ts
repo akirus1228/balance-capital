@@ -303,9 +303,9 @@ const marketplaceApiSlice = createSlice({
       let listing = state.listings.find(
         (listing: Listing) => listing.asset.openseaId === action.payload.asset.openseaId
       );
-      if(listing){
+      if (listing) {
         listing = { ...listing, ...action.payload };
-      }else{
+      } else {
         state.listings.push(action.payload);
       }
     });
