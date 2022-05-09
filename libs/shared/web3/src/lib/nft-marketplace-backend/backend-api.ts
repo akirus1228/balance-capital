@@ -8,6 +8,7 @@ import {
   AllListingsResponse,
   Asset,
   AssetStatus,
+  BackendListing,
   CreateAssetResponse,
   CreateListingRequest,
   Listing,
@@ -111,7 +112,30 @@ export const getListings = (address: string, signature: string): Promise<Listing
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
       // console.log(resp);
-      return resp.data.data;
+      return resp.data.data.map((listing: BackendListing) => {
+        const { term, ...formattedListing } = listing;
+        return { ...formattedListing, terms: term } as Listing;
+      });
+    });
+};
+
+export const getListingFromOpenseaId = (
+  openseaId: string,
+  signature: string
+): Promise<Listing> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllListingsResponse>) => {
+      // console.log(resp);
+      const { term, ...listing } = resp.data.data[0];
+      return { ...listing, terms: term };
     });
 };
 
@@ -159,7 +183,7 @@ const listingToCreateListingRequest = (
   const tempListing: CreateListingRequest = {
     asset: asset,
     term: terms,
-    status: ListingStatus.LISTED,
+    status: ListingStatus.Listed,
   };
   // if the asset isn't in the database we need to pass the asset without the ID
   // if the asset is in the database we need to pass just the ID

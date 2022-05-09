@@ -1,22 +1,25 @@
-import { Asset } from "@fantohm/shared-web3";
-import {
-  Box,
-  Button,
-  Container,
-  LinearProgress,
-  Paper,
-  SxProps,
-  Theme,
-  Typography,
-} from "@mui/material";
-import style from "./borrower-loan-details.module.scss";
+import { Asset, Listing } from "@fantohm/shared-web3";
+import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
+import { useListing } from "../../hooks/useListing";
+import style from "./borrower-listing-details.module.scss";
 
-export interface BorrowerLoanDetailsProps {
+export interface BorrowerListingDetailsProps {
   asset: Asset;
   sx?: SxProps<Theme>;
 }
 
-export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Element => {
+export const BorrowerListingDetails = (
+  props: BorrowerListingDetailsProps
+): JSX.Element => {
+  const listing: Listing | null = useListing(
+    props.asset.assetContractAddress,
+    props.asset.tokenId
+  );
+
+  if (!listing) {
+    return <h3>Loading...</h3>;
+  }
+
   return (
     <Container sx={props.sx}>
       <Paper>
@@ -24,7 +27,7 @@ export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Elemen
           <Box className="flex fc">
             <Typography className={style["label"]}>Total repayment</Typography>
             <Typography className={`${style["data"]} ${style["primary"]}`}>
-              $35,150
+              ${listing.terms.amount}
             </Typography>
           </Box>
           <Box className="flex fc">
@@ -39,7 +42,6 @@ export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Elemen
             <Typography className={style["label"]}>Time until loan expires</Typography>
             <Box className="flex fr w100">
               <Typography className={`${style["data"]}`}>55/60 days</Typography>
-              <LinearProgress variant="determinate" value={10} />
             </Box>
           </Box>
           <Box className="flex fc">
@@ -51,4 +53,4 @@ export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Elemen
   );
 };
 
-export default BorrowerLoanDetails;
+export default BorrowerListingDetails;

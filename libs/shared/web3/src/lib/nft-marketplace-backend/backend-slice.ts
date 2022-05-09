@@ -2,7 +2,13 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Asset, AssetStatus, Listing, LoginResponse } from "./backend-types";
+import {
+  Asset,
+  AssetStatus,
+  Listing,
+  LoginResponse,
+  StandardAssetLookupParams,
+} from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export enum BackendLoadingStatus {
@@ -16,11 +22,18 @@ export type AssetLoadStatus = {
   assetId: string;
   status: BackendLoadingStatus;
 };
+
+export type ListingLoadStatus = {
+  assetId: string;
+  status: BackendLoadingStatus;
+};
+
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: AssetLoadStatus[];
-  readonly loadListingStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly loadListingStatus: ListingLoadStatus[];
+  readonly loadListingsStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
   listings: Listing[];
@@ -111,12 +124,10 @@ export const createListing = createAsyncThunk(
 );
 
 /* 
-loadAsset: loads all listings
+loadAsset: loads individual listing
 params: 
-- networkId: number
-- address: string
-- provider: JsonRpcProvider
-returns: void
+- asset: Asset
+returns: boolean
 */
 export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
@@ -161,15 +172,46 @@ export const loadAsset = createAsyncThunk(
   }
 );
 
+/* 
+loadListing: loads individual listing
+params: 
+- asset: Asset
+returns: Listing
+*/
+export const loadListing = createAsyncThunk(
+  "marketplaceApi/loadListing",
+  async (openseaId: string, { getState, rejectWithValue, dispatch }) => {
+    console.log("loadListing called");
+    if (!openseaId) {
+      console.log("no id");
+      return rejectWithValue("No openseaId");
+    }
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.authSignature) {
+      console.log("sig found");
+      const listing: Listing = await BackendApi.getListingFromOpenseaId(
+        openseaId,
+        thisState.nftMarketplace.authSignature
+      );
+
+      return listing;
+    } else {
+      return rejectWithValue("No authorization found.");
+    }
+  }
+);
+
 // initial wallet slice state
 const previousState = loadState("nftMarketplace");
 const initialState: MarketplaceApiData = {
   accountStatus: "unknown",
   authSignature: null,
+  listings: [],
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
-  loadListingStatus: "idle",
+  loadListingStatus: [],
+  loadListingsStatus: "idle",
   createListingStatus: "idle",
 };
 
@@ -192,49 +234,48 @@ const marketplaceApiSlice = createSlice({
       state.accountStatus = "failed";
     });
     builder.addCase(loadListings.pending, (state, action) => {
-      state.loadListingStatus = "loading";
+      state.loadListingsStatus = "loading";
     });
     builder.addCase(
       loadListings.fulfilled,
       (state, action: PayloadAction<Listing[] | undefined>) => {
-        state.loadListingStatus = "succeeded";
+        state.loadListingsStatus = "succeeded";
         if (action.payload) {
           state.listings = [...state.listings, ...action.payload];
         }
       }
     );
     builder.addCase(loadListings.rejected, (state, action) => {
-      state.loadListingStatus = "failed";
+      state.loadListingsStatus = "failed";
     });
     builder.addCase(loadAsset.pending, (state, action) => {
-      console.log(action.meta.arg);
       const currentAsset = action.meta.arg as Asset;
       state.loadAssetStatus.push({
         assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
         status: BackendLoadingStatus.loading,
       });
-      console.log(state.loadAssetStatus.length);
-      console.log(state.loadAssetStatus[0]);
     });
     builder.addCase(loadAsset.fulfilled, (state, action) => {
-      console.log(action.meta.arg);
       const currentAsset = action.meta.arg as Asset;
-      state.loadAssetStatus.push({
-        assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
-        status: BackendLoadingStatus.succeeded,
-      });
-      console.log(state.loadAssetStatus.length);
-      console.log(state.loadAssetStatus[0]);
+      const status = state.loadAssetStatus.find(
+        (status: AssetLoadStatus) =>
+          status.assetId ===
+          `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`
+      );
+      if (status) {
+        status.status = BackendLoadingStatus.succeeded;
+      }
     });
     builder.addCase(loadAsset.rejected, (state, action) => {
-      console.log(action.meta.arg);
       const currentAsset = action.meta.arg as Asset;
-      state.loadAssetStatus.push({
-        assetId: `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`,
-        status: BackendLoadingStatus.failed,
-      });
-      console.log(state.loadAssetStatus.length);
-      console.log(state.loadAssetStatus[0]);
+      const status = state.loadAssetStatus.find(
+        (status: AssetLoadStatus) =>
+          status.assetId ===
+          `${currentAsset.tokenId}:::${currentAsset.assetContractAddress}`
+      );
+      if (status) {
+        status.status = BackendLoadingStatus.failed;
+      }
     });
     builder.addCase(createListing.pending, (state, action) => {
       state.createListingStatus = "loading";
@@ -244,6 +285,37 @@ const marketplaceApiSlice = createSlice({
     });
     builder.addCase(createListing.rejected, (state, action) => {
       state.createListingStatus = "failed";
+    });
+    builder.addCase(loadListing.pending, (state, action) => {
+      state.loadListingStatus.push({
+        assetId: action.meta.arg,
+        status: BackendLoadingStatus.loading,
+      });
+    });
+    builder.addCase(loadListing.fulfilled, (state, action: PayloadAction<Listing>) => {
+      const status = state.loadAssetStatus.find(
+        (status: ListingLoadStatus) => status.assetId === action.payload.asset.openseaId
+      );
+      if (status) {
+        status.status = BackendLoadingStatus.succeeded;
+      }
+
+      let listing = state.listings.find(
+        (listing: Listing) => listing.asset.openseaId === action.payload.asset.openseaId
+      );
+      if(listing){
+        listing = { ...listing, ...action.payload };
+      }else{
+        state.listings.push(action.payload);
+      }
+    });
+    builder.addCase(loadListing.rejected, (state, action) => {
+      const status = state.loadAssetStatus.find(
+        (status: ListingLoadStatus) => status.assetId === action.meta.arg
+      );
+      if (status) {
+        status.status = BackendLoadingStatus.failed;
+      }
     });
   },
 });

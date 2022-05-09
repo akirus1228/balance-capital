@@ -29,7 +29,7 @@ export type CreateAssetResponse = {
 };
 
 export type AllListingsResponse = {
-  data: Listing[];
+  data: BackendListing[];
   count: number;
 };
 
@@ -76,8 +76,8 @@ export type Terms = {
 
 export enum ListingStatus {
   Pending = "Pending",
-  LISTED = "LISTED",
-  COMPLETED = "COMPLETED",
+  Listed = "LISTED",
+  Completed = "COMPLETED",
   Cancelled = "Cancelled",
 }
 
@@ -88,6 +88,17 @@ export interface Listing {
   status: ListingStatus;
   createdAt?: string;
   updatedAt?: string;
+  cacheExpire?: number;
+}
+
+export interface BackendListing {
+  id?: string;
+  asset: Asset;
+  term: Terms;
+  status: ListingStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  cacheExpire?: number;
 }
 
 export type Chain = "eth" | "sol";
@@ -120,3 +131,8 @@ export interface Asset {
 }
 
 export type Nullable<T> = T | null;
+
+export type StandardAssetLookupParams = {
+  tokenId: string;
+  contractAddress: string;
+};
