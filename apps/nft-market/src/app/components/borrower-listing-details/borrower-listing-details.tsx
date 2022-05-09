@@ -49,19 +49,23 @@ export const BorrowerListingDetails = (
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>Principal</Typography>
-            <Typography className={`${style["data"]}`}>{listing.terms.amount.toLocaleString("en-US", {
+            <Typography className={`${style["data"]}`}>
+              {listing.terms.amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
-              })}</Typography>
+              })}
+            </Typography>
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>APY</Typography>
             <Typography className={`${style["data"]}`}>{listing.terms.apr}%</Typography>
           </Box>
           <Box className="flex fc">
-            <Typography className={style["label"]}>Time until loan expires</Typography>
+            <Typography className={style["label"]}>Time until offer expires</Typography>
             <Box className="flex fr w100">
-              <Typography className={`${style["data"]}`}>55/60 days</Typography>
+              <Typography className={`${style["data"]}`}>
+                {listing.terms.expirationAt}
+              </Typography>
             </Box>
           </Box>
           <Box className="flex fc">
