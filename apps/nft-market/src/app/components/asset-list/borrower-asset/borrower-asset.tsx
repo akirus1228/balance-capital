@@ -8,15 +8,16 @@ import { Link } from "react-router-dom";
 export interface PreviewImageProps {
   url: string;
   name: string;
-  assetId: string;
+  openseaId: string;
 }
 
 export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
+  console.log(props.url);
   return (
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
     >
-      <Link to={`/borrow/${props.assetId}`}>
+      <Link to={`/borrow/${props.openseaId}`}>
         <img
           className={style["assetImg"]}
           src={props.url}
@@ -66,11 +67,11 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
           <MoreHorizOutlinedIcon />
         </IconButton>
       </Box>
-      {props.asset.imageUrl && props.asset.id && (
+      {props.asset.imageUrl && props.asset.openseaId && (
         <PreviewImg
           url={props.asset.imageUrl}
           name={props.asset.name || "placeholder name"}
-          assetId={props.asset.id}
+          openseaId={props.asset.openseaId}
         />
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>

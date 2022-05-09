@@ -34,7 +34,7 @@ type AssetPerson = {
 type AssetOwner = AssetPerson;
 type AssetCreator = AssetPerson;
 export type OpenSeaAsset = {
-  id: string;
+  id: number;
   token_id: string;
   name: Nullable<string>;
   description: Nullable<string>;

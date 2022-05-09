@@ -9,6 +9,8 @@ export interface AssetDetailsProps {
 }
 
 export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
+  console.log("asset from assetDetails");
+  console.log(props.asset);
   return (
     <Container>
       {props.asset && props.asset.imageUrl ? (

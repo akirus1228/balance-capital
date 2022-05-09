@@ -73,7 +73,7 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
-          <Route path="/borrow/:assetId" element={<BorrowerAssetDetailsPage />} />
+          <Route path="/borrow/:openseaId" element={<BorrowerAssetDetailsPage />} />
           <Route path="/lend" element={<LendPage />} />
           <Route path="/my-account" element={<MyAccountPage />} />
           <Route

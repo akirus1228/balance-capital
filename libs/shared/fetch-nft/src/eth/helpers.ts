@@ -202,7 +202,7 @@ export const assetToCollectible = async (
 
   return {
     id: `${asset.token_id}:::${asset.asset_contract?.address ?? ""}`,
-    openseaId: asset.id,
+    openseaId: asset.id.toString(),
     tokenId: asset.token_id,
     name: (asset.name || asset?.asset_contract?.name) ?? "",
     description: asset.description,

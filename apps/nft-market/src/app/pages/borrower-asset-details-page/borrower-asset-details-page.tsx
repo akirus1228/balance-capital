@@ -24,8 +24,8 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
   const { chainId, address } = useWeb3Context();
 
   const currentAsset: Asset = useMemo(() => {
-    if (params["assetId"] && wallet.assets) {
-      return wallet.assets.filter((asset) => asset.id === params["assetId"])[0];
+    if (params["openseaId"] && wallet.assets) {
+      return wallet.assets.filter((asset) => asset.openseaId === params["openseaId"])[0];
     } else {
       return {} as Asset;
     }
@@ -36,10 +36,15 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
       backend.authSignature !== null &&
       currentAsset &&
       address &&
-      currentAsset.backendLoaded !== true
+      currentAsset.backendLoaded !== true &&
+      backend.loadAssetStatus !== "loading"
     ) {
       dispatch(loadAsset(currentAsset));
-    } else if (backend.authSignature !== null && !currentAsset) {
+    } else if (
+      backend.authSignature !== null &&
+      !currentAsset &&
+      wallet.assetStatus !== "loading"
+    ) {
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [currentAsset, address]);

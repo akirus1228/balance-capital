@@ -67,8 +67,6 @@ export const getAssetFromOpenseaId = (
       },
     })
     .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      console.log("");
-      console.log(resp);
       return resp.data.data[0];
     })
     .catch((err) => {

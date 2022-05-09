@@ -28,7 +28,11 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
 
   // Load assets and nfts in current wallet
   useEffect(() => {
-    if (address && ["failed", "idle"].includes(wallet.assetStatus)) {
+    if (
+      address &&
+      ["failed", "idle"].includes(wallet.assetStatus) &&
+      wallet.assetStatus != "loading"
+    ) {
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [chainId, address, wallet.assetStatus]);

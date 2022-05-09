@@ -1,16 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-
-import { ierc20Abi, ierc721Abi, usdbLending } from "../abi";
+import { ierc20Abi, ierc721Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
-import {
-  AssetAsyncThunk,
-  AssetLocAsyncThunk,
-  IBaseAddressAsyncThunk,
-} from "../slices/interfaces";
+import { AssetLocAsyncThunk, IBaseAddressAsyncThunk } from "../slices/interfaces";
 import { Asset } from "../nft-marketplace-backend";
-import { FetchNFTClient } from "@fantohm/shared/fetch-nft";
+import { Collectible, FetchNFTClient } from "@fantohm/shared/fetch-nft";
 import { NetworkIds } from "../networks";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
@@ -90,11 +85,15 @@ export const loadWalletAssets = createAsyncThunk(
     }
     try {
       const client = new FetchNFTClient({ openSeaConfig });
-      const walletContents = await client.getEthereumCollectibles([address]);
-      if (!walletContents) {
+      const openseaData = await client.getEthereumCollectibles([address]);
+      if (!openseaData) {
         return [] as Asset[];
       }
-      return walletContents[address] as Asset[];
+      const walletContents = openseaData[address].map((collectible: Collectible) => {
+        const { id, ...asset } = collectible;
+        return asset as Asset;
+      });
+      return walletContents as Asset[];
     } catch (err) {
       console.log(err);
       rejectWithValue("Unable to load assets.");
@@ -194,7 +193,8 @@ const walletSlice = createSlice({
       console.log("Update asset");
       console.log(action.payload);
       state.assets = state.assets.map((asset: Asset) => {
-        if (asset.id === action.payload.id) {
+        if (asset.openseaId === action.payload.openseaId) {
+          console.log("Found update match");
           return { ...asset, ...action.payload };
         }
         return asset;

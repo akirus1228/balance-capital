@@ -2,19 +2,14 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import {
-  Asset,
-  AssetStatus,
-  Listing,
-  ListingStatus,
-  LoginResponse,
-} from "./backend-types";
+import { Asset, AssetStatus, Listing, LoginResponse } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: "idle" | "loading" | "succeeded" | "failed";
+  readonly loadListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
   listings: Listing[];
@@ -113,12 +108,17 @@ returns: void
 export const loadAsset = createAsyncThunk(
   "marketplaceApi/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
+    console.log("loadAssest called");
     if (!asset.openseaId) {
+      console.log("no id");
+      return false;
+    }
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.loadAssetState === "loading") {
+      console.log("already loading");
       return false;
     }
     //const signature = await handleSignMessage(address, provider);
-    console.log("loadAssest called");
-    const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
       console.log("sig found");
       const apiAsset = await BackendApi.getAssetFromOpenseaId(
@@ -171,28 +171,28 @@ const marketplaceApiSlice = createSlice({
       state.accountStatus = "failed";
     });
     builder.addCase(loadListings.pending, (state, action) => {
-      state.status = "loading";
+      state.loadListingStatus = "loading";
     });
     builder.addCase(
       loadListings.fulfilled,
       (state, action: PayloadAction<Listing[] | undefined>) => {
-        state.status = "succeeded";
+        state.loadListingStatus = "succeeded";
         if (action.payload) {
           state.listings = [...state.listings, ...action.payload];
         }
       }
     );
     builder.addCase(loadListings.rejected, (state, action) => {
-      state.status = "failed";
+      state.loadListingStatus = "failed";
     });
     builder.addCase(loadAsset.pending, (state, action) => {
-      state.status = "loading";
+      state.loadAssetStatus = "loading";
     });
     builder.addCase(loadAsset.fulfilled, (state, action) => {
-      state.status = "succeeded";
+      state.loadAssetStatus = "succeeded";
     });
     builder.addCase(loadAsset.rejected, (state, action) => {
-      state.status = "failed";
+      state.loadAssetStatus = "failed";
     });
     builder.addCase(createListing.pending, (state, action) => {
       state.createListingStatus = "loading";
