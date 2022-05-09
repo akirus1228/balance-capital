@@ -7,9 +7,11 @@ import {
   AllAssetsResponse,
   AllListingsResponse,
   Asset,
-  AssetListingRequest,
+  AssetStatus,
   CreateAssetResponse,
+  CreateListingRequest,
   Listing,
+  ListingStatus,
   LoginResponse,
 } from "./backend-types";
 
@@ -93,15 +95,10 @@ export const createListing = (
   listing: Listing
 ): Promise<Listing[] | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  // convert terms to term
-  const tempListing: AssetListingRequest = {
-    ...listing,
-    term: listing.terms,
-  };
-  const { terms, ...postParams } = tempListing;
+  const listingParams = listingToCreateListingRequest(listing);
   // post
   return axios
-    .post(url, postParams, {
+    .post(url, listingParams, {
       headers: {
         Authorization: `Bearer ${signature}`,
       },
@@ -126,4 +123,29 @@ export const handleSignMessage = (
   } catch (err) {
     console.warn(err);
   }
+};
+
+const listingToCreateListingRequest = (listing: Listing): CreateListingRequest => {
+  // convert terms to term
+  const tempListing: CreateListingRequest = {
+    asset: listing.asset,
+    term: listing.terms,
+    status: listing.status,
+  };
+  // if the asset isn't in the database we need to pass the asset without the ID
+  // if the asset is in the database we need to pass just the ID
+  if (
+    typeof tempListing.asset !== "string" &&
+    tempListing.asset.status === AssetStatus.New
+  ) {
+    delete tempListing.asset.id;
+  } else if (
+    typeof tempListing.asset !== "string" &&
+    tempListing.asset.status !== AssetStatus.New &&
+    tempListing.asset.id
+  ) {
+    tempListing.asset = tempListing.asset.id;
+  }
+
+  return tempListing;
 };

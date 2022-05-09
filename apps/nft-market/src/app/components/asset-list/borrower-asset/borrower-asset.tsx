@@ -85,7 +85,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
           <MoreHorizOutlinedIcon />
         </IconButton>
       </Box>
-      {props.asset.imageUrl && (
+      {props.asset.imageUrl && props.asset.id && (
         <PreviewImg
           url={props.asset.imageUrl}
           name={props.asset.name || "placeholder name"}

@@ -1,8 +1,10 @@
 import { Collectible } from "@fantohm/shared/fetch-nft";
 
 // request types
-export interface AssetListingRequest extends Listing {
-  term: Terms; //convert terms to term for api
+export interface CreateListingRequest {
+  asset: Asset | string;
+  term: Terms | string; //convert terms to term for api
+  status: ListingStatus;
 }
 
 // response types
@@ -72,7 +74,13 @@ export type Terms = {
   updatedAt?: string;
 };
 
-export type ListingStatus = "Pending" | "LISTED" | "COMPLETED" | "Cancelled";
+export enum ListingStatus {
+  Pending = "Pending",
+  LISTED = "LISTED",
+  COMPLETED = "COMPLETED",
+  Cancelled = "Cancelled",
+}
+
 export interface Listing {
   id?: string;
   asset: Asset;
@@ -82,8 +90,31 @@ export interface Listing {
   updatedAt?: string;
 }
 
-export interface Asset extends Collectible {
+export type Chain = "eth" | "sol";
+
+export interface Asset {
   status: AssetStatus;
   hasPermission?: boolean;
   owner?: Owner;
+  id?: string;
+  tokenId: string;
+  openseaId?: string;
+  name: Nullable<string>;
+  description: Nullable<string>;
+  mediaType: CollectibleMediaType;
+  frameUrl: Nullable<string>;
+  imageUrl: Nullable<string>;
+  gifUrl: Nullable<string>;
+  videoUrl: Nullable<string>;
+  threeDUrl: Nullable<string>;
+  isOwned: boolean;
+  dateCreated: Nullable<string>;
+  dateLastTransferred: Nullable<string>;
+  externalLink: Nullable<string>;
+  permaLink: Nullable<string>;
+  assetContractAddress: Nullable<string>;
+  chain: Chain;
+  wallet: string;
 }
+
+export type Nullable<T> = T | null;

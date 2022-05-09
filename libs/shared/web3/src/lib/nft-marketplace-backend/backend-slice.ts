@@ -2,7 +2,7 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Asset, AssetStatus, Listing, LoginResponse } from "./backend-types";
+import { Asset, AssetStatus, Listing, ListingStatus, LoginResponse } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
 
 export interface MarketplaceApiData {
@@ -82,11 +82,10 @@ export const createListing = createAsyncThunk(
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.nftMarketplace.authSignature) {
-      const { id, ...tmpAsset } = asset;
       const listing: Listing = {
-        asset: { ...tmpAsset, status: AssetStatus.Ready },
+        asset: { ...asset, status: AssetStatus.Ready },
         terms,
-        status: "LISTED",
+        status: ListingStatus.LISTED,
       };
       console.log(listing);
       if (!BackendApi.createListing(thisState.nftMarketplace.authSignature, listing)) {
