@@ -13,7 +13,6 @@ export interface PreviewImageProps {
 }
 
 export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
-  console.log(props.url);
   return (
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}

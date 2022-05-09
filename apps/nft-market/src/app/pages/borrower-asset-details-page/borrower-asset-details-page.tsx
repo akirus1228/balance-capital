@@ -28,7 +28,10 @@ export const BorrowerAssetDetailsPage = (): JSX.Element => {
   }
   return (
     <>
-      <AssetDetails asset={asset} />
+      <AssetDetails
+        contractAddress={asset.assetContractAddress}
+        tokenId={asset.tokenId}
+      />
       {!asset && <h1>Loading...</h1>}
       {[AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />

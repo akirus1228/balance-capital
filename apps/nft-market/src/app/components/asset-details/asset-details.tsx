@@ -1,19 +1,22 @@
 import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, Container, Grid, Skeleton, Typography } from "@mui/material";
+import { useAsset } from "../../hooks/useAsset";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
 import StatusInfo from "./status-info/status-info";
 
 export interface AssetDetailsProps {
-  asset: Asset;
+  contractAddress: string;
+  tokenId: string;
 }
 
 export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
   console.log("asset from assetDetails");
-  console.log(props.asset);
+  const asset = useAsset(props.contractAddress, props.tokenId);
+
   return (
     <Container>
-      {props.asset && props.asset.imageUrl ? (
+      {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>
             <Box
@@ -25,13 +28,13 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                 width: "50vh",
               }}
             >
-              <img src={props.asset.imageUrl} alt={props.asset.name || "unknown"} />
+              <img src={asset.imageUrl} alt={asset.name || "unknown"} />
             </Box>
           </Grid>
           <Grid item xs={12} md={6}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{props.asset.name}</Typography>
-              <h1>{props.asset.name}</h1>
+              <Typography>{asset.name}</Typography>
+              <h1>{asset.name}</h1>
             </Box>
             <Box
               sx={{
@@ -42,9 +45,9 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                 pb: "3em",
               }}
             >
-              <Chip label={props.asset.status || "Unlisted"} />
+              <Chip label={asset.status || "Unlisted"} />
               <Typography sx={{ mx: "10px" }}>.</Typography>
-              <Chip label={props.asset.mediaType || "Art"} />
+              <Chip label={asset.mediaType || "Art"} />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row" }}>
               <Box
@@ -71,7 +74,7 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                       justifyContent: "space-around",
                     }}
                   >
-                    <AssetOwnerTag asset={props.asset} sx={{ mb: "3em" }} />
+                    <AssetOwnerTag asset={asset} sx={{ mb: "3em" }} />
                   </Box>
                   <Box>
                     <Typography className={style["label"]}>Listed</Typography>
@@ -80,7 +83,7 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                 </Box>
               </Box>
             </Box>
-            <StatusInfo asset={props.asset} />
+            <StatusInfo asset={asset} />
           </Grid>
         </Grid>
       ) : (
