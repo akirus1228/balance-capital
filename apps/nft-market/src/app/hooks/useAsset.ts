@@ -1,14 +1,14 @@
 import { useState, useEffect } from "react";
+import { useWeb3Context } from "@fantohm/shared-web3";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { Asset } from "../types/backend-types";
 import {
-  Asset,
   AssetLoadStatus,
   BackendLoadingStatus,
   loadAsset,
-  loadWalletAssets,
-  useWeb3Context,
-} from "@fantohm/shared-web3";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+} from "../store/reducers/backend-slice";
+import { loadAssetsFromAddress } from "../store/reducers/asset-slice";
 
 export const useAsset = (
   contractAddress: string | undefined,
@@ -16,21 +16,21 @@ export const useAsset = (
 ): Asset | null => {
   console.log("useAsset");
   const dispatch = useDispatch();
-  const wallet = useSelector((state: RootState) => state.wallet);
+  const wallet = useSelector((state: RootState) => state.assets);
   const backendLoadStatus = useSelector((state: RootState) =>
-    state.nftMarketplace.loadAssetStatus.find(
+    state.backend.loadAssetStatus.find(
       (assetLoadStatus: AssetLoadStatus) =>
         assetLoadStatus.assetId === `${tokenId}:::${contractAddress}`
     )
   );
   const asset = useSelector((state: RootState) =>
-    state.wallet.assets.find(
+    state.assets.assets.find(
       (walletAsset: Asset) =>
         walletAsset.assetContractAddress === contractAddress &&
         walletAsset.tokenId === tokenId
     )
   );
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
+  const backend = useSelector((state: RootState) => state.backend);
   const { chainId, address } = useWeb3Context();
 
   // if we haven't loaded wallet assets yet, do that
@@ -42,7 +42,7 @@ export const useAsset = (
       wallet.nextOpenseaLoad < Date.now()
     ) {
       console.log("loading wallet assets");
-      dispatch(loadWalletAssets({ address, networkId: chainId }));
+      dispatch(loadAssetsFromAddress({ address, networkId: chainId }));
     }
   }, [address, wallet.assetStatus, contractAddress, tokenId]);
 

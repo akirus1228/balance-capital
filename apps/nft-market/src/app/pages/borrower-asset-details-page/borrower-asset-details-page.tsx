@@ -1,4 +1,3 @@
-import { Asset, AssetStatus, Listing, ListingStatus } from "@fantohm/shared-web3";
 import { useParams } from "react-router-dom";
 
 import AssetDetails from "../../components/asset-details/asset-details";
@@ -7,6 +6,7 @@ import BorrowerCreateListing from "../../components/borrower-create-listing/borr
 import { useWalletAsset } from "../../hooks/useWalletAsset";
 import BorrowerListingDetails from "../../components/borrower-listing-details/borrower-listing-details";
 import { useListing } from "../../hooks/useListing";
+import { Asset, AssetStatus, Listing, ListingStatus } from "../../types/backend-types";
 
 export const BorrowerAssetDetailsPage = (): JSX.Element => {
   console.log("BorrowerAssetDetailsPage Render");

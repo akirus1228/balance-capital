@@ -1,4 +1,3 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, IconButton, Paper } from "@mui/material";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 

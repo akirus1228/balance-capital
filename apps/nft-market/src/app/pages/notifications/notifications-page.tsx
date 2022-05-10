@@ -1,13 +1,9 @@
 import style from "./notifications.module.scss";
-import {
-  BackendApi,
-  Importance,
-  Notification,
-  NotificationStatus,
-  useWeb3Context,
-} from "@fantohm/shared-web3";
-import { Avatar, ListItemText, MenuItem } from "@mui/material";
+import { useWeb3Context } from "@fantohm/shared-web3";
+import { Avatar, ListItemText } from "@mui/material";
 import store from "../../store";
+import { Importance, Notification, NotificationStatus } from "../../types/backend-types";
+import { BackendApi } from "../../api";
 
 export const NotificationsPage = (): JSX.Element => {
   const { address } = useWeb3Context();

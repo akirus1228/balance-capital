@@ -1,10 +1,6 @@
 import {
-  Asset,
-  AssetStatus,
   checkNftPermission,
-  createListing,
   requestNftPermission,
-  Terms,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import {
@@ -21,6 +17,8 @@ import { RootState } from "../../../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";
+import { Asset, AssetStatus, Terms } from "../../../../types/backend-types";
+import { createListing } from "../../../../store/reducers/backend-slice";
 
 export interface TermsFormProps {
   asset: Asset;

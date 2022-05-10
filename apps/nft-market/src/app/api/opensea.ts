@@ -91,20 +91,4 @@ export const getWalletAssets = (address: string): Promise<OpenSeaAsset[]> => {
   });
 };
 
-// export const openSeaToInternalAsset = (asset: OpenSeaAsset): Asset => {
-//   return {
-//     ...asset,
-//     status: AssetStatus.READY,
-//     openseaId: asset.id.toString(),
-//     tokenId: asset.token_id.toString(),
-//     description: asset.description || "",
-//     imageUrl: asset.image_url || "",
-//     videoUrl: "",
-//     threeDUrl: "",
-//     mediaType: "",
-//     isOwned: true,
-
-//   }
-// };
-
 export default getWalletAssets;

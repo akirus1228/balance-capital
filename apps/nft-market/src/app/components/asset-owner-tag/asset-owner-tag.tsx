@@ -1,7 +1,7 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Avatar, Box, SxProps, Theme, Typography } from "@mui/material";
 import style from "./asset-owner-tag.module.scss";
 import tmpAvatar from "../../../assets/images/temp-avatar.png";
+import { Asset } from "../../types/backend-types";
 
 export interface AssetOwnerTagProps {
   asset: Asset;

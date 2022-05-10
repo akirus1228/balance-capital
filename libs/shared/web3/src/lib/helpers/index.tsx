@@ -15,6 +15,8 @@ import { LocalStorage } from "./local-storage";
 import { chains } from "../providers";
 import { singleSided } from "./all-bonds";
 
+export { loadState, saveState } from "./localstorage";
+
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice(networkId: NetworkId) {
   // TODO For some reason this fails with multicall

@@ -20,7 +20,7 @@ import {
   Terms,
   Notification,
   NotificationStatus,
-} from "./backend-types";
+} from "../types/backend-types";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";

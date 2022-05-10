@@ -108,6 +108,8 @@ export class OpenSeaClient {
       console.log(`lastQueueTime ${this.lastQueueTime}`);
       console.log(`queued for ${this.lastQueueTime - Date.now()}`);
       return setTimeout(() => this.sendGetRequest(url), this.lastQueueTime - Date.now());
+    } else if (response.status === 401) {
+      return [];
     }
     return response.json(); // parses JSON response into native JavaScript objects
   };

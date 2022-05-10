@@ -1,15 +1,14 @@
 import { useEffect } from "react";
-import {
-  Asset,
-  AssetLoadStatus,
-  BackendLoadingStatus,
-  Listing,
-  loadListing,
-  loadWalletAssets,
-  useWeb3Context,
-} from "@fantohm/shared-web3";
+import { useWeb3Context } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
+import { Asset, Listing } from "../types/backend-types";
+import {
+  AssetLoadStatus,
+  BackendLoadingStatus,
+  loadListing,
+} from "../store/reducers/backend-slice";
+import { loadAssetsFromAddress } from "../store/reducers/asset-slice";
 
 export const useListing = (
   contractAddress: string | undefined,
@@ -17,28 +16,28 @@ export const useListing = (
 ): Listing | null => {
   console.log("useListing");
   const dispatch = useDispatch();
-  const wallet = useSelector((state: RootState) => state.wallet);
+  const wallet = useSelector((state: RootState) => state.assets);
   const backendLoadStatus = useSelector((state: RootState) =>
-    state.nftMarketplace.loadListingStatus.find(
+    state.backend.loadListingStatus.find(
       (listingLoadStatus: AssetLoadStatus) =>
         listingLoadStatus.assetId === `${tokenId}:::${contractAddress}`
     )
   );
   const listing = useSelector((state: RootState) =>
-    state.nftMarketplace.listings.find(
+    state.backend.listings.find(
       (listing: Listing) =>
         listing.asset.assetContractAddress === contractAddress &&
         listing.asset.tokenId === tokenId
     )
   );
   const asset = useSelector((state: RootState) =>
-    state.wallet.assets.find(
+    state.assets.assets.find(
       (walletAsset: Asset) =>
         walletAsset.assetContractAddress === contractAddress &&
         walletAsset.tokenId === tokenId
     )
   );
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
+  const backend = useSelector((state: RootState) => state.backend);
   const { chainId, address } = useWeb3Context();
 
   // if we haven't loaded wallet assets yet, do that
@@ -50,7 +49,7 @@ export const useListing = (
       wallet.nextOpenseaLoad < Date.now()
     ) {
       console.log("loading wallet assets");
-      dispatch(loadWalletAssets({ address, networkId: chainId }));
+      dispatch(loadAssetsFromAddress({ address, networkId: chainId }));
     }
   }, [address, wallet.assetStatus, contractAddress, tokenId]);
 

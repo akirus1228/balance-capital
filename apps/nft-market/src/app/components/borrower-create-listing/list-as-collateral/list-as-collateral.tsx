@@ -1,11 +1,10 @@
-import { Box, Button, Dialog, Icon, IconButton, Select, Typography } from "@mui/material";
+import { Box, Button, Dialog, IconButton, Typography } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import style from "./list-as-collateral.module.scss";
 import { useState } from "react";
 import { TermsForm } from "./terms-form/terms-form";
-import { Asset } from "@fantohm/shared-web3";
+import { Asset } from "../../../types/backend-types";
 
-/* eslint-disable-next-line */
 export interface ListAsCollateralProps {
   open: boolean;
   asset: Asset;

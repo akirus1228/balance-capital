@@ -2,7 +2,9 @@ import { configureStore } from "@reduxjs/toolkit";
 import { appReducer } from "./reducers/app-slice";
 import { saveState } from "./localstorage";
 import { themeReducer } from "@fantohm/shared-ui-themes";
-import { walletReducer, marketplaceApiReducer } from "@fantohm/shared-web3";
+import { assetsReducer } from "./reducers/asset-slice";
+import { backendReducer } from "./reducers/backend-slice";
+import { walletReducer } from "@fantohm/shared-web3";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -10,9 +12,10 @@ import { walletReducer, marketplaceApiReducer } from "@fantohm/shared-web3";
 const store = configureStore({
   reducer: {
     app: appReducer,
-    wallet: walletReducer,
+    assets: assetsReducer,
     theme: themeReducer,
-    nftMarketplace: marketplaceApiReducer,
+    backend: backendReducer,
+    wallet: walletReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
@@ -20,7 +23,8 @@ const store = configureStore({
 
 store.subscribe(() => {
   saveState("app", store.getState().app);
-  saveState("nftMarketplace", store.getState().nftMarketplace);
+  saveState("backend", store.getState().backend);
+  saveState("assets", store.getState().assets);
   saveState("wallet", store.getState().wallet);
 });
 
