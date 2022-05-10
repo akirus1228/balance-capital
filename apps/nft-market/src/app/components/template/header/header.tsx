@@ -1,5 +1,4 @@
-import { MouseEvent, useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { MouseEvent, useState } from "react";
 import { Link } from "react-router-dom";
 import {
   AppBar,
@@ -10,16 +9,12 @@ import {
   Menu,
   Container,
   Button,
-  MenuItem,
-  SvgIcon,
-  SxProps,
   Theme,
+  SxProps,
 } from "@mui/material";
-import AnalyticsIcon from "@mui/icons-material/Analytics";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useWeb3Context, enabledNetworkIds } from "@fantohm/shared-web3";
 import MenuLink from "./menu-link";
-import { setCheckedConnection } from "../../../store/reducers/app-slice";
 import styles from "./header.module.scss";
 import UserMenu from "./user-menu";
 import NotificationMenu from "./notification-menu";
@@ -44,8 +39,7 @@ const pages: Page[] = [
 ];
 
 export const Header = (): JSX.Element => {
-  const { connect, connected, hasCachedProvider, chainId } = useWeb3Context();
-  const dispatch = useDispatch();
+  const { connected, chainId } = useWeb3Context();
   const allowedChain = chainId && enabledNetworkIds.includes(chainId);
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
 
@@ -56,24 +50,6 @@ export const Header = (): JSX.Element => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  useEffect(() => {
-    // if there's a cached provider, try and connect
-    if (hasCachedProvider && hasCachedProvider() && !connected) {
-      try {
-        connect();
-      } catch (e) {
-        console.log("Connection metamask error", e);
-      }
-    }
-    // if there's a cached provider and it has connected, connection check is good.
-    if (hasCachedProvider && hasCachedProvider && connected)
-      dispatch(setCheckedConnection(true));
-
-    // if there's not a cached provider and we're not connected, connection check is good
-    if (hasCachedProvider && !hasCachedProvider() && !connected)
-      dispatch(setCheckedConnection(true));
-  }, [connected, hasCachedProvider, connect]);
 
   return (
     <AppBar

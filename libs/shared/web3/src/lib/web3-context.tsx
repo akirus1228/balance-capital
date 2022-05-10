@@ -221,12 +221,15 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       if (isTradfiPage() && validNetwork) {
         networkId = validNetwork ? defaultNetworkId : forceNetworkId;
       }
-      const switched = await switchEthereumChain(networkId, true);
-      if (!switched) {
-        web3Modal.clearCachedProvider();
-        const errorMessage = "Unable to connect. Please change network using provider.";
-        console.error(errorMessage);
-        //store.dispatch(error(errorMessage));
+
+      if (!validNetwork || isTradfiPage()) {
+        const switched = await switchEthereumChain(networkId, true);
+        if (!switched) {
+          web3Modal.clearCachedProvider();
+          const errorMessage = "Unable to connect. Please change network using provider.";
+          console.error(errorMessage);
+          //store.dispatch(error(errorMessage));
+        }
       }
       if (!validNetwork) {
         return;
