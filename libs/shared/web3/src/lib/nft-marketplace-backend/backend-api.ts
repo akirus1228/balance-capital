@@ -13,7 +13,6 @@ import {
   CreateListingRequest,
   AllNotificationsResponse,
   ApiResponse,
-  AssetListingRequest,
   EditNotificationRequest,
   Listing,
   ListingStatus,
