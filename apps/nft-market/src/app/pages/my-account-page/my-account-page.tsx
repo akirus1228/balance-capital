@@ -1,9 +1,14 @@
 import style from "./my-account-page.module.scss";
 import MyAccountActiveLoansTable from "./my-account-active-loans-table";
 import { Box, Typography } from "@mui/material";
-import MyAccountDetailsTable from "../../../../../usdb/src/app/pages/my-account/my-account-details-table";
-import { shorten } from "../../../../../usdb/src/app/pages/my-account/my-account";
+// import MyAccountDetailsTable from "../../../../../usdb/src/app/pages/my-account/my-account-details-table";
+// import { shorten } from "../../../../../usdb/src/app/pages/my-account/my-account";
 import { useWeb3Context } from "@fantohm/shared-web3";
+
+export function shorten(str: string) {
+  if (str.length < 10) return str;
+  return `${str.slice(0, 6)}...${str.slice(str.length - 4)}`;
+}
 
 export const MyAccountPage = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
