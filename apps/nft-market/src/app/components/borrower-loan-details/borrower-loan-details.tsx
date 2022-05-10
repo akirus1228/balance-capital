@@ -11,7 +11,6 @@ import {
 } from "@mui/material";
 import style from "./borrower-loan-details.module.scss";
 
-/* eslint-disable-next-line */
 export interface BorrowerLoanDetailsProps {
   asset: Asset;
   sx?: SxProps<Theme>;

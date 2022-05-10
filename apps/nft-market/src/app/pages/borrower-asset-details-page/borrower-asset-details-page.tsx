@@ -1,4 +1,13 @@
-import { Asset, AssetStatus, loadAsset } from "@fantohm/shared-web3";
+import {
+  Asset,
+  AssetStatus,
+  defaultNetworkId,
+  Listing,
+  ListingStatus,
+  loadAsset,
+  loadWalletAssets,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -6,41 +15,39 @@ import { RootState } from "../../store";
 
 import AssetDetails from "../../components/asset-details/asset-details";
 import BorrowerLoanDetails from "../../components/borrower-loan-details/borrower-loan-details";
+import BorrowerCreateListing from "../../components/borrower-create-listing/borrower-create-listing";
+import { useAsset } from "../../hooks/useAsset";
+import BorrowerListingDetails from "../../components/borrower-listing-details/borrower-listing-details";
+import { useListing } from "../../hooks/useListing";
 
 export const BorrowerAssetDetailsPage = (): JSX.Element => {
+  console.log("BorrowerAssetDetailsPage Render");
+
   const params = useParams();
-  const dispatch = useDispatch();
+  const asset: Asset | null = useAsset(params["contractAddress"], params["tokenId"]);
+  const listing: Listing | null = useListing(
+    params["contractAddress"],
+    params["tokenId"]
+  );
 
-  const wallet = useSelector((state: RootState) => state.wallet);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
-
-  const currentAsset: Asset = useMemo(() => {
-    if (params["assetId"]) {
-      return wallet.assets.filter((asset) => asset.id === params["assetId"])[0];
-    } else {
-      return {} as Asset;
-    }
-  }, [wallet.assets]);
-
-  useEffect(() => {
-    console.log("load asset details from api");
-    console.log(
-      `backend.authSignature: ${backend.authSignature}, currentAsset: ${currentAsset}`
-    );
-    if (backend.authSignature !== null && currentAsset) {
-      console.log("load asset details from api 2");
-      dispatch(loadAsset(currentAsset.id));
-    }
-  }, [currentAsset]);
-
+  if (typeof asset === "undefined" || asset === null) {
+    return <h1>Loading...</h1>;
+  }
   return (
     <>
-      <AssetDetails asset={currentAsset} />
-      {currentAsset.status === AssetStatus.READY && (
-        <BorrowerLoanDetails asset={currentAsset} sx={{ mt: "3em" }} />
+      <AssetDetails
+        contractAddress={asset.assetContractAddress}
+        tokenId={asset.tokenId}
+      />
+      {!asset && <h1>Loading...</h1>}
+      {[AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
+        <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
       )}
-      {currentAsset.status === AssetStatus.READY && (
-        <BorrowerLoanDetails asset={currentAsset} sx={{ mt: "3em" }} />
+      {listing?.status === ListingStatus.Listed && (
+        <BorrowerListingDetails asset={asset} sx={{ mt: "3em" }} />
+      )}
+      {asset?.status === AssetStatus.Locked && (
+        <BorrowerLoanDetails asset={asset} sx={{ mt: "3em" }} />
       )}
     </>
   );

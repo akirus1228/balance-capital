@@ -1,8 +1,10 @@
-import { Collectible } from "@audius/fetch-nft";
+import { Collectible } from "@fantohm/shared/fetch-nft";
 
 // request types
-export interface AssetListingRequest extends Listing {
-  term: Terms; //convert terms to term for api
+export interface CreateListingRequest {
+  asset: Asset | string;
+  term: Terms | string; //convert terms to term for api
+  status: ListingStatus;
 }
 
 // response types
@@ -18,27 +20,32 @@ export type LoginResponse = {
 };
 
 export type AllAssetsResponse = {
-  data: Listing[];
+  data: Asset[];
   count: number;
 };
 
+export type CreateAssetResponse = {
+  asset: Asset;
+};
+
 export type AllListingsResponse = {
-  data: Listing[];
+  data: BackendListing[];
   count: number;
 };
 
 // data models
 export enum AssetStatus {
-  READY,
-  LISTED,
-  LOCKED,
+  New = "NEW",
+  Ready = "READY",
+  Listed = "LISTED",
+  Locked = "LOCKED",
 }
 
-export enum AssetMediaType {
-  IMAGE,
-  VIDEO,
-  GIF,
-  THREE_D,
+export enum CollectibleMediaType {
+  Image = "IMAGE",
+  Video = "VIDEO",
+  Gif = "GIF",
+  ThreeD = "THREE_D",
 }
 
 export enum AssetChain {
@@ -58,33 +65,76 @@ export type Owner = {
 };
 
 export type Terms = {
-  id: string;
+  id?: string;
   amount: number;
   apr: number;
   duration: number;
-  expirationAt: string;
-  createdAt: string;
-  updatedAt: string;
+  expirationAt: Date;
+  createdAt?: string;
+  updatedAt?: string;
 };
 
 export enum ListingStatus {
-  Pending,
-  LISTED,
-  COMPLETED,
-  Cancelled,
+  Pending = "Pending",
+  Listed = "LISTED",
+  Completed = "COMPLETED",
+  Cancelled = "Cancelled",
 }
 
 export interface Listing {
   id?: string;
-  asset: Collectible;
+  asset: Asset;
   terms: Terms;
   status: ListingStatus;
   createdAt?: string;
   updatedAt?: string;
+  cacheExpire?: number;
 }
 
-export interface Asset extends Collectible {
+export interface BackendListing {
+  id?: string;
+  asset: Asset;
+  term: Terms;
+  status: ListingStatus;
+  createdAt?: string;
+  updatedAt?: string;
+  cacheExpire?: number;
+}
+
+export type Chain = "eth" | "sol";
+
+export interface Asset {
   status: AssetStatus;
+  cacheExpire?: number;
+  openseaLoaded?: number;
+  hasPermission?: boolean;
+  owner?: Owner;
+  id?: string;
+  tokenId: string;
+  openseaId?: string;
+  name: Nullable<string>;
+  description: Nullable<string>;
+  mediaType: CollectibleMediaType;
+  frameUrl: Nullable<string>;
+  imageUrl: Nullable<string>;
+  gifUrl: Nullable<string>;
+  videoUrl: Nullable<string>;
+  threeDUrl: Nullable<string>;
+  isOwned: boolean;
+  dateCreated: Nullable<string>;
+  dateLastTransferred: Nullable<string>;
+  externalLink: Nullable<string>;
+  permaLink: Nullable<string>;
+  assetContractAddress: string;
+  chain: Chain;
+  wallet: string;
+}
+
+export type Nullable<T> = T | null;
+
+export type StandardAssetLookupParams = {
+  tokenId: string;
+  contractAddress: string;
 }
 
 export enum NotificationStatus {

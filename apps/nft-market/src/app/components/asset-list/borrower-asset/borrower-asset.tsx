@@ -1,16 +1,16 @@
-import { Asset, createListing, Terms } from "@fantohm/shared-web3";
+import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, IconButton, Paper } from "@mui/material";
-import { useCallback, useState } from "react";
-import { useDispatch } from "react-redux";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
+import { useAsset } from "../../../hooks/useAsset";
 
 export interface PreviewImageProps {
   url: string;
   name: string;
-  assetId: string;
+  contractAddress: string;
+  tokenId: string;
 }
 
 export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
@@ -18,7 +18,7 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     <Box
       sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
     >
-      <Link to={`/borrow/${props.assetId}`}>
+      <Link to={`/borrow/${props.contractAddress}/${props.tokenId}`}>
         <img
           className={style["assetImg"]}
           src={props.url}
@@ -29,51 +29,17 @@ export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
     </Box>
   );
 };
-
-enum BorrowerAssetStatus {
-  IDLE,
-  LOADING,
-  PENDING_USER,
-  PENDING_TXN,
-  TXN_SUCCESS,
-  TXN_REJECTED,
-}
-
-type BorrowerAssetState = {
-  amount: number;
-  apr: number;
-  duration: number;
-  status: BorrowerAssetStatus;
-};
-
 export interface BorrowerAssetProps {
-  asset: Asset;
+  contractAddress: string;
+  tokenId: string;
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
-  const dispatch = useDispatch();
-  const initialState: BorrowerAssetState = {
-    amount: 100,
-    apr: 20,
-    duration: 100,
-    status: BorrowerAssetStatus.IDLE,
-  };
-  const [state, setState] = useState<BorrowerAssetState>(initialState);
+  const asset = useAsset(props.contractAddress, props.tokenId);
 
-  const onCreateListingClick = useCallback(() => {
-    console.log("create listing");
-    console.log(props.asset);
-    dispatch(
-      createListing({
-        asset: props.asset,
-        terms: {
-          amount: state.amount,
-          apr: state.apr,
-          duration: state.duration,
-        } as Terms,
-      })
-    );
-  }, [props.asset, state.duration, state.apr, state.amount]);
+  if (asset === null) {
+    return <h3>Loading...</h3>;
+  }
 
   return (
     <Paper
@@ -92,7 +58,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
             left: "20px",
             zIndex: 10,
           }}
-          label={props.asset.status || "Unlisted"}
+          label={asset.status || "Unlisted"}
         />
       </Box>
       <Box sx={{ position: "absolute" }}>
@@ -109,16 +75,17 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
           <MoreHorizOutlinedIcon />
         </IconButton>
       </Box>
-      {props.asset.imageUrl && (
+      {asset.imageUrl && asset.openseaId && (
         <PreviewImg
-          url={props.asset.imageUrl}
-          name={props.asset.name || "placeholder name"}
-          assetId={props.asset.id}
+          url={asset.imageUrl}
+          name={asset.name || "placeholder name"}
+          contractAddress={asset.assetContractAddress}
+          tokenId={asset.tokenId}
         />
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <span style={{ fontWeight: "700", fontSize: "20px", margin: "2em 0" }}>
-          {props.asset.name}
+          {asset.name}
         </span>
       </Box>
     </Paper>

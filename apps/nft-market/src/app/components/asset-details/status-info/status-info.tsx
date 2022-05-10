@@ -1,5 +1,5 @@
-import { Asset, AssetStatus } from "@fantohm/shared-web3";
-import { Box, Icon, Typography } from "@mui/material";
+import { Asset } from "@fantohm/shared-web3";
+import { Box, Icon } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import style from "./status-info.module.scss";
 

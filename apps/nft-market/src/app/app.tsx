@@ -4,14 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import {
-  useWeb3Context,
-  defaultNetworkId,
-  loadWalletCurrencies,
-  loadWalletAssets,
-  loadListings,
-  authorizeAccount,
-} from "@fantohm/shared-web3";
+import { useWeb3Context, defaultNetworkId, authorizeAccount } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -31,7 +24,8 @@ export const App = (): JSX.Element => {
   const backend = useSelector((state: RootState) => state.nftMarketplace);
 
   const [theme, setTheme] = useState(NftLight);
-  const { address, chainId, connected, hasCachedProvider, connect, provider } = useWeb3Context();
+  const { address, chainId, connected, hasCachedProvider, connect, provider } =
+    useWeb3Context();
 
   useEffect(() => {
     setTheme(themeType === "light" ? NftLight : NftDark);
@@ -80,8 +74,11 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
+          <Route
+            path="/borrow/:contractAddress/:tokenId"
+            element={<BorrowerAssetDetailsPage />}
+          />
           <Route path="/notifications" element={<NotificationsPage />} />
-          <Route path="/borrow/:assetId" element={<BorrowerAssetDetailsPage />} />
           <Route path="/lend" element={<LendPage />} />
           <Route path="/my-account" element={<MyAccountPage />} />
           <Route
