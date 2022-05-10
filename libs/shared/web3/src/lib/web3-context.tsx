@@ -6,7 +6,7 @@ import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
 import { Web3ContextData } from "./types/types";
 import { enabledNetworkIds, NetworkId, NetworkIds } from "./networks";
 import { chains } from "./providers";
-import { isIframe } from "@fantohm/shared-helpers";
+import { isIframe, sign } from "@fantohm/shared-helpers";
 
 export const getURI = (networkId: NetworkId): string => {
   return chains[networkId].rpcUrls[0];
@@ -203,6 +203,15 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
       _initListeners(rawProvider);
       const connectedProvider = new Web3Provider(rawProvider, "any");
+      const isSigned = window.localStorage.getItem("disclaimerSigned");
+      if (!isSigned) {
+        const signVal = await sign(connectedProvider);
+        if (!signVal) {
+          await disconnect();
+          return;
+        }
+        window.localStorage.setItem("disclaimerSigned", signVal);
+      }
       const chainId = await connectedProvider
         .getNetwork()
         .then((network) => network.chainId);
@@ -212,6 +221,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       if (isTradfiPage() && validNetwork) {
         networkId = validNetwork ? defaultNetworkId : forceNetworkId;
       }
+
       if (!validNetwork || isTradfiPage()) {
         const switched = await switchEthereumChain(networkId, true);
         if (!switched) {
