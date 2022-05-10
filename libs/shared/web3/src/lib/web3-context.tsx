@@ -203,7 +203,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
       _initListeners(rawProvider);
       const connectedProvider = new Web3Provider(rawProvider, "any");
-      const isSigned = window.localStorage.getItem("disclaimerSigned");
+      const isSigned = true; //window.localStorage.getItem("disclaimerSigned");
       if (!isSigned) {
         const signVal = await sign(connectedProvider);
         if (!signVal) {
