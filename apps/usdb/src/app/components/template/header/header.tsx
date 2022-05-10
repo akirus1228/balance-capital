@@ -195,8 +195,7 @@ export const Header = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {header
-                .map((page: Page) => (
+              {headerPages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
                   href={page?.params?.comingSoon ? "#" : page.href}
@@ -306,8 +305,7 @@ export const Header = (): JSX.Element => {
                   "aria-labelledby": "products-button",
                 }}
               >
-                {header
-                  .map((page: any) => {
+                {headerPages.map((page: any) => {
                   return (
                     <MenuLink
                       // href={page.href ? page.href : '#'}
