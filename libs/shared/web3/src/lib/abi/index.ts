@@ -11,10 +11,12 @@ import full_FHUDContract from "./FHUDContract.json";
 import full_Factory from "./Factory.json";
 import full_FuseProxy from "./FuseProxy.json";
 import full_IERC20 from "./IERC20.json";
+import full_IERC721 from "./IERC721.json";
 import full_LPStaking from "./LPStaking.json";
 import full_LpBondCalcContract from "./LpBondCalcContract.json";
 import full_Lqdr from "./Lqdr.json";
 import full_FantohmProBondDepository from "./FantohmProBondDepository.json";
+import full_LqdrUsdbPolBondDepository from "./LqdrUsdbPolBondDepository.json";
 import full_MasterChefAbi from "./MasterChefAbi.json";
 import full_MasterChefBeets from "./MasterChefBeets.json";
 import full_MasterChefLqdr from "./MasterChefLqdr.json";
@@ -71,6 +73,9 @@ import full_UsdbFhmBurnBondDepository from "./bonds/UsdbFhmBurnBondDepository.js
 import full_UsdbABondDepository from "./bonds/UsdbABondDepository.json";
 import full_UsdbNftBondDepository from "./bonds/UsdbNftBondDepository.json";
 
+//nft-lending
+import full_UsdbLending from "./UsdbLending.json";
+
 export const balancerVaultAbi = full_BalancerVault.abi;
 export const balancerWeightedPoolAbi = full_BalancerWeightedPool.abi;
 export const bondCalcContractAbi = full_BondCalcContract.abi;
@@ -84,10 +89,11 @@ export const fhudContractAbi = full_FHUDContract.abi;
 export const factoryAbi = full_Factory.abi;
 export const fuseProxyAbi = full_FuseProxy.abi;
 export const ierc20Abi = full_IERC20.abi;
+export const ierc721Abi = full_IERC721.abi;
 export const lpStakingAbi = full_LPStaking.abi;
 export const lpBondCalcContractAbi = full_LpBondCalcContract.abi;
 export const lqdrAbi = full_Lqdr.abi;
-export const fantohmProBondDepositoryAbi = full_FantohmProBondDepository.abi;
+export const lqdrUsdbPolBondDepositoryAbi = full_LqdrUsdbPolBondDepository.abi;
 export const masterChefAbi = full_MasterChefAbi.abi;
 export const masterChefBeetsAbi = full_MasterChefBeets.abi;
 export const masterChefLqdrAbi = full_MasterChefLqdr.abi;
@@ -137,3 +143,6 @@ export const tradFiBondDepositoryAbi = full_TradFiBondDepository.abi;
 export const usdbFhmBurnBondDepositoryAbi = full_UsdbFhmBurnBondDepository.abi;
 export const usdbABondDepositoryAbi = full_UsdbABondDepository.abi;
 export const usdbNftBondDepositoryAbi = full_UsdbNftBondDepository.abi;
+
+//nft-lending
+export const usdbLending = full_UsdbLending.abi;

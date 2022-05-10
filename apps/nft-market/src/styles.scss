@@ -10,33 +10,37 @@ html, body {
   h1 {
     font-weight: 400;
   }
-  
-  .flexCenterRow {
+
+  .flex { 
     display: flex;
-    flex-direction: row;
+  }
+
+  .flex.fj-c {
     justify-content: center;
-    align-items: center;
   }
-  
-  .flexCenterCol {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+
+  .flex.fj-sb {
+    justify-content: space-between;
   }
-  
-  .flexSBRow {
-    display: flex;
+
+  .flex.fj-sa {
+    justify-content: space-around;
+  }
+
+  .flex.fj-e {
+    justify-content: end;
+  }
+
+  .flex.fr {
     flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
   }
-  
-  .flexSBCol {
-    display: flex;
+
+  .flex.fc {
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
+  }
+
+  .flex.fw {
+    flex-wrap: wrap;
   }
   
   .w100 {

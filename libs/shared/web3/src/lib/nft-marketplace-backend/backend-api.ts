@@ -4,10 +4,22 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 
 // internal libs
 import {
+  AllAssetsResponse,
   AllListingsResponse,
-  AssetListingRequest,
+  Asset,
+  AssetStatus,
+  BackendListing,
+  CreateAssetResponse,
+  CreateListingRequest,
+  AllNotificationsResponse,
+  ApiResponse,
+  EditNotificationRequest,
   Listing,
+  ListingStatus,
   LoginResponse,
+  Terms,
+  Notification,
+  NotificationStatus,
 } from "./backend-types";
 
 export const WEB3_SIGN_MESSAGE =
@@ -24,6 +36,75 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
   });
 };
 
+export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllAssetsResponse>) => {
+      console.log("");
+      console.log(resp);
+      return resp.data.data[0];
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
+    });
+};
+
+export const getAssetFromOpenseaId = (
+  openseaId: string,
+  signature: string
+): Promise<Asset> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllAssetsResponse>) => {
+      return resp.data.data[0];
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
+    });
+};
+
+export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset`;
+  return axios
+    .post(url, asset, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<CreateAssetResponse>) => {
+      console.log("");
+      console.log(resp);
+      return resp.data.asset;
+    })
+    .catch((err) => {
+      // most likely a 400 (not in our database)
+      console.log("Error found");
+      console.log(err);
+      return {} as Asset;
+    });
+};
+
 export const getListings = (address: string, signature: string): Promise<Listing[]> => {
   // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all`;
@@ -36,21 +117,43 @@ export const getListings = (address: string, signature: string): Promise<Listing
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
       // console.log(resp);
-      return resp.data.data;
+      return resp.data.data.map((listing: BackendListing) => {
+        const { term, ...formattedListing } = listing;
+        return { ...formattedListing, terms: term } as Listing;
+      });
+    });
+};
+
+export const getListingFromOpenseaId = (
+  openseaId: string,
+  signature: string
+): Promise<Listing> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllListingsResponse>) => {
+      // console.log(resp);
+      const { term, ...listing } = resp.data.data[0];
+      return { ...listing, terms: term };
     });
 };
 
 export const createListing = (
   signature: string,
-  listing: Listing
-): Promise<Listing[]> => {
+  asset: Asset,
+  terms: Terms
+): Promise<Listing[] | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const postParams: AssetListingRequest = {
-    ...listing,
-    term: listing.terms,
-  };
+  const listingParams = listingToCreateListingRequest(asset, terms);
+  // post
   return axios
-    .post(url, postParams, {
+    .post(url, listingParams, {
       headers: {
         Authorization: `Bearer ${signature}`,
       },
@@ -58,6 +161,10 @@ export const createListing = (
     .then((resp: AxiosResponse<any>) => {
       console.log(resp);
       return resp.data;
+    })
+    .catch((err: any) => {
+      console.log(err);
+      return false;
     });
 };
 
@@ -71,4 +178,100 @@ export const handleSignMessage = (
   } catch (err) {
     console.warn(err);
   }
+};
+
+const listingToCreateListingRequest = (
+  asset: Asset,
+  terms: Terms
+): CreateListingRequest => {
+  // convert terms to term
+  const tempListing: CreateListingRequest = {
+    asset: asset,
+    term: terms,
+    status: ListingStatus.Listed,
+  };
+  // if the asset isn't in the database we need to pass the asset without the ID
+  // if the asset is in the database we need to pass just the ID
+  if (
+    typeof tempListing.asset !== "string" &&
+    tempListing.asset.status === AssetStatus.New
+  ) {
+    delete tempListing.asset.id;
+    tempListing.asset.status = AssetStatus.Listed;
+  } else if (
+    typeof tempListing.asset !== "string" &&
+    tempListing.asset.status !== AssetStatus.New &&
+    tempListing.asset.id
+  ) {
+    tempListing.asset = tempListing.asset.id;
+  }
+
+  return tempListing;
+}
+
+export const getNotifications = (
+  address: string,
+  signature: string
+): Promise<AllNotificationsResponse> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/all`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllNotificationsResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
+};
+
+export const deleteNotification = async (
+  address: string,
+  signature: string,
+  id: string | undefined
+): Promise<ApiResponse | null> => {
+  // console.log(address);
+  if (typeof id !== "string") return null;
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${id}`;
+  // console.log(url);
+  return await axios
+    .delete(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<ApiResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
+};
+
+export const markAsRead = async (
+  address: string,
+  signature: string,
+  notification: Notification | undefined
+): Promise<ApiResponse | null> => {
+  // console.log(address);
+  if (!notification || typeof notification.id !== "string") return null;
+  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${notification.id}`;
+  // console.log(url);
+  const putParams: EditNotificationRequest = {
+    id: notification.id,
+    importance: notification.importance,
+    message: notification.message,
+    status: NotificationStatus.Read,
+  };
+  return await axios
+    .put(url, putParams, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<ApiResponse>) => {
+      // console.log(resp);
+      return resp.data;
+    });
 };

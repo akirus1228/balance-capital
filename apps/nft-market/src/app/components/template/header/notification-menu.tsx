@@ -1,6 +1,12 @@
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { Badge, IconButton, Menu, MenuItem } from "@mui/material";
+import { Avatar, Badge, IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
+import {
+  Notification,
+  LoginResponse,
+  Importance,
+  NotificationStatus,
+} from "@fantohm/shared-web3";
 
 export const NotificationMenu = (): JSX.Element => {
   // menu controls
@@ -12,6 +18,23 @@ export const NotificationMenu = (): JSX.Element => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const notification: Notification = {
+    user: {
+      address: "",
+      createdAt: "",
+      description: "",
+      email: "",
+      id: "",
+      name: "",
+      profileImageUrl: "",
+      updatedAt: "",
+    },
+    importance: Importance.High,
+    message: "Your loan for CyptoPunk #1234 is due in 24 hours",
+    status: NotificationStatus.Unread,
+  };
+  const notifications: Notification[] = [notification, notification];
 
   return (
     <>
@@ -39,7 +62,14 @@ export const NotificationMenu = (): JSX.Element => {
         }}
         sx={{ display: "flex", flexDirection: "column" }}
       >
-        <MenuItem>Something</MenuItem>
+        <p>Notifications</p>
+        <a href={"/notifications"}>view all</a>
+        {notifications.map((bond, i) => (
+          <MenuItem>
+            <Avatar />
+            <ListItemText primary={notification.message} />
+          </MenuItem>
+        ))}
       </Menu>
     </>
   );

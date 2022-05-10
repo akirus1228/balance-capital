@@ -1,14 +1,9 @@
 import { Button, Grid, Icon, Paper, Tooltip, Typography } from "@mui/material";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { useState } from "react";
 import { useSelector } from "react-redux";
 import style from "./my-account.module.scss";
-import Info from "../../../assets/icons/info.svg";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import { isPendingTxn, txnButtonTextGeneralPending } from "@fantohm/shared-web3";
-import { RootState } from "../../store";
 import AccountDetails from "./my-account-details";
-import { useState } from "react";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -27,10 +22,6 @@ export const MyAccountDetailsTable = ({
   const themeType = useSelector((state: any) => state.app.theme);
   const backgroundColor = themeType === "light" ? "#f7f7ff" : "#0E0F10";
   const [pendingClaim, setPendingClaim] = useState(false);
-
-  const pendingTransactions = useSelector((state: RootState) => {
-    return state?.pendingTransactions;
-  });
 
   const onRedeemAllInternal = async () => {
     try {
@@ -66,21 +57,6 @@ export const MyAccountDetailsTable = ({
             {accountDetails && currencyFormat.format(accountDetails.balance)}
           </Typography>
         </Grid>
-        {/* Hide until the graph ready */}
-        {/* <Grid item xs={12} sm={6} md={3}>
-          <Typography variant="subtitle2" className={style['subTitle']}>
-            Total rewards claimed
-            <img
-              src={Info}
-              alt="info"
-              className={style['infoIcon']}
-            />{' '}
-          </Typography>
-          <Typography variant="h5">
-            {accountDetails &&
-              currencyFormat.format(accountDetails.rewardsClaimed)}
-          </Typography>
-        </Grid> */}
         <Grid item xs={12} sm={6} md={4}>
           <Typography variant="subtitle2" className={style["subTitle"]}>
             Claimable rewards

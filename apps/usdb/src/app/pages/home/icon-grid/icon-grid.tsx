@@ -17,7 +17,7 @@ export const IconGrid = (): JSX.Element => {
         <IconLink title="Traditional Finance" icon={TradFiIcon} link="/trad-fi" />
       </Grid>
       <Grid item md={4} xs={6}>
-        <IconLink title="Staking" icon={WalletIcon} link="/staking" />
+        <IconLink title="Stablecoin Farming" icon={WalletIcon} link="/staking" />
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="Mint USDB" icon={MintIcon} link="/mint" />
@@ -28,7 +28,7 @@ export const IconGrid = (): JSX.Element => {
         <IconLink title="xFHM" icon={xFhmIcon} />
       </Grid>
       <Grid item md={4} xs={6}>
-        <IconLink title="USDBank" icon={BankIcon} />
+        <IconLink title="USDB Bank" icon={BankIcon} />
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink

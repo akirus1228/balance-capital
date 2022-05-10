@@ -7,7 +7,6 @@ import {
   Asset,
   defaultNetworkId,
   loadWalletAssets,
-  loadWalletCurrencies,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
@@ -24,17 +23,15 @@ export interface AssetListProps {
 export const AssetList = (props: AssetListProps): JSX.Element => {
   const dispatch = useDispatch();
   const wallet = useSelector((state: RootState) => state.wallet);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
   const { address, chainId } = useWeb3Context();
 
   // Load assets and nfts in current wallet
   useEffect(() => {
-    console.log("load wallet assets effect triggered");
-    console.log(`address: ${address}`);
-    console.log(`assetStatus: ${wallet.assetStatus}`);
-    if (address && ["failed", "idle"].includes(wallet.assetStatus)) {
-      console.log("load wallet assets condition met, loading...");
-      console.log("app-chainId, address: ", chainId, address);
+    if (
+      address &&
+      ["failed", "idle"].includes(wallet.assetStatus) &&
+      wallet.assetStatus !== "loading"
+    ) {
       dispatch(loadWalletAssets({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [chainId, address, wallet.assetStatus]);
@@ -60,7 +57,11 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
           <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
             {wallet.assets &&
               wallet.assets.map((asset: Asset, index: number) => (
-                <BorrowerAsset key={`asset-${index}`} asset={asset} />
+                <BorrowerAsset
+                  key={`asset-${index}`}
+                  contractAddress={asset.assetContractAddress}
+                  tokenId={asset.tokenId}
+                />
               ))}
             {wallet.assetStatus === "succeeded" &&
               (!wallet.assets || wallet.assets.length < 1) && (
