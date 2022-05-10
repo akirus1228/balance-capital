@@ -1,7 +1,7 @@
 import { Box, Button, Grid, SxProps, Theme, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import style from "./asset-list.module.scss";
+// import style from "./asset-list.module.scss";
 import BorrowerAsset from "./borrower-asset/borrower-asset";
 import GridViewOutlinedIcon from "@mui/icons-material/GridViewOutlined";
 import FormatListBulletedOutlinedIcon from "@mui/icons-material/FormatListBulletedOutlined";
