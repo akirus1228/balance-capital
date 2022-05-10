@@ -21,6 +21,7 @@ import BorrowPage from "./pages/borrow-page/borrow-page";
 import LendPage from "./pages/lend-page/lend-page";
 import MyAccountPage from "./pages/my-account-page/my-account-page";
 import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
+import NotificationsPage from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 
 export const App = (): JSX.Element => {
@@ -79,6 +80,7 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
+          <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/borrow/:assetId" element={<BorrowerAssetDetailsPage />} />
           <Route path="/lend" element={<LendPage />} />
           <Route path="/my-account" element={<MyAccountPage />} />

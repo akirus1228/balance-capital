@@ -2,18 +2,19 @@ import { AsyncThunk, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { loadState } from "../helpers/localstorage";
 import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
 import { BackendApi } from ".";
-import { Listing, ListingStatus, LoginResponse } from "./backend-types";
+import { Listing, ListingStatus, LoginResponse, Notification } from "./backend-types";
 
 export interface MarketplaceApiData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
+  readonly notifications: Notification[] | null;
 }
 
-/* 
-authorizeAccount: generates user account if non existant 
+/*
+authorizeAccount: generates user account if non existant
   requests signature to create bearer token
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -38,9 +39,9 @@ export const authorizeAccount = createAsyncThunk(
   }
 );
 
-/* 
+/*
 loadListings: loads all listings
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -64,9 +65,35 @@ export const loadListings = createAsyncThunk(
   }
 );
 
-/* 
+/*
+loadListings: loads all notifications
+params:
+- networkId: number
+- address: string
+- provider: JsonRpcProvider
+returns: void
+*/
+export const loadNotifications = createAsyncThunk(
+  "marketplaceApi/loadNotifications",
+  async (
+    { address, provider, networkId }: SignerAsyncThunk,
+    { getState, rejectWithValue }
+  ) => {
+    //const signature = await handleSignMessage(address, provider);
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.authSignature) {
+      console.log(
+        await BackendApi.getNotifications(address, thisState.nftMarketplace.authSignature)
+      );
+    } else {
+      rejectWithValue("No authorization found.");
+    }
+  }
+);
+
+/*
 createListing: loads all listings
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -151,6 +178,17 @@ const marketplaceApiSlice = createSlice({
       //state.currencies = action.payload;
     });
     builder.addCase(loadListings.rejected, (state, action) => {
+      state.status = "failed";
+    });
+    builder.addCase(loadNotifications.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(loadNotifications.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      // console.log(action.payload);
+      //state.notifications = action.payload;
+    });
+    builder.addCase(loadNotifications.rejected, (state, action) => {
       state.status = "failed";
     });
   },
