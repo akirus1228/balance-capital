@@ -192,6 +192,7 @@ export interface IUsdbNftRedeemAsyncThunk extends IBaseAsyncThunk {
   readonly nftId: number;
   readonly address: string;
   readonly provider: JsonRpcProvider;
+}
 
 export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
   readonly walletAddress: string;

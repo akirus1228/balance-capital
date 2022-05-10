@@ -15,7 +15,6 @@ import full_IERC721 from "./IERC721.json";
 import full_LPStaking from "./LPStaking.json";
 import full_LpBondCalcContract from "./LpBondCalcContract.json";
 import full_Lqdr from "./Lqdr.json";
-import full_FantohmProBondDepository from "./FantohmProBondDepository.json";
 import full_LqdrUsdbPolBondDepository from "./LqdrUsdbPolBondDepository.json";
 import full_MasterChefAbi from "./MasterChefAbi.json";
 import full_MasterChefBeets from "./MasterChefBeets.json";
