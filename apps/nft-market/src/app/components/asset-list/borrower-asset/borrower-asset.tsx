@@ -1,10 +1,9 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, IconButton, Paper } from "@mui/material";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
 import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
-import { useAsset } from "../../../hooks/useAsset";
+import { useWalletAsset } from "../../../hooks/useWalletAsset";
 
 export interface PreviewImageProps {
   url: string;
@@ -35,7 +34,7 @@ export interface BorrowerAssetProps {
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
-  const asset = useAsset(props.contractAddress, props.tokenId);
+  const asset = useWalletAsset(props.contractAddress, props.tokenId);
 
   if (asset === null) {
     return <h3>Loading...</h3>;

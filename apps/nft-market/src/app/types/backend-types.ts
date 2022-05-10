@@ -1,5 +1,3 @@
-import { Collectible } from "@fantohm/shared/fetch-nft";
-
 // request types
 export interface CreateListingRequest {
   asset: Asset | string;
@@ -135,7 +133,7 @@ export type Nullable<T> = T | null;
 export type StandardAssetLookupParams = {
   tokenId: string;
   contractAddress: string;
-}
+};
 
 export enum NotificationStatus {
   Read = "READ",

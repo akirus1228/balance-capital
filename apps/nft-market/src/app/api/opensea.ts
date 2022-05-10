@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { Asset, AssetStatus } from "../nft-marketplace-backend";
 
 export interface OpenSeaAsset {
   id: number;
@@ -91,21 +90,5 @@ export const getWalletAssets = (address: string): Promise<OpenSeaAsset[]> => {
     return resp.data.assets;
   });
 };
-
-// export const openSeaToInternalAsset = (asset: OpenSeaAsset): Asset => {
-//   return {
-//     ...asset,
-//     status: AssetStatus.READY,
-//     openseaId: asset.id.toString(),
-//     tokenId: asset.token_id.toString(),
-//     description: asset.description || "",
-//     imageUrl: asset.image_url || "",
-//     videoUrl: "",
-//     threeDUrl: "",
-//     mediaType: "",
-//     isOwned: true,
-
-//   }
-// };
 
 export default getWalletAssets;

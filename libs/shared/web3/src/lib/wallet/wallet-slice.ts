@@ -2,14 +2,10 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
 import { ierc20Abi, ierc721Abi } from "../abi";
 import { addresses } from "../constants";
+import { loadState } from "../helpers";
+import { NetworkIds } from "../networks";
 import { chains } from "../providers";
 import { AssetLocAsyncThunk, IBaseAddressAsyncThunk } from "../slices/interfaces";
-import { Asset } from "../nft-marketplace-backend";
-import { Collectible, FetchNFTClient } from "@fantohm/shared/fetch-nft";
-import { NetworkIds } from "../networks";
-import { loadState } from "../helpers/localstorage";
-
-const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
 export enum AcceptedCurrencies {
   USDB,
@@ -25,15 +21,17 @@ export interface Currency {
   balance: string;
 }
 
+export type NftPermStatus = {
+  [key: string]: boolean;
+};
+
 export interface WalletData {
-  readonly assetStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly currencyStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly checkPermStatus: "idle" | "loading" | "failed";
   readonly requestPermStatus: "idle" | "loading" | "failed";
-  readonly assets: Asset[];
+  readonly nftPermStatus: NftPermStatus;
   readonly currencies: Currency[];
   readonly isDev: boolean;
-  readonly nextOpenseaLoad: number;
 }
 
 const cacheTime = 300 * 1000; // 5 minutes
@@ -65,53 +63,6 @@ export const loadWalletCurrencies = createAsyncThunk(
         balance: ethers.utils.formatUnits(usdbBalance, "gwei"),
       } as Currency,
     ];
-  }
-);
-
-/* 
-loadWalletNfts: loads nfts owned by specific address
-params: 
-- address: string
-returns: void
-*/
-export const loadWalletAssets = createAsyncThunk(
-  "wallet/loadWalletAssets",
-  async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue }) => {
-    if (!address) {
-      return rejectWithValue("No wallet address");
-    }
-    const isDev = !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
-    const openSeaConfig: any = {
-      apiKey: isDev ? "" : OPENSEA_API_KEY,
-    };
-    if (isDev) {
-      openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
-    }
-    try {
-      // see if opensea has any assets listed for this address
-      const client = new FetchNFTClient({ openSeaConfig });
-      const openseaData = await client.getEthereumCollectibles([address]);
-      if (!openseaData) {
-        return [] as Asset[];
-      }
-
-      // convertCollectible to Asset
-      const walletContents = openseaData[address].map(
-        (collectible: Collectible): Asset => {
-          const { id, ...tmpCollectible } = collectible;
-          const asset = {
-            ...tmpCollectible,
-            openseaLoaded: Date.now() + cacheTime,
-          } as Asset;
-          return asset;
-        }
-      );
-      return walletContents as Asset[];
-    } catch (err) {
-      console.log(err);
-      rejectWithValue("Unable to load assets.");
-      return [] as Asset[];
-    }
   }
 );
 
@@ -189,37 +140,19 @@ export const checkNftPermission = createAsyncThunk(
 // initial wallet slice state
 const previousState = loadState("wallet");
 const initialState: WalletData = {
-  assets: [],
   currencies: [],
-  isDev: !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development",
   ...previousState, // overwrite assets and currencies from cache if recent
+  nftPerms: [],
   currencyStatus: "idle", // always reset states on reload
-  assetStatus: "idle",
   checkPermStatus: "idle",
   requestPermStatus: "idle",
-  nextOpenseaLoad: 0,
 };
 
 // create slice and initialize reducers
 const walletSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {
-    updateAsset: (state, action: PayloadAction<Asset>) => {
-      console.log("Update asset");
-      console.log(action.payload);
-      state.assets = state.assets.map((asset: Asset) => {
-        if (
-          asset.assetContractAddress === action.payload.assetContractAddress &&
-          asset.tokenId === action.payload.tokenId
-        ) {
-          console.log("Found update match");
-          return { ...asset, ...action.payload };
-        }
-        return asset;
-      });
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder.addCase(loadWalletCurrencies.pending, (state, action) => {
       state.currencyStatus = "loading";
@@ -231,33 +164,6 @@ const walletSlice = createSlice({
     });
     builder.addCase(loadWalletCurrencies.rejected, (state, action) => {
       state.currencyStatus = "failed";
-    });
-    builder.addCase(loadWalletAssets.pending, (state, action) => {
-      state.assetStatus = "loading";
-    });
-    builder.addCase(
-      loadWalletAssets.fulfilled,
-      (state, action: PayloadAction<Asset[]>) => {
-        state.assetStatus = "succeeded";
-        state.nextOpenseaLoad = Date.now() + cacheTime;
-        action.payload.map((newAsset: Asset) => {
-          let dupAsset = state.assets.find(
-            (stateAsset: Asset) =>
-              stateAsset.tokenId === newAsset.tokenId &&
-              stateAsset.assetContractAddress === newAsset.assetContractAddress
-          );
-          // if exists, update
-          if (dupAsset) {
-            dupAsset = { ...dupAsset, ...newAsset };
-          } else {
-            // if new, push
-            state.assets.push(newAsset);
-          }
-        });
-      }
-    );
-    builder.addCase(loadWalletAssets.rejected, (state, action) => {
-      state.assetStatus = "failed";
     });
     builder.addCase(checkNftPermission.pending, (state, action) => {
       state.checkPermStatus = "loading";
@@ -273,16 +179,9 @@ const walletSlice = createSlice({
         }>
       ) => {
         state.checkPermStatus = "idle";
-        console.log(action.payload);
-        state.assets = state.assets.map((asset: Asset) => {
-          if (
-            asset.assetContractAddress === action.payload.assetAddress &&
-            asset.tokenId === action.payload.tokenId
-          ) {
-            asset.hasPermission = action.payload.hasPermission;
-          }
-          return asset;
-        });
+        state.nftPermStatus[
+          `${action.payload.tokenId}:::${action.payload.assetAddress}`
+        ] = action.payload.hasPermission;
       }
     );
     builder.addCase(checkNftPermission.rejected, (state, action) => {
@@ -301,15 +200,9 @@ const walletSlice = createSlice({
         }>
       ) => {
         state.requestPermStatus = "idle";
-        state.assets = state.assets.map((asset: Asset) => {
-          if (
-            asset.assetContractAddress === action.payload.assetAddress &&
-            asset.tokenId === action.payload.tokenId
-          ) {
-            asset.hasPermission = true;
-          }
-          return asset;
-        });
+        state.nftPermStatus[
+          `${action.payload.tokenId}:::${action.payload.assetAddress}`
+        ] = true;
       }
     );
     builder.addCase(requestNftPermission.rejected, (state, action) => {
@@ -320,4 +213,4 @@ const walletSlice = createSlice({
 
 export const walletReducer = walletSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-export const { updateAsset } = walletSlice.actions;
+// export const {} = assetsSlice.actions;

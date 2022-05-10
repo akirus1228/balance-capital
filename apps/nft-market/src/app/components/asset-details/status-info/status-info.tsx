@@ -1,7 +1,7 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Icon } from "@mui/material";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import style from "./status-info.module.scss";
+import { Asset } from "../../../types/backend-types";
 
 export interface StatusInfoProps {
   asset: Asset;

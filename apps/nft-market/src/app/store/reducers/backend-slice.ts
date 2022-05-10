@@ -1,16 +1,15 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { loadState } from "../helpers/localstorage";
-import { SignerAsyncThunk, ListingAsyncThunk } from "../slices/interfaces";
-import { BackendApi } from ".";
 import {
   Asset,
   AssetStatus,
   Listing,
   LoginResponse,
   Notification,
-  StandardAssetLookupParams,
-} from "./backend-types";
-import { updateAsset } from "../wallet/wallet-slice";
+} from "../../types/backend-types";
+import { loadState } from "@fantohm/shared-web3";
+import { BackendApi } from "../../api";
+import { ListingAsyncThunk, SignerAsyncThunk } from "./interfaces";
+import { updateAsset, updateAssets } from "./asset-slice";
 
 export enum BackendLoadingStatus {
   idle = "idle",
@@ -29,7 +28,7 @@ export type ListingLoadStatus = {
   status: BackendLoadingStatus;
 };
 
-export interface MarketplaceApiData {
+export interface BackendData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: AssetLoadStatus[];
@@ -53,7 +52,7 @@ params:
 returns: void
 */
 export const authorizeAccount = createAsyncThunk(
-  "marketplaceApi/authorizeAccount",
+  "backend/authorizeAccount",
   async (
     { address, networkId, provider }: SignerAsyncThunk,
     { dispatch, rejectWithValue, getState }
@@ -80,18 +79,15 @@ params:
 returns: void
 */
 export const loadListings = createAsyncThunk(
-  "marketplaceApi/loadListings",
+  "backend/loadListings",
   async (
     { address, provider, networkId }: SignerAsyncThunk,
     { getState, rejectWithValue }
   ) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
-    if (thisState.nftMarketplace.authSignature) {
-      return await BackendApi.getListings(
-        address,
-        thisState.nftMarketplace.authSignature
-      );
+    if (thisState.backend.authSignature) {
+      return await BackendApi.getListings(address, thisState.backend.authSignature);
     } else {
       return rejectWithValue("No authorization found.");
     }
@@ -107,16 +103,16 @@ params:
 returns: void
 */
 export const loadNotifications = createAsyncThunk(
-  "marketplaceApi/loadNotifications",
+  "backend/loadNotifications",
   async (
     { address, provider, networkId }: SignerAsyncThunk,
     { getState, rejectWithValue }
   ) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
-    if (thisState.nftMarketplace.authSignature) {
+    if (thisState.backend.authSignature) {
       console.log(
-        await BackendApi.getNotifications(address, thisState.nftMarketplace.authSignature)
+        await BackendApi.getNotifications(address, thisState.backend.authSignature)
       );
     } else {
       rejectWithValue("No authorization found.");
@@ -133,14 +129,12 @@ params:
 returns: void
 */
 export const createListing = createAsyncThunk(
-  "marketplaceApi/createListing",
+  "backend/createListing",
   async ({ asset, terms }: ListingAsyncThunk, { getState, rejectWithValue }) => {
     console.log("backend-slice: createListing");
     const thisState: any = getState();
-    if (thisState.nftMarketplace.authSignature) {
-      if (
-        !BackendApi.createListing(thisState.nftMarketplace.authSignature, asset, terms)
-      ) {
+    if (thisState.backend.authSignature) {
+      if (!BackendApi.createListing(thisState.backend.authSignature, asset, terms)) {
         return rejectWithValue("Failed to create listing");
       }
       return true;
@@ -158,7 +152,7 @@ params:
 returns: boolean
 */
 export const loadAsset = createAsyncThunk(
-  "marketplaceApi/loadAsset",
+  "backend/loadAsset",
   async (asset: Asset, { getState, rejectWithValue, dispatch }) => {
     console.log("loadAssest called");
     if (!asset.openseaId) {
@@ -171,12 +165,13 @@ export const loadAsset = createAsyncThunk(
       return false;
     }
     const thisState: any = getState();
-    if (thisState.nftMarketplace.authSignature) {
+    if (thisState.backend.authSignature) {
       console.log("sig found");
-      const apiAsset = await BackendApi.getAssetFromOpenseaId(
-        asset.openseaId,
-        thisState.nftMarketplace.authSignature
+      const apiResults = await BackendApi.getAssetFromOpenseaId(
+        [asset.openseaId],
+        thisState.backend.authSignature
       );
+      const apiAsset = apiResults[0];
       console.log("apiAsset");
       console.log(apiAsset);
       if (typeof apiAsset === "undefined" || !apiAsset.id) {
@@ -201,13 +196,45 @@ export const loadAsset = createAsyncThunk(
 );
 
 /* 
+loadAssetsFromOpenseaIds: loads multiple assets from API and merges into assets
+params: 
+- openseaIds: string[]
+returns: boolean
+*/
+export const loadAssetsFromOpenseaIds = createAsyncThunk(
+  "backend/loadAsset",
+  async (openseaIds: string[], { getState, rejectWithValue, dispatch }) => {
+    console.log("loadAssetsFromOpenseaIds called");
+    const thisState: any = getState();
+    if (thisState.backend.authSignature) {
+      console.log("sig found");
+      const apiAssets = await BackendApi.getAssetFromOpenseaId(
+        openseaIds,
+        thisState.backend.authSignature
+      );
+
+      dispatch(
+        updateAssets(
+          apiAssets.map((asset: Asset) => ({
+            ...asset,
+            cacheExpire: Date.now() + cacheTime,
+          }))
+        )
+      );
+    } else {
+      rejectWithValue("No authorization found.");
+    }
+  }
+);
+
+/* 
 loadListing: loads individual listing
 params: 
 - asset: Asset
 returns: Listing
 */
 export const loadListing = createAsyncThunk(
-  "marketplaceApi/loadListing",
+  "backend/loadListing",
   async (openseaId: string, { getState, rejectWithValue, dispatch }) => {
     console.log("loadListing called");
     if (!openseaId) {
@@ -215,11 +242,11 @@ export const loadListing = createAsyncThunk(
       return rejectWithValue("No openseaId");
     }
     const thisState: any = getState();
-    if (thisState.nftMarketplace.authSignature) {
+    if (thisState.backend.authSignature) {
       console.log("sig found");
       const listing: Listing = await BackendApi.getListingFromOpenseaId(
         openseaId,
-        thisState.nftMarketplace.authSignature
+        thisState.backend.authSignature
       );
 
       return listing;
@@ -230,8 +257,8 @@ export const loadListing = createAsyncThunk(
 );
 
 // initial wallet slice state
-const previousState = loadState("nftMarketplace");
-const initialState: MarketplaceApiData = {
+const previousState = loadState("backend");
+const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
   listings: [],
@@ -244,7 +271,7 @@ const initialState: MarketplaceApiData = {
 };
 
 // create slice and initialize reducers
-const marketplaceApiSlice = createSlice({
+const backendSlice = createSlice({
   name: "wallet",
   initialState,
   reducers: {},
@@ -359,6 +386,6 @@ const marketplaceApiSlice = createSlice({
   },
 });
 
-export const marketplaceApiReducer = marketplaceApiSlice.reducer;
+export const backendReducer = backendSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
 //export const {} = walletSlice.actions;

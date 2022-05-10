@@ -64,6 +64,8 @@ export class OpenSeaClient {
   readonly apiKey: string = "";
   readonly assetLimit: number = 50;
   readonly eventLimit: number = 300;
+  lastQueueTime = 0;
+  queueTime = 1000; // max api spam time of 1 per second
 
   constructor(props?: OpenSeaClientProps) {
     this.url = props?.apiEndpoint ?? this.url;
@@ -73,6 +75,17 @@ export class OpenSeaClient {
   }
 
   private sendGetRequest = async (url: string): Promise<any> => {
+    // if we have a queue going already, add this item
+    if (this.lastQueueTime > Date.now() + this.queueTime) {
+      this.lastQueueTime += this.queueTime;
+      console.log(`lastQueueTime ${this.lastQueueTime}`);
+      console.log(`queued for ${this.lastQueueTime - Date.now()}`);
+      return setTimeout(() => {
+        this.sendGetRequest(url);
+      }, this.lastQueueTime - Date.now());
+    } else {
+      this.lastQueueTime = Date.now();
+    }
     // Default options are marked with *
     const response = await fetch(url, {
       method: "GET", // *GET, POST, PUT, DELETE, etc.
@@ -88,7 +101,15 @@ export class OpenSeaClient {
     });
     // 429 = rate limited
     if (response.status === 429) {
-      return setTimeout(() => this.sendGetRequest(url), 1000);
+      this.lastQueueTime =
+        this.lastQueueTime === 0
+          ? Date.now() + this.queueTime
+          : this.lastQueueTime + this.queueTime;
+      console.log(`lastQueueTime ${this.lastQueueTime}`);
+      console.log(`queued for ${this.lastQueueTime - Date.now()}`);
+      return setTimeout(() => this.sendGetRequest(url), this.lastQueueTime - Date.now());
+    } else if (response.status === 401) {
+      return [];
     }
     return response.json(); // parses JSON response into native JavaScript objects
   };

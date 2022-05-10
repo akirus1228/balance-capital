@@ -4,7 +4,7 @@ import { OpenSeaClient, OpenSeaClientProps } from "./eth";
 import { SolanaClient, SolanaClientProps } from "./sol";
 import { Collectible, CollectibleState } from "./utils/types";
 
-type FetchNFTClientProps = {
+export type FetchNFTClientProps = {
   openSeaConfig?: OpenSeaClientProps;
   solanaConfig?: SolanaClientProps;
 };

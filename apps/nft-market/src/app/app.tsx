@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId, authorizeAccount } from "@fantohm/shared-web3";
+import { useWeb3Context, defaultNetworkId } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -15,12 +15,13 @@ import MyAccountPage from "./pages/my-account-page/my-account-page";
 import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
 import NotificationsPage from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
+import { authorizeAccount } from "./store/reducers/backend-slice";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
+  const backend = useSelector((state: RootState) => state.backend);
 
   const [theme, setTheme] = useState(NftLight);
   const { address, chainId, connected, hasCachedProvider, connect, provider } =

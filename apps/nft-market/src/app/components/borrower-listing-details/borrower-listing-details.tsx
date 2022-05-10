@@ -1,7 +1,7 @@
-import { Asset, Listing } from "@fantohm/shared-web3";
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useListing } from "../../hooks/useListing";
+import { Asset, Listing } from "../../types/backend-types";
 import style from "./borrower-listing-details.module.scss";
 
 export interface BorrowerListingDetailsProps {
