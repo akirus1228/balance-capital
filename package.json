@@ -10,9 +10,6 @@
     "prepare": "husky install"
   },
   "private": true,
-  "engines": {
-    "node": ">=12.9.0"
-  },
   "dependencies": {
     "@danny-jin/fetch-nft": "^0.0.2",
     "@emotion/react": "^11.8.2",
