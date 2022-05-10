@@ -5,11 +5,28 @@ import { addresses } from "../constants";
 import { chains } from "../providers";
 import { AssetLocAsyncThunk, IBaseAddressAsyncThunk } from "../slices/interfaces";
 import { Asset } from "../nft-marketplace-backend";
-import { Collectible, FetchNFTClient } from "@fantohm/shared/fetch-nft";
+import {
+  Collectible,
+  FetchNFTClient,
+  FetchNFTClientProps,
+} from "@fantohm/shared/fetch-nft";
 import { NetworkIds } from "../networks";
 import { loadState } from "../helpers/localstorage";
+import { isDev } from "../helpers";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
+
+const openSeaConfig = (): FetchNFTClientProps => {
+  console.log("isDev: " + isDev());
+  const openSeaConfig: any = {
+    apiKey: isDev() ? "" : OPENSEA_API_KEY,
+  };
+  if (isDev()) {
+    openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
+  }
+  console.log(openSeaConfig);
+  return { openSeaConfig };
+};
 
 export enum AcceptedCurrencies {
   USDB,
@@ -34,6 +51,7 @@ export interface WalletData {
   readonly currencies: Currency[];
   readonly isDev: boolean;
   readonly nextOpenseaLoad: number;
+  fetchNftClient: FetchNFTClient;
 }
 
 const cacheTime = 300 * 1000; // 5 minutes
@@ -76,20 +94,14 @@ returns: void
 */
 export const loadWalletAssets = createAsyncThunk(
   "wallet/loadWalletAssets",
-  async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue }) => {
+  async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue, getState }) => {
     if (!address) {
       return rejectWithValue("No wallet address");
     }
-    const isDev = !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
-    const openSeaConfig: any = {
-      apiKey: isDev ? "" : OPENSEA_API_KEY,
-    };
-    if (isDev) {
-      openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
-    }
     try {
       // see if opensea has any assets listed for this address
-      const client = new FetchNFTClient({ openSeaConfig });
+      const thisState: any = getState();
+      const client: FetchNFTClient = thisState.wallet.fetchNftClient as FetchNFTClient;
       const openseaData = await client.getEthereumCollectibles([address]);
       if (!openseaData) {
         return [] as Asset[];
@@ -198,6 +210,7 @@ const initialState: WalletData = {
   checkPermStatus: "idle",
   requestPermStatus: "idle",
   nextOpenseaLoad: 0,
+  fetchNftClient: new FetchNFTClient(openSeaConfig()),
 };
 
 // create slice and initialize reducers

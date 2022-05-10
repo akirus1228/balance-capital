@@ -8,9 +8,9 @@ import {
   Listing,
   LoginResponse,
   Notification,
-  StandardAssetLookupParams,
 } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
+import { FetchNFTClient } from "@fantohm/shared/fetch-nft";
 
 export enum BackendLoadingStatus {
   idle = "idle",
