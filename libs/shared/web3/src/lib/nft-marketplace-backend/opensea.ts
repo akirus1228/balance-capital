@@ -1,5 +1,4 @@
 import axios, { AxiosResponse } from "axios";
-import { Asset, AssetStatus } from "../nft-marketplace-backend";
 
 export interface OpenSeaAsset {
   id: number;
