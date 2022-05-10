@@ -60,11 +60,11 @@ export const getAsset = (assetId: string, signature: string): Promise<Asset> => 
 };
 
 export const getAssetFromOpenseaId = (
-  openseaId: string,
+  openseaIds: string[],
   signature: string
-): Promise<Asset> => {
+): Promise<Asset[]> => {
   // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaId}`;
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaIds.join(",")}`;
   // console.log(url);
   return axios
     .get(url, {
@@ -73,13 +73,13 @@ export const getAssetFromOpenseaId = (
       },
     })
     .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      return resp.data.data[0];
+      return resp.data.data;
     })
     .catch((err) => {
       // most likely a 400 (not in our database)
       console.log("Error found");
       console.log(err);
-      return {} as Asset;
+      return [{}] as Asset[];
     });
 };
 
@@ -207,7 +207,7 @@ const listingToCreateListingRequest = (
   }
 
   return tempListing;
-}
+};
 
 export const getNotifications = (
   address: string,

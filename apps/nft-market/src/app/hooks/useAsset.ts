@@ -50,11 +50,18 @@ export const useAsset = (
   // check the database for a match and merge in data
   useEffect(() => {
     // console.log("loadAsset effect");
+    // console.log(asset);
     // console.log(`chainId ${chainId}`);
     // console.log(`address ${address}`);
     // console.log(`wallet.assetStatus ${wallet.assetStatus}`);
     // console.log(`backendLoadStatus?.status ${backendLoadStatus?.status}`);
-    // console.log(asset);
+    // console.log(`asset.cacheExpire ${asset?.cacheExpire}`);
+    // console.log(
+    //   `asset.cacheExpire ${
+    //     typeof asset?.cacheExpire === "undefined" || asset.cacheExpire < Date.now()
+    //   }`
+    // );
+
     if (
       asset &&
       chainId &&
@@ -63,7 +70,7 @@ export const useAsset = (
       (typeof asset.cacheExpire === "undefined" || asset.cacheExpire < Date.now()) && // is the asset needing a backend refresh?
       backendLoadStatus?.status !== BackendLoadingStatus.loading // is it already loading?
     ) {
-      console.log("loadAsset");
+      console.log(`loadAsset: ${asset.tokenId}:::${asset.assetContractAddress}`);
       dispatch(loadAsset(asset));
     }
   }, [

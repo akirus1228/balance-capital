@@ -4,7 +4,7 @@ import { ierc20Abi, ierc721Abi } from "../abi";
 import { addresses } from "../constants";
 import { chains } from "../providers";
 import { AssetLocAsyncThunk, IBaseAddressAsyncThunk } from "../slices/interfaces";
-import { Asset } from "../nft-marketplace-backend";
+import { Asset, loadAssetsFromOpenseaIds } from "../nft-marketplace-backend";
 import {
   Collectible,
   FetchNFTClient,
@@ -94,7 +94,10 @@ returns: void
 */
 export const loadWalletAssets = createAsyncThunk(
   "wallet/loadWalletAssets",
-  async ({ address }: IBaseAddressAsyncThunk, { rejectWithValue, getState }) => {
+  async (
+    { address }: IBaseAddressAsyncThunk,
+    { rejectWithValue, getState, dispatch }
+  ) => {
     if (!address) {
       return rejectWithValue("No wallet address");
     }
@@ -118,6 +121,11 @@ export const loadWalletAssets = createAsyncThunk(
           return asset;
         }
       );
+
+      const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
+      // see if we have this data on the backend
+      dispatch(loadAssetsFromOpenseaIds(openseaIds));
+
       return walletContents as Asset[];
     } catch (err) {
       console.log(err);
@@ -219,17 +227,27 @@ const walletSlice = createSlice({
   initialState,
   reducers: {
     updateAsset: (state, action: PayloadAction<Asset>) => {
-      console.log("Update asset");
-      console.log(action.payload);
       state.assets = state.assets.map((asset: Asset) => {
         if (
           asset.assetContractAddress === action.payload.assetContractAddress &&
           asset.tokenId === action.payload.tokenId
         ) {
-          console.log("Found update match");
           return { ...asset, ...action.payload };
         }
         return asset;
+      });
+    },
+    updateAssets: (state, action: PayloadAction<Asset[]>) => {
+      action.payload.forEach((updatedAsset: Asset) => {
+        state.assets = state.assets.map((asset: Asset) => {
+          if (
+            asset.assetContractAddress === updatedAsset.assetContractAddress &&
+            asset.tokenId === updatedAsset.tokenId
+          ) {
+            return { ...asset, ...updatedAsset };
+          }
+          return asset;
+        });
       });
     },
   },
@@ -333,4 +351,4 @@ const walletSlice = createSlice({
 
 export const walletReducer = walletSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-export const { updateAsset } = walletSlice.actions;
+export const { updateAsset, updateAssets } = walletSlice.actions;

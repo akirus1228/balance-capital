@@ -1,6 +1,5 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, Container, Grid, Skeleton, Typography } from "@mui/material";
-import { useAsset } from "../../hooks/useAsset";
+import { useWalletAsset } from "../../hooks/useWalletAsset";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
 import StatusInfo from "./status-info/status-info";
@@ -12,7 +11,7 @@ export interface AssetDetailsProps {
 
 export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
   console.log("asset from assetDetails");
-  const asset = useAsset(props.contractAddress, props.tokenId);
+  const asset = useWalletAsset(props.contractAddress, props.tokenId);
 
   return (
     <Container>
