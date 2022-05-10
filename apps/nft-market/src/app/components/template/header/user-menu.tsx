@@ -42,7 +42,7 @@ export const UserMenu = (): JSX.Element => {
     useWeb3Context();
 
   const onClickConnect = (event: MouseEvent<HTMLButtonElement>) => {
-    connect();
+    connect(false);
   };
 
   // theme control

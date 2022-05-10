@@ -4,6 +4,7 @@ import { JsonRpcProvider } from "@ethersproject/providers";
 
 // internal libs
 import {
+  AllAssetsResponse,
   AllListingsResponse,
   AllNotificationsResponse,
   ApiResponse,
@@ -27,6 +28,22 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
     console.log(resp);
     return resp.data;
   });
+};
+
+export const getAsset = (assetId: string, signature: string): Promise<Listing[]> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllAssetsResponse>) => {
+      // console.log(resp);
+      return resp.data.data;
+    });
 };
 
 export const getListings = (address: string, signature: string): Promise<Listing[]> => {
