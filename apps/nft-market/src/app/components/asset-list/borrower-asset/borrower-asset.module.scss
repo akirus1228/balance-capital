@@ -1,0 +1,8 @@
+.assetImg:hover {
+    transform: scale(1.05);
+    transform-style: preserve-3d;
+    -webkit-transition: all 0.25s 0s ease-out;
+    -moz-transition: all 0.25s 0s ease-out;
+    -o-transition: all 0.25s 0s ease-out;
+    transition: all 0.25s 0s ease-out;
+}

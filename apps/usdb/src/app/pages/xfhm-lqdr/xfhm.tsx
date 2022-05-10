@@ -21,14 +21,14 @@ import {
   changeStakeForXfhm,
   claimForXfhm,
 } from "@fantohm/shared-web3";
-import { memo, SyntheticEvent, useState } from "react";
+import { memo, SyntheticEvent, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import { RootState } from "../../store";
 import style from "./xfhm-lqdr.module.scss";
 
 export const XfhmPage = (): JSX.Element => {
-  const { chainId, address, provider } = useWeb3Context();
+  const { chainId, address, provider, connected, disconnect, connect } = useWeb3Context();
   const dispatch = useDispatch();
   const [stakeView, setStakeView] = useState<number>(0);
   const [stakeQuantity, setStakeQuantity] = useState<string>("");
@@ -90,6 +90,18 @@ export const XfhmPage = (): JSX.Element => {
       );
     }
   };
+
+  const handleConnect = useCallback(async () => {
+    if (connected) {
+      await disconnect();
+    } else {
+      try {
+        await connect();
+      } catch (e) {
+        console.log("Connection metamask error", e);
+      }
+    }
+  }, [connected, disconnect, connect]);
 
   const setMax = (stakeView: number) => {
     if (!details) {
@@ -295,7 +307,7 @@ export const XfhmPage = (): JSX.Element => {
           <Skeleton width="100px" />
         )}
       </Box>
-      {details && details.allowance > 0 ? (
+      {connected && details && details.allowance > 0 ? (
         <Box width="100%">
           <Tabs
             key="xfhm-tabs"
@@ -397,6 +409,17 @@ export const XfhmPage = (): JSX.Element => {
               </>
             )}
           </Box>
+        </Box>
+      ) : !connected ? (
+        <Box display="flex" justifyContent="center">
+          <Button
+            className="thin"
+            color="primary"
+            variant="contained"
+            onClick={() => handleConnect()}
+          >
+            Connect Wallet
+          </Button>
         </Box>
       ) : (
         <Box display="flex" justifyContent="center">

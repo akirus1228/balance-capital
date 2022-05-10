@@ -124,7 +124,15 @@ export const StakingChoicePage = (): JSX.Element => {
         </Box>
       </Box>
       <Box className={style["__section"]}>
-        <Headline {...simpleSafe} id="learn-more" sx={{ mb: "5em" }} />
+        <Headline {...simpleSafe} id="learn-more" />
+        <div className="embed-container">
+          <iframe
+            src="https://www.youtube.com/embed/Zkdce6v94vg"
+            frameBorder="0"
+            allowFullScreen
+            title="Single Sided Staking is Live & USDB Is Stronger For It!"
+          ></iframe>
+        </div>
         <SsInfoBlock />
       </Box>
       <Box className={style["__section"]}>

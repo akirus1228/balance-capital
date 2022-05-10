@@ -11,7 +11,7 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import style from "./staking-card.module.scss";
 import DaiCard from "../../../components/dai-card/dai-card";
-import { DaiToken, FHMToken, USDBToken, DaiUSDBLP } from "@fantohm/shared/images";
+import { DaiToken, FHMToken, DaiUSDBLP } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Bond,
@@ -63,7 +63,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const [ilUnLockPeriod, setIlUnLockPeriod] = useState<number>(0);
 
   const dispatch = useDispatch();
-  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const { provider, address, chainId, connect, connected } = useWeb3Context();
   const { bonds } = useBonds(chainId || defaultNetworkId);
   const singleSidedBondData = bonds.filter(
     (bond) => bond.type === BondType.SINGLE_SIDED
@@ -257,9 +257,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     // console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
     if (["IL Redeem", "Claim"].includes(cardState)) return false;
 
-    if (Number(tokenBalance) < Number(quantity)) return true;
-
-    return false;
+    return Number(tokenBalance) < Number(quantity);
   }, [tokenBalance, quantity, cardState]);
 
   useEffect(() => {
@@ -471,7 +469,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           </Box>
         </Box>
       ) : (
-        <Box className={`flexSBRow w100`} sx={{ mb: "2em" }}></Box>
+        <Box className={`flexSBRow w100`} sx={{ mb: "2em" }} />
       )}
       {!connected ? (
         <Button
@@ -479,7 +477,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color="primary"
           id="bond-btn"
           className="paperButton transaction-button"
-          onClick={connect}
+          onClick={() => connect(true)}
         >
           Connect Wallet
         </Button>

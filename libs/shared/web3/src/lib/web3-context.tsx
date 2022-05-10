@@ -1,13 +1,12 @@
-import React, { useState, ReactElement, useContext, useMemo, useCallback } from "react";
+import React, { ReactElement, useCallback, useContext, useMemo, useState } from "react";
 import Web3Modal from "web3modal";
 import WalletConnectProvider from "@walletconnect/web3-provider";
 import { JsonRpcProvider, Web3Provider } from "@ethersproject/providers";
 import { IFrameEthereumProvider } from "@ledgerhq/iframe-provider";
-// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { Web3ContextData } from "./types/types";
-import { NetworkId, NetworkIds, enabledNetworkIds } from "../lib/networks";
+import { enabledNetworkIds, NetworkId, NetworkIds } from "./networks";
 import { chains } from "./providers";
-import { isIframe } from "@fantohm/shared-helpers";
+import { isIframe, sign } from "@fantohm/shared-helpers";
 
 export const getURI = (networkId: NetworkId): string => {
   return chains[networkId].rpcUrls[0];
@@ -92,7 +91,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
       if (!rawProvider.on) {
         return;
       }
-      rawProvider.on("accountsChanged", async (accounts: string[]) => {
+      rawProvider.on("accountsChanged", async () => {
         setTimeout(() => window.location.reload(), 1);
       });
 
@@ -106,7 +105,7 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
         }
         setChainId(newChainId);
         if (!_checkNetwork(newChainId)) {
-          disconnect();
+          await disconnect();
         }
         setTimeout(() => window.location.reload(), 1);
       });
@@ -185,46 +184,69 @@ export const Web3ContextProvider: React.FC<{ children: ReactElement }> = ({
     }
   };
 
+  const isTradfiPage = () => {
+    return window.location.href.indexOf("trad-fi") >= 0;
+  };
+
   // connect - only runs for WalletProviders
-  const connect = useCallback(async () => {
-    // handling Ledger Live;
-    let rawProvider;
-    if (isIframe()) {
-      rawProvider = new IFrameEthereumProvider();
-    } else {
-      rawProvider = await web3Modal.connect();
-    }
-
-    // new _initListeners implementation matches Web3Modal Docs
-    // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
-    _initListeners(rawProvider);
-    const connectedProvider = new Web3Provider(rawProvider, "any");
-    const chainId = await connectedProvider
-      .getNetwork()
-      .then((network) => network.chainId);
-    const connectedAddress = await connectedProvider.getSigner().getAddress();
-    const validNetwork = _checkNetwork(chainId);
-    if (!validNetwork) {
-      const switched = await switchEthereumChain(defaultNetworkId, true);
-      if (!switched) {
-        web3Modal.clearCachedProvider();
-        const errorMessage = "Unable to connect. Please change network using provider.";
-        console.error(errorMessage);
-        //store.dispatch(error(errorMessage));
+  const connect = useCallback(
+    async (forceSwitch = false, forceNetworkId = NetworkIds.FantomOpera) => {
+      // handling Ledger Live;
+      let rawProvider;
+      if (isIframe()) {
+        rawProvider = new IFrameEthereumProvider();
+      } else {
+        rawProvider = await web3Modal.connect();
       }
-      return;
-    }
-    // Save everything after we've validated the right network.
-    // Eventually we'll be fine without doing network validations.
-    setChainId(chainId);
-    setAddress(connectedAddress);
-    setProvider(connectedProvider);
 
-    // Keep this at the bottom of the method, to ensure any repaints have the data we need
-    setConnected(true);
+      // new _initListeners implementation matches Web3Modal Docs
+      // ... see here: https://github.com/Web3Modal/web3modal/blob/2ff929d0e99df5edf6bb9e88cff338ba6d8a3991/example/../App.tsx#L185
+      _initListeners(rawProvider);
+      const connectedProvider = new Web3Provider(rawProvider, "any");
+      const isSigned = window.localStorage.getItem("disclaimerSigned");
+      if (!isSigned) {
+        const signVal = await sign(connectedProvider);
+        if (!signVal) {
+          await disconnect();
+          return;
+        }
+        window.localStorage.setItem("disclaimerSigned", signVal);
+      }
+      const chainId = await connectedProvider
+        .getNetwork()
+        .then((network) => network.chainId);
+      const connectedAddress = await connectedProvider.getSigner().getAddress();
+      const validNetwork = _checkNetwork(chainId);
+      let networkId = forceSwitch ? forceNetworkId : defaultNetworkId;
+      if (isTradfiPage() && validNetwork) {
+        networkId = validNetwork ? defaultNetworkId : forceNetworkId;
+      }
 
-    return connectedProvider;
-  }, [provider, web3Modal, connected]);
+      if (!validNetwork || isTradfiPage()) {
+        const switched = await switchEthereumChain(networkId, true);
+        if (!switched) {
+          web3Modal.clearCachedProvider();
+          const errorMessage = "Unable to connect. Please change network using provider.";
+          console.error(errorMessage);
+          //store.dispatch(error(errorMessage));
+        }
+      }
+      if (!validNetwork) {
+        return;
+      }
+      // Save everything after we've validated the right network.
+      // Eventually we'll be fine without doing network validations.
+      setChainId(chainId);
+      setAddress(connectedAddress);
+      setProvider(connectedProvider);
+
+      // Keep this at the bottom of the method, to ensure any repaints have the data we need
+      setConnected(true);
+
+      return connectedProvider;
+    },
+    [provider, web3Modal, connected]
+  );
 
   const disconnect = useCallback(async () => {
     web3Modal.clearCachedProvider();

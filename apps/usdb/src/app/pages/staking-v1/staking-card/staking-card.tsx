@@ -15,12 +15,10 @@ import { DaiToken, FHMToken, DaiUSDBLP } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import {
   Bond,
-  bondAsset,
   BondType,
   changeApproval,
   claimSingleSidedBond,
   error,
-  info,
   IAllBondData,
   IBondAssetAsyncThunk,
   IRedeemBondAsyncThunk,
@@ -38,7 +36,6 @@ import {
   allBonds,
 } from "@fantohm/shared-web3";
 import { formatCurrency, formatSeconds } from "@fantohm/shared-helpers";
-import { useNavigate } from "react-router-dom";
 import { RootState } from "../../../store";
 
 interface IStakingCardParams {
@@ -68,7 +65,6 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const singleSided = allBonds.filter(
     (bond) => bond.type === BondType.SINGLE_SIDED_V1
   )[0] as Bond;
-  const navigate = useNavigate();
 
   const accountBonds = useSelector((state: RootState) => {
     return state.account.bonds;
@@ -237,9 +233,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
     // console.log(`tokenBalance ${tokenBalance}, quantity ${quantity}`);
     if (["IL Redeem", "Claim"].includes(cardState)) return false;
 
-    if (Number(tokenBalance) < Number(quantity)) return true;
-
-    return false;
+    return Number(tokenBalance) < Number(quantity);
   }, [tokenBalance, quantity, cardState]);
 
   useEffect(() => {
@@ -429,7 +423,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           </Box>
         </Box>
       ) : (
-        <Box className={`flexSBRow w100`} sx={{ mb: "2em" }}></Box>
+        <Box className={`flexSBRow w100`} sx={{ mb: "2em" }} />
       )}
       {!connected ? (
         <Button
@@ -437,7 +431,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
           color="primary"
           id="bond-btn"
           className="paperButton transaction-button"
-          onClick={connect}
+          onClick={() => connect(true)}
         >
           Connect Wallet
         </Button>

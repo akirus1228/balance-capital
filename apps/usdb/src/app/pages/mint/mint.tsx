@@ -16,6 +16,7 @@ import {
   Bond,
   redeemBondUsdb,
   IRedeemBondAsyncThunk,
+  defaultNetworkId,
 } from "@fantohm/shared-web3";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import {
@@ -57,7 +58,8 @@ export default function Mint() {
   const outlinedInputClasses = noBorderOutlinedInputStyles();
   const navigate = useNavigate();
 
-  const { provider, address, connected, connect, chainId } = useWeb3Context();
+  const { provider, address, connected, connect, chainId, switchEthereumChain } =
+    useWeb3Context();
   const dispatch = useDispatch();
   const [tabState, setTabState] = React.useState(true);
   const [daiPrice, setDaiPrice] = React.useState(0);
@@ -163,10 +165,20 @@ export default function Mint() {
     async function fetchPrice() {
       setDaiPrice(await getTokenPrice("dai"));
       setFhmPrice(await getTokenPrice("fantohm"));
+      fetchPrice().then();
     }
-
-    fetchPrice().then();
   }, []);
+
+  const changeNetworks = async (chainId: number) => {
+    if (!switchEthereumChain) return;
+    const result = await switchEthereumChain(chainId || defaultNetworkId);
+    if (!result) {
+      const errorMessage =
+        "Unable to switch networks. Please change network using provider.";
+      console.error(errorMessage);
+      dispatch(error(errorMessage));
+    }
+  };
 
   const pendingTransactions = useSelector((state: RootState) => {
     return state?.pendingTransactions;
@@ -437,7 +449,7 @@ export default function Mint() {
                   variant="contained"
                   color="primary"
                   id="bond-btn"
-                  onClick={connect}
+                  onClick={() => connect(true)}
                 >
                   Connect Wallet
                 </Button>
