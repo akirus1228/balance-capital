@@ -1,9 +1,5 @@
-import { AppBar, Toolbar, Container, Grid, Box, Typography } from "@mui/material";
+import { Toolbar, Container, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
-
-import MenuLink from "../header/menu-link";
-import style from "./footer.module.scss";
-import { Logo } from "@fantohm/shared/ui-components";
 import { FooterBar } from "@fantohm/shared-ui-themes";
 
 type Page = {

@@ -4,7 +4,7 @@ import { NetworkIds } from "../networks";
 import {
   singleSidedLPBondDepositoryAbi,
   tradFiBondDepositoryAbi,
-  fantohmProBondDepositoryAbi,
+  lqdrUsdbPolBondDepositoryAbi,
   usdbABondDepositoryAbi,
   usdbFhmBurnBondDepositoryAbi,
 } from "../abi";
@@ -157,7 +157,7 @@ export const lqdrUsdbPol = new StableBond({
   isAvailable: { [NetworkIds.Rinkeby]: true },
   isPurchasable: true,
   bondIconSvg: null,
-  bondContractABI: fantohmProBondDepositoryAbi,
+  bondContractABI: lqdrUsdbPolBondDepositoryAbi,
   networkAddrs: {
     [NetworkIds.Rinkeby]: {
       bondAddress: "0x4f06EC6079BB6F6B39aF11010d764f1B4747E3eC",

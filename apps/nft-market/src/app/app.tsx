@@ -9,7 +9,6 @@ import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
-import { ScrollToTop } from "@fantohm/shared/ui-helpers";
 import BorrowPage from "./pages/borrow-page/borrow-page";
 import LendPage from "./pages/lend-page/lend-page";
 import MyAccountPage from "./pages/my-account-page/my-account-page";
@@ -68,7 +67,6 @@ export const App = (): JSX.Element => {
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
-        <ScrollToTop />
         {/* <Messages /> */}
         <Header />
         <Routes>

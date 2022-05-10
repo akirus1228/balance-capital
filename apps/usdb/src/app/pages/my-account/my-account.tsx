@@ -1,19 +1,16 @@
-import { Paper, Typography, useMediaQuery } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { Box } from "@mui/material";
 import style from "./my-account.module.scss";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 import {
   BondType,
-  redeemOneBond,
+  cancelBond,
   claimSingleSidedBond,
+  IAllBondData,
+  info,
+  IUserBond,
+  redeemOneBond,
   useBonds,
   useWeb3Context,
-  IAllBondData,
-  cancelBond,
-  IUserBond,
-  info,
 } from "@fantohm/shared-web3";
 import { useEffect, useMemo, useState } from "react";
 import { RootState } from "../../store";
@@ -62,7 +59,8 @@ export const MyAccount = (): JSX.Element => {
 
   const activeInvestments: Investment[] | null = useMemo(() => {
     if (accountBonds && accountBondsLoaded && chainId) {
-      const myInvestments = bonds.flatMap((bond) => {
+      // set timeout on setting the readystate to avoid additional render
+      return bonds.flatMap((bond) => {
         const bondName = bond.name;
         const accountBond = accountBonds[bondName];
         if (accountBond) {
@@ -91,8 +89,6 @@ export const MyAccount = (): JSX.Element => {
           return [];
         }
       });
-      // set timeout on setting the readystate to avoid additional render
-      return myInvestments;
     } else {
       return null;
     }
@@ -208,9 +204,20 @@ export const MyAccount = (): JSX.Element => {
 
   if (!address)
     return (
-      <h1 style={{ textAlign: "center" }}>
-        {hasCheckedConnection ? "Connect your wallet to view My Account" : "Loading..."}
-      </h1>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          width: "100%",
+          px: "20px",
+          minHeight: { xs: "150px", sm: "calc(100% - 470px)" },
+        }}
+      >
+        <h1 style={{ textAlign: "center" }}>
+          {hasCheckedConnection ? "Connect your wallet to view My Account" : "Loading..."}
+        </h1>
+      </Box>
     );
   return (
     <Box
