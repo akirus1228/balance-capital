@@ -23,6 +23,10 @@ import {
   LightCarouselFhm0,
   LightCarouselFhm1,
   LightCarouselFhm2,
+  DarkUSDBBanner1,
+  DarkUSDBBanner2,
+  LightUSDBBanner1,
+  LightUSDBBanner2,
 } from "@fantohm/shared/images";
 import { RootState } from "../../store";
 import { CSSProperties } from "@mui/styles";
@@ -93,6 +97,16 @@ const imgMap: ThemeImages = {
     lightIcon: LightCarouselFhm2,
     darkIcon: DarkCarouselFhm2,
   },
+  USDBBanner1: {
+    alt: "Gradient from purple to green to black with coins showing the USDB logo",
+    lightIcon: LightUSDBBanner1,
+    darkIcon: DarkUSDBBanner1,
+  },
+  USDBBanner2: {
+    alt: "Bordered box with rounded corners. Large coin showing USDB logo",
+    lightIcon: LightUSDBBanner2,
+    darkIcon: DarkUSDBBanner2,
+  },
 };
 
 interface ThemeImageProps {
@@ -107,7 +121,9 @@ interface ThemeImageProps {
     | "MintCarouselDai2"
     | "MintCarouselFhm0"
     | "MintCarouselFhm1"
-    | "MintCarouselFhm2";
+    | "MintCarouselFhm2"
+    | "USDBBanner1"
+    | "USDBBanner2";
   invertTheme?: boolean;
   style?: CSSProperties;
 }

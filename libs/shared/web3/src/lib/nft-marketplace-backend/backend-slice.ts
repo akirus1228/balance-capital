@@ -7,6 +7,7 @@ import {
   AssetStatus,
   Listing,
   LoginResponse,
+  Notification,
   StandardAssetLookupParams,
 } from "./backend-types";
 import { updateAsset } from "../wallet/wallet-slice";
@@ -36,6 +37,7 @@ export interface MarketplaceApiData {
   readonly loadListingsStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
+  readonly notifications: Notification[] | null;
   listings: Listing[];
 }
 
@@ -44,7 +46,7 @@ const cacheTime = 300 * 1000; // 5 minutes
 /* 
 authorizeAccount: generates user account if non existant 
   requests signature to create bearer token
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -69,9 +71,9 @@ export const authorizeAccount = createAsyncThunk(
   }
 );
 
-/* 
+/*
 loadListings: loads all listings
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -96,9 +98,35 @@ export const loadListings = createAsyncThunk(
   }
 );
 
-/* 
+/*
+loadListings: loads all notifications
+params:
+- networkId: number
+- address: string
+- provider: JsonRpcProvider
+returns: void
+*/
+export const loadNotifications = createAsyncThunk(
+  "marketplaceApi/loadNotifications",
+  async (
+    { address, provider, networkId }: SignerAsyncThunk,
+    { getState, rejectWithValue }
+  ) => {
+    //const signature = await handleSignMessage(address, provider);
+    const thisState: any = getState();
+    if (thisState.nftMarketplace.authSignature) {
+      console.log(
+        await BackendApi.getNotifications(address, thisState.nftMarketplace.authSignature)
+      );
+    } else {
+      rejectWithValue("No authorization found.");
+    }
+  }
+);
+
+/*
 createListing: loads all listings
-params: 
+params:
 - networkId: number
 - address: string
 - provider: JsonRpcProvider
@@ -316,6 +344,17 @@ const marketplaceApiSlice = createSlice({
       if (status) {
         status.status = BackendLoadingStatus.failed;
       }
+    });
+    builder.addCase(loadNotifications.pending, (state, action) => {
+      state.status = "loading";
+    });
+    builder.addCase(loadNotifications.fulfilled, (state, action) => {
+      state.status = "succeeded";
+      // console.log(action.payload);
+      //state.notifications = action.payload;
+    });
+    builder.addCase(loadNotifications.rejected, (state, action) => {
+      state.status = "failed";
     });
   },
 });
