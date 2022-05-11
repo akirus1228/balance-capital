@@ -1,17 +1,16 @@
 import { Box, Chip, IconButton, Paper } from "@mui/material";
-import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
-
-import style from "./borrower-asset.module.scss";
-import { Link } from "react-router-dom";
 import { useWalletAsset } from "../../../hooks/useWalletAsset";
+import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import PreviewImage from "../preview-image/preview-image";
+import style from "./lender-asset.module.scss";
+import { Link } from "react-router-dom";
 
-export interface BorrowerAssetProps {
+export interface LenderAssetProps {
   contractAddress: string;
   tokenId: string;
 }
 
-export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
+export function LenderAsset(props: LenderAssetProps) {
   const asset = useWalletAsset(props.contractAddress, props.tokenId);
 
   if (asset === null) {
@@ -53,7 +52,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         </IconButton>
       </Box>
       {asset.imageUrl && asset.openseaId && (
-        <Link to={`/borrow/${props.contractAddress}/${props.tokenId}`}>
+        <Link to={`/lend/${props.contractAddress}/${props.tokenId}`}>
           <PreviewImage
             url={asset.imageUrl}
             name={asset.name || "placeholder name"}
@@ -69,6 +68,6 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
       </Box>
     </Paper>
   );
-};
+}
 
-export default BorrowerAsset;
+export default LenderAsset;

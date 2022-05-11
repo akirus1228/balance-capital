@@ -5,10 +5,11 @@ import {
   PayloadAction,
 } from "@reduxjs/toolkit";
 import { isDev, loadState } from "@fantohm/shared-web3";
-import { BackendLoadingStatus, Listing } from "../../types/backend-types";
+import { Asset, BackendLoadingStatus, Listing } from "../../types/backend-types";
 import { ListingAsyncThunk, ListingQueryAsyncThunk } from "./interfaces";
 import { BackendApi } from "../../api";
 import { RootState } from "..";
+import { updateAssets } from "./asset-slice";
 
 export type Listings = {
   [listingId: string]: Listing;
@@ -40,12 +41,19 @@ export const loadListings = createAsyncThunk(
   "backend/loadListings",
   async (
     { queryParams = { skip: 0, take: 50 } }: ListingQueryAsyncThunk,
-    { getState, rejectWithValue }
+    { getState, rejectWithValue, dispatch }
   ) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
-      return await BackendApi.getListings(queryParams, thisState.backend.authSignature);
+      const listings: Listing[] = await BackendApi.getListings(
+        queryParams,
+        thisState.backend.authSignature
+      );
+      // listings come with assets, might as well update since we have it already
+      const listingAssets: Asset[] = listings.map((listing: Listing) => listing.asset);
+      dispatch(updateAssets(listingAssets));
+      return listings;
     } else {
       return rejectWithValue("No authorization found.");
     }

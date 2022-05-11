@@ -1,7 +1,8 @@
 import { defaultNetworkId, useWeb3Context } from "@fantohm/shared-web3";
-import { Container } from "@mui/material";
+import { Box, Container, Grid } from "@mui/material";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
 import { RootState } from "../../store";
 import { loadAssetsFromAddress } from "../../store/reducers/asset-slice";
@@ -35,7 +36,16 @@ export const BorrowPage = (): JSX.Element => {
   return (
     <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
       <h1>Choose an asset to collateralize</h1>
-      <AssetList sx={{ mt: "2em" }} assets={myAssets} />
+      <Box sx={{ mt: "2em" }}>
+        <Grid container maxWidth="xl" columnSpacing={5}>
+          <Grid item xs={0} md={2}>
+            <BorrowerAssetFilter />
+          </Grid>
+          <Grid item xs={12} md={10}>
+            <AssetList assets={myAssets} type="borrow" />
+          </Grid>
+        </Grid>
+      </Box>
     </Container>
   );
 };
