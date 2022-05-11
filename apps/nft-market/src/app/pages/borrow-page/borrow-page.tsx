@@ -18,9 +18,6 @@ export const BorrowPage = (): JSX.Element => {
     )
   );
 
-  //0x0fe2454716e3356B752af87eE064d1e1A5cA6A81
-  //0x0fe2454716e3356b752af87ee064d1e1a5ca6a81
-
   // Load assets and nfts in current wallet
   useEffect(() => {
     if (
