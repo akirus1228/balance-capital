@@ -1,6 +1,7 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useListingTermDetails } from "../../hooks/useListingTerms";
 import { RootState } from "../../store";
 import { loadListings } from "../../store/reducers/listing-slice";
 import { Asset, Listing } from "../../types/backend-types";
@@ -16,8 +17,6 @@ export const BorrowerListingDetails = (
 ): JSX.Element => {
   console.log("BorrowerListingDetails render");
   const dispatch = useDispatch();
-  const [repaymentAmount, setRepaymentAmount] = useState(0);
-  const [repaymentTotal, setRepaymentTotal] = useState(0);
 
   const listing: Listing = useSelector((state: RootState) => {
     const key = Object.keys(state.listings.listings).find((key: string) => {
@@ -46,21 +45,7 @@ export const BorrowerListingDetails = (
   }, [props.asset?.openseaId]);
 
   // calculate repayment totals
-  useEffect(() => {
-    if (
-      listing &&
-      listing.terms &&
-      listing?.terms.amount &&
-      listing?.terms.apr &&
-      listing?.terms.duration
-    ) {
-      const wholePercent = (listing.terms.duration / 365) * listing.terms.apr;
-      const realPercent = wholePercent / 100;
-      const _repaymentAmount = listing.terms.amount * realPercent;
-      setRepaymentAmount(_repaymentAmount);
-      setRepaymentTotal(_repaymentAmount + listing.terms.amount);
-    }
-  }, [JSON.stringify(listing)]);
+  const { repaymentAmount, repaymentTotal } = useListingTermDetails(listing);
 
   if (typeof listing.terms === "undefined") {
     return <h3>Loading...</h3>;
