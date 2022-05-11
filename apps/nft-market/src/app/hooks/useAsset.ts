@@ -1,13 +1,9 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useWeb3Context } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
-import { Asset } from "../types/backend-types";
-import {
-  AssetLoadStatus,
-  BackendLoadingStatus,
-  loadAsset,
-} from "../store/reducers/backend-slice";
+import { Asset, BackendLoadingStatus } from "../types/backend-types";
+import { AssetLoadStatus, loadAsset } from "../store/reducers/backend-slice";
 import { loadAssetsFromAddress } from "../store/reducers/asset-slice";
 
 export const useAsset = (

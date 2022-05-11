@@ -105,9 +105,13 @@ export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
     });
 };
 
-export const getListings = (address: string, signature: string): Promise<Listing[]> => {
+export const getListings = (
+  skip = 0,
+  limit = 50,
+  signature: string
+): Promise<Listing[]> => {
   // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all`;
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?skip=${skip}&limit=${limit}`;
   // console.log(url);
   return axios
     .get(url, {
@@ -124,12 +128,30 @@ export const getListings = (address: string, signature: string): Promise<Listing
     });
 };
 
-export const getListingFromOpenseaId = (
-  openseaId: string,
+export const getListing = (listingId: string, signature: string): Promise<Listing> => {
+  // console.log(address);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/${listingId}`;
+  // console.log(url);
+  return axios
+    .get(url, {
+      headers: {
+        Authorization: `Bearer ${signature}`,
+      },
+    })
+    .then((resp: AxiosResponse<AllListingsResponse>) => {
+      const { term, ...listing } = resp.data.data[0];
+      return { ...listing, terms: term };
+    });
+};
+
+export const getListingByOpenseaIds = (
+  openseaIds: string[],
   signature: string
 ): Promise<Listing> => {
   // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaId}`;
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaIds.join(
+    ","
+  )}`;
   // console.log(url);
   return axios
     .get(url, {

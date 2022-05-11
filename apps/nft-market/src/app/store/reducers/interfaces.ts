@@ -25,3 +25,8 @@ export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncTh
   readonly assetAddress: string;
   readonly tokenId: string;
 }
+
+export interface SkipLimitAsynkThunk {
+  readonly skip: number;
+  readonly limit: number;
+}

@@ -2,42 +2,26 @@ import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   Asset,
   AssetStatus,
+  BackendLoadingStatus,
   Listing,
   LoginResponse,
   Notification,
 } from "../../types/backend-types";
 import { loadState } from "@fantohm/shared-web3";
 import { BackendApi } from "../../api";
-import { ListingAsyncThunk, SignerAsyncThunk } from "./interfaces";
+import { SignerAsyncThunk } from "./interfaces";
 import { updateAsset, updateAssets } from "./asset-slice";
-
-export enum BackendLoadingStatus {
-  idle = "idle",
-  loading = "loading",
-  succeeded = "succeeded",
-  failed = "failed",
-}
 
 export type AssetLoadStatus = {
   assetId: string;
   status: BackendLoadingStatus;
 };
-
-export type ListingLoadStatus = {
-  assetId: string;
-  status: BackendLoadingStatus;
-};
-
 export interface BackendData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: AssetLoadStatus[];
-  readonly loadListingStatus: ListingLoadStatus[];
-  readonly loadListingsStatus: "idle" | "loading" | "succeeded" | "failed";
-  readonly createListingStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly authSignature: string | null;
   readonly notifications: Notification[] | null;
-  listings: Listing[];
 }
 
 const cacheTime = 300 * 1000; // 5 minutes
@@ -71,31 +55,7 @@ export const authorizeAccount = createAsyncThunk(
 );
 
 /*
-loadListings: loads all listings
-params:
-- networkId: number
-- address: string
-- provider: JsonRpcProvider
-returns: void
-*/
-export const loadListings = createAsyncThunk(
-  "backend/loadListings",
-  async (
-    { address, provider, networkId }: SignerAsyncThunk,
-    { getState, rejectWithValue }
-  ) => {
-    //const signature = await handleSignMessage(address, provider);
-    const thisState: any = getState();
-    if (thisState.backend.authSignature) {
-      return await BackendApi.getListings(address, thisState.backend.authSignature);
-    } else {
-      return rejectWithValue("No authorization found.");
-    }
-  }
-);
-
-/*
-loadListings: loads all notifications
+loadNotifications: loads all notifications
 params:
 - networkId: number
 - address: string
@@ -116,31 +76,6 @@ export const loadNotifications = createAsyncThunk(
       );
     } else {
       rejectWithValue("No authorization found.");
-    }
-  }
-);
-
-/*
-createListing: loads all listings
-params:
-- networkId: number
-- address: string
-- provider: JsonRpcProvider
-returns: void
-*/
-export const createListing = createAsyncThunk(
-  "backend/createListing",
-  async ({ asset, terms }: ListingAsyncThunk, { getState, rejectWithValue }) => {
-    console.log("backend-slice: createListing");
-    const thisState: any = getState();
-    if (thisState.backend.authSignature) {
-      if (!BackendApi.createListing(thisState.backend.authSignature, asset, terms)) {
-        return rejectWithValue("Failed to create listing");
-      }
-      return true;
-    } else {
-      console.warn("no auth");
-      return rejectWithValue("No authorization found.");
     }
   }
 );
@@ -227,47 +162,14 @@ export const loadAssetsFromOpenseaIds = createAsyncThunk(
   }
 );
 
-/* 
-loadListing: loads individual listing
-params: 
-- asset: Asset
-returns: Listing
-*/
-export const loadListing = createAsyncThunk(
-  "backend/loadListing",
-  async (openseaId: string, { getState, rejectWithValue, dispatch }) => {
-    console.log("loadListing called");
-    if (!openseaId) {
-      console.log("no id");
-      return rejectWithValue("No openseaId");
-    }
-    const thisState: any = getState();
-    if (thisState.backend.authSignature) {
-      console.log("sig found");
-      const listing: Listing = await BackendApi.getListingFromOpenseaId(
-        openseaId,
-        thisState.backend.authSignature
-      );
-
-      return listing;
-    } else {
-      return rejectWithValue("No authorization found.");
-    }
-  }
-);
-
 // initial wallet slice state
 const previousState = loadState("backend");
 const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
-  listings: [],
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
-  loadListingStatus: [],
-  loadListingsStatus: "idle",
-  createListingStatus: "idle",
 };
 
 // create slice and initialize reducers
@@ -287,21 +189,6 @@ const backendSlice = createSlice({
     });
     builder.addCase(authorizeAccount.rejected, (state, action) => {
       state.accountStatus = "failed";
-    });
-    builder.addCase(loadListings.pending, (state, action) => {
-      state.loadListingsStatus = "loading";
-    });
-    builder.addCase(
-      loadListings.fulfilled,
-      (state, action: PayloadAction<Listing[] | undefined>) => {
-        state.loadListingsStatus = "succeeded";
-        if (action.payload) {
-          state.listings = [...state.listings, ...action.payload];
-        }
-      }
-    );
-    builder.addCase(loadListings.rejected, (state, action) => {
-      state.loadListingsStatus = "failed";
     });
     builder.addCase(loadAsset.pending, (state, action) => {
       const currentAsset = action.meta.arg as Asset;
@@ -332,46 +219,7 @@ const backendSlice = createSlice({
         status.status = BackendLoadingStatus.failed;
       }
     });
-    builder.addCase(createListing.pending, (state, action) => {
-      state.createListingStatus = "loading";
-    });
-    builder.addCase(createListing.fulfilled, (state, action) => {
-      state.createListingStatus = "succeeded";
-    });
-    builder.addCase(createListing.rejected, (state, action) => {
-      state.createListingStatus = "failed";
-    });
-    builder.addCase(loadListing.pending, (state, action) => {
-      state.loadListingStatus.push({
-        assetId: action.meta.arg,
-        status: BackendLoadingStatus.loading,
-      });
-    });
-    builder.addCase(loadListing.fulfilled, (state, action: PayloadAction<Listing>) => {
-      const status = state.loadAssetStatus.find(
-        (status: ListingLoadStatus) => status.assetId === action.payload.asset.openseaId
-      );
-      if (status) {
-        status.status = BackendLoadingStatus.succeeded;
-      }
 
-      let listing = state.listings.find(
-        (listing: Listing) => listing.asset.openseaId === action.payload.asset.openseaId
-      );
-      if (listing) {
-        listing = { ...listing, ...action.payload };
-      } else {
-        state.listings.push(action.payload);
-      }
-    });
-    builder.addCase(loadListing.rejected, (state, action) => {
-      const status = state.loadAssetStatus.find(
-        (status: ListingLoadStatus) => status.assetId === action.meta.arg
-      );
-      if (status) {
-        status.status = BackendLoadingStatus.failed;
-      }
-    });
     builder.addCase(loadNotifications.pending, (state, action) => {
       state.status = "loading";
     });
