@@ -29,7 +29,6 @@ export const useWalletAsset = (
       (assets.assetStatus === "idle" || assets.assetStatus === "failed") &&
       assets.nextOpenseaLoad < Date.now()
     ) {
-      console.log("loading wallet assets");
       dispatch(loadAssetsFromAddress({ address, networkId: chainId }));
     }
   }, [address, assets.assetStatus, contractAddress, tokenId]);

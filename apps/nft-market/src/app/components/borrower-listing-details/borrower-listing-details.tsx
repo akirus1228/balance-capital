@@ -1,39 +1,68 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { Listing } from "../../types/backend-types";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { loadListings } from "../../store/reducers/listing-slice";
+import { Asset, Listing } from "../../types/backend-types";
 import style from "./borrower-listing-details.module.scss";
 
 export interface BorrowerListingDetailsProps {
-  listing: Listing;
+  asset: Asset;
   sx?: SxProps<Theme>;
 }
 
 export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
+  console.log("BorrowerListingDetails render");
+  const dispatch = useDispatch();
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);
+
+  const listing: Listing = useSelector((state: RootState) => {
+    const key = Object.keys(state.listings.listings).find((key: string) => {
+      const rtn =
+        state.listings.listings[key].asset.assetContractAddress ===
+        props.asset.assetContractAddress;
+
+      return rtn;
+    });
+
+    if (key) {
+      return state.listings.listings[key];
+    } else {
+      return {} as Listing;
+    }
+  });
+
+  useEffect(() => {
+    if (props.asset?.openseaId) {
+      dispatch(
+        loadListings({
+          queryParams: { skip: 0, take: 50, openseaIds: [props.asset?.openseaId] },
+        })
+      );
+    }
+  }, [props.asset?.openseaId]);
 
   // calculate repayment totals
   useEffect(() => {
     if (
-      props.listing?.terms.amount &&
-      props.listing?.terms.apr &&
-      props.listing?.terms.duration
+      listing &&
+      listing.terms &&
+      listing?.terms.amount &&
+      listing?.terms.apr &&
+      listing?.terms.duration
     ) {
-      const wholePercent = (props.listing.terms.duration / 365) * props.listing.terms.apr;
+      const wholePercent = (listing.terms.duration / 365) * listing.terms.apr;
       const realPercent = wholePercent / 100;
-      const _repaymentAmount = props.listing.terms.amount * realPercent;
+      const _repaymentAmount = listing.terms.amount * realPercent;
       setRepaymentAmount(_repaymentAmount);
-      setRepaymentTotal(_repaymentAmount + props.listing.terms.amount);
+      setRepaymentTotal(_repaymentAmount + listing.terms.amount);
     }
-  }, [
-    props.listing?.terms.amount,
-    props.listing?.terms.apr,
-    props.listing?.terms.duration,
-  ]);
+  }, [JSON.stringify(listing)]);
 
-  if (!props.listing) {
+  if (typeof listing.terms === "undefined") {
     return <h3>Loading...</h3>;
   }
 
@@ -53,7 +82,7 @@ export const BorrowerListingDetails = (
           <Box className="flex fc">
             <Typography className={style["label"]}>Principal</Typography>
             <Typography className={`${style["data"]}`}>
-              {props.listing.terms.amount.toLocaleString("en-US", {
+              {listing.terms.amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
@@ -61,20 +90,18 @@ export const BorrowerListingDetails = (
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>APY</Typography>
-            <Typography className={`${style["data"]}`}>
-              {props.listing.terms.apr}%
-            </Typography>
+            <Typography className={`${style["data"]}`}>{listing.terms.apr}%</Typography>
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until offer expires</Typography>
             <Box className="flex fr w100">
               <Typography className={`${style["data"]}`}>
-                {props.listing.terms.expirationAt}
+                {listing.terms.expirationAt}
               </Typography>
             </Box>
           </Box>
           <Box className="flex fc">
-            <Button variant="contained">Repay loan</Button>
+            <Button variant="contained">Update Terms</Button>
           </Box>
         </Box>
       </Paper>

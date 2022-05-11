@@ -11,14 +11,13 @@ import { loadAssetsFromOpenseaIds } from "./backend-slice";
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
 const openSeaConfig = (): FetchNFTClientProps => {
-  console.log("isDev: " + isDev());
   const openSeaConfig: any = {
     apiKey: isDev() ? "5bec8ae0372044cab1bef0d866c98618" : OPENSEA_API_KEY,
   };
   if (isDev()) {
     openSeaConfig.apiEndpoint = "https://testnets-api.opensea.io/api/v1";
   }
-  console.log(openSeaConfig);
+
   return { openSeaConfig };
 };
 
@@ -53,7 +52,6 @@ export const loadAssetsFromAddress = createAsyncThunk(
       const client: FetchNFTClient = thisState.assets.fetchNftClient as FetchNFTClient;
       const openseaData = await client.getEthereumCollectibles([address]);
       if (!openseaData || typeof openseaData[address] === "undefined") {
-        console.log("Opensea returning no items");
         return [] as Asset[];
       }
 
@@ -71,7 +69,7 @@ export const loadAssetsFromAddress = createAsyncThunk(
 
       const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
       // see if we have this data on the backend
-      console.log("load data from backend");
+
       dispatch(loadAssetsFromOpenseaIds(openseaIds));
 
       return walletContents as Asset[];

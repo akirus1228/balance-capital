@@ -16,7 +16,7 @@ export const LendPage = (): JSX.Element => {
   // Load assets and nfts in current wallet
   useEffect(() => {
     if (assetState.assetStatus !== "loading" && assetState.nextOpenseaLoad < Date.now()) {
-      dispatch(loadListings({ skip: 0, limit: 50 }));
+      dispatch(loadListings({ queryParams: { skip: 0, take: 50 } }));
     }
   }, [chainId, address, assetState.assetStatus]);
 

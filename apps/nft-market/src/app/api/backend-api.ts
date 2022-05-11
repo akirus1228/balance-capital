@@ -21,6 +21,8 @@ import {
   Notification,
   NotificationStatus,
 } from "../types/backend-types";
+import { ListingQueryParam } from "../store/reducers/interfaces";
+import { objectToQueryParams } from "@fantohm/shared-helpers";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -31,15 +33,13 @@ export const NFT_MARKETPLACE_API_URL =
 export const doLogin = (address: string): Promise<LoginResponse> => {
   const url = `${NFT_MARKETPLACE_API_URL}/auth/login`;
   return axios.post(url, { address }).then((resp: AxiosResponse<LoginResponse>) => {
-    console.log(resp);
     return resp.data;
   });
 };
 
 export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -47,14 +47,11 @@ export const getAsset = (assetId: string, signature: string): Promise<Asset> => 
       },
     })
     .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      console.log("");
-      console.log(resp);
       return resp.data.data[0];
     })
     .catch((err) => {
       // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
+
       return {} as Asset;
     });
 };
@@ -63,9 +60,8 @@ export const getAssetFromOpenseaId = (
   openseaIds: string[],
   signature: string
 ): Promise<Asset[]> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaIds.join(",")}`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -77,14 +73,12 @@ export const getAssetFromOpenseaId = (
     })
     .catch((err) => {
       // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
+
       return [{}] as Asset[];
     });
 };
 
 export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset`;
   return axios
     .post(url, asset, {
@@ -93,26 +87,22 @@ export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
       },
     })
     .then((resp: AxiosResponse<CreateAssetResponse>) => {
-      console.log("");
-      console.log(resp);
       return resp.data.asset;
     })
     .catch((err) => {
       // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
+
       return {} as Asset;
     });
 };
 
 export const getListings = (
-  skip = 0,
-  limit = 50,
+  queryParams: ListingQueryParam,
   signature: string
 ): Promise<Listing[]> => {
-  // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?skip=${skip}&limit=${limit}`;
-  // console.log(url);
+  const queryParamString = objectToQueryParams(queryParams);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?${queryParamString}`;
+
   return axios
     .get(url, {
       headers: {
@@ -120,7 +110,6 @@ export const getListings = (
       },
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
-      // console.log(resp);
       return resp.data.data.map((listing: BackendListing) => {
         const { term, ...formattedListing } = listing;
         return { ...formattedListing, terms: term } as Listing;
@@ -129,9 +118,8 @@ export const getListings = (
 };
 
 export const getListing = (listingId: string, signature: string): Promise<Listing> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/${listingId}`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -148,11 +136,10 @@ export const getListingByOpenseaIds = (
   openseaIds: string[],
   signature: string
 ): Promise<Listing> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaIds.join(
     ","
   )}`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -160,7 +147,6 @@ export const getListingByOpenseaIds = (
       },
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
-      // console.log(resp);
       const { term, ...listing } = resp.data.data[0];
       return { ...listing, terms: term };
     });
@@ -181,11 +167,9 @@ export const createListing = (
       },
     })
     .then((resp: AxiosResponse<any>) => {
-      console.log(resp);
       return resp.data;
     })
     .catch((err: any) => {
-      console.log(err);
       return false;
     });
 };
@@ -235,9 +219,8 @@ export const getNotifications = (
   address: string,
   signature: string
 ): Promise<AllNotificationsResponse> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/all`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -245,7 +228,6 @@ export const getNotifications = (
       },
     })
     .then((resp: AxiosResponse<AllNotificationsResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };
@@ -255,10 +237,9 @@ export const deleteNotification = async (
   signature: string,
   id: string | undefined
 ): Promise<ApiResponse | null> => {
-  // console.log(address);
   if (typeof id !== "string") return null;
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${id}`;
-  // console.log(url);
+
   return await axios
     .delete(url, {
       headers: {
@@ -266,7 +247,6 @@ export const deleteNotification = async (
       },
     })
     .then((resp: AxiosResponse<ApiResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };
@@ -276,10 +256,9 @@ export const markAsRead = async (
   signature: string,
   notification: Notification | undefined
 ): Promise<ApiResponse | null> => {
-  // console.log(address);
   if (!notification || typeof notification.id !== "string") return null;
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${notification.id}`;
-  // console.log(url);
+
   const putParams: EditNotificationRequest = {
     id: notification.id,
     importance: notification.importance,
@@ -293,7 +272,6 @@ export const markAsRead = async (
       },
     })
     .then((resp: AxiosResponse<ApiResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };

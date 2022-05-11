@@ -26,7 +26,23 @@ export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncTh
   readonly tokenId: string;
 }
 
-export interface SkipLimitAsynkThunk {
+export interface SkipLimitAsyncThunk {
   readonly skip: number;
   readonly limit: number;
+}
+
+export type ListingQueryParam = {
+  skip: number;
+  take: number;
+  status?: string;
+  openseaIds?: string[];
+  contractAddress?: string;
+  mediaType?: string;
+  apr?: number;
+  duration?: number;
+  borrower?: string;
+};
+
+export interface ListingQueryAsyncThunk {
+  queryParams?: ListingQueryParam;
 }

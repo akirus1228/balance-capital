@@ -1,11 +1,11 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { isDev, loadState } from "@fantohm/shared-web3";
 import { BackendLoadingStatus, Listing } from "../../types/backend-types";
-import { ListingAsyncThunk, SkipLimitAsynkThunk } from "./interfaces";
+import { ListingAsyncThunk, ListingQueryAsyncThunk } from "./interfaces";
 import { BackendApi } from "../../api";
 
 type Listings = {
-  [key: string]: Listing;
+  [listingId: string]: Listing;
 };
 
 type ListingLoadStatus = {
@@ -32,11 +32,14 @@ returns: void
 */
 export const loadListings = createAsyncThunk(
   "backend/loadListings",
-  async ({ skip, limit }: SkipLimitAsynkThunk, { getState, rejectWithValue }) => {
+  async (
+    { queryParams = { skip: 0, take: 50 } }: ListingQueryAsyncThunk,
+    { getState, rejectWithValue }
+  ) => {
     //const signature = await handleSignMessage(address, provider);
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
-      return await BackendApi.getListings(skip, limit, thisState.backend.authSignature);
+      return await BackendApi.getListings(queryParams, thisState.backend.authSignature);
     } else {
       return rejectWithValue("No authorization found.");
     }
@@ -84,38 +87,8 @@ export const loadListing = createAsyncThunk(
     }
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
-      console.log("sig found");
       const listing: Listing = await BackendApi.getListing(
         listingId,
-        thisState.backend.authSignature
-      );
-
-      return listing;
-    } else {
-      return rejectWithValue("No authorization found.");
-    }
-  }
-);
-
-/* 
-loadListing: loads individual listing
-params: 
-- asset: Asset
-returns: Listing
-*/
-export const loadListingByOpenseaIds = createAsyncThunk(
-  "backend/loadListingFromOpenseaId",
-  async (openseaIds: string[], { getState, rejectWithValue, dispatch }) => {
-    console.log("loadListing called");
-    if (openseaIds.length < 1) {
-      console.log("no id");
-      return rejectWithValue("No openseaId");
-    }
-    const thisState: any = getState();
-    if (thisState.backend.authSignature) {
-      console.log("sig found");
-      const listing: Listing = await BackendApi.getListingByOpenseaIds(
-        openseaIds,
         thisState.backend.authSignature
       );
 
