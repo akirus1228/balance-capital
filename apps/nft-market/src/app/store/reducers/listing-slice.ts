@@ -1,14 +1,20 @@
-import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { isDev, loadState } from "@fantohm/shared-web3";
 import { BackendLoadingStatus, Listing } from "../../types/backend-types";
 import { ListingAsyncThunk, ListingQueryAsyncThunk } from "./interfaces";
 import { BackendApi } from "../../api";
+import { RootState } from "..";
 
-type Listings = {
+export type Listings = {
   [listingId: string]: Listing;
 };
 
-type ListingLoadStatus = {
+export type ListingLoadStatus = {
   [key: string]: BackendLoadingStatus;
 };
 
@@ -164,3 +170,6 @@ const listingsSlice = createSlice({
 export const listingsReducer = listingsSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
 //export const { } = listingsReducer.actions;
+
+const baseInfo = (state: RootState) => state.listings;
+export const getListingState = createSelector(baseInfo, (listings) => listings);

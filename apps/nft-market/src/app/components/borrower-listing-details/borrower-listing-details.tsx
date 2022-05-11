@@ -2,8 +2,9 @@ import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useListingTermDetails } from "../../hooks/useListingTerms";
-import { RootState } from "../../store";
-import { loadListings } from "../../store/reducers/listing-slice";
+import store, { RootState } from "../../store";
+import { getListingState, loadListings } from "../../store/reducers/listing-slice";
+import { selectListingFromAsset } from "../../store/selectors/listing-selectors";
 import { Asset, Listing } from "../../types/backend-types";
 import style from "./borrower-listing-details.module.scss";
 
@@ -17,22 +18,8 @@ export const BorrowerListingDetails = (
 ): JSX.Element => {
   console.log("BorrowerListingDetails render");
   const dispatch = useDispatch();
-
-  const listing: Listing = useSelector((state: RootState) => {
-    const key = Object.keys(state.listings.listings).find((key: string) => {
-      const rtn =
-        state.listings.listings[key].asset.assetContractAddress ===
-        props.asset.assetContractAddress;
-
-      return rtn;
-    });
-
-    if (key) {
-      return state.listings.listings[key];
-    } else {
-      return {} as Listing;
-    }
-  });
+  const listingState = getListingState(store.getState());
+  const listing: Listing = selectListingFromAsset(listingState, props.asset);
 
   useEffect(() => {
     if (props.asset?.openseaId) {
@@ -45,7 +32,7 @@ export const BorrowerListingDetails = (
   }, [props.asset?.openseaId]);
 
   // calculate repayment totals
-  const { repaymentAmount, repaymentTotal } = useListingTermDetails(listing);
+  const { repaymentTotal } = useListingTermDetails(listing);
 
   if (typeof listing.terms === "undefined") {
     return <h3>Loading...</h3>;
