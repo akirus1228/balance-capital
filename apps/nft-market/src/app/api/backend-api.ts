@@ -20,6 +20,7 @@ import {
   Terms,
   Notification,
   NotificationStatus,
+  CreateListingResponse,
 } from "../types/backend-types";
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
@@ -157,7 +158,7 @@ export const createListing = (
   signature: string,
   asset: Asset,
   terms: Terms
-): Promise<Listing[] | boolean> => {
+): Promise<Listing | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
   const listingParams = listingToCreateListingRequest(asset, terms);
   // post
@@ -167,8 +168,8 @@ export const createListing = (
         Authorization: `Bearer ${signature}`,
       },
     })
-    .then((resp: AxiosResponse<any>) => {
-      return resp.data;
+    .then((resp: AxiosResponse<CreateListingResponse>) => {
+      return createListingResponseToListing(resp.data);
     })
     .catch((err: any) => {
       return false;
@@ -214,6 +215,13 @@ const listingToCreateListingRequest = (
   }
 
   return tempListing;
+};
+
+const createListingResponseToListing = (
+  createListingResponse: CreateListingResponse
+): Listing => {
+  const { term, ...listing } = createListingResponse;
+  return { ...listing, terms: term };
 };
 
 export const getNotifications = (

@@ -53,7 +53,11 @@ export const loadListings = createAsyncThunk(
       // listings come with assets, might as well update since we have it already
       const listingAssets: Asset[] = listings.map((listing: Listing) => listing.asset);
       dispatch(updateAssets(listingAssets));
-      return listings;
+      const newListings: Listings = {};
+      listings.forEach((listing: Listing) => {
+        newListings[listing.id || ""] = listing;
+      });
+      return newListings;
     } else {
       return rejectWithValue("No authorization found.");
     }
@@ -133,16 +137,9 @@ const listingsSlice = createSlice({
     builder.addCase(loadListings.pending, (state, action) => {
       state.listingsLoadStatus = BackendLoadingStatus.loading;
     });
-    builder.addCase(loadListings.fulfilled, (state, action: PayloadAction<Listing[]>) => {
+    builder.addCase(loadListings.fulfilled, (state, action: PayloadAction<Listings>) => {
       state.listingsLoadStatus = BackendLoadingStatus.succeeded;
-      action.payload.forEach((newListing: Listing) => {
-        if (newListing.id) {
-          state.listings[newListing.id] = {
-            ...state.listings[newListing.id],
-            ...newListing,
-          };
-        }
-      });
+      state.listings = { ...state.listings, ...action.payload };
     });
     builder.addCase(loadListings.rejected, (state, action) => {
       state.listingsLoadStatus = BackendLoadingStatus.failed;

@@ -31,6 +31,12 @@ export type AllListingsResponse = {
   count: number;
 };
 
+export type CreateListingResponse = {
+  asset: Asset;
+  status: ListingStatus;
+  term: Terms;
+};
+
 // data models
 export enum AssetStatus {
   New = "NEW",
