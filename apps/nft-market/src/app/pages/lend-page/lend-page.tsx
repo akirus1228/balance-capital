@@ -20,22 +20,29 @@ import {
 import style from "./lend-page.module.scss";
 
 export const LendPage = (): JSX.Element => {
+  console.log("render LendPage");
   const dispatch = useDispatch();
-  const [assets, setAssets] = useState([] as Asset[]);
+  const [assets, setAssets] = useState<Asset[]>([]);
   const { chainId, address } = useWeb3Context();
-  const listingState = getListingState(store.getState());
-  const listings: Listing[] = selectListingByStatus(listingState, ListingStatus.Listed);
+  const listingState = useSelector((state: RootState) => state.listings);
+  const listings: Listing[] = useSelector((state: RootState) =>
+    selectListingByStatus(state, ListingStatus.Listed)
+  );
+  const { authSignature } = useSelector((state: RootState) => state.backend);
 
   // Load assets and nfts in current wallet
   useEffect(() => {
+    console.log("Load listings");
     if (listingState.listingsLoadStatus !== BackendLoadingStatus.loading) {
       dispatch(loadListings({ queryParams: { skip: 0, take: 50 } }));
     }
-  }, [chainId, address]);
+  }, [chainId, address, authSignature]);
 
   useEffect(() => {
+    console.log("Set Assets");
+    console.log(listings);
     setAssets(listings.map((listing: Listing) => listing.asset));
-  }, [JSON.stringify(listings)]);
+  }, [listings]);
 
   return (
     <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
