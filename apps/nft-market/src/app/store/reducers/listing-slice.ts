@@ -78,10 +78,15 @@ export const createListing = createAsyncThunk(
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
-      if (!BackendApi.createListing(thisState.backend.authSignature, asset, terms)) {
-        return rejectWithValue("Failed to create listing");
+      const listing = BackendApi.createListing(
+        thisState.backend.authSignature,
+        asset,
+        terms
+      );
+      if (!listing) {
+        rejectWithValue("Failed to create listing");
       }
-      return true;
+      return listing;
     } else {
       console.warn("no auth");
       return rejectWithValue("No authorization found.");
@@ -147,9 +152,22 @@ const listingsSlice = createSlice({
     builder.addCase(createListing.pending, (state, action) => {
       state.createListingStatus = BackendLoadingStatus.loading;
     });
-    builder.addCase(createListing.fulfilled, (state, action) => {
-      state.createListingStatus = BackendLoadingStatus.succeeded;
-    });
+    builder.addCase(
+      createListing.fulfilled,
+      (state, action: PayloadAction<Listing | boolean>) => {
+        state.createListingStatus = BackendLoadingStatus.succeeded;
+        if (
+          action.payload !== false &&
+          typeof action.payload !== "boolean" &&
+          action.payload.id
+        ) {
+          state.listings = {
+            ...state.listings,
+            ...{ [action.payload.id]: action.payload },
+          };
+        }
+      }
+    );
     builder.addCase(createListing.rejected, (state, action) => {
       state.createListingStatus = BackendLoadingStatus.failed;
     });
