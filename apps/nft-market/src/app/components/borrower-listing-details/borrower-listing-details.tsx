@@ -18,7 +18,6 @@ export const BorrowerListingDetails = (
 ): JSX.Element => {
   console.log("BorrowerListingDetails render");
   const dispatch = useDispatch();
-  const listingState = getListingState(store.getState());
   const listing: Listing = useSelector((state: RootState) =>
     selectListingFromAsset(state, props.asset)
   );

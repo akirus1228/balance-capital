@@ -16,6 +16,7 @@ import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrow
 import NotificationsPage from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount } from "./store/reducers/backend-slice";
+import LenderAssetDetailsPage from "./pages/lender-asset-details-page/lender-asset-details-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -79,6 +80,10 @@ export const App = (): JSX.Element => {
           />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/lend" element={<LendPage />} />
+          <Route
+            path="/lend/:contractAddress/:tokenId"
+            element={<LenderAssetDetailsPage />}
+          />
           <Route path="/my-account" element={<MyAccountPage />} />
           <Route
             path="*"
