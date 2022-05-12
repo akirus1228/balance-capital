@@ -46,3 +46,31 @@ export type ListingQueryParam = {
 export interface ListingQueryAsyncThunk {
   queryParams?: ListingQueryParam;
 }
+
+export type BackendAssetQueryParam = {
+  skip: number;
+  take: number;
+  status?: string;
+  openseaIds?: string[];
+  contractAddress?: string;
+  mediaType?: string;
+};
+
+export interface BackendAssetQueryAsyncThunk {
+  queryParams?: BackendAssetQueryParam;
+}
+
+export type OpenseaAssetQueryParam = {
+  owner?: string; // wallet address
+  token_ids?: string[]; //array of token ids
+  collection?: string;
+  collection_slug?: string;
+  order_direction?: string;
+  asset_contract_address?: string;
+  asset_contract_addresses?: string;
+  limit?: number;
+};
+
+export interface OpenseaAssetQueryAsyncThunk {
+  queryParams?: OpenseaAssetQueryParam;
+}

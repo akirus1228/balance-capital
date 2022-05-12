@@ -22,10 +22,16 @@ export interface Currency {
 }
 
 export type NftPermStatus = {
-  [key: string]: boolean;
+  [tokenIdentifier: string]: boolean;
 };
 
-export interface WalletData {
+export type NftPermissionPayload = {
+  assetAddress: string;
+  tokenId: string;
+  hasPermission: boolean;
+};
+
+export interface WalletState {
   readonly currencyStatus: "idle" | "loading" | "succeeded" | "failed";
   readonly checkPermStatus: "idle" | "loading" | "failed";
   readonly requestPermStatus: "idle" | "loading" | "failed";
@@ -33,8 +39,6 @@ export interface WalletData {
   readonly currencies: Currency[];
   readonly isDev: boolean;
 }
-
-const cacheTime = 300 * 1000; // 5 minutes
 
 /* 
 loadWalletBalance: loads balances
@@ -84,12 +88,15 @@ export const requestNftPermission = createAsyncThunk(
     try {
       const signer = provider.getSigner();
       const nftContract = new ethers.Contract(assetAddress, ierc721Abi, signer);
-      const response = await nftContract["approve"](
+      const approveTx = await nftContract["approve"](
         addresses[networkId]["USDB_LENDING_ADDRESS"] as string,
         tokenId
       );
-      console.log(response);
-      return { assetAddress, tokenId };
+      await approveTx.wait();
+      console.log(approveTx);
+      const payload: NftPermStatus = {};
+      payload[`${tokenId}:::${assetAddress}`] = true;
+      return payload;
     } catch (err) {
       console.log(err);
       return rejectWithValue("Unable to load create listing.");
@@ -113,6 +120,7 @@ export const checkNftPermission = createAsyncThunk(
     { networkId, provider, walletAddress, assetAddress, tokenId }: AssetLocAsyncThunk,
     { rejectWithValue }
   ) => {
+    console.log(`checking Perms: ${assetAddress} ${tokenId}`);
     if (!walletAddress || !assetAddress || !tokenId) {
       return rejectWithValue("Addresses and id required");
     }
@@ -125,11 +133,12 @@ export const checkNftPermission = createAsyncThunk(
     try {
       const nftContract = new ethers.Contract(assetAddress, ierc721Abi, provider);
       const response = await nftContract["getApproved"](tokenId);
-      console.log(response);
       const hasPermission = response.includes(
         addresses[networkId]["USDB_LENDING_ADDRESS"]
       );
-      return { assetAddress, tokenId, hasPermission };
+      const payload: NftPermStatus = {};
+      payload[`${tokenId}:::${assetAddress}`] = hasPermission;
+      return payload;
     } catch (err) {
       console.log(err);
       return rejectWithValue("Unable to load create listing.");
@@ -139,10 +148,10 @@ export const checkNftPermission = createAsyncThunk(
 
 // initial wallet slice state
 const previousState = loadState("wallet");
-const initialState: WalletData = {
+const initialState: WalletState = {
   currencies: [],
+  nftPermStatus: [],
   ...previousState, // overwrite assets and currencies from cache if recent
-  nftPerms: [],
   currencyStatus: "idle", // always reset states on reload
   checkPermStatus: "idle",
   requestPermStatus: "idle",
@@ -170,18 +179,12 @@ const walletSlice = createSlice({
     });
     builder.addCase(
       checkNftPermission.fulfilled,
-      (
-        state,
-        action: PayloadAction<{
-          assetAddress: string;
-          tokenId: string;
-          hasPermission: boolean;
-        }>
-      ) => {
+      (state, action: PayloadAction<NftPermStatus>) => {
+        console.log("reducing nftPermStatus");
+
         state.checkPermStatus = "idle";
-        state.nftPermStatus[
-          `${action.payload.tokenId}:::${action.payload.assetAddress}`
-        ] = action.payload.hasPermission;
+        state.nftPermStatus = { ...state.nftPermStatus, ...action.payload };
+        console.log("reducing nftPermStatus update finished");
       }
     );
     builder.addCase(checkNftPermission.rejected, (state, action) => {
@@ -192,17 +195,12 @@ const walletSlice = createSlice({
     });
     builder.addCase(
       requestNftPermission.fulfilled,
-      (
-        state,
-        action: PayloadAction<{
-          assetAddress: string;
-          tokenId: string;
-        }>
-      ) => {
+      (state, action: PayloadAction<NftPermStatus>) => {
+        console.log("reducing nftPermStatus");
+
         state.requestPermStatus = "idle";
-        state.nftPermStatus[
-          `${action.payload.tokenId}:::${action.payload.assetAddress}`
-        ] = true;
+        state.nftPermStatus = { ...state.nftPermStatus, ...action.payload };
+        console.log("reducing nftPermStatus update finished");
       }
     );
     builder.addCase(requestNftPermission.rejected, (state, action) => {

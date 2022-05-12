@@ -21,7 +21,7 @@ import {
   Notification,
   NotificationStatus,
 } from "../types/backend-types";
-import { ListingQueryParam } from "../store/reducers/interfaces";
+import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
 
 export const WEB3_SIGN_MESSAGE =
@@ -56,11 +56,12 @@ export const getAsset = (assetId: string, signature: string): Promise<Asset> => 
     });
 };
 
-export const getAssetFromOpenseaId = (
-  openseaIds: string[],
+export const getAssets = (
+  queryParams: BackendAssetQueryParam,
   signature: string
 ): Promise<Asset[]> => {
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaIds.join(",")}`;
+  const queryParamString = objectToQueryParams(queryParams);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?${queryParamString}`;
 
   return axios
     .get(url, {

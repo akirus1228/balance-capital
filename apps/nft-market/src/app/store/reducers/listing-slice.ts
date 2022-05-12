@@ -38,7 +38,7 @@ params:
 returns: void
 */
 export const loadListings = createAsyncThunk(
-  "backend/loadListings",
+  "listings/loadListings",
   async (
     { queryParams = { skip: 0, take: 50 } }: ListingQueryAsyncThunk,
     { getState, rejectWithValue, dispatch }
@@ -69,7 +69,7 @@ params:
 returns: void
 */
 export const createListing = createAsyncThunk(
-  "backend/createListing",
+  "listings/createListing",
   async ({ asset, terms }: ListingAsyncThunk, { getState, rejectWithValue }) => {
     console.log("backend-slice: createListing");
     const thisState: any = getState();
@@ -92,7 +92,7 @@ params:
 returns: Listing
 */
 export const loadListing = createAsyncThunk(
-  "backend/loadListing",
+  "listings/loadListing",
   async (listingId: string, { getState, rejectWithValue, dispatch }) => {
     console.log("loadListing called");
     if (!listingId) {

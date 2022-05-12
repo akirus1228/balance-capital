@@ -23,6 +23,7 @@ export const BorrowerListingDetails = (
 
   useEffect(() => {
     if (props.asset?.openseaId) {
+      console.log("loading listings");
       dispatch(
         loadListings({
           queryParams: { skip: 0, take: 50, openseaIds: [props.asset?.openseaId] },

@@ -6,11 +6,9 @@ import BorrowerCreateListing from "../../components/borrower-create-listing/borr
 import { useWalletAsset } from "../../hooks/useWalletAsset";
 import BorrowerListingDetails from "../../components/borrower-listing-details/borrower-listing-details";
 import { Asset, AssetStatus } from "../../types/backend-types";
-import { useDispatch } from "react-redux";
 
 export const BorrowerAssetDetailsPage = (): JSX.Element => {
   console.log("BorrowerAssetDetailsPage Render");
-  const dispatch = useDispatch();
   const params = useParams();
   const asset: Asset | null = useWalletAsset(
     params["contractAddress"],

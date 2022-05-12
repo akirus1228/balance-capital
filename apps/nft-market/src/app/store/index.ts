@@ -1,10 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { appReducer } from "./reducers/app-slice";
-import { saveState } from "./localstorage";
 import { themeReducer } from "@fantohm/shared-ui-themes";
 import { assetsReducer } from "./reducers/asset-slice";
 import { backendReducer } from "./reducers/backend-slice";
-import { walletReducer } from "@fantohm/shared-web3";
+import { saveState, walletReducer } from "@fantohm/shared-web3";
 import { listingsReducer } from "./reducers/listing-slice";
 
 // reducers are named automatically based on the name field in the slice

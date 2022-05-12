@@ -1,3 +1,4 @@
+import { loadState } from "@fantohm/shared-web3";
 import { createSlice, createSelector, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "..";
 
@@ -6,7 +7,9 @@ interface AppData {
   readonly checkedConnection: boolean;
 }
 
+const previousState = loadState("app");
 const initialState: AppData = {
+  ...previousState,
   loading: true,
   checkedConnection: false,
 };

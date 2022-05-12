@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
 import { RootState } from "../../store";
-import { loadAssetsFromAddress } from "../../store/reducers/asset-slice";
+import { loadAssetsFromOpensea } from "../../store/reducers/asset-slice";
 import { Asset } from "../../types/backend-types";
 import style from "./borrow-page.module.scss";
 
@@ -28,7 +28,7 @@ export const BorrowPage = (): JSX.Element => {
       assetState.nextOpenseaLoad < Date.now()
     ) {
       dispatch(
-        loadAssetsFromAddress({ networkId: chainId || defaultNetworkId, address })
+        loadAssetsFromOpensea({ networkId: chainId || defaultNetworkId, address })
       );
     }
   }, [chainId, address, assetState.assetStatus]);
