@@ -49,7 +49,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const { checkPermStatus, requestPermStatus } = useSelector(
     (state: RootState) => state.wallet
   );
-  const hasPermission = selectNftPermFromAsset(store.getState().wallet, props.asset);
+  const hasPermission = useSelector((state: RootState) =>
+    selectNftPermFromAsset(state, props.asset)
+  );
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
