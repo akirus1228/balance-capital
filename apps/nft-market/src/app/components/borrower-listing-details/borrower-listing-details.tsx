@@ -1,6 +1,10 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useListing } from "../../hooks/useListing";
+import { useDispatch, useSelector } from "react-redux";
+import { useListingTermDetails } from "../../hooks/useListingTerms";
+import store, { RootState } from "../../store";
+import { getListingState, loadListings } from "../../store/reducers/listing-slice";
+import { selectListingFromAsset } from "../../store/selectors/listing-selectors";
 import { Asset, Listing } from "../../types/backend-types";
 import style from "./borrower-listing-details.module.scss";
 
@@ -12,25 +16,27 @@ export interface BorrowerListingDetailsProps {
 export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
-  const listing: Listing | null = useListing(
-    props.asset.assetContractAddress,
-    props.asset.tokenId
+  console.log("BorrowerListingDetails render");
+  const dispatch = useDispatch();
+  const listing: Listing = useSelector((state: RootState) =>
+    selectListingFromAsset(state, props.asset)
   );
-  const [repaymentAmount, setRepaymentAmount] = useState(0);
-  const [repaymentTotal, setRepaymentTotal] = useState(0);
+
+  useEffect(() => {
+    if (props.asset?.openseaId) {
+      console.log("loading listings");
+      dispatch(
+        loadListings({
+          queryParams: { skip: 0, take: 50, openseaIds: [props.asset?.openseaId] },
+        })
+      );
+    }
+  }, [props.asset?.openseaId]);
 
   // calculate repayment totals
-  useEffect(() => {
-    if (listing?.terms.amount && listing?.terms.apr && listing?.terms.duration) {
-      const wholePercent = (listing.terms.duration / 365) * listing.terms.apr;
-      const realPercent = wholePercent / 100;
-      const _repaymentAmount = listing.terms.amount * realPercent;
-      setRepaymentAmount(_repaymentAmount);
-      setRepaymentTotal(_repaymentAmount + listing.terms.amount);
-    }
-  }, [listing?.terms.amount, listing?.terms.apr, listing?.terms.duration]);
+  const { repaymentTotal } = useListingTermDetails(listing);
 
-  if (!listing) {
+  if (typeof listing.terms === "undefined") {
     return <h3>Loading...</h3>;
   }
 
@@ -69,7 +75,7 @@ export const BorrowerListingDetails = (
             </Box>
           </Box>
           <Box className="flex fc">
-            <Button variant="contained">Repay loan</Button>
+            <Button variant="contained">Update Terms</Button>
           </Box>
         </Box>
       </Paper>

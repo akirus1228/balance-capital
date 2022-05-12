@@ -13,12 +13,13 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { RootState } from "../../../../store";
+import store, { RootState } from "../../../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";
 import { Asset, AssetStatus, Terms } from "../../../../types/backend-types";
-import { createListing } from "../../../../store/reducers/backend-slice";
+import { createListing } from "../../../../store/reducers/listing-slice";
+import { selectNftPermFromAsset } from "../../../../store/selectors/wallet-selectors";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -45,18 +46,17 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const [repaymentAmount, setRepaymentAmount] = useState(2500);
   const [repaymentTotal, setRepaymentTotal] = useState(12500);
 
-  const { checkPermStatus } = useSelector((state: RootState) => state.wallet);
+  const { checkPermStatus, requestPermStatus } = useSelector(
+    (state: RootState) => state.wallet
+  );
+  const hasPermission = useSelector((state: RootState) =>
+    selectNftPermFromAsset(state, props.asset)
+  );
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
     console.log("request permissions");
-    if (
-      chainId &&
-      address &&
-      props.asset.assetContractAddress &&
-      props.asset.id &&
-      provider
-    ) {
+    if (chainId && address && props.asset.assetContractAddress && provider) {
       setPending(true);
       dispatch(
         requestNftPermission({
@@ -70,17 +70,16 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     } else {
       console.warn("unable to process permission request");
     }
-  }, [chainId, address, props.asset.assetContractAddress, props.asset.id]);
+  }, [chainId, address, props.asset.assetContractAddress]);
 
   // check the contract to see if we have perms already
   useEffect(() => {
-    if (
-      chainId &&
-      address &&
-      props.asset.assetContractAddress &&
-      props.asset.id &&
-      provider
-    ) {
+    console.log(`chainId ${chainId}`);
+    console.log(`address ${address}`);
+    console.log(`props.asset.assetContractAddress ${props.asset.assetContractAddress}`);
+    console.log(`provider ${provider}`);
+    if (chainId && address && props.asset.assetContractAddress && provider) {
+      console.log(`Check perms`);
       dispatch(
         checkNftPermission({
           networkId: chainId,
@@ -91,14 +90,16 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
         })
       );
     }
-  }, [chainId, address, props.asset.assetContractAddress, props.asset.id]);
+  }, [chainId, address, props.asset.assetContractAddress]);
 
   // watch the status of the wallet for pending txns to clear
   useEffect(() => {
-    if (checkPermStatus === "idle" && pending === true) {
+    if (checkPermStatus !== "loading" && requestPermStatus !== "loading") {
       setPending(false);
+    } else {
+      setPending(true);
     }
-  }, [checkPermStatus]);
+  }, [checkPermStatus, requestPermStatus]);
 
   const handleCreateListing = () => {
     console.log("create listing");
@@ -198,12 +199,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           </Box>
         </Box>
       </Box>
-      {!props.asset.hasPermission && !pending && (
+      {!hasPermission && !pending && (
         <Button variant="contained" onClick={handlePermissionRequest}>
           Allow [name] to Access your NFT
         </Button>
       )}
-      {props.asset.hasPermission && !pending && (
+      {hasPermission && !pending && (
         <Button variant="contained" onClick={handleCreateListing}>
           List as collateral
         </Button>

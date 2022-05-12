@@ -31,6 +31,12 @@ export type AllListingsResponse = {
   count: number;
 };
 
+export type CreateListingResponse = {
+  asset: Asset;
+  status: ListingStatus;
+  term: Terms;
+};
+
 // data models
 export enum AssetStatus {
   New = "NEW",
@@ -106,7 +112,6 @@ export interface Asset {
   cacheExpire?: number;
   openseaLoaded?: number;
   hasPermission?: boolean;
-  owner?: Owner;
   id?: string;
   tokenId: string;
   openseaId?: string;
@@ -119,6 +124,7 @@ export interface Asset {
   videoUrl: Nullable<string>;
   threeDUrl: Nullable<string>;
   isOwned: boolean;
+  owner?: Owner;
   dateCreated: Nullable<string>;
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;
@@ -173,3 +179,10 @@ export type EditNotificationRequest = {
   message: string;
   status: NotificationStatus;
 };
+
+export enum BackendLoadingStatus {
+  idle = "idle",
+  loading = "loading",
+  succeeded = "succeeded",
+  failed = "failed",
+}

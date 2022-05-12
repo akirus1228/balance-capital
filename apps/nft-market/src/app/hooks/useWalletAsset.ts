@@ -3,7 +3,7 @@ import { useWeb3Context } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { Asset } from "../types/backend-types";
-import { loadAssetsFromAddress } from "../store/reducers/asset-slice";
+import { loadAssetsFromOpensea } from "../store/reducers/asset-slice";
 
 export const useWalletAsset = (
   contractAddress: string | undefined,
@@ -29,8 +29,7 @@ export const useWalletAsset = (
       (assets.assetStatus === "idle" || assets.assetStatus === "failed") &&
       assets.nextOpenseaLoad < Date.now()
     ) {
-      console.log("loading wallet assets");
-      dispatch(loadAssetsFromAddress({ address, networkId: chainId }));
+      dispatch(loadAssetsFromOpensea({ address, networkId: chainId }));
     }
   }, [address, assets.assetStatus, contractAddress, tokenId]);
 
