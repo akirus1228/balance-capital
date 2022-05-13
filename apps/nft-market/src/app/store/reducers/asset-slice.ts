@@ -242,6 +242,7 @@ const assetsSlice = createSlice({
       loadMyAssetsFromOpensea.fulfilled,
       (state, action: PayloadAction<Assets>) => {
         state.assetStatus = "succeeded";
+        state.nextOpenseaLoad = Date.now() + cacheTime;
         state.assets = { ...state.assets, ...action.payload };
       }
     );
