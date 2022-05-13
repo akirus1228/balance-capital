@@ -17,7 +17,7 @@ export const BorrowPage = (): JSX.Element => {
     { owner: address, limit: 50 },
     { skip: !address }
   );
-  const { data, isLoading } = useGetListingsQuery(
+  const { data, isLoading: isAssetLoading } = useGetListingsQuery(
     {
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
       skip: 0,

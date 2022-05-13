@@ -2,6 +2,8 @@ import { useWeb3Context } from "@fantohm/shared-web3";
 import { useEffect, useMemo } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
+import { useGetListingsQuery } from "../../api/backend-api";
+import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import AssetDetails from "../../components/asset-details/asset-details";
 import BorrowerCreateListing from "../../components/borrower-create-listing/borrower-create-listing";
 import BorrowerListingDetails from "../../components/borrower-listing-details/borrower-listing-details";
@@ -34,28 +36,24 @@ export const AssetDetailsPage = (): JSX.Element => {
     })
   );
 
-  useEffect(() => {
-    console.log("listing");
-    console.log(listing);
-    console.log("asset");
-    console.log(asset);
-    if (!listing && !asset) {
-      dispatch(
-        loadAssetsFromOpensea({
-          queryParams: {
-            token_ids: [params["tokenId"] || ""],
-            asset_contract_address: params["contractAddress"],
-          },
-        })
-      );
-    } else if (asset && !listing) {
-      dispatch(
-        loadListings({
-          queryParams: { skip: 0, take: 1, openseaIds: [asset.openseaId || ""] },
-        })
-      );
-    }
-  }, [listing, asset]);
+  const { data: assets, isLoading: isAssetLoading } = useGetOpenseaAssetsQuery({
+    asset_contract_address: params["contractAddress"],
+    token_ids: [params["tokenId"] || ""],
+    limit: 1,
+  });
+
+  const {
+    data: listings,
+    error,
+    isLoading: isListingLoading,
+  } = useGetListingsQuery(
+    {
+      skip: 0,
+      take: 50,
+      openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
+    },
+    { skip: !assets }
+  );
 
   const isOwner = useMemo(() => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
