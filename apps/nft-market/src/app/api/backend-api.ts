@@ -1,5 +1,6 @@
 // external libs
 import axios, { AxiosResponse } from "axios";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
 // internal libs
@@ -24,6 +25,7 @@ import {
 } from "../types/backend-types";
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
+import { RootState } from "../store";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -284,3 +286,36 @@ export const markAsRead = async (
       return resp.data;
     });
 };
+
+export const backendApi = createApi({
+  reducerPath: "backendApi",
+  baseQuery: fetchBaseQuery({
+    baseUrl: NFT_MARKETPLACE_API_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const signature = (getState() as RootState).backend.authSignature;
+      headers.set("authorization", `Bearer ${signature}`);
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    getListings: builder.query<Listing[], ListingQueryParam>({
+      query: (queryParams) => ({
+        url: `asset-listing/all`,
+        params: queryParams,
+      }),
+      transformResponse: (response: AllListingsResponse, meta, arg) =>
+        response.data.map((listing: BackendListing) => {
+          const { term, ...formattedListing } = listing;
+          return { ...formattedListing, terms: term } as Listing;
+        }),
+    }),
+    getAssets: builder.query<Asset[], BackendAssetQueryParam>({
+      query: (queryParams) => ({
+        url: `asset/all`,
+        params: queryParams,
+      }),
+      transformResponse: (response: AllAssetsResponse, meta, arg) => response.data,
+    }),
+  }),
+});
+export const { useGetAssetsQuery, useGetListingsQuery } = backendApi;

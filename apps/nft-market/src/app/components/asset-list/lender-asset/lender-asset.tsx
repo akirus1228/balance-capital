@@ -52,7 +52,7 @@ export function LenderAsset(props: LenderAssetProps) {
         </IconButton>
       </Box>
       {asset.imageUrl && asset.openseaId && (
-        <Link to={`/lend/${props.contractAddress}/${props.tokenId}`}>
+        <Link to={`/asset/${props.contractAddress}/${props.tokenId}`}>
           <PreviewImage
             url={asset.imageUrl}
             name={asset.name || "placeholder name"}

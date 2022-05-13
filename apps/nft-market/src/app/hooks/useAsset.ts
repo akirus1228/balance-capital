@@ -6,13 +6,11 @@ import { Asset, BackendLoadingStatus } from "../types/backend-types";
 import { AssetLoadStatus } from "../store/reducers/backend-slice";
 import {
   loadAssetsFromBackend,
-  loadAssetsFromOpensea,
+  loadMyAssetsFromOpensea,
 } from "../store/reducers/asset-slice";
+import { selectAssetByAddress } from "../store/selectors/asset-selectors";
 
-export const useAsset = (
-  contractAddress: string | undefined,
-  tokenId: string | undefined
-): Asset | null => {
+export const useAsset = (contractAddress: string, tokenId: string): Asset | null => {
   console.log("useAsset");
   const dispatch = useDispatch();
   const wallet = useSelector((state: RootState) => state.assets);
@@ -23,11 +21,7 @@ export const useAsset = (
     )
   );
   const asset = useSelector((state: RootState) =>
-    state.assets.assets.find(
-      (walletAsset: Asset) =>
-        walletAsset.assetContractAddress === contractAddress &&
-        walletAsset.tokenId === tokenId
-    )
+    selectAssetByAddress(state, { tokenId, contractAddress })
   );
   const backend = useSelector((state: RootState) => state.backend);
   const { chainId, address } = useWeb3Context();
@@ -38,10 +32,11 @@ export const useAsset = (
       chainId &&
       address &&
       (wallet.assetStatus === "idle" || wallet.assetStatus === "failed") &&
-      wallet.nextOpenseaLoad < Date.now()
+      wallet.nextOpenseaLoad < Date.now() &&
+      !asset
     ) {
       console.log("loading wallet assets");
-      dispatch(loadAssetsFromOpensea({ address, networkId: chainId }));
+      dispatch(loadMyAssetsFromOpensea({ address, networkId: chainId }));
     }
   }, [address, wallet.assetStatus, contractAddress, tokenId]);
 

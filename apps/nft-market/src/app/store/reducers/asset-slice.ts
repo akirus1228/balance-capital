@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  assetToCollectible,
   Collectible,
   FetchNFTClient,
   FetchNFTClientProps,
@@ -7,7 +8,9 @@ import {
 import { IBaseAddressAsyncThunk, isDev, loadState } from "@fantohm/shared-web3";
 import { Asset, AssetStatus, BackendLoadingStatus } from "../../types/backend-types";
 import { BackendApi } from "../../api";
-import { BackendAssetQueryAsyncThunk } from "./interfaces";
+import { BackendAssetQueryAsyncThunk, OpenseaAssetQueryAsyncThunk } from "./interfaces";
+import getOpenseaAssets, { useGetOpenseaAssetsQuery } from "../../api/opensea";
+import { ethers } from "ethers";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -22,17 +25,29 @@ const openSeaConfig = (): FetchNFTClientProps => {
   return { openSeaConfig };
 };
 
+export const assetToAssetId = (asset: Asset) =>
+  `${asset.tokenId}:::${asset.assetContractAddress}`;
+
 export type AssetLoadStatus = {
   [assetId: string]: BackendLoadingStatus;
 };
 
+export type OpenseaCache = {
+  [paramHash: string]: number;
+};
+
+export type Assets = {
+  [assetId: string]: Asset;
+};
+
 export interface AssetState {
   readonly assetStatus: "idle" | "loading" | "partial" | "succeeded" | "failed";
-  readonly assets: Asset[];
+  readonly assets: Assets;
   readonly isDev: boolean;
   readonly nextOpenseaLoad: number;
   readonly fetchNftClient: FetchNFTClient;
   readonly assetLoadStatus: AssetLoadStatus;
+  readonly openseaCache: OpenseaCache;
 }
 
 const cacheTime = 300 * 1000; // 5 minutes
@@ -43,8 +58,8 @@ params:
 - address: string
 returns: void
 */
-export const loadAssetsFromOpensea = createAsyncThunk(
-  "assets/loadAssetsFromOpensea",
+export const loadMyAssetsFromOpensea = createAsyncThunk(
+  "assets/loadMyAssetsFromOpensea",
   async (
     { address }: IBaseAddressAsyncThunk,
     { rejectWithValue, getState, dispatch }
@@ -58,7 +73,7 @@ export const loadAssetsFromOpensea = createAsyncThunk(
       const client: FetchNFTClient = thisState.assets.fetchNftClient as FetchNFTClient;
       const openseaData = await client.getEthereumCollectibles([address]);
       if (!openseaData || typeof openseaData[address] === "undefined") {
-        return [] as Asset[];
+        return {} as Assets;
       }
 
       // convertCollectible to Asset
@@ -78,12 +93,61 @@ export const loadAssetsFromOpensea = createAsyncThunk(
       // see if we have this data on the backend
 
       dispatch(loadAssetsFromBackend({ queryParams: { openseaIds, skip: 0, take: 50 } }));
-
-      return walletContents as Asset[];
+      const newAssets: Assets = {};
+      walletContents.forEach((asset: Asset) => {
+        newAssets[assetToAssetId(asset)] = asset;
+      });
+      return newAssets;
     } catch (err) {
       console.log(err);
       rejectWithValue("Unable to load assets.");
-      return [] as Asset[];
+      return {} as Assets;
+    }
+  }
+);
+
+/* 
+loadWalletNfts: loads nfts owned by specific address
+params: 
+- address: string
+returns: void
+*/
+export const loadAssetsFromOpensea = createAsyncThunk(
+  "assets/loadAssetsFromOpensea",
+  async (
+    { queryParams = { limit: 50 } }: OpenseaAssetQueryAsyncThunk,
+    { rejectWithValue, getState, dispatch }
+  ) => {
+    try {
+      // see if opensea has any assets listed for this address
+      const openseaData = await getOpenseaAssets(queryParams);
+      const collectibles = await Promise.all(
+        openseaData.map(async (asset) => await assetToCollectible(asset))
+      );
+      // convertCollectible to Asset
+      const walletContents = collectibles.map((collectible: Collectible): Asset => {
+        const { id, ...tmpCollectible } = collectible;
+        const asset = {
+          ...tmpCollectible,
+          openseaLoaded: Date.now() + cacheTime,
+          status: AssetStatus.New,
+        } as Asset;
+        return asset;
+      });
+
+      const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
+      // see if we have this data on the backend
+
+      dispatch(loadAssetsFromBackend({ queryParams: { openseaIds, skip: 0, take: 50 } }));
+      const newAssets: Assets = {};
+      walletContents.forEach((asset: Asset) => {
+        newAssets[assetToAssetId(asset)] = asset;
+      });
+      return newAssets;
+    } catch (err) {
+      console.log(err);
+      rejectWithValue("Unable to load assets.");
+      return {} as Assets;
     }
   }
 );
@@ -98,7 +162,7 @@ export const loadAssetsFromBackend = createAsyncThunk(
   "asset/loadAssetsFromBackend",
   async (
     { queryParams = { skip: 0, take: 50 } }: BackendAssetQueryAsyncThunk,
-    { getState, rejectWithValue, dispatch }
+    { getState, rejectWithValue }
   ) => {
     console.log("loadAssetsFromOpenseaIds called");
     const thisState: any = getState();
@@ -129,6 +193,7 @@ const initialState: AssetState = {
   nextOpenseaLoad: 0,
   fetchNftClient: new FetchNFTClient(openSeaConfig()),
   assetLoadStatus: [],
+  openseaCache: [],
 };
 
 // create slice and initialize reducers
@@ -137,78 +202,49 @@ const assetsSlice = createSlice({
   initialState,
   reducers: {
     updateAsset: (state, action: PayloadAction<Asset>) => {
-      state.assets = state.assets.map((asset: Asset) => {
-        if (
-          asset.assetContractAddress === action.payload.assetContractAddress &&
-          asset.tokenId === action.payload.tokenId
-        ) {
-          return { ...asset, ...action.payload };
-        }
-        return asset;
-      });
+      state.assets = {
+        ...state.assets,
+        ...{ [assetToAssetId(action.payload)]: action.payload },
+      };
     },
-    updateAssets: (state, action: PayloadAction<Asset[]>) => {
-      action.payload.forEach((updatedAsset: Asset) => {
-        state.assets = state.assets.map((asset: Asset) => {
-          if (
-            asset.assetContractAddress === updatedAsset.assetContractAddress &&
-            asset.tokenId === updatedAsset.tokenId
-          ) {
-            return { ...asset, ...updatedAsset };
-          }
-          return asset;
-        });
-      });
+    updateAssets: (state, action: PayloadAction<Assets>) => {
+      state.assets = { ...state.assets, ...action.payload };
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadAssetsFromOpensea.pending, (state, action) => {
-      state.assetStatus = "loading";
-    });
-    builder.addCase(
-      loadAssetsFromOpensea.fulfilled,
-      (state, action: PayloadAction<Asset[]>) => {
-        state.assetStatus = "partial";
-        state.nextOpenseaLoad = Date.now() + cacheTime;
-        action.payload.map((newAsset: Asset) => {
-          let dupAsset = state.assets.find(
-            (stateAsset: Asset) =>
-              stateAsset.tokenId === newAsset.tokenId &&
-              stateAsset.assetContractAddress === newAsset.assetContractAddress
-          );
-          // if exists, update
-          if (dupAsset) {
-            dupAsset = { ...dupAsset, ...newAsset };
-          } else {
-            // if new, push
-            state.assets.push(newAsset);
-          }
-        });
-      }
-    );
     builder.addCase(loadAssetsFromOpensea.rejected, (state, action) => {
       state.assetStatus = "failed";
     });
-    builder.addCase(loadAssetsFromBackend.pending, (state, action) => {
+    builder.addCase(loadAssetsFromOpensea.pending, (state, action) => {
+      state.assetStatus = "loading";
+
+      // add a hash with the expiration
+      const cacheHash = ethers.utils.sha256(JSON.stringify(action.meta.arg));
+      state.openseaCache = {
+        ...state.openseaCache,
+        ...{ [cacheHash]: Date.now() },
+      };
+    });
+    builder.addCase(
+      loadAssetsFromOpensea.fulfilled,
+      (state, action: PayloadAction<Assets>) => {
+        state.assetStatus = "partial";
+        state.assets = { ...state.assets, ...action.payload };
+      }
+    );
+    builder.addCase(loadMyAssetsFromOpensea.rejected, (state, action) => {
+      state.assetStatus = "failed";
+    });
+    builder.addCase(loadMyAssetsFromOpensea.pending, (state, action) => {
       state.assetStatus = "loading";
     });
-    builder.addCase(loadAssetsFromBackend.fulfilled, (state, action) => {
-      state.assetStatus = "succeeded";
-      if (!action.payload) {
-        return;
+    builder.addCase(
+      loadMyAssetsFromOpensea.fulfilled,
+      (state, action: PayloadAction<Assets>) => {
+        state.assetStatus = "succeeded";
+        state.assets = { ...state.assets, ...action.payload };
       }
-      action.payload.forEach((updatedAsset: Asset) => {
-        state.assets = state.assets.map((asset: Asset) => {
-          if (
-            asset.assetContractAddress === updatedAsset.assetContractAddress &&
-            asset.tokenId === updatedAsset.tokenId
-          ) {
-            return { ...asset, ...updatedAsset };
-          }
-          return asset;
-        });
-      });
-    });
+    );
     builder.addCase(loadAssetsFromBackend.rejected, (state, action) => {
       state.assetStatus = "failed";
     });

@@ -9,7 +9,7 @@ import { Asset, BackendLoadingStatus, Listing } from "../../types/backend-types"
 import { ListingAsyncThunk, ListingQueryAsyncThunk } from "./interfaces";
 import { BackendApi } from "../../api";
 import { RootState } from "..";
-import { updateAssets } from "./asset-slice";
+import { Assets, assetToAssetId, updateAssets } from "./asset-slice";
 
 export type Listings = {
   [listingId: string]: Listing;
@@ -51,7 +51,10 @@ export const loadListings = createAsyncThunk(
         thisState.backend.authSignature
       );
       // listings come with assets, might as well update since we have it already
-      const listingAssets: Asset[] = listings.map((listing: Listing) => listing.asset);
+      const listingAssets: Assets = {};
+      listings.forEach((listing: Listing) => {
+        listingAssets[assetToAssetId(listing.asset)] = listing.asset;
+      });
       dispatch(updateAssets(listingAssets));
       const newListings: Listings = {};
       listings.forEach((listing: Listing) => {

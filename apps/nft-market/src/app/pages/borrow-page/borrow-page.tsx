@@ -5,19 +5,15 @@ import { useDispatch, useSelector } from "react-redux";
 import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
 import { RootState } from "../../store";
-import { loadAssetsFromOpensea } from "../../store/reducers/asset-slice";
-import { Asset } from "../../types/backend-types";
+import { loadMyAssetsFromOpensea } from "../../store/reducers/asset-slice";
+import { selectMyAssets } from "../../store/selectors/asset-selectors";
 import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
   const dispatch = useDispatch();
   const { chainId, address } = useWeb3Context();
   const assetState = useSelector((state: RootState) => state.assets);
-  const myAssets = useSelector((state: RootState) =>
-    state.assets.assets.filter(
-      (asset: Asset) => asset.owner?.address.toLowerCase() === address.toLowerCase()
-    )
-  );
+  const myAssets = useSelector((state: RootState) => selectMyAssets(state, address));
 
   // Load assets and nfts in current wallet
   useEffect(() => {
@@ -28,7 +24,7 @@ export const BorrowPage = (): JSX.Element => {
       assetState.nextOpenseaLoad < Date.now()
     ) {
       dispatch(
-        loadAssetsFromOpensea({ networkId: chainId || defaultNetworkId, address })
+        loadMyAssetsFromOpensea({ networkId: chainId || defaultNetworkId, address })
       );
     }
   }, [chainId, address, assetState.assetStatus]);
