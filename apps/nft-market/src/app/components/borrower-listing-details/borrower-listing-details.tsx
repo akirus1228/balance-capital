@@ -1,7 +1,7 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useListingTermDetails } from "../../hooks/useListingTerms";
+import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import store, { RootState } from "../../store";
 import { getListingState, loadListings } from "../../store/reducers/listing-slice";
 import { selectListingFromAsset } from "../../store/selectors/listing-selectors";

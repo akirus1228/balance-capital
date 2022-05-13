@@ -1,5 +1,5 @@
 import { Box, Chip, Container, Grid, Skeleton, Typography } from "@mui/material";
-import { useWalletAsset } from "../../hooks/useWalletAsset";
+import { useWalletAsset } from "../../hooks/use-wallet-asset";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
 import StatusInfo from "./status-info/status-info";

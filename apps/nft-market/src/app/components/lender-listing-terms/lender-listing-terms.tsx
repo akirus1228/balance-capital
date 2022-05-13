@@ -1,5 +1,5 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { useListingTermDetails } from "../../hooks/useListingTerms";
+import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import { Listing } from "../../types/backend-types";
 import style from "./lender-listing-terms.module.scss";
 

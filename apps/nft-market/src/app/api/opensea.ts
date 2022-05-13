@@ -4,6 +4,9 @@ import { isDev } from "@fantohm/shared-web3";
 import axios, { AxiosResponse } from "axios";
 import { OpenseaAssetQueryParam } from "../store/reducers/interfaces";
 import { config } from "process";
+import { useDispatch } from "react-redux";
+import { updateAssets, updateAssetsFromOpensea } from "../store/reducers/asset-slice";
+import { openseaAssetToAsset } from "../helpers/data-translations";
 
 export type Nullable<T> = T | null;
 
@@ -159,6 +162,13 @@ export const openseaApi = createApi({
         url: `assets`,
         params: queryParams,
       }),
+      transformResponse: (response: OpenseaGetAssetsResponse, meta, arg) => {
+        return response.assets;
+      },
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: OpenseaAsset[] } = await queryFulfilled;
+        dispatch(updateAssetsFromOpensea(data));
+      },
     }),
   }),
 });

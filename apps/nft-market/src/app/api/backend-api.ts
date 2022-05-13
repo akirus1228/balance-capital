@@ -26,6 +26,9 @@ import {
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
 import { RootState } from "../store";
+import { assetAryToAssets, listingAryToListings } from "../helpers/data-translations";
+import { updateAssets } from "../store/reducers/asset-slice";
+import { updateListings } from "../store/reducers/listing-slice";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -308,6 +311,12 @@ export const backendApi = createApi({
           const { term, ...formattedListing } = listing;
           return { ...formattedListing, terms: term } as Listing;
         }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Listing[] } = await queryFulfilled;
+        const assets = data.map((listing: Listing) => listing.asset);
+        dispatch(updateListings(listingAryToListings(data)));
+        dispatch(updateAssets(assetAryToAssets(assets)));
+      },
     }),
     getAssets: builder.query<Asset[], BackendAssetQueryParam>({
       query: (queryParams) => ({
@@ -315,6 +324,10 @@ export const backendApi = createApi({
         params: queryParams,
       }),
       transformResponse: (response: AllAssetsResponse, meta, arg) => response.data,
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Asset[] } = await queryFulfilled;
+        dispatch(updateAssets(assetAryToAssets(data)));
+      },
     }),
   }),
 });

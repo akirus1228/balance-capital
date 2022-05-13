@@ -1,9 +1,10 @@
 import { Box, Chip, IconButton, Paper } from "@mui/material";
-import { useWalletAsset } from "../../../hooks/useWalletAsset";
+import { useWalletAsset } from "../../../hooks/use-wallet-asset";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import PreviewImage from "../preview-image/preview-image";
 import style from "./lender-asset.module.scss";
 import { Link } from "react-router-dom";
+import { useGetAssetsQuery } from "../../../api/backend-api";
 
 export interface LenderAssetProps {
   contractAddress: string;

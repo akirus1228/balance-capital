@@ -140,7 +140,17 @@ const initialState: ListingState = {
 const listingsSlice = createSlice({
   name: "listings",
   initialState,
-  reducers: {},
+  reducers: {
+    updateListing: (state, action: PayloadAction<Listing>) => {
+      state.listings = {
+        ...state.listings,
+        ...{ [action.payload.id || ""]: action.payload },
+      };
+    },
+    updateListings: (state, action: PayloadAction<Listings>) => {
+      state.listings = { ...state.listings, ...action.payload };
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(loadListings.pending, (state, action) => {
       state.listingsLoadStatus = BackendLoadingStatus.loading;
@@ -195,7 +205,7 @@ const listingsSlice = createSlice({
 
 export const listingsReducer = listingsSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-//export const { } = listingsReducer.actions;
+export const { updateListing, updateListings } = listingsSlice.actions;
 
 const baseInfo = (state: RootState) => state.listings;
 export const getListingState = createSelector(baseInfo, (listings) => listings);

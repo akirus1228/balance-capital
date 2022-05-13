@@ -4,13 +4,15 @@ import {
   Collectible,
   FetchNFTClient,
   FetchNFTClientProps,
+  isAssetValid,
 } from "@fantohm/shared/fetch-nft";
 import { IBaseAddressAsyncThunk, isDev, loadState } from "@fantohm/shared-web3";
 import { Asset, AssetStatus, BackendLoadingStatus } from "../../types/backend-types";
 import { BackendApi } from "../../api";
 import { BackendAssetQueryAsyncThunk, OpenseaAssetQueryAsyncThunk } from "./interfaces";
-import getOpenseaAssets, { useGetOpenseaAssetsQuery } from "../../api/opensea";
+import getOpenseaAssets, { OpenseaAsset } from "../../api/opensea";
 import { ethers } from "ethers";
+import { openseaAssetToAsset } from "../../helpers/data-translations";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 
@@ -121,19 +123,7 @@ export const loadAssetsFromOpensea = createAsyncThunk(
     try {
       // see if opensea has any assets listed for this address
       const openseaData = await getOpenseaAssets(queryParams);
-      const collectibles = await Promise.all(
-        openseaData.map(async (asset) => await assetToCollectible(asset))
-      );
-      // convertCollectible to Asset
-      const walletContents = collectibles.map((collectible: Collectible): Asset => {
-        const { id, ...tmpCollectible } = collectible;
-        const asset = {
-          ...tmpCollectible,
-          openseaLoaded: Date.now() + cacheTime,
-          status: AssetStatus.New,
-        } as Asset;
-        return asset;
-      });
+      const walletContents = await openseaAssetToAsset(openseaData);
 
       const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
       // see if we have this data on the backend
@@ -183,6 +173,20 @@ export const loadAssetsFromBackend = createAsyncThunk(
   }
 );
 
+export const updateAssetsFromOpensea = createAsyncThunk(
+  "asset/updateAssetsFromOpensea",
+  async (openseaAssets: OpenseaAsset[], { dispatch }) => {
+    const newAssetAry = await openseaAssetToAsset(
+      openseaAssets.filter((asset: OpenseaAsset) => isAssetValid(asset))
+    );
+    const newAssets: Assets = {};
+    newAssetAry.forEach((asset: Asset) => {
+      newAssets[assetToAssetId(asset)] = asset;
+    });
+    dispatch(updateAssets(newAssets));
+  }
+);
+
 // initial wallet slice state
 const previousState = loadState("asset");
 const initialState: AssetState = {
@@ -208,7 +212,14 @@ const assetsSlice = createSlice({
       };
     },
     updateAssets: (state, action: PayloadAction<Assets>) => {
-      state.assets = { ...state.assets, ...action.payload };
+      const mergedAssets: Assets = {};
+      Object.entries(action.payload).forEach(([assetId, asset]) => {
+        mergedAssets[assetId] = {
+          ...state.assets[assetId],
+          ...asset,
+        };
+      });
+      state.assets = { ...state.assets, ...mergedAssets };
     },
   },
   extraReducers: (builder) => {
