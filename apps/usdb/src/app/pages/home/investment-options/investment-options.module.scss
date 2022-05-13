@@ -1,15 +1,24 @@
+.iconGridItem {
+  margin-bottom: 25px;
+}
+
+@media (max-width:1200px) {
+
+  .productGrid {
+    display: block;
+    align-items: center;
+    justify-content: center;
+    margin-top:150px !important;
+    margin-bottom:50px !important;
+  }
+
+}
+
 .iconLinkContainer {
-  display: flex;
-  flex-direction: column;
+  display: block;
+  flex-direction: row;
   justify-content: start;
   align-items: start;
-
-  .imageBox {
-    margin: 0 auto;
-    @media (max-width: 400px) {
-      height: 70px;
-    }
-  }
 
   .iconImage {
     width: 50%;
@@ -19,17 +28,17 @@
     }
   }
   .title {
-    width: 50%;
+    width: 100%;
+    margin-left: 20px;
     font-size: 20px;
-    font-weight: 400;
-    margin-bottom: 5px;
     @media (max-width: 200px) {
-      font-size: 16px;
+      width: 70px;
+      height: auto;
     }
   }
-
   .text {
     width: 80%;
+    margin-left: 20px;
     font-size: 14px;
     font-weight: 400;
     margin-bottom: 5px;
@@ -41,17 +50,17 @@
 
   .link {
     font-size: 14px;
+    margin-top: 10px;
+    margin-left: 20px;
     font-weight: 400;
-    color: #6dc1b9;
-    margin-top: 0;
-  }
-
-  .disabled {
-    color: rgba(105, 108, 128, 0.43);
+    background: #00000000;
+    color: #000000;
+    border: 1px solid #000000;
   }
 
   .linkArrow {
     transform: rotate(90deg);
     font-size: 16px;
   }
+
 }

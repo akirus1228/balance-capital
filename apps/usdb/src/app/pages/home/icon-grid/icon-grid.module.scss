@@ -5,6 +5,9 @@
 @media (max-width:1200px) {
 
     .productGrid {
+      display: flex;
+      align-items: center;
+      justify-content: center;
         margin-top:0 !important;
         margin-bottom:50px !important;
     }

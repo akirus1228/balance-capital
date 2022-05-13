@@ -6,6 +6,9 @@ import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
+import InvestmentOptions from "./investment-options/investment-options";
+import { DefineGrid } from "./define-grid/define-grid";
+import PartnersGrid from "./partners-grid/partners-grid";
 
 export const HomePage = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
@@ -39,45 +42,42 @@ export const HomePage = (): JSX.Element => {
           columnSpacing={2}
           rowSpacing={{ xs: 4, md: 0 }}
         >
-          <Grid
-            item
-            lg={6}
-            md={12}
-            order={{ lg: 1, xs: 2 }}
-            className={style["iconsElement"]}
-          >
+          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
             <IconGrid />
           </Grid>
-          <Grid
-            item
-            lg={6}
-            md={12}
-            order={{ lg: 2, xs: 1 }}
-            className={style["heroTextContent"]}
-          >
-            <Box className={style["heroRight"]}>
-              <Box
-                sx={{
-                  height: { xs: "132px", md: "180px" },
-                  display: { xs: "none", md: "flex" },
-                }}
-              >
-                <img
-                  src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
-                  alt="USDB Logo"
-                  className={style["heroLogo"]}
-                />
-              </Box>
-              <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>
-              <h3 className={style["heroSubtitle"]}>
-                USDB provides a wide range of financial tools and services to individuals
-                and institutions
-              </h3>
-              <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">
-                Learn more
-                <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-              </a>
-            </Box>
+          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+            <InvestmentOptions />
+          </Grid>
+          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+            <DefineGrid />
+          </Grid>
+          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+            <PartnersGrid />
+          </Grid>
+          <Grid item lg={12} className={style["heroTextContent"]}>
+            {/*<Box className={style["heroRight"]}>*/}
+            {/*  <Box*/}
+            {/*    sx={{*/}
+            {/*      height: { xs: "132px", md: "180px" },*/}
+            {/*      display: { xs: "none", md: "flex" },*/}
+            {/*    }}*/}
+            {/*  >*/}
+            {/*    <img*/}
+            {/*      src={themeType === "light" ? USDBLogoLight : USDBLogoDark}*/}
+            {/*      alt="USDB Logo"*/}
+            {/*      className={style["heroLogo"]}*/}
+            {/*    />*/}
+            {/*  </Box>*/}
+            {/*  <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>*/}
+            {/*  <h3 className={style["heroSubtitle"]}>*/}
+            {/*    USDB provides a wide range of financial tools and services to individuals*/}
+            {/*    and institutions*/}
+            {/*  </h3>*/}
+            {/*  <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">*/}
+            {/*    Learn more*/}
+            {/*    <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />*/}
+            {/*  </a>*/}
+            {/*</Box>*/}
           </Grid>
         </Grid>
       </Box>

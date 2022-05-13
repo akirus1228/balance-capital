@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import { useNavigate, useHref } from "react-router-dom";
 import style from "./icon-link.module.scss";
 import { useCallback } from "react";
@@ -7,10 +7,11 @@ import { useCallback } from "react";
 export interface IconLinkProps {
   icon: string | typeof import("*.png");
   title: string;
+  text: string;
   link?: string | undefined;
 }
 
-export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
+export function IconLink({ icon, title, link = undefined, text = "" }: IconLinkProps) {
   const navigate = useNavigate();
 
   const handleOnClick = useCallback(() => {
@@ -22,23 +23,49 @@ export function IconLink({ icon, title, link = undefined }: IconLinkProps) {
   return (
     <Box className={style["iconLinkContainer"]}>
       <Box
-        textAlign="center"
+        textAlign="start"
         sx={link ? { cursor: "pointer" } : {}}
         onClick={handleOnClick}
         style={setOpacity}
       >
-        <Box
-          className={style["imageBox"]}
+        <Grid container rowSpacing={3}>
+          <Grid
+            item
+            xs={12}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "start",
+              alignItems: "start",
+              paddingTop: "30px",
+            }}
+          >
+            <Grid item xs={6}>
+              <img src={icon as string} alt={title} className={style["iconImage"]} />
+            </Grid>
+            <Grid item xs={6}>
+              <h1 className={style["title"]}>{title}</h1>
+            </Grid>
+          </Grid>
+          <Grid item xs={12}>
+            <h1 className={style["text"]}>{text}</h1>
+          </Grid>
+        </Grid>
+        <Grid
+          item
+          xs={12}
           sx={{
-            height: { xs: "114px", md: "150px" },
-            width: { xs: "114px", md: "150px" },
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "start",
+            alignItems: "start",
           }}
         >
-          <img src={icon as string} alt={title} className={style["iconImage"]} />
-        </Box>
-        <h1 className={style["title"]}>{title}</h1>
+          <Grid item xs={12}>
+            <h1 className={style["link"]}>Learn more &#11016;</h1>
+          </Grid>
+        </Grid>
       </Box>
-      {!link && <h2 className={`${style["link"]}`}>Coming Soon</h2>}
     </Box>
   );
 }

@@ -3,6 +3,7 @@ import { RootState } from "../../store";
 import USDBLogoLight from "../../../assets/images/USDB-logo.svg";
 import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
 import { CSSProperties } from "react";
+import { BalanceLogo } from "@fantohm/shared/images";
 
 /* eslint-disable-next-line */
 export interface LogoProps {
@@ -14,7 +15,7 @@ export function Logo(props: LogoProps) {
 
   return (
     <div style={{ ...props.style }}>
-      <img src={themeType === "light" ? USDBLogoLight : USDBLogoDark} alt="BUSD Logo" />
+      <img src={BalanceLogo} width="60%" alt="BUSD Logo" />
     </div>
   );
 }

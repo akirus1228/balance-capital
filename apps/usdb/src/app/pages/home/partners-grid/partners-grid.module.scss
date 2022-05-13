@@ -1,0 +1,37 @@
+.iconGridItem {
+  margin-bottom: 25px;
+}
+
+@media (max-width:1200px) {
+
+  .productGrid {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:150px !important;
+    margin-bottom:50px !important;
+  }
+}
+
+.partnerIcon {
+  width: 60%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 200px) {
+    width: 70px;
+    height: auto;
+  }
+}
+
+.auditIcon {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 200px) {
+    width: 70px;
+    height: auto;
+  }
+}
