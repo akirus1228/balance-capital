@@ -15,10 +15,8 @@
 }
 
 .partnerIcon {
-  width: 60%;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
+  max-width: 60%;
+  max-height: 100%;
   @media (max-width: 200px) {
     width: 70px;
     height: auto;

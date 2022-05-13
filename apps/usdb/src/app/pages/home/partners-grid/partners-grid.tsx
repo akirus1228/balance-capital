@@ -20,6 +20,7 @@ import {
   SpadetechIcon,
   TechrateIcon,
 } from "@fantohm/shared/images";
+import lightBG from "../../../../../../../libs/shared/ui-themes/src/lib/images/USDB_gradient_light.png";
 
 export const PartnersGrid = (): JSX.Element => {
   return (
@@ -59,9 +60,11 @@ export const PartnersGrid = (): JSX.Element => {
           rowSpacing={6}
           className={style["productGrid"]}
           style={{
+            height: "100%",
             justifyContent: "center",
             alignContent: "center",
           }}
+          justifyContent="center"
         >
           <Grid item md={3} xs={6}>
             <img src={SpookySwapIcon} alt="USDB logo" className={style["partnerIcon"]} />

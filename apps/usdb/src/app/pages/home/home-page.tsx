@@ -1,9 +1,20 @@
-import { Box, Container, Grid, Icon } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  Icon,
+  OutlinedInput,
+  Paper,
+  Typography,
+} from "@mui/material";
 import style from "./home-page.module.scss";
 import IconGrid from "./icon-grid/icon-grid";
-import USDBLogoLight from "../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import {
+  BalanceDefine2,
+  BalanceHeroImage,
+  BalanceEmailBanner,
+} from "@fantohm/shared/images";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import InvestmentOptions from "./investment-options/investment-options";
@@ -35,14 +46,75 @@ export const HomePage = (): JSX.Element => {
         }}
         className={style["hero"]}
       >
-        <Grid
-          container
-          className={style["heroWrap"]}
-          sx={{ marginTop: "55px" }}
-          columnSpacing={2}
-          rowSpacing={{ xs: 4, md: 0 }}
-        >
-          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+        <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            className={style["iconsElement"]}
+            style={{ height: "40em" }}
+          >
+            <Paper
+              style={{
+                background: `url(${BalanceHeroImage})`,
+                width: "100%",
+                height: "100%",
+                borderTopLeftRadius: "80px",
+                borderTopRightRadius: "80px",
+                borderBottomLeftRadius: "0px",
+                borderBottomRightRadius: "0px",
+              }}
+            >
+              <Grid
+                container
+                style={{ width: "100%", height: "100%" }}
+                columnSpacing={2}
+                rowSpacing={{ xs: 4, md: 0 }}
+              >
+                <Grid
+                  item
+                  md={6}
+                  order={{ lg: 1 }}
+                  sx={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "start",
+                    alignItems: "center",
+                    paddingTop: "30px",
+                  }}
+                >
+                  <Box style={{ marginLeft: "5em" }}>
+                    <Typography style={{ fontSize: "36px" }}>
+                      Infrastructure for decentralized finance
+                    </Typography>
+                    <Typography style={{ marginTop: "20px" }}>
+                      We are leveraging our decentralized business experience to help
+                      build a more sustainable, inclusive crypto investment economy. See
+                      how we're delivering on our commitments alongside our stakeholders
+                      and partners
+                    </Typography>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+                      className={style["link"]}
+                      style={{ marginTop: "20px" }}
+                    >
+                      Get started
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Paper>
+          </Grid>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            className={style["iconsElement"]}
+            style={{ marginTop: "150px" }}
+          >
             <IconGrid />
           </Grid>
           <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
@@ -53,6 +125,75 @@ export const HomePage = (): JSX.Element => {
           </Grid>
           <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
             <PartnersGrid />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            className={style["iconsElement"]}
+            style={{ width: "100%", height: "300px" }}
+          >
+            <Paper
+              style={{
+                width: "100%",
+                height: "100%",
+                borderRadius: "80px",
+                background: `url(${BalanceEmailBanner})`,
+              }}
+            >
+              <Grid
+                container
+                style={{ width: "100%", height: "100%" }}
+                columnSpacing={2}
+                rowSpacing={{ xs: 4, md: 0 }}
+              >
+                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]} />
+                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+                  <Typography style={{ marginLeft: "40px", fontSize: "20px" }}>
+                    Receive email updates
+                  </Typography>
+                  <Grid
+                    container
+                    style={{ width: "100%", height: "100%" }}
+                    columnSpacing={2}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "start",
+                      alignItems: "start",
+                      paddingTop: "30px",
+                    }}
+                    rowSpacing={{ xs: 4, md: 0 }}
+                  >
+                    <Grid
+                      item
+                      md={6}
+                      order={{ lg: 1 }}
+                      className={style["iconsElement"]}
+                      style={{ marginLeft: "40px" }}
+                    >
+                      <OutlinedInput
+                        className={`${style["styledInput"]}`}
+                        placeholder="Enter your email address"
+                      />
+                    </Grid>
+                    <Grid item md={3} order={{ lg: 1 }} className={style["iconsElement"]}>
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+                        className={style["link"]}
+                      >
+                        Subscribe
+                      </Button>
+                    </Grid>
+                  </Grid>
+                  <Typography style={{ marginLeft: "40px" }}>
+                    No spam. Never shared. Opt out at any time.
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Paper>
           </Grid>
           <Grid item lg={12} className={style["heroTextContent"]}>
             {/*<Box className={style["heroRight"]}>*/}

@@ -30,6 +30,7 @@ import { RootState } from "./store";
 import { loadAppDetails } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
 import AboutPage from "./pages/about-page/about-page";
+import { HomeHeader } from "./components/template/header/home-header";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -79,7 +80,6 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     //console.log(location.pathname);
     switch (location.pathname) {
-      case "/":
       case "/trad-fi":
       case "/staking":
       case "/about":
@@ -96,7 +96,7 @@ export const App = (): JSX.Element => {
       <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
         <ScrollToTop />
         <Messages />
-        <Header />
+        {location.pathname === "/" ? <HomeHeader /> : <Header />}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />

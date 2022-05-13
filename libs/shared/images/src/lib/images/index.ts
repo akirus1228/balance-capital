@@ -33,6 +33,10 @@ import ThreeIcon from "./numbers/3.png";
 import HackenIcon from "./audits/Hacken.png";
 import SpadetechIcon from "./audits/Spadetech.png";
 import TechrateIcon from "./audits/Techrate.png";
+import BalanceDefine1 from "./Balance-define_1.png";
+import BalanceDefine2 from "./Balance_define_2.png";
+import BalanceEmailBanner from "./Balance_email_banner.png";
+import BalanceHeroImage from "./Balance_hero_banner.png";
 import BalanceLogo from "./Balance_logo.png";
 
 export {
@@ -72,4 +76,8 @@ export {
   SpadetechIcon,
   TechrateIcon,
   BalanceLogo,
+  BalanceDefine1,
+  BalanceDefine2,
+  BalanceEmailBanner,
+  BalanceHeroImage,
 };

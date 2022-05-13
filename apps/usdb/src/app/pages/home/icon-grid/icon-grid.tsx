@@ -24,8 +24,12 @@ export const IconGrid = (): JSX.Element => {
         style={{
           justifyContent: "center",
           alignContent: "center",
+          textAlign: "center",
         }}
       >
+        <Grid item md={12} xs={6}>
+          <Typography style={{ fontSize: "36px" }}>Our products</Typography>
+        </Grid>
         <Grid item md={3} xs={6}>
           <IconLink
             title="USDB Stablecoin"
