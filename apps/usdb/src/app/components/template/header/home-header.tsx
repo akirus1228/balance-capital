@@ -78,7 +78,7 @@ export const HomeHeader = (): JSX.Element => {
   useEffect(() => {
     console.log(hash);
     if (hash === "#docs") {
-      window.location.replace("https://fantohm.gitbook.io/documentation/");
+      window.open("https://fantohm.gitbook.io/documentation/", "_blank");
     }
 
     // if not a hash link, scroll to top

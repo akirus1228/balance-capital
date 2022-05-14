@@ -42,7 +42,7 @@ export const IconGrid = (): JSX.Element => {
           <IconLink
             title="FHM"
             icon={USDBFHMIcon}
-            link="/staking"
+            link="https://fantohm.com/"
             text="The FHM protocol is ideal as a value-capturing reserve"
           />
         </Grid>
@@ -50,7 +50,7 @@ export const IconGrid = (): JSX.Element => {
           <IconLink
             title="Liquidity Solutions"
             icon={LiquidityIcon}
-            link="/mint"
+            link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
             text="Our business-to-business solution for on-chain liquidity"
           />
           {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
@@ -60,7 +60,6 @@ export const IconGrid = (): JSX.Element => {
         <IconLink
           title="NFT Lending"
           icon={NFTLendingIcon}
-          link="/mint"
           text="Need brief one-line summary here to describe item"
         />
         {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
@@ -69,7 +68,6 @@ export const IconGrid = (): JSX.Element => {
         <IconLink
           title="Financial NFTs"
           icon={FinancialNftsIcon}
-          link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
