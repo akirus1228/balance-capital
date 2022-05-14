@@ -78,6 +78,7 @@ export const App = (): JSX.Element => {
 
   const location = useLocation();
   useEffect(() => {
+    if (location.pathname === "/") setTheme(USDBLight);
     //console.log(location.pathname);
     switch (location.pathname) {
       case "/trad-fi":
