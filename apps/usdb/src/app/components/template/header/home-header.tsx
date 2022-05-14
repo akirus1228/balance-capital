@@ -24,7 +24,7 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
@@ -72,6 +72,30 @@ export const HomeHeader = (): JSX.Element => {
   const handleCloseProductsMenu = () => {
     setAnchorElProductsMenu(null);
   };
+
+  const { pathname, hash, key } = useLocation();
+
+  useEffect(() => {
+    console.log(hash);
+    if (hash === "#docs") {
+      window.location.replace("https://fantohm.gitbook.io/documentation/");
+    }
+
+    // if not a hash link, scroll to top
+    if (hash === "") {
+      window.scrollTo(0, 0);
+    }
+    // else scroll to id
+    else {
+      setTimeout(() => {
+        const id = hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView();
+        }
+      }, 0);
+    }
+  }, [pathname, hash, key]); // do this on route change
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -142,7 +166,7 @@ export const HomeHeader = (): JSX.Element => {
                 onClick={handleCloseNavMenu}
                 className={`${styles["mobileConnect"]}`}
               >
-                <Typography textAlign="center"></Typography>
+                <Typography textAlign="center" />
               </MenuItem>
               <MenuItem
                 sx={{ display: "flex", justifyContent: "start", padding: "0" }}
@@ -250,18 +274,19 @@ export const HomeHeader = (): JSX.Element => {
               </Menu>
             </Box>
           </Box>
-          <Link to="/" className={styles["headerLink"]}>
+          <Link to="/#about" className={styles["headerLink"]}>
             About
           </Link>
-          <Link to="/" className={styles["headerLink"]}>
+          <Link to={{ pathname: "/#docs" }} className={styles["headerLink"]}>
             Docs
           </Link>
-          <Link to="/" className={styles["headerLink"]}>
+          <Link to="/#audit" className={styles["headerLink"]}>
             Audits
           </Link>
           <Button
             variant="contained"
             color="primary"
+            href="/#get-started"
             sx={{ px: "3em", display: { xs: "none", md: "flex", height: "3em" } }}
             className={style["link"]}
           >

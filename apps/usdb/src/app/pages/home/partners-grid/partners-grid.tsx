@@ -140,30 +140,6 @@ export const PartnersGrid = (): JSX.Element => {
           <Grid item md={3} xs={6}>
             <img src={WarpIcon} alt="USDB logo" className={style["partnerIcon"]} />
           </Grid>
-
-          <Grid item md={12} xs={6}>
-            <Typography
-              style={{
-                width: "60%",
-                marginLeft: "20%",
-                textAlign: "center",
-                fontSize: "36px",
-                fontWeight: "400",
-                marginTop: "100px",
-              }}
-            >
-              Empowered & Audited As Necessary
-            </Typography>{" "}
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <img src={TechrateIcon} alt="USDB logo" className={style["auditIcon"]} />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <img src={HackenIcon} alt="USDB logo" className={style["auditIcon"]} />
-          </Grid>
-          <Grid item md={3} xs={6}>
-            <img src={SpadetechIcon} alt="USDB logo" className={style["auditIcon"]} />
-          </Grid>
         </Grid>
       </Grid>
     </Box>

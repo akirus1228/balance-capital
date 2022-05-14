@@ -10,7 +10,7 @@ export const InvestmentOptions = (): JSX.Element => {
       <Grid item md={4} xs={6}>
         <InvestmentLink
           title="Build"
-          icon={TwoIcon}
+          icon={OneIcon}
           link="/staking"
           linkText="For protocols"
           text="Our organization includes financial engineers and developers with top level mastery within the fields of risk management and software engineering."
@@ -19,7 +19,7 @@ export const InvestmentOptions = (): JSX.Element => {
       <Grid item md={4} xs={6}>
         <InvestmentLink
           title="Grow"
-          icon={OneIcon}
+          icon={TwoIcon}
           link="/trad-fi"
           linkText="For institutions"
           text="Through the systems in place, new financial interests are welcome to take part in both the continued success of the Balance ecosystem."

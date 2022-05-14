@@ -20,6 +20,7 @@ import { RootState } from "../../store";
 import InvestmentOptions from "./investment-options/investment-options";
 import { DefineGrid } from "./define-grid/define-grid";
 import PartnersGrid from "./partners-grid/partners-grid";
+import AuditGrid from "./partners-grid/audit-grid";
 
 export const HomePage = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
@@ -97,7 +98,11 @@ export const HomePage = (): JSX.Element => {
                     <Button
                       variant="contained"
                       color="primary"
-                      sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+                      href="/#get-started"
+                      sx={{
+                        px: "3",
+                        display: { xs: "none", md: "flex", width: "30%" },
+                      }}
                       className={style["link"]}
                       style={{ marginTop: "20px" }}
                     >
@@ -113,11 +118,18 @@ export const HomePage = (): JSX.Element => {
             md={12}
             order={{ lg: 1 }}
             className={style["iconsElement"]}
-            style={{ marginTop: "150px" }}
+            style={{ paddingTop: "150px" }}
+            id="get-started"
           >
             <IconGrid />
           </Grid>
-          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            className={style["iconsElement"]}
+            id="about"
+          >
             <InvestmentOptions />
           </Grid>
           <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
@@ -125,6 +137,15 @@ export const HomePage = (): JSX.Element => {
           </Grid>
           <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
             <PartnersGrid />
+          </Grid>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            className={style["iconsElement"]}
+            id="audit"
+          >
+            <AuditGrid />
           </Grid>
           <Grid
             item
