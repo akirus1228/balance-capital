@@ -42,11 +42,7 @@ export const AssetDetailsPage = (): JSX.Element => {
     limit: 1,
   });
 
-  const {
-    data: listings,
-    error,
-    isLoading: isListingLoading,
-  } = useGetListingsQuery(
+  const { isLoading: isListingLoading } = useGetListingsQuery(
     {
       skip: 0,
       take: 50,
@@ -59,18 +55,14 @@ export const AssetDetailsPage = (): JSX.Element => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, address]);
 
-  if (
-    typeof asset === "undefined" ||
-    typeof listing === "undefined" ||
-    listing === null
-  ) {
+  if (isListingLoading || isAssetLoading) {
     return <h1>Loading...</h1>;
   }
   return (
     <>
       <AssetDetails
-        contractAddress={listing.asset.assetContractAddress}
-        tokenId={listing.asset.tokenId}
+        contractAddress={asset.assetContractAddress}
+        tokenId={asset.tokenId}
       />
       {!listing && !asset && <h1>Loading...</h1>}
       {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (

@@ -22,6 +22,7 @@ import {
   Notification,
   NotificationStatus,
   CreateListingResponse,
+  Loan,
 } from "../types/backend-types";
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
@@ -328,6 +329,13 @@ export const backendApi = createApi({
         const { data }: { data: Asset[] } = await queryFulfilled;
         dispatch(updateAssets(assetAryToAssets(data)));
       },
+    }),
+    createLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...loan }) => ({
+        url: `loan`,
+        method: "POST",
+        body: loan,
+      }),
     }),
   }),
 });

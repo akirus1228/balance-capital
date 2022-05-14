@@ -57,6 +57,17 @@ export enum AssetChain {
   sol,
 }
 
+export type Person = {
+  id?: string;
+  address: string;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string;
+  email?: string;
+  description?: string;
+  profileImageUrl?: string;
+};
+
 export type Owner = {
   id?: string;
   address: string;
@@ -186,3 +197,13 @@ export enum BackendLoadingStatus {
   succeeded = "succeeded",
   failed = "failed",
 }
+
+export type Loan = {
+  id?: string;
+  lender: Person;
+  borrower: Person;
+  assetListing: Listing;
+  term: Terms;
+  createdAt?: string;
+  updatedAt?: string;
+};
