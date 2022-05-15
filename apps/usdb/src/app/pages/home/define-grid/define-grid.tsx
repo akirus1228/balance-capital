@@ -155,6 +155,7 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
+        id="partner-form"
       >
         <OutlinedInput
           className={`${style["styledInput"]}`}

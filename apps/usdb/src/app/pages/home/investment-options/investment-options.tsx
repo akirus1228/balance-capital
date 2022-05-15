@@ -11,7 +11,7 @@ export const InvestmentOptions = (): JSX.Element => {
         <InvestmentLink
           title="Build"
           icon={OneIcon}
-          link="/staking"
+          link="/#partner-form"
           linkText="For protocols"
           text="Our organization includes financial engineers and developers with top level mastery within the fields of risk management and software engineering."
         />
@@ -20,7 +20,7 @@ export const InvestmentOptions = (): JSX.Element => {
         <InvestmentLink
           title="Grow"
           icon={TwoIcon}
-          link="/trad-fi"
+          link="/#partner-form"
           linkText="For institutions"
           text="Through the systems in place, new financial interests are welcome to take part in both the continued success of the Balance ecosystem."
         />
@@ -29,9 +29,9 @@ export const InvestmentOptions = (): JSX.Element => {
         <InvestmentLink
           title="Earn"
           icon={ThreeIcon}
-          link="/mint"
+          link="/#get-started"
           linkText="For investors"
-          text="We serve our stakeholdersthrough a shared purpose of advancing sustainable economic growth and opportunity."
+          text="We serve our stakeholders through a shared purpose of advancing sustainable economic growth and opportunity."
         />
         {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
