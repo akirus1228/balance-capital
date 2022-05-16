@@ -10,7 +10,7 @@ import { IBaseAddressAsyncThunk, isDev, loadState } from "@fantohm/shared-web3";
 import { Asset, AssetStatus, BackendLoadingStatus } from "../../types/backend-types";
 import { BackendApi } from "../../api";
 import { BackendAssetQueryAsyncThunk, OpenseaAssetQueryAsyncThunk } from "./interfaces";
-import getOpenseaAssets, { OpenseaAsset } from "../../api/opensea";
+import { OpenseaAsset } from "../../api/opensea";
 import { ethers } from "ethers";
 import { openseaAssetToAsset } from "../../helpers/data-translations";
 
@@ -90,40 +90,6 @@ export const loadMyAssetsFromOpensea = createAsyncThunk(
           return asset;
         }
       );
-
-      const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
-      // see if we have this data on the backend
-
-      dispatch(loadAssetsFromBackend({ queryParams: { openseaIds, skip: 0, take: 50 } }));
-      const newAssets: Assets = {};
-      walletContents.forEach((asset: Asset) => {
-        newAssets[assetToAssetId(asset)] = asset;
-      });
-      return newAssets;
-    } catch (err) {
-      console.log(err);
-      rejectWithValue("Unable to load assets.");
-      return {} as Assets;
-    }
-  }
-);
-
-/* 
-loadWalletNfts: loads nfts owned by specific address
-params: 
-- address: string
-returns: void
-*/
-export const loadAssetsFromOpensea = createAsyncThunk(
-  "assets/loadAssetsFromOpensea",
-  async (
-    { queryParams = { limit: 50 } }: OpenseaAssetQueryAsyncThunk,
-    { rejectWithValue, getState, dispatch }
-  ) => {
-    try {
-      // see if opensea has any assets listed for this address
-      const openseaData = await getOpenseaAssets(queryParams);
-      const walletContents = await openseaAssetToAsset(openseaData);
 
       const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
       // see if we have this data on the backend
@@ -223,26 +189,6 @@ const assetsSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(loadAssetsFromOpensea.rejected, (state, action) => {
-      state.assetStatus = "failed";
-    });
-    builder.addCase(loadAssetsFromOpensea.pending, (state, action) => {
-      state.assetStatus = "loading";
-
-      // add a hash with the expiration
-      const cacheHash = ethers.utils.sha256(JSON.stringify(action.meta.arg));
-      state.openseaCache = {
-        ...state.openseaCache,
-        ...{ [cacheHash]: Date.now() },
-      };
-    });
-    builder.addCase(
-      loadAssetsFromOpensea.fulfilled,
-      (state, action: PayloadAction<Assets>) => {
-        state.assetStatus = "partial";
-        state.assets = { ...state.assets, ...action.payload };
-      }
-    );
     builder.addCase(loadMyAssetsFromOpensea.rejected, (state, action) => {
       state.assetStatus = "failed";
     });

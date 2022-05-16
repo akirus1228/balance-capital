@@ -138,21 +138,6 @@ const openseaConfig = (): OpenseaConfig => {
   return openSeaConfig;
 };
 
-// TODO: use production env to determine correct endpoint
-// TODO: Add api token after OpenSea provides it.
-export const getOpenseaAssets = (
-  queryParams: OpenseaAssetQueryParam
-): Promise<OpenseaAsset[]> => {
-  const queryParamString = objectToQueryParams(queryParams);
-  const config = openseaConfig();
-  const url = `${config.apiEndpoint}/assets?${queryParamString}`;
-  console.log(url);
-  return axios.get(url).then((resp: AxiosResponse<OpenseaGetAssetsResponse>) => {
-    console.log(resp);
-    return resp.data.assets;
-  });
-};
-
 export const openseaApi = createApi({
   reducerPath: "openseaApi",
   baseQuery: fetchBaseQuery({ baseUrl: openseaConfig().apiEndpoint }),
@@ -163,7 +148,18 @@ export const openseaApi = createApi({
         params: queryParams,
       }),
       transformResponse: (response: OpenseaGetAssetsResponse, meta, arg) => {
-        return response.assets;
+        return response.assets.map((asset: OpenseaAsset) => {
+          let wallet;
+          if (asset.owner && asset.owner.address) {
+            wallet = asset.owner.address;
+          } else {
+            wallet = "";
+          }
+          return {
+            ...asset,
+            wallet,
+          };
+        });
       },
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         const { data }: { data: OpenseaAsset[] } = await queryFulfilled;
@@ -174,5 +170,3 @@ export const openseaApi = createApi({
 });
 
 export const { useGetOpenseaAssetsQuery } = openseaApi;
-
-export default getOpenseaAssets;

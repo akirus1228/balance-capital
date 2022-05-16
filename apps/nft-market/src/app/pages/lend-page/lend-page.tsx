@@ -1,7 +1,5 @@
-import { useWeb3Context } from "@fantohm/shared-web3";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
 import { useGetListingsQuery } from "../../api/backend-api";
 import LenderAssetFilter from "../../components/asset-filter/lender-asset-filter/lender-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
@@ -37,6 +35,7 @@ export const LendPage = (): JSX.Element => {
             <LenderAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
+            {isLoading && <CircularProgress />}
             <AssetList assets={assets} type="lend" />
           </Grid>
         </Grid>

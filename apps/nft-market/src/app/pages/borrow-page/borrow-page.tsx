@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { Box, Container, Grid } from "@mui/material";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { useGetListingsQuery } from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
@@ -10,13 +10,16 @@ import { selectMyAssets } from "../../store/selectors/asset-selectors";
 import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
-  const dispatch = useDispatch();
   const { address } = useWeb3Context();
   const myAssets = useSelector((state: RootState) => selectMyAssets(state, address));
+
+  // load assets from opensea api
   const { data: assets, isLoading: assetsLoading } = useGetOpenseaAssetsQuery(
     { owner: address, limit: 50 },
     { skip: !address }
   );
+
+  // using the opensea assets, crosscheck with backend api for correlated data
   const { data, isLoading: isAssetLoading } = useGetListingsQuery(
     {
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
@@ -35,7 +38,7 @@ export const BorrowPage = (): JSX.Element => {
             <BorrowerAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
-            {assetsLoading && <h3>Loading...</h3>}
+            {(assetsLoading || isAssetLoading) && <CircularProgress />}
             <AssetList assets={myAssets} type="borrow" />
           </Grid>
         </Grid>

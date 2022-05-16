@@ -318,6 +318,9 @@ export const backendApi = createApi({
         dispatch(updateListings(listingAryToListings(data)));
         dispatch(updateAssets(assetAryToAssets(assets)));
       },
+      // providesTags: (result, error, queryParams) => [
+      //   { type: "Asset Listings", queryParams },
+      // ],
     }),
     getAssets: builder.query<Asset[], BackendAssetQueryParam>({
       query: (queryParams) => ({
@@ -329,6 +332,16 @@ export const backendApi = createApi({
         const { data }: { data: Asset[] } = await queryFulfilled;
         dispatch(updateAssets(assetAryToAssets(data)));
       },
+    }),
+    createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
+      query: (body) => {
+        return {
+          url: `asset-listing`,
+          method: "POST",
+          body,
+        };
+      },
+      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
     }),
     createLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
       query: ({ id, ...loan }) => ({

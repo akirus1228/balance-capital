@@ -85,6 +85,7 @@ export type Terms = {
   apr: number;
   duration: number;
   expirationAt: Date;
+  signature: string;
   createdAt?: string;
   updatedAt?: string;
 };

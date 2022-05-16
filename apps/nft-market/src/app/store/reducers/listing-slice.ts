@@ -9,7 +9,7 @@ import { Asset, BackendLoadingStatus, Listing } from "../../types/backend-types"
 import { ListingAsyncThunk, ListingQueryAsyncThunk } from "./interfaces";
 import { BackendApi } from "../../api";
 import { RootState } from "..";
-import { Assets, assetToAssetId, updateAssets } from "./asset-slice";
+import { Assets, assetToAssetId, updateAsset, updateAssets } from "./asset-slice";
 
 export type Listings = {
   [listingId: string]: Listing;
@@ -77,17 +77,23 @@ returns: void
 */
 export const createListing = createAsyncThunk(
   "listings/createListing",
-  async ({ asset, terms }: ListingAsyncThunk, { getState, rejectWithValue }) => {
+  async (
+    { asset, terms }: ListingAsyncThunk,
+    { getState, rejectWithValue, dispatch }
+  ) => {
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
-      const listing = BackendApi.createListing(
+      const listing = await BackendApi.createListing(
         thisState.backend.authSignature,
         asset,
         terms
       );
       if (!listing) {
         rejectWithValue("Failed to create listing");
+      }
+      if (typeof listing !== "boolean") {
+        dispatch(updateAsset({ ...listing.asset, owner: { address: asset.wallet } }));
       }
       return listing;
     } else {

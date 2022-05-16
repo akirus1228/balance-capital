@@ -39,7 +39,6 @@ export const selectListingByAddress = createSelector(
   selectListingAddress,
   (listings, addressParams) => {
     const key = Object.keys(listings).find((key: string) => {
-      console.log(`key ${key}`);
       const rtn =
         listings[key].asset.assetContractAddress === addressParams.contractAddress &&
         listings[key].asset.tokenId === addressParams.tokenId;

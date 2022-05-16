@@ -13,16 +13,23 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import store, { RootState } from "../../../../store";
+import { RootState } from "../../../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";
-import { Asset, AssetStatus, Terms } from "../../../../types/backend-types";
+import {
+  Asset,
+  AssetStatus,
+  BackendLoadingStatus,
+  Terms,
+} from "../../../../types/backend-types";
 import { createListing } from "../../../../store/reducers/listing-slice";
 import { selectNftPermFromAsset } from "../../../../store/selectors/wallet-selectors";
+import { signTerms } from "../../../../helpers/signatures";
 
 export interface TermsFormProps {
   asset: Asset;
+  onClose: (value: boolean) => void;
 }
 
 export type TermTypes = {
@@ -52,6 +59,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const hasPermission = useSelector((state: RootState) =>
     selectNftPermFromAsset(state, props.asset)
   );
+  const { createListingStatus } = useSelector((state: RootState) => state.listings);
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
@@ -74,10 +82,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   // check the contract to see if we have perms already
   useEffect(() => {
-    console.log(`chainId ${chainId}`);
-    console.log(`address ${address}`);
-    console.log(`props.asset.assetContractAddress ${props.asset.assetContractAddress}`);
-    console.log(`provider ${provider}`);
     if (chainId && address && props.asset.assetContractAddress && provider) {
       console.log(`Check perms`);
       dispatch(
@@ -101,7 +105,8 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     }
   }, [checkPermStatus, requestPermStatus]);
 
-  const handleCreateListing = () => {
+  const handleCreateListing = async () => {
+    if (!provider || !chainId) return;
     console.log("create listing");
     // send listing data to backend
     setPending(true);
@@ -118,8 +123,19 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       apr,
       duration,
       expirationAt,
+      signature: "",
     };
-    dispatch(createListing({ terms, asset: asset }));
+    const termsSignature = await signTerms(
+      provider,
+      address,
+      chainId,
+      asset.assetContractAddress,
+      asset.tokenId,
+      terms
+    );
+    terms.signature = termsSignature;
+    dispatch(createListing({ terms, asset }));
+    return;
   };
 
   const handleDurationChange = (event: BaseSyntheticEvent) => {
@@ -154,6 +170,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setRepaymentAmount(_repaymentAmount);
     setRepaymentTotal(_repaymentAmount + amount);
   }, [durationType, duration, amount, apr]);
+
+  useEffect(() => {
+    if (createListingStatus === BackendLoadingStatus.succeeded) {
+      props.onClose(true);
+    }
+  }, [createListingStatus]);
 
   return (
     <Box className="flex fc">
