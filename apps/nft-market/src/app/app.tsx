@@ -52,17 +52,12 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (
-      provider &&
-      connected &&
-      ["unknown", "failed"].includes(backend.accountStatus) &&
-      backend.authSignature === null
-    ) {
+    if (provider && connected && address != backend.authorizedAccount) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [address, backend.accountStatus, connected]);
+  }, [address, connected, backend.authorizedAccount]);
 
   return (
     <ThemeProvider theme={theme}>

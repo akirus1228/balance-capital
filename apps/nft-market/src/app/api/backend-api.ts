@@ -28,7 +28,7 @@ import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/int
 import { objectToQueryParams } from "@fantohm/shared-helpers";
 import { RootState } from "../store";
 import { assetAryToAssets, listingAryToListings } from "../helpers/data-translations";
-import { updateAssets } from "../store/reducers/asset-slice";
+import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
 import { updateListings } from "../store/reducers/listing-slice";
 
 export const WEB3_SIGN_MESSAGE =
@@ -185,11 +185,12 @@ export const createListing = (
 export const handleSignMessage = (
   address: string,
   provider: JsonRpcProvider
-): Promise<string> | void => {
+): Promise<string> | string => {
   try {
     const signer = provider.getSigner(address);
     return signer.signMessage(WEB3_SIGN_MESSAGE);
   } catch (err) {
+    return "";
     console.warn(err);
   }
 };
@@ -322,6 +323,25 @@ export const backendApi = createApi({
       //   { type: "Asset Listings", queryParams },
       // ],
     }),
+    // getListing: builder.query<Listing, string>({
+    //   query: (id) => ({
+    //     url: `asset-listing/${id}`,
+    //   }),
+    //   transformResponse: (response: AllListingsResponse, meta, arg) =>
+    //     response.data.map((listing: BackendListing) => {
+    //       const { term, ...formattedListing } = listing;
+    //       return { ...formattedListing, terms: term } as Listing;
+    //     }),
+    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+    //     const { data }: { data: Listing[] } = await queryFulfilled;
+    //     const assets = data.map((listing: Listing) => listing.asset);
+    //     dispatch(updateListings(listingAryToListings(data)));
+    //     dispatch(updateAssets(assetAryToAssets(assets)));
+    //   },
+    //   // providesTags: (result, error, queryParams) => [
+    //   //   { type: "Asset Listings", queryParams },
+    //   // ],
+    // }),
     getAssets: builder.query<Asset[], BackendAssetQueryParam>({
       query: (queryParams) => ({
         url: `asset/all`,
@@ -331,6 +351,15 @@ export const backendApi = createApi({
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         const { data }: { data: Asset[] } = await queryFulfilled;
         dispatch(updateAssets(assetAryToAssets(data)));
+      },
+    }),
+    getAsset: builder.query<Asset, string | undefined>({
+      query: (id) => ({
+        url: `asset/${id}`,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Asset } = await queryFulfilled;
+        dispatch(updateAsset(data));
       },
     }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
@@ -343,7 +372,7 @@ export const backendApi = createApi({
       },
       // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
     }),
-    createLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+    createLoan: builder.mutation<Loan, Partial<Loan>>({
       query: ({ id, ...loan }) => ({
         url: `loan`,
         method: "POST",
@@ -352,4 +381,11 @@ export const backendApi = createApi({
     }),
   }),
 });
-export const { useGetAssetsQuery, useGetListingsQuery } = backendApi;
+export const {
+  useGetAssetQuery,
+  useGetAssetsQuery,
+  // useGetListingQuery,
+  useGetListingsQuery,
+  useCreateLoanMutation,
+  useCreateListingMutation,
+} = backendApi;

@@ -1,9 +1,10 @@
+import { JsonRpcProvider } from "@ethersproject/providers";
 import {
   IBaseAddressAsyncThunk,
   IBaseAsyncThunk,
   IInteractiveAsyncThunk,
 } from "@fantohm/shared-web3";
-import { Asset, Terms } from "../../types/backend-types";
+import { Asset, Loan, Terms } from "../../types/backend-types";
 
 // nft-marketplace slice
 export interface SignerAsyncThunk
@@ -19,6 +20,12 @@ export interface TermsAsyncThunk {
 }
 
 export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}
+
+export interface LoanAsyncThunk extends IBaseAsyncThunk {
+  readonly loan: Loan;
+  networkId: number;
+  provider: JsonRpcProvider;
+}
 
 export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
   readonly walletAddress: string;

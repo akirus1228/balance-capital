@@ -4,12 +4,7 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
+        { "indexed": true, "internalType": "address", "name": "lender", "type": "address" },
         {
           "indexed": true,
           "internalType": "address",
@@ -28,12 +23,7 @@
           "name": "nftTokenId",
           "type": "uint256"
         },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "loanId",
-          "type": "uint256"
-        }
+        { "indexed": false, "internalType": "uint256", "name": "loanId", "type": "uint256" }
       ],
       "name": "LoanCreated",
       "type": "event"
@@ -41,12 +31,7 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
+        { "indexed": true, "internalType": "address", "name": "lender", "type": "address" },
         {
           "indexed": true,
           "internalType": "address",
@@ -65,12 +50,7 @@
           "name": "nftTokenId",
           "type": "uint256"
         },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "loanId",
-          "type": "uint256"
-        }
+        { "indexed": false, "internalType": "uint256", "name": "loanId", "type": "uint256" }
       ],
       "name": "LoanLiquidated",
       "type": "event"
@@ -78,12 +58,7 @@
     {
       "anonymous": false,
       "inputs": [
-        {
-          "indexed": true,
-          "internalType": "address",
-          "name": "lender",
-          "type": "address"
-        },
+        { "indexed": true, "internalType": "address", "name": "lender", "type": "address" },
         {
           "indexed": true,
           "internalType": "address",
@@ -102,12 +77,7 @@
           "name": "nftTokenId",
           "type": "uint256"
         },
-        {
-          "indexed": false,
-          "internalType": "uint256",
-          "name": "loanId",
-          "type": "uint256"
-        }
+        { "indexed": false, "internalType": "uint256", "name": "loanId", "type": "uint256" }
       ],
       "name": "LoanTerminated",
       "type": "event"
@@ -132,19 +102,48 @@
       "type": "event"
     },
     {
+      "inputs": [{ "internalType": "address", "name": "_value", "type": "address" }],
+      "name": "addPunk",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
       "inputs": [
         { "internalType": "address", "name": "borrower", "type": "address" },
         { "internalType": "address", "name": "nftAddress", "type": "address" },
         { "internalType": "address", "name": "currency", "type": "address" },
         { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
-        { "internalType": "uint256", "name": "startTime", "type": "uint256" },
-        { "internalType": "uint256", "name": "endTime", "type": "uint256" },
+        { "internalType": "uint256", "name": "duration", "type": "uint256" },
         { "internalType": "uint256", "name": "loanAmount", "type": "uint256" },
-        { "internalType": "uint256", "name": "apr", "type": "uint256" }
+        { "internalType": "uint256", "name": "apr", "type": "uint256" },
+        { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" },
+        { "internalType": "bytes", "name": "sig", "type": "bytes" }
       ],
       "name": "createLoan",
       "outputs": [],
       "stateMutability": "payable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "name": "existPunk",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "_index", "type": "uint256" }],
+      "name": "getElementPunk",
+      "outputs": [{ "internalType": "address", "name": "", "type": "address" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "getPunk",
+      "outputs": [{ "internalType": "address[]", "name": "", "type": "address[]" }],
+      "stateMutability": "view",
       "type": "function"
     },
     {
@@ -175,9 +174,36 @@
         { "internalType": "uint256", "name": "endTime", "type": "uint256" },
         { "internalType": "uint256", "name": "loanAmount", "type": "uint256" },
         { "internalType": "uint256", "name": "amountDue", "type": "uint256" },
-        { "internalType": "uint256", "name": "platformFeeAmount", "type": "uint256" }
+        { "internalType": "uint256", "name": "platformFeeAmount", "type": "uint256" },
+        { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" }
       ],
       "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
+        { "internalType": "uint256[]", "name": "", "type": "uint256[]" },
+        { "internalType": "bytes", "name": "", "type": "bytes" }
+      ],
+      "name": "onERC1155BatchReceived",
+      "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "address", "name": "", "type": "address" },
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "uint256", "name": "", "type": "uint256" },
+        { "internalType": "bytes", "name": "", "type": "bytes" }
+      ],
+      "name": "onERC1155Received",
+      "outputs": [{ "internalType": "bytes4", "name": "", "type": "bytes4" }],
+      "stateMutability": "nonpayable",
       "type": "function"
     },
     {
@@ -208,6 +234,27 @@
     },
     {
       "inputs": [],
+      "name": "punkSize",
+      "outputs": [{ "internalType": "uint256", "name": "", "type": "uint256" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "_index", "type": "uint256" }],
+      "name": "removeAndShufflePunk",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [{ "internalType": "uint256", "name": "_index", "type": "uint256" }],
+      "name": "removePunk",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
       "name": "renounceOwnership",
       "outputs": [],
       "stateMutability": "nonpayable",
@@ -231,11 +278,19 @@
       "type": "function"
     },
     {
+      "inputs": [{ "internalType": "bytes4", "name": "interfaceId", "type": "bytes4" }],
+      "name": "supportsInterface",
+      "outputs": [{ "internalType": "bool", "name": "", "type": "bool" }],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
       "inputs": [
         { "internalType": "address", "name": "from", "type": "address" },
         { "internalType": "address", "name": "to", "type": "address" },
         { "internalType": "address", "name": "nftAddress", "type": "address" },
-        { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" }
+        { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
+        { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" }
       ],
       "name": "transferNFT",
       "outputs": [],
@@ -262,5 +317,5 @@
       "stateMutability": "nonpayable",
       "type": "function"
     }
-  ]
+  ]  
 }
