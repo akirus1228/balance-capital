@@ -59,7 +59,8 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       lender: { address },
       borrower: asset.owner,
       assetListing: { ...props.listing, status: ListingStatus.Pending },
-      term: { ...props.listing.terms, signature },
+      term: props.listing.terms,
+      //      term: { ...props.listing.terms, signature },
     };
     setCachedTerms({ ...props.listing.terms, signature });
 
