@@ -1,12 +1,7 @@
-import { objectToQueryParams } from "@fantohm/shared-helpers";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { isDev } from "@fantohm/shared-web3";
-import axios, { AxiosResponse } from "axios";
 import { OpenseaAssetQueryParam } from "../store/reducers/interfaces";
-import { config } from "process";
-import { useDispatch } from "react-redux";
-import { updateAssets, updateAssetsFromOpensea } from "../store/reducers/asset-slice";
-import { openseaAssetToAsset } from "../helpers/data-translations";
+import { updateAssetsFromOpensea } from "../store/reducers/asset-slice";
 
 export type Nullable<T> = T | null;
 

@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
-import style from "./borrower-asset-filter.module.scss";
+// import style from "./borrower-asset-filter.module.scss";
 
 /* eslint-disable-next-line */
 export interface BorrowerAssetFilterProps {}

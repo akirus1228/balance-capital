@@ -1,7 +1,7 @@
 import { Box, Chip, IconButton, Paper } from "@mui/material";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
-import style from "./borrower-asset.module.scss";
+// import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
 import { useWalletAsset } from "../../../hooks/use-wallet-asset";
 import PreviewImage from "../preview-image/preview-image";

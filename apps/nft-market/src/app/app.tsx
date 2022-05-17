@@ -52,7 +52,7 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (provider && connected && address != backend.authorizedAccount) {
+    if (provider && connected && address !== backend.authorizedAccount) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );

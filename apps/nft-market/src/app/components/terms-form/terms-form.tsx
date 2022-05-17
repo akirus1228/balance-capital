@@ -27,6 +27,7 @@ import {
 import { createListing } from "../../store/reducers/listing-slice";
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
+import { useUpdateTermsMutation } from "../../api/backend-api";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -47,6 +48,8 @@ export const termTypes: TermTypes = {
 export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const dispatch = useDispatch();
   const { address, chainId, provider } = useWeb3Context();
+  const [updateTerms, { isLoading: isTermsUpdateLoading, data: updateTermsResponse }] =
+    useUpdateTermsMutation();
   const [pending, setPending] = useState(false);
   const [duration, setDuration] = useState(props?.listing?.terms.duration || 1);
   const [durationType, setDurationType] = useState("days");
@@ -140,6 +143,46 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     return;
   };
 
+  const handleUpdateTerms = async () => {
+    if (!provider || !chainId) return;
+    console.log("update listing");
+    // send listing data to backend
+    setPending(true);
+    let asset: Asset;
+    if (props.asset.status === AssetStatus.New) {
+      asset = { ...props.asset, owner: { address } };
+    } else {
+      asset = props.asset;
+    }
+    const expirationAt = new Date();
+    expirationAt.setDate(expirationAt.getDate() + 1);
+    const terms: Terms = {
+      ...props?.listing?.terms,
+      amount,
+      apr,
+      duration,
+      expirationAt,
+      signature: "",
+    };
+    const termsSignature = await signTerms(
+      provider,
+      address,
+      chainId,
+      asset.assetContractAddress,
+      asset.tokenId,
+      terms
+    );
+    terms.signature = termsSignature;
+    updateTerms(terms);
+    return;
+  };
+
+  useEffect(() => {
+    if (!isTermsUpdateLoading && updateTermsResponse) {
+      props.onClose(true);
+    }
+  }, [isTermsUpdateLoading, updateTermsResponse]);
+
   const handleDurationChange = (event: BaseSyntheticEvent) => {
     console.log(event);
     setDuration(event.target.value);
@@ -228,9 +271,14 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           Allow [name] to Access your NFT
         </Button>
       )}
-      {hasPermission && !pending && (
+      {hasPermission && !pending && !props.listing && (
         <Button variant="contained" onClick={handleCreateListing}>
           List as collateral
+        </Button>
+      )}
+      {hasPermission && !pending && props.listing && (
+        <Button variant="contained" onClick={handleUpdateTerms}>
+          Update Terms
         </Button>
       )}
       {pending && (

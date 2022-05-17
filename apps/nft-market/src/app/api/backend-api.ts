@@ -177,7 +177,7 @@ export const createListing = (
     .then((resp: AxiosResponse<CreateListingResponse>) => {
       return createListingResponseToListing(resp.data);
     })
-    .catch((err: any) => {
+    .catch((err: AxiosResponse) => {
       return false;
     });
 };
@@ -372,6 +372,13 @@ export const backendApi = createApi({
       },
       // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
     }),
+    updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `term/${id}`,
+        method: "PUT",
+        body: patch,
+      }),
+    }),
     createLoan: builder.mutation<Loan, Partial<Loan>>({
       query: ({ id, ...loan }) => ({
         url: `loan`,
@@ -388,4 +395,5 @@ export const {
   useGetListingsQuery,
   useCreateLoanMutation,
   useCreateListingMutation,
+  useUpdateTermsMutation,
 } = backendApi;
