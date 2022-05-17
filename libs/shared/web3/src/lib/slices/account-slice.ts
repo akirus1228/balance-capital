@@ -524,7 +524,7 @@ export const getNftList = createAsyncThunk(
       provider
     );
     let nftIds = await usdbNftContract["getTokenIds"](address);
-    nftIds = nftIds.map((id: any) => Number(id) + 1);
+    nftIds = nftIds.map((id: any) => Number(id));
     callback(nftIds);
 
     return {
@@ -664,7 +664,7 @@ export const getNftTokenUri = createAsyncThunk(
       provider
     );
     let tokenId = id;
-    if (!tokenId) tokenId = await usdbNftContract["getTokenIdForMint"]();
+    if (tokenId === -1) tokenId = await usdbNftContract["totalSupply"]();
     const base64Metadata = await usdbNftContract["tokenURI"](tokenId);
     const json = atob(base64Metadata.substring(29));
     const metadata = JSON.parse(json);

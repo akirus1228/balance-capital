@@ -79,7 +79,7 @@ export const MintNftPage = (): JSX.Element => {
 
     dispatch(
       getNftTokenUri({
-        id: 0,
+        id: -1,
         networkId: chainId ?? defaultNetworkId,
         callback: (metadata: NftMetadata) => {
           setNftMetadata(metadata);
