@@ -42,7 +42,7 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
     }
 
     if (loans && loans.length > 0) {
-      loans?.forEach((loan: Loan) => deleteLoan(loan));
+      loans?.forEach((loan: Partial<Loan>) => deleteLoan(loan));
     }
   };
 

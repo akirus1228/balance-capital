@@ -8,7 +8,6 @@ import {
   AllAssetsResponse,
   AllListingsResponse,
   Asset,
-  AssetStatus,
   BackendListing,
   CreateAssetResponse,
   CreateListingRequest,
@@ -16,7 +15,6 @@ import {
   ApiResponse,
   EditNotificationRequest,
   Listing,
-  ListingStatus,
   LoginResponse,
   Terms,
   Notification,
@@ -300,6 +298,8 @@ export const backendApi = createApi({
         url: `loan/all`,
         params: queryParams,
       }),
+      transformResponse: (response: { count: number; data: Loan[] }, meta, arg) =>
+        response.data,
     }),
     createLoan: builder.mutation<Loan, Loan>({
       query: ({ id, borrower, lender, assetListing, term }) => {
