@@ -12,7 +12,7 @@ import {
   ThemeProvider,
 } from "@mui/material";
 import { USDBLight } from "@fantohm/shared-ui-themes";
-import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import "react-circular-progressbar/dist/styles.css";
 
 import style from "../amps.module.scss";
@@ -39,8 +39,9 @@ export default function RedeemCard(props: any) {
               variant="subtitle1"
               color="primary"
               textAlign="center"
-              paddingTop={1}
+              paddingTop={3}
               paddingBottom={2}
+              fontWeight="bold"
             >
               {title}
             </Typography>
@@ -59,17 +60,26 @@ export default function RedeemCard(props: any) {
               >
                 Cost
               </Typography>
-              <Typography variant="subtitle1" color="primary" marginBottom={1}>
+              <Typography
+                variant="subtitle1"
+                color="primary"
+                marginBottom={1}
+                className={style["cost"]}
+              >
                 {cost === -1 ? "Highest Holder" : `${cost} AMPS`}
               </Typography>
               <Box className={style["descBox"]}>
-                <Typography
-                  variant="body2"
-                  color="primary"
-                  className={style["description"]}
-                >
-                  {description}
-                </Typography>
+                <div>
+                  <Icon>
+                    <InfoOutlinedIcon />
+                  </Icon>
+                  <Typography
+                    variant="body2"
+                    color="primary"
+                    className={style["description"]}
+                    dangerouslySetInnerHTML={{ __html: description }}
+                  />
+                </div>
               </Box>
             </Grid>
 

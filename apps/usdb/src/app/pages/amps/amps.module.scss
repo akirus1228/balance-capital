@@ -90,21 +90,24 @@
     color: #fff;
     font-size: 10px;
     border-radius: 20px;
-    padding: 5px 20px;
+    padding: 10px 20px;
     display: inline;
   }
 
   .imageBox {
-    height: 180px;
+    height: 160px;
     flex-direction: row;
     align-items: center;
     display: flex;
   }
   .image {
-    max-width: 150px;
-    max-height: 150px;
+    max-width: 100px;
+    max-height: 100px;
     margin-left: auto;
     margin-right: auto;
+  }
+  .cost {
+    font-size: 20px;
   }
   .description {
     font-size: 10px;
@@ -115,12 +118,32 @@
     width: 80%;
     display: block;
     margin-left: 10%;
-    padding: 10px;
+    padding: 20px 20px;
     border-radius: 10px;
     margin-bottom: 20px;
+    height: 70px;
+    align-items: center;
+    display: flex;
+    div {
+      display: flex;
+      margin-left: auto;
+      margin-right: auto;
+      span {
+        color: #89aba6;
+        width: 15px;
+        font-size: 12px;
+        height: 14px;
+        margin-right: 5px;
+
+        svg {
+          width: 15px;
+          height: 15px;
+        }
+      }
+    }
 
     .description {
-      font-size: 10px;
+      font-size: 11px;
       color: #89aba6;
     }
   }

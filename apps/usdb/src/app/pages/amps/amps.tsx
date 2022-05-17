@@ -44,14 +44,14 @@ export default function Amps() {
       title: "FHM Staking APY Boost",
       image: imgFhmStaking,
       cost: 500,
-      description: "Get a 50% APY boost when staking FHM",
+      description: "Get a 50% APY boost <br />when staking FHM",
     },
     {
       use: 0,
       title: "Get Out of Jail NFT",
       image: imgGetJail,
       cost: 500,
-      description: "Get a 50% APY boost when staking FHM",
+      description: "Get a 50% APY boost <br />when staking FHM",
     },
     {
       use: 0,
@@ -72,7 +72,7 @@ export default function Amps() {
       title: "NFT Marketplace Fees",
       image: imgNftFees,
       cost: 750,
-      description: "Get a 50% discount at the USDB NFT marketplace",
+      description: "Get a 50% discount at <br />the USDB NFT marketplace",
     },
     {
       use: 0,
