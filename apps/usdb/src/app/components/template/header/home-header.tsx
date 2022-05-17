@@ -160,60 +160,6 @@ export const HomeHeader = (): JSX.Element => {
                   </Typography>
                 </MenuLink>
               ))}
-
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileConnect"]}`}
-              >
-                <Typography textAlign="center" />
-              </MenuItem>
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileTheme"]}`}
-              >
-                <Typography textAlign="center">
-                  <Button onClick={toggleTheme}>
-                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="medium" />
-                  </Button>
-                </Typography>
-              </MenuItem>
-
-              <MenuItem
-                sx={{
-                  display: "flex",
-                  justifyContent: "start",
-                  paddingLeft: "20px",
-                }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobilePortfolio"]}`}
-              >
-                <Typography textAlign="center">
-                  <Link to="/my-account">
-                    <Button className="portfolio">
-                      <Box display="flex" alignItems="center" mr="10px">
-                        <SvgIcon component={AnalyticsIcon} fontSize="large" />
-                      </Box>
-                      <Box
-                        display="flex"
-                        alignItems="center"
-                        mt="2px"
-                        className={`${styles["portfolioText"]}`}
-                      >
-                        My Portfolio:&nbsp;
-                      </Box>
-                      {!accountBondsLoading ? (
-                        <Box display="flex" alignItems="center" mt="2px">
-                          ${trim(totalBalances, 2)}
-                        </Box>
-                      ) : (
-                        <Skeleton width="100px" />
-                      )}
-                    </Button>
-                  </Link>
-                </Typography>
-              </MenuItem>
             </Menu>
           </Box>
           <Typography
@@ -273,25 +219,25 @@ export const HomeHeader = (): JSX.Element => {
                 })}
               </Menu>
             </Box>
+            <Link to="/#about" className={styles["headerLink"]}>
+              About
+            </Link>
+            <Link to={{ pathname: "/#docs" }} className={styles["headerLink"]}>
+              Docs
+            </Link>
+            <Link to="/#audit" className={styles["headerLink"]}>
+              Audits
+            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              href="/#get-started"
+              sx={{ px: "3em", display: { xs: "none", md: "flex", height: "3em" } }}
+              className={style["link"]}
+            >
+              Get started
+            </Button>
           </Box>
-          <Link to="/#about" className={styles["headerLink"]}>
-            About
-          </Link>
-          <Link to={{ pathname: "/#docs" }} className={styles["headerLink"]}>
-            Docs
-          </Link>
-          <Link to="/#audit" className={styles["headerLink"]}>
-            Audits
-          </Link>
-          <Button
-            variant="contained"
-            color="primary"
-            href="/#get-started"
-            sx={{ px: "3em", display: { xs: "none", md: "flex", height: "3em" } }}
-            className={style["link"]}
-          >
-            Get started
-          </Button>
         </Toolbar>
       </Container>
       {!allowedChain && connected && (

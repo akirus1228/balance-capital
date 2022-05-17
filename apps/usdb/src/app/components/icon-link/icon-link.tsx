@@ -40,7 +40,7 @@ export function IconLink({ icon, title, link = undefined, text = "" }: IconLinkP
               paddingTop: "30px",
             }}
           >
-            <Grid item xs={6}>
+            <Grid item xs={3}>
               <img src={icon as string} alt={title} className={style["iconImage"]} />
             </Grid>
             <Grid item xs={6}>

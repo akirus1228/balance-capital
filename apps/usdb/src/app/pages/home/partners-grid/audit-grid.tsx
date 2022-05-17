@@ -33,13 +33,13 @@ export const AuditGrid = (): JSX.Element => {
             Empowered & Audited As Necessary
           </Typography>{" "}
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={3}>
           <img src={TechrateIcon} alt="USDB logo" className={style["auditIcon"]} />
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={3}>
           <img src={HackenIcon} alt="USDB logo" className={style["auditIcon"]} />
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={3}>
           <img src={SpadetechIcon} alt="USDB logo" className={style["auditIcon"]} />
         </Grid>
       </Grid>

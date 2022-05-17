@@ -7,7 +7,7 @@ import InvestmentLink from "./investment-link";
 export const InvestmentOptions = (): JSX.Element => {
   return (
     <Grid container rowSpacing={6} className={style["productGrid"]}>
-      <Grid item md={4} xs={6}>
+      <Grid item md={4} sm={12}>
         <InvestmentLink
           title="Build"
           icon={OneIcon}
@@ -16,7 +16,7 @@ export const InvestmentOptions = (): JSX.Element => {
           text="Our organization includes financial engineers and developers with top level mastery within the fields of risk management and software engineering."
         />
       </Grid>
-      <Grid item md={4} xs={6}>
+      <Grid item md={4} sm={12}>
         <InvestmentLink
           title="Grow"
           icon={TwoIcon}
@@ -25,7 +25,7 @@ export const InvestmentOptions = (): JSX.Element => {
           text="Through the systems in place, new financial interests are welcome to take part in both the continued success of the Balance ecosystem."
         />
       </Grid>
-      <Grid item md={4} xs={6}>
+      <Grid item md={4} sm={12}>
         <InvestmentLink
           title="Earn"
           icon={ThreeIcon}

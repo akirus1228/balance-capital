@@ -147,7 +147,8 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        xs={3}
+        md={3}
+        sm={12}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -167,12 +168,13 @@ export const DefineGrid = (): JSX.Element => {
         />
         <OutlinedInput
           className={`${style["styledInput"]}`}
-          placeholder="What’s your website url? "
+          placeholder="What’s your website url?"
         />
       </Grid>
       <Grid
         item
-        xs={3}
+        md={3}
+        sm={12}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -196,7 +198,8 @@ export const DefineGrid = (): JSX.Element => {
       </Grid>
       <Grid
         item
-        xs={6}
+        md={6}
+        sm={12}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -204,10 +207,11 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
-      ></Grid>
+      />
       <Grid
         item
-        xs={6}
+        md={6}
+        sm={12}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -219,7 +223,7 @@ export const DefineGrid = (): JSX.Element => {
         <Button
           variant="contained"
           color="primary"
-          sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+          sx={{ px: "6em", display: { md: "flex" } }}
           className={style["link"]}
         >
           Submit

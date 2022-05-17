@@ -50,6 +50,7 @@ export const PartnersGrid = (): JSX.Element => {
           }}
         >
           <Typography
+            className={style["partnerTitle"]}
             style={{ textAlign: "center", fontSize: "40px", fontWeight: "400" }}
           >
             Our partners

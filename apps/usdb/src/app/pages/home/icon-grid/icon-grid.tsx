@@ -20,17 +20,16 @@ export const IconGrid = (): JSX.Element => {
       <Grid
         container
         rowSpacing={6}
-        className={style["productGrid"]}
         style={{
           justifyContent: "center",
           alignContent: "center",
           textAlign: "center",
         }}
       >
-        <Grid item md={12} xs={6}>
+        <Grid item md={12} sm={6}>
           <Typography style={{ fontSize: "36px" }}>Our products</Typography>
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={12}>
           <IconLink
             title="USDB Stablecoin"
             icon={TradFiIcon}
@@ -38,7 +37,7 @@ export const IconGrid = (): JSX.Element => {
             text="USDB is an ideal tool of decentralised commerce"
           />
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={12}>
           <IconLink
             title="FHM"
             icon={USDBFHMIcon}
@@ -46,7 +45,7 @@ export const IconGrid = (): JSX.Element => {
             text="The FHM protocol is ideal as a value-capturing reserve"
           />
         </Grid>
-        <Grid item md={3} xs={6}>
+        <Grid item md={3} sm={12}>
           <IconLink
             title="Liquidity Solutions"
             icon={LiquidityIcon}
@@ -56,7 +55,7 @@ export const IconGrid = (): JSX.Element => {
           {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
         </Grid>
       </Grid>
-      <Grid item md={3} xs={6}>
+      <Grid item md={3} sm={12}>
         <IconLink
           title="NFT Lending"
           icon={NFTLendingIcon}
@@ -64,21 +63,21 @@ export const IconGrid = (): JSX.Element => {
         />
         {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
-      <Grid item md={3} xs={6}>
+      <Grid item md={3} sm={12}>
         <IconLink
           title="Financial NFTs"
           icon={FinancialNftsIcon}
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
-      <Grid item md={3} xs={6}>
+      <Grid item md={3} sm={12}>
         <IconLink
           title="USDB Bank"
           icon={BankIcon}
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
-      <Grid item md={3} xs={6}>
+      <Grid item md={3} sm={12}>
         <IconLink
           title="Dex & Bridge"
           icon={BridgeIcon}
