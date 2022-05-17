@@ -6,14 +6,7 @@ export interface CreateListingRequest {
 }
 
 // response types
-export type LoginResponse = {
-  address: string;
-  description?: string;
-  email?: string;
-  id: string;
-  name?: string;
-  profileImageUrl?: string;
-} & StandardBackendObject;
+export type LoginResponse = User;
 
 export type AllAssetsResponse = {
   data: Asset[];
@@ -72,6 +65,8 @@ export type Owner = {
   description?: string;
   profileImageUrl?: string;
 } & StandardBackendObject;
+
+export type User = Person;
 
 export type Terms = {
   id?: string;

@@ -25,7 +25,6 @@ import {
   Loan,
 } from "../types/backend-types";
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
-import { objectToQueryParams } from "@fantohm/shared-helpers";
 import { RootState } from "../store";
 import {
   assetAryToAssets,

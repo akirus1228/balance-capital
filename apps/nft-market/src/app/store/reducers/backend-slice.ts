@@ -3,6 +3,7 @@ import {
   BackendLoadingStatus,
   LoginResponse,
   Notification,
+  User,
 } from "../../types/backend-types";
 import { loadState } from "@fantohm/shared-web3";
 import { BackendApi } from "../../api";
@@ -16,7 +17,9 @@ export type AssetLoadStatus = {
 type SignaturePayload = {
   signature: string;
   address: string;
+  user: User;
 };
+
 export interface BackendData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
@@ -24,6 +27,7 @@ export interface BackendData {
   readonly authSignature: string | null;
   readonly authorizedAccount: string;
   readonly notifications: Notification[] | null;
+  readonly user: User;
 }
 
 /* 
@@ -39,12 +43,13 @@ export const authorizeAccount = createAsyncThunk(
   "backend/authorizeAccount",
   async ({ address, networkId, provider }: SignerAsyncThunk, { rejectWithValue }) => {
     const loginResponse: LoginResponse = await BackendApi.doLogin(address);
+    console.log(loginResponse);
     if (loginResponse.id) {
       const signature = await BackendApi.handleSignMessage(address, provider);
       if (!signature) {
         rejectWithValue("Login Failed");
       }
-      return { signature, address };
+      return { signature, address, user: loginResponse };
     } else {
       return rejectWithValue("Login Failed");
     }
@@ -104,6 +109,7 @@ const backendSlice = createSlice({
           state.accountStatus = "ready";
           state.authSignature = action.payload.signature;
           state.authorizedAccount = action.payload.address;
+          state.user = action.payload.user;
         }
       }
     );
