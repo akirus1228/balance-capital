@@ -1,0 +1,168 @@
+import {
+  Box,
+  Grid,
+  Button,
+  Paper,
+  OutlinedInput,
+  InputAdornment,
+  Typography,
+  Icon,
+  useMediaQuery,
+  Divider,
+  ThemeProvider,
+} from "@mui/material";
+import { USDBLight } from "@fantohm/shared-ui-themes";
+import { CircularProgressbarWithChildren, buildStyles } from "react-circular-progressbar";
+import "react-circular-progressbar/dist/styles.css";
+
+import style from "../amps.module.scss";
+
+const percentage = 66;
+
+export default function StakingCard(props: any) {
+  const { title, index } = props;
+
+  const onStake = () => {
+    if (!props.onStake) return;
+    props.onStake(index);
+  };
+
+  return (
+    <Grid xs={4}>
+      <ThemeProvider theme={USDBLight}>
+        <Box className={`${style["bondCard"]} flexCenterCol`}>
+          <Paper
+            sx={{ marginTop: "47px", maxWidth: "470px" }}
+            elevation={0}
+            className={`${style["bondElement"]}`}
+          >
+            <Grid container rowSpacing={3}>
+              <Grid item xs={12}>
+                <Box className={`flexCenterCol`}>
+                  <div className={`${style["textWrapper"]}`}>{title}</div>
+                </Box>
+                <Grid container rowSpacing={3}>
+                  <Grid
+                    item
+                    xs={12}
+                    sx={{
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      paddingTop: "50px",
+                    }}
+                  >
+                    <Box className={style["titleWrapper"]}>
+                      <h3>AMPS Pool {index}</h3>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Divider />
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Box textAlign="center">
+                      <Typography
+                        variant="body2"
+                        color="primary"
+                        className={style["description"]}
+                      >
+                        Accrual multiplier
+                      </Typography>
+                      <Typography variant="h5" color="primary" marginTop={1}>
+                        {index} X
+                      </Typography>
+                    </Box>
+                  </Grid>
+
+                  {index !== 1 && (
+                    <Grid item xs={12}>
+                      <Box className={style["progress"]}>
+                        <CircularProgressbarWithChildren
+                          value={percentage}
+                          strokeWidth={3}
+                          styles={buildStyles({
+                            pathColor: "#3744e6",
+                          })}
+                        >
+                          <Typography
+                            variant="inherit"
+                            color="primary"
+                            className={style["description"]}
+                          >
+                            Time remaining
+                          </Typography>
+                          <Typography variant="h6" color="primary">
+                            300 days
+                          </Typography>
+                        </CircularProgressbarWithChildren>
+                      </Box>
+                    </Grid>
+                  )}
+
+                  {index === 1 && (
+                    <Grid item xs={12}>
+                      <Box className={style["timeRemains"]}>
+                        <Typography
+                          variant="body2"
+                          color="primary"
+                          className={style["description"]}
+                        >
+                          Time remaining
+                        </Typography>
+                        <Typography variant="h6" color="primary">
+                          No lock up
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  )}
+
+                  <Grid item xs={12} sx={{ paddingTop: 0 }}>
+                    <Box className={style["list"]}>
+                      <Typography variant="subtitle2" color="primary">
+                        Staked NFT(s) value
+                      </Typography>
+                      <Typography variant="subtitle2" color="primary">
+                        5000.00 USDB
+                      </Typography>
+                    </Box>
+                    <Box className={style["list"]}>
+                      <Typography variant="subtitle2" color="primary">
+                        Pending rewards
+                      </Typography>
+                      <Typography variant="subtitle2" color="primary">
+                        1900.00 AMPS
+                      </Typography>
+                    </Box>
+                    <Box className={style["list"]}>
+                      <Typography variant="subtitle2" color="primary">
+                        Total rewards
+                      </Typography>
+                      <Typography variant="subtitle2" color="primary">
+                        100.00 AMPS
+                      </Typography>
+                    </Box>
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      id="bond-btn"
+                      className="paperButton transaction-button"
+                      onClick={() => onStake()}
+                    >
+                      Stake
+                    </Button>
+                  </Grid>
+                </Grid>
+              </Grid>
+            </Grid>
+          </Paper>
+        </Box>
+      </ThemeProvider>
+    </Grid>
+  );
+}
