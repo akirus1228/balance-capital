@@ -13,7 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { RootState } from "../../../../store";
+import { RootState } from "../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";
@@ -21,14 +21,16 @@ import {
   Asset,
   AssetStatus,
   BackendLoadingStatus,
+  Listing,
   Terms,
-} from "../../../../types/backend-types";
-import { createListing } from "../../../../store/reducers/listing-slice";
-import { selectNftPermFromAsset } from "../../../../store/selectors/wallet-selectors";
-import { signTerms } from "../../../../helpers/signatures";
+} from "../../types/backend-types";
+import { createListing } from "../../store/reducers/listing-slice";
+import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
+import { signTerms } from "../../helpers/signatures";
 
 export interface TermsFormProps {
   asset: Asset;
+  listing?: Listing;
   onClose: (value: boolean) => void;
 }
 
@@ -46,10 +48,10 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const dispatch = useDispatch();
   const { address, chainId, provider } = useWeb3Context();
   const [pending, setPending] = useState(false);
-  const [duration, setDuration] = useState(1);
+  const [duration, setDuration] = useState(props?.listing?.terms.duration || 1);
   const [durationType, setDurationType] = useState("days");
-  const [apr, setApr] = useState(25);
-  const [amount, setAmount] = useState(10000);
+  const [apr, setApr] = useState(props?.listing?.terms.apr || 25);
+  const [amount, setAmount] = useState(props?.listing?.terms.amount || 10000);
   const [repaymentAmount, setRepaymentAmount] = useState(2500);
   const [repaymentTotal, setRepaymentTotal] = useState(12500);
 

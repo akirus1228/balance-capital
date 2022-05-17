@@ -132,10 +132,11 @@ export const checkNftPermission = createAsyncThunk(
     }
     try {
       const nftContract = new ethers.Contract(assetAddress, ierc721Abi, provider);
-      const response = await nftContract["getApproved"](tokenId);
-      const hasPermission = response.includes(
-        addresses[networkId]["USDB_LENDING_ADDRESS"]
-      );
+      const response: string = await nftContract["getApproved"](tokenId);
+      console.log(response);
+      const hasPermission =
+        response.toLowerCase() ===
+        addresses[networkId]["USDB_LENDING_ADDRESS"].toLowerCase();
       const payload: NftPermStatus = {};
       payload[`${tokenId}:::${assetAddress}`] = hasPermission;
       return payload;

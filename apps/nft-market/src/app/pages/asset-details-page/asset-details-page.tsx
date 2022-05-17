@@ -58,7 +58,7 @@ export const AssetDetailsPage = (): JSX.Element => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, address]);
 
-  if (isListingLoading || isAssetLoading) {
+  if (isListingLoading || isAssetLoading || !asset) {
     return <CircularProgress />;
   }
   return (

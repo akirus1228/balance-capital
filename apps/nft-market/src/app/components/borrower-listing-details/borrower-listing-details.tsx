@@ -6,6 +6,7 @@ import store, { RootState } from "../../store";
 import { getListingState, loadListings } from "../../store/reducers/listing-slice";
 import { selectListingFromAsset } from "../../store/selectors/listing-selectors";
 import { Asset, Listing } from "../../types/backend-types";
+import UpdateTerms from "../update-terms/update-terms";
 import style from "./borrower-listing-details.module.scss";
 
 export interface BorrowerListingDetailsProps {
@@ -36,12 +37,24 @@ export const BorrowerListingDetails = (
   // calculate repayment totals
   const { repaymentTotal } = useListingTermDetails(listing);
 
+  // update terms
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const onClickButton = () => {
+    setDialogOpen(true);
+  };
+
+  const onListDialogClose = (accepted: boolean) => {
+    console.log(accepted);
+    setDialogOpen(false);
+  };
+
   if (typeof listing.terms === "undefined") {
     return <h3>Loading...</h3>;
   }
 
   return (
     <Container sx={props.sx}>
+      <UpdateTerms onClose={onListDialogClose} open={dialogOpen} listing={listing} />
       <Paper>
         <Box className="flex fr fj-sa fw">
           <Box className="flex fc">
@@ -75,7 +88,9 @@ export const BorrowerListingDetails = (
             </Box>
           </Box>
           <Box className="flex fc">
-            <Button variant="contained">Update Terms</Button>
+            <Button variant="contained" onClick={onClickButton}>
+              Update Terms
+            </Button>
           </Box>
         </Box>
       </Paper>
