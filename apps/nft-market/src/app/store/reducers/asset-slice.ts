@@ -54,91 +54,6 @@ export interface AssetState {
 
 const cacheTime = 300 * 1000; // 5 minutes
 
-/* 
-loadWalletNfts: loads nfts owned by specific address
-params: 
-- address: string
-returns: void
-*/
-export const loadMyAssetsFromOpensea = createAsyncThunk(
-  "assets/loadMyAssetsFromOpensea",
-  async (
-    { address }: IBaseAddressAsyncThunk,
-    { rejectWithValue, getState, dispatch }
-  ) => {
-    if (!address) {
-      return rejectWithValue("No wallet address");
-    }
-    try {
-      // see if opensea has any assets listed for this address
-      const thisState: any = getState();
-      const client: FetchNFTClient = thisState.assets.fetchNftClient as FetchNFTClient;
-      const openseaData = await client.getEthereumCollectibles([address]);
-      if (!openseaData || typeof openseaData[address] === "undefined") {
-        return {} as Assets;
-      }
-
-      // convertCollectible to Asset
-      const walletContents = openseaData[address].map(
-        (collectible: Collectible): Asset => {
-          const { id, ...tmpCollectible } = collectible;
-          const asset = {
-            ...tmpCollectible,
-            openseaLoaded: Date.now() + cacheTime,
-            status: AssetStatus.New,
-          } as Asset;
-          return asset;
-        }
-      );
-
-      const openseaIds = walletContents.map((asset: Asset) => asset.openseaId || "");
-      // see if we have this data on the backend
-
-      dispatch(loadAssetsFromBackend({ queryParams: { openseaIds, skip: 0, take: 50 } }));
-      const newAssets: Assets = {};
-      walletContents.forEach((asset: Asset) => {
-        newAssets[assetToAssetId(asset)] = asset;
-      });
-      return newAssets;
-    } catch (err) {
-      console.log(err);
-      rejectWithValue("Unable to load assets.");
-      return {} as Assets;
-    }
-  }
-);
-
-/* 
-loadAssetsFromBackend: loads multiple assets from API and merges into assets
-params: 
-- openseaIds: string[]
-returns: boolean
-*/
-export const loadAssetsFromBackend = createAsyncThunk(
-  "asset/loadAssetsFromBackend",
-  async (
-    { queryParams = { skip: 0, take: 50 } }: BackendAssetQueryAsyncThunk,
-    { getState, rejectWithValue }
-  ) => {
-    console.log("loadAssetsFromOpenseaIds called");
-    const thisState: any = getState();
-    if (thisState.backend.authSignature) {
-      console.log("sig found");
-      const apiAssets = await BackendApi.getAssets(
-        queryParams,
-        thisState.backend.authSignature
-      );
-
-      return apiAssets.map((asset: Asset) => ({
-        ...asset,
-        cacheExpire: Date.now() + cacheTime,
-      }));
-    } else {
-      return rejectWithValue("No authorization found.");
-    }
-  }
-);
-
 export const updateAssetsFromOpensea = createAsyncThunk(
   "asset/updateAssetsFromOpensea",
   async (openseaAssets: OpenseaAsset[], { dispatch }) => {
@@ -187,25 +102,6 @@ const assetsSlice = createSlice({
       });
       state.assets = { ...state.assets, ...mergedAssets };
     },
-  },
-  extraReducers: (builder) => {
-    builder.addCase(loadMyAssetsFromOpensea.rejected, (state, action) => {
-      state.assetStatus = "failed";
-    });
-    builder.addCase(loadMyAssetsFromOpensea.pending, (state, action) => {
-      state.assetStatus = "loading";
-    });
-    builder.addCase(
-      loadMyAssetsFromOpensea.fulfilled,
-      (state, action: PayloadAction<Assets>) => {
-        state.assetStatus = "succeeded";
-        state.nextOpenseaLoad = Date.now() + cacheTime;
-        state.assets = { ...state.assets, ...action.payload };
-      }
-    );
-    builder.addCase(loadAssetsFromBackend.rejected, (state, action) => {
-      state.assetStatus = "failed";
-    });
   },
 });
 

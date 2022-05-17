@@ -48,48 +48,6 @@ export const doLogin = (address: string): Promise<LoginResponse> => {
   });
 };
 
-export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
-
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      return resp.data.data[0];
-    })
-    .catch((err) => {
-      // most likely a 400 (not in our database)
-
-      return {} as Asset;
-    });
-};
-
-export const getAssets = (
-  queryParams: BackendAssetQueryParam,
-  signature: string
-): Promise<Asset[]> => {
-  const queryParamString = objectToQueryParams(queryParams);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?${queryParamString}`;
-
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      return resp.data.data;
-    })
-    .catch((err) => {
-      // most likely a 400 (not in our database)
-
-      return [{}] as Asset[];
-    });
-};
-
 export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset`;
   return axios
@@ -105,42 +63,6 @@ export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
       // most likely a 400 (not in our database)
 
       return {} as Asset;
-    });
-};
-
-export const getListings = (
-  queryParams: ListingQueryParam,
-  signature: string
-): Promise<Listing[]> => {
-  const queryParamString = objectToQueryParams(queryParams);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?${queryParamString}`;
-
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllListingsResponse>) => {
-      return resp.data.data.map((listing: BackendListing) => {
-        const { term, ...formattedListing } = listing;
-        return { ...formattedListing, terms: term } as Listing;
-      });
-    });
-};
-
-export const getListing = (listingId: string, signature: string): Promise<Listing> => {
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/${listingId}`;
-
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllListingsResponse>) => {
-      const { term, ...listing } = resp.data.data[0];
-      return { ...listing, terms: term };
     });
 };
 

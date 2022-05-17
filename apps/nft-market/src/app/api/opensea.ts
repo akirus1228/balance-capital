@@ -121,10 +121,11 @@ export type OpenseaConfig = {
   apiEndpoint: string;
 };
 
-const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
 const openseaConfig = (): OpenseaConfig => {
   const openSeaConfig: any = {
-    apiKey: isDev() ? "5bec8ae0372044cab1bef0d866c98618" : OPENSEA_API_KEY,
+    apiKey: isDev()
+      ? "5bec8ae0372044cab1bef0d866c98618"
+      : "6f2462b6e7174e9bbe807169db342ec4",
     apiEndpoint: isDev()
       ? "https://testnets-api.opensea.io/api/v1"
       : "https://api.opensea.io/api/v1/assets",
@@ -135,7 +136,13 @@ const openseaConfig = (): OpenseaConfig => {
 
 export const openseaApi = createApi({
   reducerPath: "openseaApi",
-  baseQuery: fetchBaseQuery({ baseUrl: openseaConfig().apiEndpoint }),
+  baseQuery: fetchBaseQuery({
+    baseUrl: openseaConfig().apiEndpoint,
+    prepareHeaders: (headers) => {
+      headers.set("X-API-KEY", openseaConfig().apiKey);
+      return headers;
+    },
+  }),
   endpoints: (builder) => ({
     getOpenseaAssets: builder.query<OpenseaAsset[], OpenseaAssetQueryParam>({
       query: (queryParams) => ({
