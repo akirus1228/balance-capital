@@ -49,7 +49,7 @@ export const DefineGrid = (): JSX.Element => {
       </Grid>
       <Grid
         item
-        xs={6}
+        xs={4}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -63,7 +63,7 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        xs={6}
+        xs={4}
         sx={{
           display: "flex",
           flexDirection: "column",

@@ -22,13 +22,12 @@ export const AuditGrid = (): JSX.Element => {
         <Grid item md={12} xs={6}>
           <Typography
             style={{
-              width: "60%",
-              marginLeft: "20%",
               textAlign: "center",
               fontSize: "36px",
               fontWeight: "400",
               marginBottom: "50px",
             }}
+            className="auditTitle"
           >
             Empowered & Audited As Necessary
           </Typography>{" "}

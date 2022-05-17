@@ -100,3 +100,11 @@
 
   }
 }
+
+.email-div {
+  height: 300px;
+  @media (max-width:600px) {
+    padding-bottom: 150px;
+    height: 400px;
+  }
+}

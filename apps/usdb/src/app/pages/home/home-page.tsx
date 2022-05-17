@@ -132,7 +132,13 @@ export const HomePage = (): JSX.Element => {
           >
             <InvestmentOptions />
           </Grid>
-          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
+            style={{ width: "100%" }}
+            className={style["iconsElement"]}
+          >
             <DefineGrid />
           </Grid>
           <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
@@ -149,15 +155,15 @@ export const HomePage = (): JSX.Element => {
           </Grid>
           <Grid
             item
+            className="email-div"
             md={12}
             order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ width: "100%", height: "300px" }}
+            style={{ width: "100%" }}
           >
             <Paper
+              className="email-box"
               style={{
                 width: "100%",
-                height: "100%",
                 borderRadius: "80px",
                 background: `url(${BalanceEmailBanner})`,
               }}
@@ -166,7 +172,7 @@ export const HomePage = (): JSX.Element => {
                 container
                 style={{ width: "100%", height: "100%" }}
                 columnSpacing={2}
-                rowSpacing={{ xs: 4, md: 0 }}
+                rowSpacing={{ sm: 0, md: 4 }}
               >
                 <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]} />
                 <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]}>
@@ -202,7 +208,7 @@ export const HomePage = (): JSX.Element => {
                       <Button
                         variant="contained"
                         color="primary"
-                        sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
+                        sx={{ px: "3em", display: { md: "flex" } }}
                         className={style["link"]}
                       >
                         Subscribe

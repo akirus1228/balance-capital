@@ -63,6 +63,7 @@ export const PartnersGrid = (): JSX.Element => {
           style={{
             height: "100%",
             justifyContent: "center",
+            marginLeft: "20%",
             alignContent: "center",
           }}
           justifyContent="center"

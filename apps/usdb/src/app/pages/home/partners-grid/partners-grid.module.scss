@@ -52,3 +52,12 @@
   font-size: 40px;
   font-weight: 400;
 }
+
+.auditTitle {
+  width: 60%;
+  margin-left: 20%;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+}
