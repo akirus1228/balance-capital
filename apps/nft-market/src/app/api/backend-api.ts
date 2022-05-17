@@ -27,7 +27,11 @@ import {
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { objectToQueryParams } from "@fantohm/shared-helpers";
 import { RootState } from "../store";
-import { assetAryToAssets, listingAryToListings } from "../helpers/data-translations";
+import {
+  assetAryToAssets,
+  dropHelperDates,
+  listingAryToListings,
+} from "../helpers/data-translations";
 import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
 import { updateListings } from "../store/reducers/listing-slice";
 
@@ -213,12 +217,6 @@ const listingToCreateListingRequest = (
   ) {
     delete tempListing.asset.id;
     tempListing.asset.status = AssetStatus.Listed;
-  } else if (
-    typeof tempListing.asset !== "string" &&
-    tempListing.asset.status !== AssetStatus.New &&
-    tempListing.asset.id
-  ) {
-    tempListing.asset = tempListing.asset.id;
   }
 
   return tempListing;
@@ -379,12 +377,21 @@ export const backendApi = createApi({
         body: patch,
       }),
     }),
-    createLoan: builder.mutation<Loan, Partial<Loan>>({
-      query: ({ id, ...loan }) => ({
-        url: `loan`,
-        method: "POST",
-        body: loan,
-      }),
+    createLoan: builder.mutation<Loan, Loan>({
+      query: ({ id, ...loan }) => {
+        const loanRequest = {
+          ...loan,
+          assetListing: listingToCreateListingRequest(
+            dropHelperDates({ ...loan.assetListing.asset }),
+            dropHelperDates({ ...loan.assetListing.terms })
+          ),
+        };
+        return {
+          url: `loan`,
+          method: "POST",
+          body: loanRequest,
+        };
+      },
     }),
   }),
 });

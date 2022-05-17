@@ -45,15 +45,15 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       console.log(props.listing.asset);
       return;
     }
-    const signature = await signTerms(
-      provider,
-      address,
-      chainId,
-      props.listing.asset.assetContractAddress,
-      props.listing.asset.tokenId,
-      props.listing.terms
-    );
-    console.log(signature);
+    // const signature = await signTerms(
+    //   provider,
+    //   address,
+    //   chainId,
+    //   props.listing.asset.assetContractAddress,
+    //   props.listing.asset.tokenId,
+    //   props.listing.terms
+    // );
+    // console.log(signature);
 
     const createLoanRequest: Loan = {
       lender: { address },
@@ -62,7 +62,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       term: props.listing.terms,
       //      term: { ...props.listing.terms, signature },
     };
-    setCachedTerms({ ...props.listing.terms, signature });
+    setCachedTerms(props.listing.terms);
 
     createLoan(createLoanRequest);
   }, [props.listing, provider, chainId, asset]);

@@ -8,14 +8,12 @@ export interface CreateListingRequest {
 // response types
 export type LoginResponse = {
   address: string;
-  createdAt: string;
   description?: string;
   email?: string;
   id: string;
   name?: string;
   profileImageUrl?: string;
-  updatedAt: string;
-};
+} & StandardBackendObject;
 
 export type AllAssetsResponse = {
   data: Asset[];
@@ -60,24 +58,20 @@ export enum AssetChain {
 export type Person = {
   id?: string;
   address: string;
-  createdAt?: string;
-  updatedAt?: string;
   name?: string;
   email?: string;
   description?: string;
   profileImageUrl?: string;
-};
+} & StandardBackendObject;
 
 export type Owner = {
   id?: string;
   address: string;
-  createdAt?: string;
-  updatedAt?: string;
   name?: string;
   email?: string;
   description?: string;
   profileImageUrl?: string;
-};
+} & StandardBackendObject;
 
 export type Terms = {
   id?: string;
@@ -86,9 +80,7 @@ export type Terms = {
   duration: number;
   expirationAt: Date;
   signature: string;
-  createdAt?: string;
-  updatedAt?: string;
-};
+} & StandardBackendObject;
 
 export enum ListingStatus {
   Pending = "Pending",
@@ -97,29 +89,25 @@ export enum ListingStatus {
   Cancelled = "Cancelled",
 }
 
-export interface Listing {
+export type Listing = {
   id?: string;
   asset: Asset;
   terms: Terms;
   status: ListingStatus;
-  createdAt?: string;
-  updatedAt?: string;
   cacheExpire?: number;
-}
+} & StandardBackendObject;
 
-export interface BackendListing {
+export type BackendListing = {
   id?: string;
   asset: Asset;
   term: Terms;
   status: ListingStatus;
-  createdAt?: string;
-  updatedAt?: string;
   cacheExpire?: number;
-}
+} & StandardBackendObject;
 
 export type Chain = "eth" | "sol";
 
-export interface Asset {
+export type Asset = {
   status: AssetStatus;
   cacheExpire?: number;
   openseaLoaded?: number;
@@ -144,7 +132,7 @@ export interface Asset {
   assetContractAddress: string;
   chain: Chain;
   wallet: string;
-}
+} & StandardBackendObject;
 
 export type Nullable<T> = T | null;
 
@@ -175,10 +163,7 @@ export type Notification = {
   importance: Importance;
   message: string;
   status: NotificationStatus;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-};
+} & StandardBackendObject;
 
 export type ApiResponse = {
   success: boolean;
@@ -205,6 +190,18 @@ export type Loan = {
   borrower: Person;
   assetListing: Listing;
   term: Terms;
-  createdAt?: string;
+} & StandardBackendObject;
+
+type Updatable = {
   updatedAt?: string;
 };
+
+type Deleteable = {
+  deletedAt?: string;
+};
+
+type Creatable = {
+  createdAt?: string;
+};
+
+export type StandardBackendObject = Updatable & Creatable & Deleteable;

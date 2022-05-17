@@ -1,3 +1,5 @@
+import { isDev } from ".";
+
 export class DebugHelper {
   private static permissions = [
     "enable-testnet",

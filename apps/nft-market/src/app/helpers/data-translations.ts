@@ -2,8 +2,14 @@ import { assetToCollectible, Collectible } from "@fantohm/shared/fetch-nft";
 import { OpenseaAsset } from "../api/opensea";
 import { Assets, assetToAssetId } from "../store/reducers/asset-slice";
 import { Listings } from "../store/reducers/listing-slice";
-import { Asset, AssetStatus, Listing } from "../types/backend-types";
+import {
+  Asset,
+  AssetStatus,
+  Listing,
+  StandardBackendObject,
+} from "../types/backend-types";
 
+// convert asset data from opensea to our internal type
 export const openseaAssetToAsset = async (
   openseaAsset: OpenseaAsset[]
 ): Promise<Asset[]> => {
@@ -24,6 +30,7 @@ export const openseaAssetToAsset = async (
   return walletContents;
 };
 
+// convert Asset[] to Assets
 export const assetAryToAssets = (assetAry: Asset[]): Assets => {
   const assets: Assets = {};
   assetAry.forEach((asset: Asset) => {
@@ -32,10 +39,17 @@ export const assetAryToAssets = (assetAry: Asset[]): Assets => {
   return assets;
 };
 
+// convert Listing[] to Listings
 export const listingAryToListings = (listingAry: Listing[]): Listings => {
   const listings: Listings = {};
   listingAry.forEach((listing: Listing) => {
     listings[listing.id || ""] = listing;
   });
   return listings;
+};
+
+export const dropHelperDates = <T extends StandardBackendObject>(obj: T): T => {
+  if (obj.updatedAt) obj.updatedAt = undefined;
+  if (obj.createdAt) obj.createdAt = undefined;
+  return obj;
 };

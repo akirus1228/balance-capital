@@ -14,7 +14,7 @@ import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingByAddress } from "../../store/selectors/listing-selectors";
 import { AssetStatus } from "../../types/backend-types";
-import style from "./lender-asset-details-page.module.scss";
+// import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
   console.log("LenderAssetDetailsPage Render");
