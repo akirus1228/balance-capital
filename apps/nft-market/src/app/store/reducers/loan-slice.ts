@@ -44,15 +44,6 @@ export const contractCreateLoan = createAsyncThunk(
       signer
     );
     console.log("contractCreateLoan 3");
-    // { "internalType": "address", "name": "borrower", "type": "address" },
-    // { "internalType": "address", "name": "nftAddress", "type": "address" },
-    // { "internalType": "address", "name": "currency", "type": "address" },
-    // { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
-    // { "internalType": "uint256", "name": "duration", "type": "uint256" },
-    // { "internalType": "uint256", "name": "loanAmount", "type": "uint256" },
-    // { "internalType": "uint256", "name": "apr", "type": "uint256" },
-    // { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" },
-    // { "internalType": "bytes", "name": "sig", "type": "bytes" }
     console.log(`loan.borrower.address ${loan.borrower.address}`);
     console.log(
       `loan.assetListing.asset.assetContractAddress ${loan.assetListing.asset.assetContractAddress}`
@@ -72,8 +63,9 @@ export const contractCreateLoan = createAsyncThunk(
 
     const params = {
       borrower: loan.borrower.address,
+      lender: loan.lender.address,
       nftAddress: loan.assetListing.asset.assetContractAddress,
-      currency: addresses[networkId]["USDB_ADDRESS"],
+      currencyAddress: addresses[networkId]["USDB_ADDRESS"],
       nftTokenId: loan.assetListing.asset.tokenId,
       duration: loan.term.duration,
       loanAmount: ethers.utils.parseEther(loan.term.amount.toString()),
@@ -83,15 +75,16 @@ export const contractCreateLoan = createAsyncThunk(
     };
     console.log(params);
     const approveTx = await lendingContract["createLoan"](
-      loan.borrower.address,
-      loan.assetListing.asset.assetContractAddress,
-      addresses[networkId]["USDB_ADDRESS"],
-      loan.assetListing.asset.tokenId,
-      loan.term.duration,
-      ethers.utils.parseEther(loan.term.amount.toString()),
-      loan.term.apr,
-      0, // token type
-      loan.term.signature
+      params.lender,
+      params.borrower,
+      params.nftAddress,
+      params.currencyAddress,
+      params.nftTokenId,
+      params.duration,
+      params.loanAmount,
+      params.apr,
+      params.nftTokenType,
+      params.sig
     );
     console.log("contractCreateLoan 4");
     await approveTx.wait();

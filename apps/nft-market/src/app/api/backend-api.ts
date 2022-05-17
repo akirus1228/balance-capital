@@ -30,6 +30,8 @@ import {
   assetAryToAssets,
   dropHelperDates,
   listingAryToListings,
+  listingToCreateListingRequest,
+  termsToTerm,
 } from "../helpers/data-translations";
 import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
 import { updateListings } from "../store/reducers/listing-slice";
@@ -118,29 +120,6 @@ export const handleSignMessage = (
     return "";
     console.warn(err);
   }
-};
-
-const listingToCreateListingRequest = (
-  asset: Asset,
-  terms: Terms
-): CreateListingRequest => {
-  // convert terms to term
-  const tempListing: CreateListingRequest = {
-    asset: asset,
-    term: terms,
-    status: ListingStatus.Listed,
-  };
-  // if the asset isn't in the database we need to pass the asset without the ID
-  // if the asset is in the database we need to pass just the ID
-  if (
-    typeof tempListing.asset !== "string" &&
-    tempListing.asset.status === AssetStatus.New
-  ) {
-    delete tempListing.asset.id;
-    tempListing.asset.status = AssetStatus.Listed;
-  }
-
-  return tempListing;
 };
 
 const createListingResponseToListing = (
@@ -281,12 +260,30 @@ export const backendApi = createApi({
         dispatch(updateAsset(data));
       },
     }),
+    deleteAsset: builder.mutation<Asset, Partial<Asset> & Pick<Asset, "id">>({
+      query: ({ id, ...asset }) => {
+        return {
+          url: `asset/${id}`,
+          method: "DELETE",
+        };
+      },
+      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+    }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
       query: (body) => {
         return {
           url: `asset-listing`,
           method: "POST",
           body,
+        };
+      },
+      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+    }),
+    deleteListing: builder.mutation<Listing, Partial<Listing> & Pick<Listing, "id">>({
+      query: ({ id, ...listing }) => {
+        return {
+          url: `asset-listing/${id}`,
+          method: "DELETE",
         };
       },
       // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
@@ -298,14 +295,23 @@ export const backendApi = createApi({
         body: patch,
       }),
     }),
+    getLoans: builder.query<Loan[], BackendAssetQueryParam>({
+      query: (queryParams) => ({
+        url: `loan/all`,
+        params: queryParams,
+      }),
+    }),
     createLoan: builder.mutation<Loan, Loan>({
-      query: ({ id, ...loan }) => {
+      query: ({ id, borrower, lender, assetListing, term }) => {
         const loanRequest = {
-          ...loan,
-          assetListing: listingToCreateListingRequest(
-            dropHelperDates({ ...loan.assetListing.asset }),
-            dropHelperDates({ ...loan.assetListing.terms })
-          ),
+          assetListing: {
+            ...termsToTerm(dropHelperDates({ ...assetListing })),
+            asset: dropHelperDates({ ...assetListing.asset }),
+            term: dropHelperDates({ ...assetListing.terms }),
+          },
+          borrower: dropHelperDates({ ...borrower }),
+          lender: dropHelperDates({ ...borrower }),
+          term: dropHelperDates({ ...term }),
         };
         return {
           url: `loan`,
@@ -314,14 +320,27 @@ export const backendApi = createApi({
         };
       },
     }),
+    deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...loan }) => {
+        return {
+          url: `loan/${id}`,
+          method: "DELETE",
+        };
+      },
+      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+    }),
   }),
 });
 export const {
   useGetAssetQuery,
   useGetAssetsQuery,
+  useDeleteAssetMutation,
   // useGetListingQuery,
   useGetListingsQuery,
+  useDeleteListingMutation,
+  useGetLoansQuery,
   useCreateLoanMutation,
+  useDeleteLoanMutation,
   useCreateListingMutation,
   useUpdateTermsMutation,
 } = backendApi;

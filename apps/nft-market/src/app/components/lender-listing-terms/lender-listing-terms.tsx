@@ -25,6 +25,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   const { provider, chainId, address } = useWeb3Context();
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
   const dispatch = useDispatch();
+  const { user } = useSelector((state: RootState) => state.backend);
   const { loanCreationStatus } = useSelector((state: RootState) => state.loans);
   const { repaymentTotal, repaymentAmount } = useListingTermDetails(props.listing);
   const [
@@ -45,24 +46,17 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       console.log(props.listing.asset);
       return;
     }
-    // const signature = await signTerms(
-    //   provider,
-    //   address,
-    //   chainId,
-    //   props.listing.asset.assetContractAddress,
-    //   props.listing.asset.tokenId,
-    //   props.listing.terms
-    // );
-    // console.log(signature);
+    console.log(props.listing);
+
+    const { id, ...term } = props.listing.terms;
 
     const createLoanRequest: Loan = {
-      lender: { address },
+      lender: user,
       borrower: asset.owner,
       assetListing: { ...props.listing, status: ListingStatus.Pending },
-      term: props.listing.terms,
-      //      term: { ...props.listing.terms, signature },
+      term,
     };
-    setCachedTerms(props.listing.terms);
+    setCachedTerms(term);
 
     createLoan(createLoanRequest);
   }, [props.listing, provider, chainId, asset]);
@@ -83,7 +77,6 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
           loan: {
             ...createLoanData,
             term: cachedTerms,
-            lender: { address },
           },
           provider,
           networkId: chainId,

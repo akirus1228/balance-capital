@@ -84,13 +84,21 @@ export enum ListingStatus {
   Cancelled = "Cancelled",
 }
 
+export type IncludesTerms = {
+  terms: Terms;
+};
+
+export type IncludesTerm = {
+  term: Terms;
+};
+
 export type Listing = {
   id?: string;
   asset: Asset;
-  terms: Terms;
   status: ListingStatus;
   cacheExpire?: number;
-} & StandardBackendObject;
+} & StandardBackendObject &
+  IncludesTerms;
 
 export type BackendListing = {
   id?: string;
