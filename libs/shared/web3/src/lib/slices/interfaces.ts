@@ -199,3 +199,20 @@ export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncTh
   readonly assetAddress: string;
   readonly tokenId: string;
 }
+
+export interface IStakingBackedNftAsyncThunk extends IBaseAsyncThunk {
+  readonly nftId?: number;
+  readonly type: number;
+  readonly address: string;
+  readonly provider: JsonRpcProvider;
+  readonly callback?: any;
+  readonly bond: Bond;
+}
+
+export interface IApprovePoolAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly nftId: number;
+  readonly address: string;
+  readonly callback?: any;
+}

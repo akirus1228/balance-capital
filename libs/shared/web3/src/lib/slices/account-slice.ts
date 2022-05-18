@@ -16,6 +16,7 @@ import { setAll, trim } from "../helpers";
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  IApprovePoolAsyncThunk,
   IBaseAddressAsyncThunk,
   IBaseAsyncThunk,
   ICalcAllUserBondDetailsAsyncThunk,
@@ -508,6 +509,27 @@ export const calculateUserBondDetails = createAsyncThunk(
       paymentToken: bond.paymentToken,
       bondAction: bond.bondAction,
     };
+  }
+);
+
+export const getUserBondApproval = createAsyncThunk(
+  "account/getUserBondApproval",
+  async (
+    { nftId, address, bond, networkId, callback }: IApprovePoolAsyncThunk,
+    { dispatch }
+  ) => {
+    if (bond.type === BondType.STAKE_NFT) {
+      const provider = await chains[networkId].provider;
+      const usdbNftContract = new ethers.Contract(
+        addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+        usdbNftAbi,
+        provider
+      );
+      const bondAddr = bond.getAddressForBond(networkId);
+      const addr = await usdbNftContract["getApproved"](nftId);
+      const allowance = addr === bondAddr ? 1 : 0;
+      callback && callback(allowance);
+    }
   }
 );
 

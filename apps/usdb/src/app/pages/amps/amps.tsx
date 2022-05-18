@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { noBorderOutlinedInputStyles } from "@fantohm/shared-ui-themes";
 import { Box, Grid, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -18,16 +18,81 @@ import imgBackedNft from "../../../assets/images/amps/backed-nft.png";
 import imgNftFees from "../../../assets/images/amps/nft-fees.png";
 import imgMonopoly from "../../../assets/images/amps/monopoly.png";
 import imgNftFeature from "../../../assets/images/amps/nft-feature.png";
+import {
+  allBonds,
+  BondType,
+  defaultNetworkId,
+  getStakedInfo,
+  IAllBondData,
+  unstakeNft,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
 
 export default function Amps() {
-  const outlinedInputClasses = noBorderOutlinedInputStyles();
-  const navigate = useNavigate();
+  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const balance = useSelector((state: RootState) => {
+    return state.account.balances;
+  });
+
   const themeType = useSelector((state: RootState) => state.app.theme);
 
   const [tabIndex, setTabIndex] = useState(0);
-  const [isShowStakingModal, setShowStakingModal] = useState<boolean>(false);
+  const [stakingType, setStakingType] = useState(1);
 
-  const onStake = () => {
+  const [stakedStatus, setStakedStatus] = useState([false, false, false]);
+  const [stakedType, setStakedType] = useState(-1);
+  const [isShowStakingModal, setShowStakingModal] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (!connected || !address || !provider) return;
+    [1, 2, 3].forEach((index) => {
+      const bondData = allBonds.filter(
+        (pool) => pool.type === BondType.STAKE_NFT && pool.days === index
+      )[0] as IAllBondData;
+      dispatch(
+        getStakedInfo({
+          type: index,
+          address,
+          networkId: chainId ?? defaultNetworkId,
+          provider,
+          bond: bondData,
+          callback: (result: boolean) => {
+            const temp = JSON.parse(JSON.stringify(stakedStatus));
+            temp[index - 1] = result;
+            setStakedStatus(temp);
+          },
+        })
+      );
+    });
+  }, [connected, address, balance]);
+
+  useEffect(() => {
+    const activeIndex = stakedStatus.indexOf(true);
+    if (activeIndex === -1) setStakedType(-1);
+    else setStakedType(activeIndex + 1);
+  }, [stakedStatus]);
+
+  const onStake = (type: number) => {
+    if (!connected || !address || !provider) return;
+
+    if (stakedType === type) {
+      const bondData = allBonds.filter(
+        (pool) => pool.type === BondType.STAKE_NFT && pool.days === type
+      )[0] as IAllBondData;
+      // Unstake
+      dispatch(
+        unstakeNft({
+          type,
+          address,
+          bond: bondData,
+          networkId: chainId ?? defaultNetworkId,
+          provider,
+        })
+      );
+      return;
+    }
+    setStakingType(type);
     setShowStakingModal(true);
   };
 
@@ -124,9 +189,24 @@ export default function Amps() {
       </div>
       {tabIndex === 0 && (
         <Grid container spacing={8} className={style["cardGrid"]}>
-          <StakingCard title="No lock up" index={1} onStake={onStake} />
-          <StakingCard title="365 day lock up" index={2} onStake={onStake} />
-          <StakingCard title="720 day lock up" index={3} onStake={onStake} />
+          <StakingCard
+            title="No lock up"
+            index={1}
+            onStake={() => onStake(1)}
+            stakedType={stakedType}
+          />
+          <StakingCard
+            title="365 day lock up"
+            index={2}
+            onStake={() => onStake(2)}
+            stakedType={stakedType}
+          />
+          <StakingCard
+            title="720 day lock up"
+            index={3}
+            onStake={() => onStake(3)}
+            stakedType={stakedType}
+          />
         </Grid>
       )}
 
@@ -139,9 +219,9 @@ export default function Amps() {
       )}
 
       <StakeModal
+        type={stakingType}
         open={isShowStakingModal}
         closeModal={() => setShowStakingModal(false)}
-        onCancel={() => {}}
       />
     </Box>
   );

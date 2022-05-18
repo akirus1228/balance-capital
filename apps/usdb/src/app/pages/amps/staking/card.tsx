@@ -16,11 +16,35 @@ import { CircularProgressbarWithChildren, buildStyles } from "react-circular-pro
 import "react-circular-progressbar/dist/styles.css";
 
 import style from "../amps.module.scss";
+import { useMemo } from "react";
+import {
+  allBonds,
+  BondType,
+  IAllBondData,
+  isPendingTxn,
+  txnButtonText,
+} from "@fantohm/shared-web3";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const percentage = 66;
 
 export default function StakingCard(props: any) {
-  const { title, index } = props;
+  const { title, index, stakedType } = props;
+  const balance = useSelector((state: RootState) => {
+    return state.account.balances;
+  });
+  const dispatch = useDispatch();
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const stakeNftPoolData = useMemo(() => {
+    return allBonds.filter(
+      (pool) => pool.type === BondType.STAKE_NFT && pool.days === index
+    )[0] as IAllBondData;
+  }, [index]);
 
   const onStake = () => {
     if (!props.onStake) return;
@@ -28,7 +52,7 @@ export default function StakingCard(props: any) {
   };
 
   return (
-    <Grid xs={4}>
+    <Grid item xs={4}>
       <ThemeProvider theme={USDBLight}>
         <Box className={`${style["bondCard"]} flexCenterCol`}>
           <Paper
@@ -147,15 +171,30 @@ export default function StakingCard(props: any) {
                   </Grid>
 
                   <Grid item xs={12}>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      id="bond-btn"
-                      className="paperButton transaction-button"
-                      onClick={() => onStake()}
-                    >
-                      Stake
-                    </Button>
+                    {stakeNftPoolData && (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        id="bond-btn"
+                        className="paperButton transaction-button"
+                        onClick={() => onStake()}
+                        disabled={
+                          (stakedType !== -1 && stakedType !== index) ||
+                          isPendingTxn(
+                            pendingTransactions,
+                            "unstake_" + stakeNftPoolData.name
+                          )
+                        }
+                      >
+                        {stakedType === index
+                          ? txnButtonText(
+                              pendingTransactions,
+                              "unstake_" + stakeNftPoolData.name,
+                              "Unstake"
+                            )
+                          : "Stake"}
+                      </Button>
+                    )}
                   </Grid>
                 </Grid>
               </Grid>

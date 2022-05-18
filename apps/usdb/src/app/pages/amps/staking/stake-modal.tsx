@@ -1,16 +1,118 @@
+import {
+  defaultNetworkId,
+  useBonds,
+  useWeb3Context,
+  getNftList,
+  stakeNft,
+  allBonds,
+  BondType,
+  IAllBondData,
+  txnButtonText,
+  isPendingTxn,
+  changeApproval,
+  changeStakePoolApproval,
+  getUserBondApproval,
+} from "@fantohm/shared-web3";
 import { Modal, Box, Typography, Fade, Paper, Grid, Button } from "@mui/material";
-import { memo } from "react";
+import { memo, useCallback, useEffect, useMemo, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../../store";
 import style from "../amps.module.scss";
+import { NftItem } from "./nft";
 
 export const StakeModal = ({
   open,
+  type,
   closeModal,
-  onCancel,
 }: {
   open: boolean;
+  type: number;
   closeModal: () => void;
-  onCancel: () => void;
 }): JSX.Element => {
+  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const { bonds } = useBonds(chainId || defaultNetworkId);
+  const [nftIds, setNftIds] = useState<Array<number>>([]);
+  const [selectedId, setSelectedId] = useState<number>(-1);
+  const [allowance, setAllowance] = useState<boolean>(false);
+  const dispatch = useDispatch();
+
+  const [stdButtonColor, setStdButtonColor] = useState<"primary" | "error">("primary");
+
+  const accountBonds = useSelector((state: RootState) => {
+    return state.account.bonds;
+  });
+
+  const stakeNftPoolData = useMemo(() => {
+    return allBonds.filter(
+      (pool) => pool.type === BondType.STAKE_NFT && pool.days === type
+    )[0] as IAllBondData;
+  }, [type]);
+  const stakeNftPool = accountBonds[stakeNftPoolData?.name];
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  useEffect(() => {
+    if (!connected || !address) return;
+    dispatch(
+      getNftList({
+        address,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (list: Array<number>) => {
+          setNftIds(list);
+        },
+      })
+    );
+  }, [connected, address, stakeNftPoolData, stakeNftPool, pendingTransactions]);
+
+  useEffect(() => {
+    if (selectedId === -1 || !provider) return;
+    dispatch(
+      getUserBondApproval({
+        nftId: selectedId,
+        address,
+        bond: stakeNftPoolData,
+        networkId: chainId ?? defaultNetworkId,
+        provider,
+        callback: (value: boolean) => setAllowance(value),
+      })
+    );
+  }, [selectedId, stakeNftPoolData, connected, stakeNftPool, pendingTransactions]);
+
+  const onSelect = (id: number) => {
+    setSelectedId(id);
+  };
+
+  const onSeekApproval = () => {
+    if (provider) {
+      dispatch(
+        changeStakePoolApproval({
+          nftId: selectedId,
+          address,
+          bond: stakeNftPoolData,
+          provider,
+          networkId: chainId ?? defaultNetworkId,
+        })
+      );
+    }
+  };
+
+  const onStake = () => {
+    if (!provider) return;
+    dispatch(
+      stakeNft({
+        nftId: selectedId,
+        type,
+        address,
+        networkId: chainId ?? defaultNetworkId,
+        bond: stakeNftPoolData,
+        provider,
+        callback: closeModal,
+      })
+    );
+  };
+
   return (
     <Modal open={open}>
       <Fade in={open}>
@@ -20,34 +122,59 @@ export const StakeModal = ({
         >
           <Box display="flex" alignItems="center">
             <Typography variant="h6" color="primary" className="font-weight-bold">
-              Choose NFT(s) to stake
+              {nftIds.length === 0
+                ? "You don't have any NFTs."
+                : "Choose NFT(s) to stake"}
             </Typography>
           </Box>
 
           <Grid container marginTop={3} className={style["nftItemContainer"]}>
-            {[1, 2, 3, 4, 5, 6].map((index) => (
-              <Grid item xs={4} className={style["nftItem"]} key={`${index}`}>
-                <Box className={style["nftImage"]} />
-                <Typography
-                  variant="subtitle1"
-                  color="primary"
-                  className={style["nftTitle"]}
-                >
-                  NFT #1234
-                </Typography>
-              </Grid>
+            {nftIds.map((id: number) => (
+              <NftItem
+                nftId={id}
+                onClick={() => onSelect(id)}
+                selected={selectedId === id}
+                key={`${id}`}
+              />
             ))}
           </Grid>
           <Box display="flex" mt="20px" width="80%">
-            <Button
-              variant="contained"
-              id="bond-btn"
-              className="paperButton transaction-button"
-              onClick={onCancel}
-              style={{ marginRight: "10px" }}
-            >
-              Stake
-            </Button>
+            {nftIds.length !== 0 &&
+              (allowance ? (
+                <Button
+                  variant="contained"
+                  color={stdButtonColor}
+                  className="paperButton cardActionButton"
+                  disabled={
+                    selectedId == -1 ||
+                    isPendingTxn(pendingTransactions, "stake_" + stakeNftPoolData.name)
+                  }
+                  onClick={onStake}
+                >
+                  {txnButtonText(
+                    pendingTransactions,
+                    "stake_" + stakeNftPoolData.name,
+                    "Stake"
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  className="paperButton cardActionButton"
+                  disabled={
+                    selectedId == -1 ||
+                    isPendingTxn(pendingTransactions, "approve_" + stakeNftPoolData.name)
+                  }
+                  onClick={onSeekApproval}
+                >
+                  {txnButtonText(
+                    pendingTransactions,
+                    "approve_" + stakeNftPoolData.name,
+                    "Approve"
+                  )}
+                </Button>
+              ))}
 
             <Button
               variant="contained"

@@ -12,6 +12,7 @@ export * from "./lib/slices/bond-slice";
 export * from "./lib/slices/global-bond-slice";
 export * from "./lib/slices/interfaces";
 export * from "./lib/slices/network-slice";
+export * from "./lib/slices/nft-slice";
 export * from "./lib/slices/pending-txns-slice";
 export * from "./lib/slices/web3-slice";
 export * from "./lib/slices/messages-slice";
