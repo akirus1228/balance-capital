@@ -3,7 +3,11 @@ import { ethers } from "ethers";
 import { ampsToken, stakingBackedNFTPool, usdbNftAbi } from "../abi";
 import { addresses } from "../constants";
 import { getBalances } from "./account-slice";
-import { IAmpsRedeemNftAsyncThunk, IApprovePoolAsyncThunk, IStakingBackedNftAsyncThunk } from "./interfaces";
+import {
+  IAmpsRedeemNftAsyncThunk,
+  IApprovePoolAsyncThunk,
+  IStakingBackedNftAsyncThunk,
+} from "./interfaces";
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 
@@ -23,7 +27,6 @@ export const getStakedInfo = createAsyncThunk(
     );
     try {
       const isStaked = await stakingNftPoolContract["_stakedInfo"](address);
-      console.log("isStaked", isStaked);
       callback && callback(isStaked);
     } catch (e) {
       //
@@ -48,8 +51,30 @@ export const getStakingInfo = createAsyncThunk(
       provider
     );
     try {
-      const { tokenId } = await stakingNftPoolContract["_stakingInfo"](address);
-      callback && callback(Number(tokenId));
+      const stakingInfo = await stakingNftPoolContract["_stakingInfo"](address);
+      let { tokenId, vestingSeconds, lastTimestamp } = stakingInfo;
+
+      const latestBlockNumber = await provider.getBlockNumber();
+      const getLatestBlock = async (): Promise<ethers.providers.Block> => {
+        let block = undefined;
+        block = await provider.getBlock(latestBlockNumber);
+        if (block) {
+          return block;
+        } else {
+          //console.log("~~~~~RETRYING GETLATESTBLOCK~~~~~");
+          await new Promise((r) => setTimeout(r, 500));
+          return getLatestBlock();
+        }
+      };
+      const latestBlock = await getLatestBlock();
+      const latestBlockTimestamp = latestBlock.timestamp;
+
+      tokenId = Number(tokenId);
+      vestingSeconds = Number(vestingSeconds);
+      lastTimestamp = Number(lastTimestamp);
+      const remainPercent = (latestBlockTimestamp - lastTimestamp) / vestingSeconds;
+
+      callback && callback({ tokenId, remainPercent });
     } catch (e) {
       callback && callback(Number(-1));
     }

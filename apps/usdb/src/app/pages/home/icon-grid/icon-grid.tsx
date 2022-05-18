@@ -40,6 +40,9 @@ export const IconGrid = (): JSX.Element => {
       <Grid item md={4} xs={6}>
         <IconLink title="Backed NFT" icon={WalletIcon} link="/backed-nft" />
       </Grid>
+      <Grid item md={4} xs={6}>
+        <IconLink title="AMPS Model" icon={WalletIcon} link="/amps" />
+      </Grid>
     </Grid>
   );
 };

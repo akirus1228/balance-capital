@@ -27,6 +27,7 @@ import {
   getUsdbAmount,
   IAllBondData,
   isPendingTxn,
+  networks,
   trim,
   txnButtonText,
   useWeb3Context,
@@ -34,12 +35,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
 
-const percentage = 66;
-
 export default function StakingCard(props: any) {
   const { title, index, stakedType } = props;
   const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
   const [stakedNftId, setStakedNftId] = useState<number>(-1);
+  const [remainPercent, setRemainPercent] = useState<number>(0);
   const [stakedAmount, setStakedAmount] = useState<number>(0);
   const [pendingRewardsAmount, setPendingRewardsAmount] = useState<number>(0);
   const [totalRewardsAmount, setTotalRewardsAmount] = useState<number>(0);
@@ -74,13 +74,16 @@ export default function StakingCard(props: any) {
         bond: stakeNftPoolData,
         networkId: chainId ?? defaultNetworkId,
         provider,
-        callback: (nftId: number) => setStakedNftId(nftId),
+        callback: ({ tokenId, remainPercent }: any) => {
+          setStakedNftId(tokenId);
+          setRemainPercent(remainPercent);
+        },
       })
     );
   }, [stakedType]);
 
   useEffect(() => {
-    if (stakedNftId === -1 || !provider) {
+    if (stakedNftId === -1 || !provider || stakedType !== index) {
       setStakedAmount(0);
       return;
     }
@@ -180,7 +183,7 @@ export default function StakingCard(props: any) {
                     <Grid item xs={12}>
                       <Box className={style["progress"]}>
                         <CircularProgressbarWithChildren
-                          value={percentage}
+                          value={stakedType !== index ? 0 : (1 - remainPercent) * 100}
                           strokeWidth={3}
                           styles={buildStyles({
                             pathColor: "#3744e6",
@@ -194,7 +197,7 @@ export default function StakingCard(props: any) {
                             Time remaining
                           </Typography>
                           <Typography variant="h6" color="primary">
-                            300 days
+                            {index === 2 ? 360 : 720} days
                           </Typography>
                         </CircularProgressbarWithChildren>
                       </Box>

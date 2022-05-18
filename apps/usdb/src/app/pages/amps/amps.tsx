@@ -59,6 +59,7 @@ export default function Amps() {
           provider,
           bond: bondData,
           callback: (result: boolean) => {
+            if (stakedStatus[index - 1] === result) return;
             const temp = JSON.parse(JSON.stringify(stakedStatus));
             temp[index - 1] = result;
             setStakedStatus(temp);
