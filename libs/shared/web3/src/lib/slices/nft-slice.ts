@@ -1,6 +1,6 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { ethers } from "ethers";
-import { stakingBackedNFTPool } from "../abi";
+import { ampsToken, stakingBackedNFTPool, usdbNftAbi } from "../abi";
 import { addresses } from "../constants";
 import { getBalances } from "./account-slice";
 import { IApprovePoolAsyncThunk, IStakingBackedNftAsyncThunk } from "./interfaces";
@@ -27,6 +27,31 @@ export const getStakedInfo = createAsyncThunk(
       callback && callback(isStaked);
     } catch (e) {
       //
+    }
+
+    return null;
+  }
+);
+
+export const getStakingInfo = createAsyncThunk(
+  "account/getStakingInfo",
+  async (
+    { type, address, networkId, provider, callback }: IStakingBackedNftAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return null;
+    }
+    const stakingNftPoolContract = new ethers.Contract(
+      addresses[networkId][`STAKING_BACKED_NFT_ADDRESS_${type}`] as string,
+      stakingBackedNFTPool,
+      provider
+    );
+    try {
+      const { tokenId } = await stakingNftPoolContract["_stakingInfo"](address);
+      callback && callback(Number(tokenId));
+    } catch (e) {
+      callback && callback(Number(-1));
     }
 
     return null;
@@ -204,5 +229,83 @@ export const changeStakePoolApproval = createAsyncThunk(
         dispatch(info("Approve completed."));
       }
     }
+  }
+);
+
+export const getUsdbAmount = createAsyncThunk(
+  "account/getUsdbAmount",
+  async (
+    { nftId, address, networkId, provider, callback }: IApprovePoolAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return null;
+    }
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    try {
+      let amount = await usdbNftContract["getUsdbAmount"](nftId);
+      amount = ethers.utils.formatUnits(amount, 18);
+      callback && callback(amount);
+    } catch (e) {
+      //
+    }
+
+    return null;
+  }
+);
+
+export const getCalcAmount = createAsyncThunk(
+  "account/getCalcAmount",
+  async (
+    { nftId, type, address, networkId, provider, callback }: IStakingBackedNftAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return null;
+    }
+    const stakingNftPoolContract = new ethers.Contract(
+      addresses[networkId][`STAKING_BACKED_NFT_ADDRESS_${type}`] as string,
+      stakingBackedNFTPool,
+      provider
+    );
+    try {
+      let amount = await stakingNftPoolContract["_calcAmount"](address, nftId);
+      amount = ethers.utils.formatUnits(amount, 18);
+      callback && callback(Number(amount));
+    } catch (e) {
+      //
+    }
+
+    return null;
+  }
+);
+
+export const getTotalRewards = createAsyncThunk(
+  "account/getTotalRewards",
+  async (
+    { address, networkId, provider, callback }: IStakingBackedNftAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return null;
+    }
+    const ampsContract = new ethers.Contract(
+      addresses[networkId]["AMPS_ADDRESS"] as string,
+      ampsToken,
+      provider
+    );
+    try {
+      let amount = await ampsContract["balanceOf"](address);
+      amount = ethers.utils.formatUnits(amount, 18);
+      callback && callback(Number(amount));
+    } catch (e) {
+      //
+    }
+
+    return null;
   }
 );

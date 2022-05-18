@@ -75,6 +75,7 @@ import full_UsdbNftBondDepository from "./bonds/UsdbNftBondDepository.json";
 //nft-lending
 import full_UsdbLending from "./UsdbLending.json";
 import full_StakingBackedNFTPool from "./StakingBackedNFTPool.json";
+import full_AmpsToken from "./AmpsToken.json";
 
 export const balancerVaultAbi = full_BalancerVault.abi;
 export const balancerWeightedPoolAbi = full_BalancerWeightedPool.abi;
@@ -147,3 +148,4 @@ export const usdbNftBondDepositoryAbi = full_UsdbNftBondDepository.abi;
 //nft-lending
 export const usdbLending = full_UsdbLending.abi;
 export const stakingBackedNFTPool = full_StakingBackedNFTPool.abi;
+export const ampsToken = full_AmpsToken.abi;

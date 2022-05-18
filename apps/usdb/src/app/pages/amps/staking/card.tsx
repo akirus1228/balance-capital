@@ -16,13 +16,20 @@ import { CircularProgressbarWithChildren, buildStyles } from "react-circular-pro
 import "react-circular-progressbar/dist/styles.css";
 
 import style from "../amps.module.scss";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   allBonds,
   BondType,
+  defaultNetworkId,
+  getCalcAmount,
+  getStakingInfo,
+  getTotalRewards,
+  getUsdbAmount,
   IAllBondData,
   isPendingTxn,
+  trim,
   txnButtonText,
+  useWeb3Context,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
@@ -31,6 +38,12 @@ const percentage = 66;
 
 export default function StakingCard(props: any) {
   const { title, index, stakedType } = props;
+  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const [stakedNftId, setStakedNftId] = useState<number>(-1);
+  const [stakedAmount, setStakedAmount] = useState<number>(0);
+  const [pendingRewardsAmount, setPendingRewardsAmount] = useState<number>(0);
+  const [totalRewardsAmount, setTotalRewardsAmount] = useState<number>(0);
+
   const balance = useSelector((state: RootState) => {
     return state.account.balances;
   });
@@ -50,6 +63,68 @@ export default function StakingCard(props: any) {
     if (!props.onStake) return;
     props.onStake(index);
   };
+
+  useEffect(() => {
+    if (!provider) return;
+
+    dispatch(
+      getStakingInfo({
+        type: index,
+        address,
+        bond: stakeNftPoolData,
+        networkId: chainId ?? defaultNetworkId,
+        provider,
+        callback: (nftId: number) => setStakedNftId(nftId),
+      })
+    );
+  }, [stakedType]);
+
+  useEffect(() => {
+    if (stakedNftId === -1 || !provider) {
+      setStakedAmount(0);
+      return;
+    }
+
+    dispatch(
+      getUsdbAmount({
+        nftId: stakedNftId,
+        address,
+        bond: stakeNftPoolData,
+        provider,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (amount: number) => {
+          setStakedAmount(amount);
+        },
+      })
+    );
+
+    dispatch(
+      getCalcAmount({
+        nftId: stakedNftId,
+        type: index,
+        address,
+        bond: stakeNftPoolData,
+        provider,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (amount: number) => {
+          setPendingRewardsAmount(amount);
+        },
+      })
+    );
+
+    dispatch(
+      getTotalRewards({
+        type: index,
+        address,
+        bond: stakeNftPoolData,
+        provider,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (amount: number) => {
+          setTotalRewardsAmount(amount);
+        },
+      })
+    );
+  }, [stakedNftId]);
 
   return (
     <Grid item xs={4}>
@@ -149,7 +224,7 @@ export default function StakingCard(props: any) {
                         Staked NFT(s) value
                       </Typography>
                       <Typography variant="subtitle2" color="primary">
-                        5000.00 USDB
+                        {trim(stakedAmount, 2)} USDB
                       </Typography>
                     </Box>
                     <Box className={style["list"]}>
@@ -157,7 +232,7 @@ export default function StakingCard(props: any) {
                         Pending rewards
                       </Typography>
                       <Typography variant="subtitle2" color="primary">
-                        1900.00 AMPS
+                        {trim(pendingRewardsAmount, 2)} AMPS
                       </Typography>
                     </Box>
                     <Box className={style["list"]}>
@@ -165,7 +240,7 @@ export default function StakingCard(props: any) {
                         Total rewards
                       </Typography>
                       <Typography variant="subtitle2" color="primary">
-                        100.00 AMPS
+                      {trim(pendingRewardsAmount + totalRewardsAmount, 2)} AMPS
                       </Typography>
                     </Box>
                   </Grid>
