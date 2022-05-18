@@ -16,11 +16,31 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import "react-circular-progressbar/dist/styles.css";
 
 import style from "../amps.module.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import {
+  allBonds,
+  BondType,
+  IAllBondData,
+  isPendingTxn,
+  txnButtonText,
+} from "@fantohm/shared-web3";
+import { useMemo } from "react";
 
 const percentage = 66;
 
 export default function RedeemCard(props: any) {
-  const { use, title, image, cost, description } = props;
+  const { use, title, image, cost, description, method, stakedType } = props;
+
+  const pendingTransactions = useSelector((state: RootState) => {
+    return state?.pendingTransactions;
+  });
+
+  const bondData = useMemo(() => {
+    return allBonds.filter(
+      (pool) => pool.type === BondType.STAKE_NFT && pool.days === stakedType
+    )[0] as IAllBondData;
+  }, [stakedType]);
 
   const onRedeem = () => {
     if (!props.onRedeem) return;
@@ -90,9 +110,20 @@ export default function RedeemCard(props: any) {
                 color="primary"
                 id="bond-btn"
                 className="paperButton transaction-button"
+                disabled={
+                  stakedType === -1 ||
+                  isPendingTxn(
+                    pendingTransactions,
+                    "redeem_" + method + (bondData && bondData.name)
+                  )
+                }
                 onClick={() => onRedeem()}
               >
-                Redeem
+                {txnButtonText(
+                  pendingTransactions,
+                  "redeem_" + method + (bondData && bondData.name),
+                  "Redeem"
+                )}
               </Button>
             </Grid>
           </Grid>

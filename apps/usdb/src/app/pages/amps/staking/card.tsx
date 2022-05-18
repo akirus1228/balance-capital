@@ -240,7 +240,7 @@ export default function StakingCard(props: any) {
                         Total rewards
                       </Typography>
                       <Typography variant="subtitle2" color="primary">
-                      {trim(pendingRewardsAmount + totalRewardsAmount, 2)} AMPS
+                        {trim(pendingRewardsAmount + totalRewardsAmount, 2)} AMPS
                       </Typography>
                     </Box>
                   </Grid>

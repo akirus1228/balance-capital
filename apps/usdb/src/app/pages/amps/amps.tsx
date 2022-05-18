@@ -20,6 +20,7 @@ import imgMonopoly from "../../../assets/images/amps/monopoly.png";
 import imgNftFeature from "../../../assets/images/amps/nft-feature.png";
 import {
   allBonds,
+  amptRedeemNft,
   BondType,
   defaultNetworkId,
   getStakedInfo,
@@ -96,6 +97,25 @@ export default function Amps() {
     setShowStakingModal(true);
   };
 
+  const onRedeem = ({ method }: { method: string }) => {
+    if (stakedType === -1) return;
+    if (!connected || !address || !provider) return;
+
+    const bondData = allBonds.filter(
+      (pool) => pool.type === BondType.STAKE_NFT && pool.days === stakedType
+    )[0] as IAllBondData;
+    dispatch(
+      amptRedeemNft({
+        type: stakedType,
+        address,
+        method,
+        bond: bondData,
+        networkId: chainId ?? defaultNetworkId,
+        provider,
+      })
+    );
+  };
+
   const redeems = [
     {
       use: 1,
@@ -103,6 +123,7 @@ export default function Amps() {
       image: imgBondDiscount,
       cost: 100,
       description: "1% discount (capped at 10%)",
+      method: "redeemBondDiscount",
     },
     {
       use: 1,
@@ -110,6 +131,7 @@ export default function Amps() {
       image: imgFhmStaking,
       cost: 500,
       description: "Get a 50% APY boost <br />when staking FHM",
+      method: "redeemFhmStakingApy",
     },
     {
       use: 0,
@@ -117,6 +139,7 @@ export default function Amps() {
       image: imgGetJail,
       cost: 500,
       description: "Get a 50% APY boost <br />when staking FHM",
+      method: "redeemGetoutOfJailNft",
     },
     {
       use: 0,
@@ -124,6 +147,7 @@ export default function Amps() {
       image: imgLending,
       cost: 750,
       description: "50% rate delta",
+      method: "redeemLendingAndBorrowing",
     },
     {
       use: 0,
@@ -131,6 +155,7 @@ export default function Amps() {
       image: imgBackedNft,
       cost: 750,
       description: "50% discount on NFTs",
+      method: "redeemBackedNftRewards",
     },
     {
       use: 0,
@@ -138,6 +163,7 @@ export default function Amps() {
       image: imgNftFees,
       cost: 750,
       description: "Get a 50% discount at <br />the USDB NFT marketplace",
+      method: "redeemNftMarketplaceFees",
     },
     {
       use: 0,
@@ -145,6 +171,7 @@ export default function Amps() {
       image: imgMonopoly,
       cost: 1000,
       description: "10% USDB boost in staked NFT",
+      method: "redeemMonopolyManNft",
     },
     {
       use: 0,
@@ -152,6 +179,7 @@ export default function Amps() {
       image: imgNftFeature,
       cost: -1,
       description: "Landing page placement",
+      method: "redeemNftMarketplaceFeaturePage",
     },
   ];
 
@@ -213,7 +241,11 @@ export default function Amps() {
       {tabIndex === 1 && (
         <Grid container spacing={8} className={style["cardGrid"]}>
           {redeems.map((item) => (
-            <RedeemCard {...item} />
+            <RedeemCard
+              {...item}
+              stakedType={stakedType}
+              onRedeem={() => onRedeem({ method: item.method! })}
+            />
           ))}
         </Grid>
       )}

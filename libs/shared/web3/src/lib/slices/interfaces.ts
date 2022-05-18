@@ -216,3 +216,13 @@ export interface IApprovePoolAsyncThunk
   readonly address: string;
   readonly callback?: any;
 }
+
+export interface IAmpsRedeemNftAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly type: number;
+  readonly bond: Bond;
+  readonly method: string;
+  readonly address: string;
+  readonly callback?: any;
+}

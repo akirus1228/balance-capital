@@ -3,7 +3,7 @@ import { ethers } from "ethers";
 import { ampsToken, stakingBackedNFTPool, usdbNftAbi } from "../abi";
 import { addresses } from "../constants";
 import { getBalances } from "./account-slice";
-import { IApprovePoolAsyncThunk, IStakingBackedNftAsyncThunk } from "./interfaces";
+import { IAmpsRedeemNftAsyncThunk, IApprovePoolAsyncThunk, IStakingBackedNftAsyncThunk } from "./interfaces";
 import { error, info } from "./messages-slice";
 import { clearPendingTxn, fetchPendingTxns } from "./pending-txns-slice";
 
@@ -304,6 +304,66 @@ export const getTotalRewards = createAsyncThunk(
       callback && callback(Number(amount));
     } catch (e) {
       //
+    }
+
+    return null;
+  }
+);
+
+export const amptRedeemNft = createAsyncThunk(
+  "account/amptRedeemNft",
+  async (
+    {
+      type,
+      address,
+      method,
+      bond,
+      networkId,
+      provider,
+      callback,
+    }: IAmpsRedeemNftAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return null;
+    }
+    const signer = provider.getSigner(address);
+    const stakingNftPoolContract = new ethers.Contract(
+      addresses[networkId][`STAKING_BACKED_NFT_ADDRESS_${type}`] as string,
+      stakingBackedNFTPool,
+      signer
+    );
+
+    let redeemTx;
+    try {
+      redeemTx = await stakingNftPoolContract[method](address);
+      dispatch(
+        fetchPendingTxns({
+          txnHash: redeemTx.hash,
+          text: "Redeeming " + bond.displayName,
+          type: "redeem_" + method + bond.name,
+        })
+      );
+      await redeemTx.wait();
+    } catch (e: any) {
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    } finally {
+      if (redeemTx) {
+        dispatch(clearPendingTxn(redeemTx.hash));
+        dispatch(info("Redeem completed."));
+      }
     }
 
     return null;

@@ -138,7 +138,7 @@ export const StakeModal = ({
               />
             ))}
           </Grid>
-          <Box display="flex" mt="20px" width="80%">
+          <Box display="flex" mt="20px" width="80%" marginLeft="10%">
             {nftIds.length !== 0 &&
               (allowance ? (
                 <Button
@@ -150,6 +150,7 @@ export const StakeModal = ({
                     isPendingTxn(pendingTransactions, "stake_" + stakeNftPoolData.name)
                   }
                   onClick={onStake}
+                  sx={{ marginRight: 2 }}
                 >
                   {txnButtonText(
                     pendingTransactions,
@@ -167,6 +168,7 @@ export const StakeModal = ({
                     isPendingTxn(pendingTransactions, "approve_" + stakeNftPoolData.name)
                   }
                   onClick={onSeekApproval}
+                  sx={{ marginRight: 2 }}
                 >
                   {txnButtonText(
                     pendingTransactions,
