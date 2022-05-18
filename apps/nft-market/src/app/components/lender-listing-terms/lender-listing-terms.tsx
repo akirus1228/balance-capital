@@ -14,6 +14,7 @@ import { useCreateLoanMutation, useGetAssetQuery } from "../../api/backend-api";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
 import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import {
+  AssetStatus,
   BackendLoadingStatus,
   Listing,
   ListingStatus,
@@ -22,6 +23,7 @@ import {
 } from "../../types/backend-types";
 import style from "./lender-listing-terms.module.scss";
 import { RootState } from "../../store";
+import { useTermDetails } from "../../hooks/use-term-details";
 
 export interface LenderListingTermsProps {
   listing: Listing;
@@ -42,7 +44,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       erc20TokenAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
     })
   );
-  const { repaymentAmount } = useListingTermDetails(props.listing);
+  const { repaymentAmount } = useTermDetails(props.listing.terms);
   const [
     createLoan,
     { isLoading: isCreating, error: createLoanError, data: createLoanData },
@@ -52,38 +54,34 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     { skip: !props.listing.asset }
   );
 
+  // click accept terms button
   const handleAcceptTerms = useCallback(() => {
     if (!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) {
       console.warn("Insufficiant allownace. Trigger request");
       return;
     }
-    console.log("Accept Terms");
     if (!provider || !chainId || !address || !asset || !asset.owner) {
       console.warn("missing critical data");
-      console.log(asset);
-      console.log(asset?.owner);
-      console.log(props.listing.asset);
       return;
     }
-    console.log(props.listing);
 
-    const { id, ...term } = props.listing.terms;
     const createLoanRequest: Loan = {
       lender: user,
       borrower: asset.owner,
-      assetListing: { ...props.listing, status: ListingStatus.Pending },
-      term,
+      assetListing: {
+        ...props.listing,
+        status: ListingStatus.Completed,
+        asset: { ...props.listing.asset, status: AssetStatus.Locked },
+      },
+      term: props.listing.terms,
     };
-    console.log(createLoanRequest);
-    setCachedTerms(term);
+    setCachedTerms(props.listing.terms);
 
     createLoan(createLoanRequest);
   }, [props.listing, provider, chainId, asset, allowance, user.address]);
 
+  // after api call to create loan is complete, execute contract call to create loan
   useEffect(() => {
-    console.log(isCreating);
-    console.log(createLoanError);
-    console.log(createLoanData);
     if (
       provider &&
       chainId &&
@@ -99,17 +97,19 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
         provider,
         networkId: chainId,
       };
-      console.log(createLoanParams);
       dispatch(contractCreateLoan(createLoanParams));
     }
   }, [isCreating]);
 
+  // contract call creation status update
   useEffect(() => {
+    // contract call successfully completed
     if (loanCreationStatus === BackendLoadingStatus.succeeded) {
       alert("WOOT!");
     }
   }, [loanCreationStatus]);
 
+  // request allowance necessary to complete txn
   const handleRequestAllowance = useCallback(() => {
     if (provider && address)
       dispatch(
@@ -123,8 +123,8 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       );
   }, [chainId, address, props.listing.terms.amount, provider]);
 
+  // check to see if we have an approval for the amount required for this txn
   useEffect(() => {
-    console.log("check usdb allowance");
     if (chainId && address && provider) {
       dispatch(
         checkErc20Allowance({
@@ -136,14 +136,6 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       );
     }
   }, [chainId, address, provider]);
-
-  useEffect(() => {
-    console.log(`allowance: ${allowance}`);
-  }, [allowance]);
-
-  useEffect(() => {
-    console.log(`user: ${user.address}`);
-  }, [user.address]);
 
   return (
     <Container sx={props.sx}>

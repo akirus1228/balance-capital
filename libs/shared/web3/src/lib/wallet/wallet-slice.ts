@@ -216,7 +216,7 @@ export const requestErc20Allowance = createAsyncThunk(
       await approveTx.wait();
       console.log(approveTx);
       const payload: Erc20Allowance = {};
-      payload[`${walletAddress}:::${assetAddress}`] = +amount;
+      payload[`${walletAddress}:::${assetAddress}`] = amount;
       return payload;
     } catch (err) {
       console.log(err);

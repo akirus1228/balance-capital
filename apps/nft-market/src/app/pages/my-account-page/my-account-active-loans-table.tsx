@@ -1,5 +1,6 @@
 import {
   Avatar,
+  LinearProgress,
   Paper,
   Table,
   TableBody,
@@ -9,7 +10,7 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { Listing } from "../../types/backend-types";
+import { Loan } from "../../types/backend-types";
 import style from "./my-account.module.scss";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
@@ -19,11 +20,16 @@ export const currencyFormat = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 });
 
-export const MyAccountActiveLoansTable = ({
-  listings,
-}: {
-  listings: Listing[];
-}): JSX.Element => {
+type MyAccountActiveLoansTableProps = {
+  loans: Loan[] | undefined;
+};
+
+export const MyAccountActiveLoansTable = (
+  props: MyAccountActiveLoansTableProps
+): JSX.Element => {
+  if (typeof props.loans === "undefined") {
+    return <LinearProgress />;
+  }
   return (
     <Paper elevation={0} sx={{ marginTop: "10px" }} className={style["rowCard"]}>
       <TableContainer>
@@ -84,27 +90,27 @@ export const MyAccountActiveLoansTable = ({
             </TableRow>
           </TableHead>
           <TableBody>
-            {listings.map((listing: Listing, index) => (
+            {props.loans.map((loan: Loan, index: number) => (
               <TableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
                 <TableCell>
                   <Avatar />
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">{listing.asset.name}</Typography>
+                  <Typography variant="h6">{loan.assetListing.asset.name}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">{listing.terms.amount}</Typography>
+                  <Typography variant="h6">{loan.term.amount}</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">{listing.terms.amount}%</Typography>
+                  <Typography variant="h6">{loan.term.amount}%</Typography>
                 </TableCell>
                 <TableCell>
-                  <Typography variant="h6">{listing.terms.apr}</Typography>
+                  <Typography variant="h6">{loan.term.apr}</Typography>
                 </TableCell>
-                <TableCell>{listing.terms.duration}</TableCell>
-                <TableCell>{listing.terms.duration}</TableCell>
-                <TableCell>{listing.asset.wallet}</TableCell>
-                <TableCell>{listing.asset.wallet}</TableCell>
+                <TableCell>{loan.term.duration}</TableCell>
+                <TableCell>{loan.term.duration}</TableCell>
+                <TableCell>{loan.assetListing.asset.wallet}</TableCell>
+                <TableCell>{loan.assetListing.asset.wallet}</TableCell>
               </TableRow>
             ))}
           </TableBody>

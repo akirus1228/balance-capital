@@ -190,6 +190,7 @@ export const markAsRead = async (
 
 export const backendApi = createApi({
   reducerPath: "backendApi",
+  tagTypes: ["Asset", "Listing", "Loan", "Notification", "Order", "Terms", "User"],
   baseQuery: fetchBaseQuery({
     baseUrl: NFT_MARKETPLACE_API_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -215,29 +216,11 @@ export const backendApi = createApi({
         dispatch(updateListings(listingAryToListings(data)));
         dispatch(updateAssets(assetAryToAssets(assets)));
       },
-      // providesTags: (result, error, queryParams) => [
-      //   { type: "Asset Listings", queryParams },
-      // ],
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
+          : ["Listing"],
     }),
-    // getListing: builder.query<Listing, string>({
-    //   query: (id) => ({
-    //     url: `asset-listing/${id}`,
-    //   }),
-    //   transformResponse: (response: AllListingsResponse, meta, arg) =>
-    //     response.data.map((listing: BackendListing) => {
-    //       const { term, ...formattedListing } = listing;
-    //       return { ...formattedListing, terms: term } as Listing;
-    //     }),
-    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //     const { data }: { data: Listing[] } = await queryFulfilled;
-    //     const assets = data.map((listing: Listing) => listing.asset);
-    //     dispatch(updateListings(listingAryToListings(data)));
-    //     dispatch(updateAssets(assetAryToAssets(assets)));
-    //   },
-    //   // providesTags: (result, error, queryParams) => [
-    //   //   { type: "Asset Listings", queryParams },
-    //   // ],
-    // }),
     getAssets: builder.query<Asset[], BackendAssetQueryParam>({
       query: (queryParams) => ({
         url: `asset/all`,
@@ -248,6 +231,10 @@ export const backendApi = createApi({
         const { data }: { data: Asset[] } = await queryFulfilled;
         dispatch(updateAssets(assetAryToAssets(data)));
       },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Asset" as const, id })), "Asset"]
+          : ["Asset"],
     }),
     getAsset: builder.query<Asset, string | undefined>({
       query: (id) => ({
@@ -257,6 +244,7 @@ export const backendApi = createApi({
         const { data }: { data: Asset } = await queryFulfilled;
         dispatch(updateAsset(data));
       },
+      providesTags: ["Asset"],
     }),
     deleteAsset: builder.mutation<Asset, Partial<Asset> & Pick<Asset, "id">>({
       query: ({ id, ...asset }) => {
@@ -265,7 +253,7 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: (result, error, arg) => [{ type: "Asset", id: arg.id }],
     }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
       query: (body) => {
@@ -275,7 +263,7 @@ export const backendApi = createApi({
           body,
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Listing", "Asset", "Terms"],
     }),
     deleteListing: builder.mutation<Listing, Partial<Listing> & Pick<Listing, "id">>({
       query: ({ id, ...listing }) => {
@@ -284,7 +272,7 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Listing", "Asset", "Terms"],
     }),
     updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
       query: ({ id, ...patch }) => ({
@@ -292,6 +280,7 @@ export const backendApi = createApi({
         method: "PUT",
         body: patch,
       }),
+      invalidatesTags: ["Terms", "Asset", "Terms"],
     }),
     getLoans: builder.query<Loan[], BackendAssetQueryParam>({
       query: (queryParams) => ({
@@ -300,6 +289,10 @@ export const backendApi = createApi({
       }),
       transformResponse: (response: { count: number; data: Loan[] }, meta, arg) =>
         response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Loan" as const, id })), "Loan"]
+          : ["Loan"],
     }),
     createLoan: builder.mutation<Loan, Loan>({
       query: ({ id, borrower, lender, assetListing, term }) => {
@@ -320,6 +313,7 @@ export const backendApi = createApi({
           body: loanRequest,
         };
       },
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
     deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
       query: ({ id, ...loan }) => {
@@ -328,7 +322,7 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
   }),
 });
