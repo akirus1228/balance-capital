@@ -1,8 +1,9 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   BackendLoadingStatus,
   LoginResponse,
   Notification,
+  User,
 } from "../../types/backend-types";
 import { loadState } from "@fantohm/shared-web3";
 import { BackendApi } from "../../api";
@@ -12,12 +13,21 @@ export type AssetLoadStatus = {
   assetId: string;
   status: BackendLoadingStatus;
 };
+
+type SignaturePayload = {
+  signature: string;
+  address: string;
+  user: User;
+};
+
 export interface BackendData {
   readonly accountStatus: "unknown" | "pending" | "ready" | "failed";
   readonly status: "idle" | "loading" | "succeeded" | "failed";
   readonly loadAssetStatus: AssetLoadStatus[];
   readonly authSignature: string | null;
+  readonly authorizedAccount: string;
   readonly notifications: Notification[] | null;
+  readonly user: User;
 }
 
 /* 
@@ -31,19 +41,17 @@ returns: void
 */
 export const authorizeAccount = createAsyncThunk(
   "backend/authorizeAccount",
-  async (
-    { address, networkId, provider }: SignerAsyncThunk,
-    { dispatch, rejectWithValue, getState }
-  ) => {
+  async ({ address, networkId, provider }: SignerAsyncThunk, { rejectWithValue }) => {
     const loginResponse: LoginResponse = await BackendApi.doLogin(address);
+    console.log(loginResponse);
     if (loginResponse.id) {
       const signature = await BackendApi.handleSignMessage(address, provider);
       if (!signature) {
         rejectWithValue("Login Failed");
       }
-      return signature;
+      return { signature, address, user: loginResponse };
     } else {
-      rejectWithValue("Login Failed");
+      return rejectWithValue("Login Failed");
     }
   }
 );
@@ -79,6 +87,7 @@ const previousState = loadState("backend");
 const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
+  authorizedAccount: null,
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
@@ -93,12 +102,17 @@ const backendSlice = createSlice({
     builder.addCase(authorizeAccount.pending, (state, action) => {
       state.accountStatus = "pending";
     });
-    builder.addCase(authorizeAccount.fulfilled, (state, action) => {
-      if (action.payload) {
-        state.accountStatus = "ready";
-        state.authSignature = action.payload;
+    builder.addCase(
+      authorizeAccount.fulfilled,
+      (state, action: PayloadAction<SignaturePayload | undefined>) => {
+        if (action.payload) {
+          state.accountStatus = "ready";
+          state.authSignature = action.payload.signature;
+          state.authorizedAccount = action.payload.address;
+          state.user = action.payload.user;
+        }
       }
-    });
+    );
     builder.addCase(authorizeAccount.rejected, (state, action) => {
       state.accountStatus = "failed";
     });

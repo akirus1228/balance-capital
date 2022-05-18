@@ -1,9 +1,9 @@
 import { Box, Chip, IconButton, Paper } from "@mui/material";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
-import style from "./borrower-asset.module.scss";
+// import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
-import { useWalletAsset } from "../../../hooks/useWalletAsset";
+import { useWalletAsset } from "../../../hooks/use-wallet-asset";
 import PreviewImage from "../preview-image/preview-image";
 
 export interface BorrowerAssetProps {
@@ -53,7 +53,7 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         </IconButton>
       </Box>
       {asset.imageUrl && asset.openseaId && (
-        <Link to={`/borrow/${props.contractAddress}/${props.tokenId}`}>
+        <Link to={`/asset/${props.contractAddress}/${props.tokenId}`}>
           <PreviewImage
             url={asset.imageUrl}
             name={asset.name || "placeholder name"}

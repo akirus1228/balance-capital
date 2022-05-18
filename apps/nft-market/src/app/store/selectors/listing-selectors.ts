@@ -6,7 +6,7 @@ import {
   ListingStatus,
   StandardAssetLookupParams,
 } from "../../types/backend-types";
-import { Listings, ListingState } from "../reducers/listing-slice";
+import { Listings } from "../reducers/listing-slice";
 
 const selectListings = (state: RootState) => state.listings.listings;
 
@@ -48,7 +48,7 @@ export const selectListingByAddress = createSelector(
     if (key) {
       return listings[key];
     } else {
-      return {} as Listing;
+      return undefined;
     }
   }
 );
