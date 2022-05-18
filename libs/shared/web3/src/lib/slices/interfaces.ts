@@ -158,16 +158,6 @@ export interface SignerAsyncThunk
   extends IBaseAddressAsyncThunk,
     IInteractiveAsyncThunk {}
 
-export interface AssetAsyncThunk {
-  readonly asset: Asset;
-}
-
-export interface TermsAsyncThunk {
-  readonly terms: Terms;
-}
-
-export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}
-
 export interface IInvestUsdbNftBondAsyncThunk
   extends IBaseBondAsyncThunk,
     IInteractiveAsyncThunk {
