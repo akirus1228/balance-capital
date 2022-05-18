@@ -2,11 +2,10 @@ import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNone
 import { Avatar, Badge, IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
 import { MouseEvent, useState } from "react";
 import {
-  Notification,
-  LoginResponse,
   Importance,
+  Notification,
   NotificationStatus,
-} from "@fantohm/shared-web3";
+} from "../../../types/backend-types";
 
 export const NotificationMenu = (): JSX.Element => {
   // menu controls
@@ -64,8 +63,8 @@ export const NotificationMenu = (): JSX.Element => {
       >
         <p>Notifications</p>
         <a href={"/notifications"}>view all</a>
-        {notifications.map((bond, i) => (
-          <MenuItem>
+        {notifications.map((bond, i: number) => (
+          <MenuItem key={`not-men-${i}`}>
             <Avatar />
             <ListItemText primary={notification.message} />
           </MenuItem>

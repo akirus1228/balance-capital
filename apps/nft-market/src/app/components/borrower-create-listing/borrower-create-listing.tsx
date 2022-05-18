@@ -1,10 +1,9 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Button, Container, Paper, SxProps, Theme } from "@mui/material";
 import { useState } from "react";
+import { Asset } from "../../types/backend-types";
 import style from "./borrower-create-listing.module.scss";
 import ListAsCollateral from "./list-as-collateral/list-as-collateral";
 
-/* eslint-disable-next-line */
 export interface BorrowerCreateListingProps {
   asset: Asset;
   sx?: SxProps<Theme>;

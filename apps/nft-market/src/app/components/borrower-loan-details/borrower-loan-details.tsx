@@ -1,4 +1,3 @@
-import { Asset } from "@fantohm/shared-web3";
 import {
   Box,
   Button,
@@ -9,6 +8,7 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
+import { Asset } from "../../types/backend-types";
 import style from "./borrower-loan-details.module.scss";
 
 export interface BorrowerLoanDetailsProps {

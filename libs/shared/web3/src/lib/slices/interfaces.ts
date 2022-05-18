@@ -3,8 +3,6 @@ import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
-import { Terms } from "../nft-marketplace-backend/backend-types";
-import { Asset } from "../nft-marketplace-backend";
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -156,7 +154,6 @@ export interface IWrapDetails extends IBaseAsyncThunk {
   value: string;
 }
 
-// nft-marketplace slice
 export interface SignerAsyncThunk
   extends IBaseAddressAsyncThunk,
     IInteractiveAsyncThunk {}

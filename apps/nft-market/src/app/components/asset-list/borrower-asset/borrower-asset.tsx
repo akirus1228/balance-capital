@@ -1,41 +1,18 @@
-import { Asset } from "@fantohm/shared-web3";
 import { Box, Chip, IconButton, Paper } from "@mui/material";
 import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 
-import style from "./borrower-asset.module.scss";
+// import style from "./borrower-asset.module.scss";
 import { Link } from "react-router-dom";
-import { useAsset } from "../../../hooks/useAsset";
+import { useWalletAsset } from "../../../hooks/use-wallet-asset";
+import PreviewImage from "../preview-image/preview-image";
 
-export interface PreviewImageProps {
-  url: string;
-  name: string;
-  contractAddress: string;
-  tokenId: string;
-}
-
-export const PreviewImg = (props: PreviewImageProps): JSX.Element => {
-  return (
-    <Box
-      sx={{ height: "300px", width: "300px", borderRadius: "28px", overflow: "hidden" }}
-    >
-      <Link to={`/borrow/${props.contractAddress}/${props.tokenId}`}>
-        <img
-          className={style["assetImg"]}
-          src={props.url}
-          alt={props.name}
-          style={{ height: "100%", width: "auto" }}
-        />
-      </Link>
-    </Box>
-  );
-};
 export interface BorrowerAssetProps {
   contractAddress: string;
   tokenId: string;
 }
 
 export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
-  const asset = useAsset(props.contractAddress, props.tokenId);
+  const asset = useWalletAsset(props.contractAddress, props.tokenId);
 
   if (asset === null) {
     return <h3>Loading...</h3>;
@@ -76,12 +53,14 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         </IconButton>
       </Box>
       {asset.imageUrl && asset.openseaId && (
-        <PreviewImg
-          url={asset.imageUrl}
-          name={asset.name || "placeholder name"}
-          contractAddress={asset.assetContractAddress}
-          tokenId={asset.tokenId}
-        />
+        <Link to={`/asset/${props.contractAddress}/${props.tokenId}`}>
+          <PreviewImage
+            url={asset.imageUrl}
+            name={asset.name || "placeholder name"}
+            contractAddress={asset.assetContractAddress}
+            tokenId={asset.tokenId}
+          />
+        </Link>
       )}
       <Box sx={{ display: "flex", justifyContent: "center" }}>
         <span style={{ fontWeight: "700", fontSize: "20px", margin: "2em 0" }}>

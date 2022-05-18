@@ -1,7 +1,5 @@
 import {
   Avatar,
-  Button,
-  Icon,
   Paper,
   Table,
   TableBody,
@@ -9,12 +7,10 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Tooltip,
   Typography,
 } from "@mui/material";
+import { Listing } from "../../types/backend-types";
 import style from "./my-account.module.scss";
-import { useWeb3Context, Listing } from "@fantohm/shared-web3";
-import { useEffect, useState } from "react";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -28,9 +24,6 @@ export const MyAccountActiveLoansTable = ({
 }: {
   listings: Listing[];
 }): JSX.Element => {
-  const { chainId } = useWeb3Context();
-  const [currentBlock, setCurrentBlock] = useState<number>();
-
   return (
     <Paper elevation={0} sx={{ marginTop: "10px" }} className={style["rowCard"]}>
       <TableContainer>
@@ -106,11 +99,7 @@ export const MyAccountActiveLoansTable = ({
                   <Typography variant="h6">{listing.terms.amount}%</Typography>
                 </TableCell>
                 <TableCell>
-                  {currentBlock ? (
-                    <Typography variant="h6">{listing.terms.apr}</Typography>
-                  ) : (
-                    <></>
-                  )}
+                  <Typography variant="h6">{listing.terms.apr}</Typography>
                 </TableCell>
                 <TableCell>{listing.terms.duration}</TableCell>
                 <TableCell>{listing.terms.duration}</TableCell>

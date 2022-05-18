@@ -4,6 +4,17 @@ export type Chain = "eth" | "sol";
 
 export type CollectibleMediaType = "IMAGE" | "VIDEO" | "GIF" | "THREE_D";
 
+type Owner = {
+  id?: string;
+  address: string;
+  createdAt?: string;
+  updatedAt?: string;
+  name?: string;
+  email?: string;
+  description?: string;
+  profileImageUrl?: string;
+};
+
 export type Collectible = {
   id: string;
   tokenId: string;
@@ -17,6 +28,7 @@ export type Collectible = {
   videoUrl: Nullable<string>;
   threeDUrl: Nullable<string>;
   isOwned: boolean;
+  owner: Owner;
   dateCreated: Nullable<string>;
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;

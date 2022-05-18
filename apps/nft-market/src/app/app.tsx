@@ -4,23 +4,25 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId, authorizeAccount } from "@fantohm/shared-web3";
+import { useWeb3Context, defaultNetworkId } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
-import BorrowPage from "./pages/borrow-page/borrow-page";
-import LendPage from "./pages/lend-page/lend-page";
-import MyAccountPage from "./pages/my-account-page/my-account-page";
-import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
-import NotificationsPage from "./pages/notifications/notifications-page";
+import { BorrowPage } from "./pages/borrow-page/borrow-page";
+import { LendPage } from "./pages/lend-page/lend-page";
+import { MyAccountPage } from "./pages/my-account-page/my-account-page";
+import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
+import { authorizeAccount } from "./store/reducers/backend-slice";
+import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
+import TestHelper from "./pages/test-helper/test-helper";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
-  const backend = useSelector((state: RootState) => state.nftMarketplace);
+  const backend = useSelector((state: RootState) => state.backend);
 
   const [theme, setTheme] = useState(NftLight);
   const { address, chainId, connected, hasCachedProvider, connect, provider } =
@@ -51,17 +53,12 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (
-      provider &&
-      connected &&
-      ["unknown", "failed"].includes(backend.accountStatus) &&
-      backend.authSignature === null
-    ) {
+    if (provider && connected && address !== backend.authorizedAccount) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [address, backend.accountStatus, connected]);
+  }, [address, connected, backend.authorizedAccount]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -72,13 +69,11 @@ export const App = (): JSX.Element => {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
-          <Route
-            path="/borrow/:contractAddress/:tokenId"
-            element={<BorrowerAssetDetailsPage />}
-          />
           <Route path="/notifications" element={<NotificationsPage />} />
           <Route path="/lend" element={<LendPage />} />
+          <Route path="/asset/:contractAddress/:tokenId" element={<AssetDetailsPage />} />
           <Route path="/my-account" element={<MyAccountPage />} />
+          <Route path="/th" element={<TestHelper />} />
           <Route
             path="*"
             element={

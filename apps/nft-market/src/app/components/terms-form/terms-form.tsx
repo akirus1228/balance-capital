@@ -1,10 +1,6 @@
 import {
-  Asset,
-  AssetStatus,
   checkNftPermission,
-  createListing,
   requestNftPermission,
-  Terms,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import {
@@ -17,13 +13,26 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import { RootState } from "../../../../store";
+import { RootState } from "../../store";
 import { BaseSyntheticEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./terms-form.module.scss";
+import {
+  Asset,
+  AssetStatus,
+  BackendLoadingStatus,
+  Listing,
+  Terms,
+} from "../../types/backend-types";
+import { createListing } from "../../store/reducers/listing-slice";
+import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
+import { signTerms } from "../../helpers/signatures";
+import { useUpdateTermsMutation } from "../../api/backend-api";
 
 export interface TermsFormProps {
   asset: Asset;
+  listing?: Listing;
+  onClose: (value: boolean) => void;
 }
 
 export type TermTypes = {
@@ -39,26 +48,28 @@ export const termTypes: TermTypes = {
 export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const dispatch = useDispatch();
   const { address, chainId, provider } = useWeb3Context();
+  const [updateTerms, { isLoading: isTermsUpdateLoading, data: updateTermsResponse }] =
+    useUpdateTermsMutation();
   const [pending, setPending] = useState(false);
-  const [duration, setDuration] = useState(1);
+  const [duration, setDuration] = useState(props?.listing?.terms.duration || 1);
   const [durationType, setDurationType] = useState("days");
-  const [apr, setApr] = useState(25);
-  const [amount, setAmount] = useState(10000);
+  const [apr, setApr] = useState(props?.listing?.terms.apr || 25);
+  const [amount, setAmount] = useState(props?.listing?.terms.amount || 10000);
   const [repaymentAmount, setRepaymentAmount] = useState(2500);
   const [repaymentTotal, setRepaymentTotal] = useState(12500);
 
-  const { checkPermStatus } = useSelector((state: RootState) => state.wallet);
+  const { checkPermStatus, requestPermStatus } = useSelector(
+    (state: RootState) => state.wallet
+  );
+  const hasPermission = useSelector((state: RootState) =>
+    selectNftPermFromAsset(state, props.asset)
+  );
+  const { createListingStatus } = useSelector((state: RootState) => state.listings);
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
     console.log("request permissions");
-    if (
-      chainId &&
-      address &&
-      props.asset.assetContractAddress &&
-      props.asset.id &&
-      provider
-    ) {
+    if (chainId && address && props.asset.assetContractAddress && provider) {
       setPending(true);
       dispatch(
         requestNftPermission({
@@ -72,17 +83,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     } else {
       console.warn("unable to process permission request");
     }
-  }, [chainId, address, props.asset.assetContractAddress, props.asset.id]);
+  }, [chainId, address, props.asset.assetContractAddress]);
 
   // check the contract to see if we have perms already
   useEffect(() => {
-    if (
-      chainId &&
-      address &&
-      props.asset.assetContractAddress &&
-      props.asset.id &&
-      provider
-    ) {
+    if (chainId && address && props.asset.assetContractAddress && provider) {
+      console.log(`Check perms`);
       dispatch(
         checkNftPermission({
           networkId: chainId,
@@ -93,16 +99,19 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
         })
       );
     }
-  }, [chainId, address, props.asset.assetContractAddress, props.asset.id]);
+  }, [chainId, address, props.asset.assetContractAddress]);
 
   // watch the status of the wallet for pending txns to clear
   useEffect(() => {
-    if (checkPermStatus === "idle" && pending === true) {
+    if (checkPermStatus !== "loading" && requestPermStatus !== "loading") {
       setPending(false);
+    } else {
+      setPending(true);
     }
-  }, [checkPermStatus]);
+  }, [checkPermStatus, requestPermStatus]);
 
-  const handleCreateListing = () => {
+  const handleCreateListing = async () => {
+    if (!provider || !chainId) return;
     console.log("create listing");
     // send listing data to backend
     setPending(true);
@@ -119,9 +128,60 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       apr,
       duration,
       expirationAt,
+      signature: "",
     };
-    dispatch(createListing({ terms, asset: asset }));
+    const termsSignature = await signTerms(
+      provider,
+      address,
+      chainId,
+      asset.assetContractAddress,
+      asset.tokenId,
+      terms
+    );
+    terms.signature = termsSignature;
+    dispatch(createListing({ terms, asset }));
+    return;
   };
+
+  const handleUpdateTerms = async () => {
+    if (!provider || !chainId) return;
+    console.log("update listing");
+    // send listing data to backend
+    setPending(true);
+    let asset: Asset;
+    if (props.asset.status === AssetStatus.New) {
+      asset = { ...props.asset, owner: { address } };
+    } else {
+      asset = props.asset;
+    }
+    const expirationAt = new Date();
+    expirationAt.setDate(expirationAt.getDate() + 1);
+    const terms: Terms = {
+      ...props?.listing?.terms,
+      amount,
+      apr,
+      duration,
+      expirationAt,
+      signature: "",
+    };
+    const termsSignature = await signTerms(
+      provider,
+      address,
+      chainId,
+      asset.assetContractAddress,
+      asset.tokenId,
+      terms
+    );
+    terms.signature = termsSignature;
+    updateTerms(terms);
+    return;
+  };
+
+  useEffect(() => {
+    if (!isTermsUpdateLoading && updateTermsResponse) {
+      props.onClose(true);
+    }
+  }, [isTermsUpdateLoading, updateTermsResponse]);
 
   const handleDurationChange = (event: BaseSyntheticEvent) => {
     console.log(event);
@@ -155,6 +215,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setRepaymentAmount(_repaymentAmount);
     setRepaymentTotal(_repaymentAmount + amount);
   }, [durationType, duration, amount, apr]);
+
+  useEffect(() => {
+    if (createListingStatus === BackendLoadingStatus.succeeded) {
+      props.onClose(true);
+    }
+  }, [createListingStatus]);
 
   return (
     <Box className="flex fc">
@@ -200,14 +266,19 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           </Box>
         </Box>
       </Box>
-      {!props.asset.hasPermission && !pending && (
+      {!hasPermission && !pending && (
         <Button variant="contained" onClick={handlePermissionRequest}>
           Allow [name] to Access your NFT
         </Button>
       )}
-      {props.asset.hasPermission && !pending && (
+      {hasPermission && !pending && !props.listing && (
         <Button variant="contained" onClick={handleCreateListing}>
           List as collateral
+        </Button>
+      )}
+      {hasPermission && !pending && props.listing && (
+        <Button variant="contained" onClick={handleUpdateTerms}>
+          Update Terms
         </Button>
       )}
       {pending && (
