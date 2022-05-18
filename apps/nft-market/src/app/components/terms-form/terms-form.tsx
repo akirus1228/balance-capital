@@ -132,7 +132,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     };
     const termsSignature = await signTerms(
       provider,
-      address,
+      asset.owner?.address || "",
       chainId,
       asset.assetContractAddress,
       asset.tokenId,
@@ -166,7 +166,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     };
     const termsSignature = await signTerms(
       provider,
-      address,
+      asset.owner?.address || "",
       chainId,
       asset.assetContractAddress,
       asset.tokenId,

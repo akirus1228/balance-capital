@@ -69,7 +69,7 @@ export const contractCreateLoan = createAsyncThunk(
       nftTokenId: loan.assetListing.asset.tokenId,
       duration: loan.term.duration,
       loanAmount: ethers.utils.parseEther(loan.term.amount.toString()),
-      apr: loan.term.apr,
+      apr: loan.term.apr * 100,
       nftTokenType: 0, // token type
       sig: loan.term.signature,
     };

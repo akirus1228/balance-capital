@@ -310,9 +310,10 @@ export const backendApi = createApi({
             term: dropHelperDates({ ...assetListing.terms }),
           },
           borrower: dropHelperDates({ ...borrower }),
-          lender: dropHelperDates({ ...borrower }),
+          lender: dropHelperDates({ ...lender }),
           term: dropHelperDates({ ...term }),
         };
+        console.log(loanRequest);
         return {
           url: `loan`,
           method: "POST",

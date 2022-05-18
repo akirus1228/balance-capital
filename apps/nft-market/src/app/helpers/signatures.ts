@@ -6,13 +6,12 @@ import { nftTokenType } from "../types/contract-types";
 
 export const signTerms = async (
   provider: JsonRpcProvider,
-  address: string,
+  borrowerAddress: string,
   chainId: number,
   nftContractAddress: string,
   tokenId: string,
   terms: Terms
 ): Promise<string> => {
-  const signer = provider.getSigner();
   const payload = ethers.utils.defaultAbiCoder.encode(
     [
       "address",
@@ -25,7 +24,7 @@ export const signTerms = async (
       "uint8",
     ],
     [
-      address,
+      borrowerAddress,
       nftContractAddress,
       addresses[chainId]["USDB_ADDRESS"],
       tokenId,

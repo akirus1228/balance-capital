@@ -1,10 +1,17 @@
-import { useWeb3Context } from "@fantohm/shared-web3";
+import {
+  addresses,
+  checkErc20Allowance,
+  isDev,
+  NetworkIds,
+  requestErc20Allowance,
+  selectErc20AllowanceByAddress,
+  useWeb3Context,
+} from "@fantohm/shared-web3";
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateLoanMutation, useGetAssetQuery } from "../../api/backend-api";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
-import { signTerms } from "../../helpers/signatures";
 import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import {
   BackendLoadingStatus,
@@ -22,12 +29,20 @@ export interface LenderListingTermsProps {
 }
 
 export function LenderListingTerms(props: LenderListingTermsProps) {
+  const dispatch = useDispatch();
   const { provider, chainId, address } = useWeb3Context();
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
-  const dispatch = useDispatch();
   const { user } = useSelector((state: RootState) => state.backend);
+  const { checkErc20AllowanceStatus, requestErc20AllowanceStatus, platformFee } =
+    useSelector((state: RootState) => state.wallet);
   const { loanCreationStatus } = useSelector((state: RootState) => state.loans);
-  const { repaymentTotal, repaymentAmount } = useListingTermDetails(props.listing);
+  const allowance = useSelector((state: RootState) =>
+    selectErc20AllowanceByAddress(state, {
+      walletAddress: address,
+      erc20TokenAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
+    })
+  );
+  const { repaymentAmount } = useListingTermDetails(props.listing);
   const [
     createLoan,
     { isLoading: isCreating, error: createLoanError, data: createLoanData },
@@ -37,10 +52,14 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     { skip: !props.listing.asset }
   );
 
-  const handleAcceptTerms = useCallback(async () => {
+  const handleAcceptTerms = useCallback(() => {
+    if (!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) {
+      console.warn("Insufficiant allownace. Trigger request");
+      return;
+    }
     console.log("Accept Terms");
     if (!provider || !chainId || !address || !asset || !asset.owner) {
-      console.log("missing data");
+      console.warn("missing critical data");
       console.log(asset);
       console.log(asset?.owner);
       console.log(props.listing.asset);
@@ -49,17 +68,17 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     console.log(props.listing);
 
     const { id, ...term } = props.listing.terms;
-
     const createLoanRequest: Loan = {
       lender: user,
       borrower: asset.owner,
       assetListing: { ...props.listing, status: ListingStatus.Pending },
       term,
     };
+    console.log(createLoanRequest);
     setCachedTerms(term);
 
     createLoan(createLoanRequest);
-  }, [props.listing, provider, chainId, asset]);
+  }, [props.listing, provider, chainId, asset, allowance, user.address]);
 
   useEffect(() => {
     console.log(isCreating);
@@ -72,16 +91,16 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       isCreating === false &&
       createLoanData
     ) {
-      dispatch(
-        contractCreateLoan({
-          loan: {
-            ...createLoanData,
-            term: cachedTerms,
-          },
-          provider,
-          networkId: chainId,
-        })
-      );
+      const createLoanParams = {
+        loan: {
+          ...createLoanData,
+          term: cachedTerms,
+        },
+        provider,
+        networkId: chainId,
+      };
+      console.log(createLoanParams);
+      dispatch(contractCreateLoan(createLoanParams));
     }
   }, [isCreating]);
 
@@ -91,10 +110,40 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     }
   }, [loanCreationStatus]);
 
+  const handleRequestAllowance = useCallback(() => {
+    if (provider && address)
+      dispatch(
+        requestErc20Allowance({
+          networkId: chainId || (isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum),
+          provider,
+          walletAddress: address,
+          assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
+          amount: props.listing.terms.amount * (1 + platformFee),
+        })
+      );
+  }, [chainId, address, props.listing.terms.amount, provider]);
+
   useEffect(() => {
-    console.log("asset watch");
-    console.log(asset);
-  }, [asset]);
+    console.log("check usdb allowance");
+    if (chainId && address && provider) {
+      dispatch(
+        checkErc20Allowance({
+          networkId: chainId || (isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum),
+          provider,
+          walletAddress: address,
+          assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
+        })
+      );
+    }
+  }, [chainId, address, provider]);
+
+  useEffect(() => {
+    console.log(`allowance: ${allowance}`);
+  }, [allowance]);
+
+  useEffect(() => {
+    console.log(`user: ${user.address}`);
+  }, [user.address]);
 
   return (
     <Container sx={props.sx}>
@@ -134,13 +183,31 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
             <Button variant="contained">Make Offer</Button>
           </Box>
           <Box className="flex fc">
-            <Button
-              variant="outlined"
-              onClick={handleAcceptTerms}
-              disabled={isAssetLoading}
-            >
-              Accept Terms
-            </Button>
+            {(!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) &&
+              checkErc20AllowanceStatus === "idle" &&
+              requestErc20AllowanceStatus === "idle" && (
+                <Button variant="outlined" onClick={handleRequestAllowance}>
+                  Provide Allowance to Your USDB
+                </Button>
+              )}
+            {!!allowance &&
+              allowance >= props.listing.terms.amount * (1 + platformFee) &&
+              !isCreating && (
+                <Button
+                  variant="outlined"
+                  onClick={handleAcceptTerms}
+                  disabled={isCreating}
+                >
+                  Accept Terms
+                </Button>
+              )}
+            {(checkErc20AllowanceStatus === "loading" ||
+              requestErc20AllowanceStatus === "loading" ||
+              isCreating) && (
+              <Button variant="outlined" disabled={true}>
+                Pending...
+              </Button>
+            )}
           </Box>
         </Box>
       </Paper>
