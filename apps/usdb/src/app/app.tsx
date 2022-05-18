@@ -97,7 +97,11 @@ export const App = (): JSX.Element => {
       <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
         <ScrollToTop />
         <Messages />
-        {location.pathname === "/" ? <HomeHeader /> : <Header />}
+        {location.pathname === "/" || location.pathname === "/about" ? (
+          <HomeHeader />
+        ) : (
+          <Header />
+        )}
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/staking" element={<StakingChoicePage />} />

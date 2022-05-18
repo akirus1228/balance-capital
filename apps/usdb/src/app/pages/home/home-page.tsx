@@ -21,28 +21,13 @@ import InvestmentOptions from "./investment-options/investment-options";
 import { DefineGrid } from "./define-grid/define-grid";
 import PartnersGrid from "./partners-grid/partners-grid";
 import AuditGrid from "./partners-grid/audit-grid";
-import SibApiV3Sdk from "sib-api-v3-typescript";
 import { error, info } from "@fantohm/shared-web3";
-import { CreateContact } from "sib-api-v3-typescript/model/createContact";
 import { useState } from "react";
 
 export const HomePage = (): JSX.Element => {
   const [email, setEmail] = useState("");
 
   const themeType = useSelector((state: RootState) => state.app.theme);
-  const apiInstance = new SibApiV3Sdk.ContactsApi();
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-  // @ts-ignore
-  const apiKey = apiInstance.authentications["apiKey"];
-
-  apiKey.apiKey =
-    "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";
-
-  const createContact = new SibApiV3Sdk.CreateContact();
-
-  createContact.email = "exampletest@example.com";
-  createContact.listIds = [2];
   const dispatch = useDispatch();
 
   const onSubmitEmail = async () => {
@@ -50,17 +35,7 @@ export const HomePage = (): JSX.Element => {
       // eslint-disable-next-line no-alert
       return dispatch(error("Please enter a valid email!"));
     }
-
-    const createContact: CreateContact = { email: email };
-
-    return apiInstance.createContact(createContact).then(
-      function (data) {
-        dispatch(info("Submitted successfully"));
-      },
-      function (error) {
-        console.error(error);
-      }
-    );
+    return;
   };
 
   return (

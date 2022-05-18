@@ -219,7 +219,7 @@ export const HomeHeader = (): JSX.Element => {
                 })}
               </Menu>
             </Box>
-            <Link to="/#about" className={styles["headerLink"]}>
+            <Link to="/about" className={styles["headerLink"]}>
               About
             </Link>
             <Link to={{ pathname: "/#docs" }} className={styles["headerLink"]}>

@@ -8,55 +8,18 @@ import {
   TeammateProfile,
   Teammate,
 } from "../../components/teammate-profile/teammate-profile";
-
-const heroContent = {
-  hero: true,
-  title: "Where traditional finance meets DeFi",
-  subtitle: [
-    "USDB is a decentralized, low risk stable asset that bridges the world of traditional finance with DeFi to unlock growth for businesses and investors around the world.",
-  ],
-};
-
-const sectionText = {
-  title: "Two layers of multisig protection",
-  subtitle: [
-    "USDB is protected by two layers of multisig protection, Fantom Safe and OpenZeppelin Defender.",
-  ],
-};
-
-const partnerProgram = {
-  title: "Join our partner program",
-  subtitle: [
-    "Are you part of a financial institution or a DeFi protocol? Get in touch to discuss how USDB and your organization can work together.",
-  ],
-};
-
-const teammates: Teammate[] = [
-  {
-    name: "pwntr0n",
-    details: "Lead developer",
-  },
-  {
-    name: "Kanan",
-    details: "Web dev & designer",
-  },
-  {
-    name: "Rayne",
-    details: "Marketing specialist",
-  },
-  {
-    name: "AtomicSwap",
-    details: "KuramaDAO",
-  },
-  {
-    name: "lilbobross",
-    details: "Cityroots.io, OtterClam, NovaDAO, SneakyCapital",
-  },
-  {
-    name: "Sleepy Neko",
-    details: "Trusted Shiba Inu Community Member",
-  },
-];
+import {
+  AboutBridge,
+  AboutDivider,
+  AboutFHM,
+  AboutFinancialNFT,
+  AboutLiquidity,
+  AboutUSDB,
+  AboutUSDBBank,
+  BalanceDefine1,
+  BalanceDefine2,
+} from "@fantohm/shared/images";
+import AboutTile from "./about-tile";
 
 export const AboutPage = (): JSX.Element => {
   // mailchimp integration
@@ -70,181 +33,43 @@ export const AboutPage = (): JSX.Element => {
 
   return (
     <>
-      <Box
-        className={`${style["__heading"]} flexCenterRow`}
-        maxWidth="md"
-        sx={{
-          margin: { xs: "0 auto 10em auto", md: "0 auto 490px auto" },
-          padding: { xs: "45px" },
-        }}
-      >
-        <Logo style={{ width: "424px", paddingBottom: "2em" }} />
-        <Headline {...heroContent} />
-        <a className={style["learnMore"]} href="/about#details">
-          Learn More
-          <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-        </a>
-      </Box>
-      <Box
-        className={`${style["__section"]} ${style["info1"]} flexCenterRow`}
-        id="details"
-      >
-        <Grid container columnSpacing={6}>
-          <Grid item xs={12} sm={6} md={5}>
-            <h2>Building an open financial system</h2>
-            <p>
-              USDB offers a plethora of financial tools and services for individuals and
-              institutions
-            </p>
-          </Grid>
-          <Grid item xs>
-            <Grid container columnSpacing={6}>
-              <Grid item xs={12} md={4}>
-                <h4>B2B liquidity solutions</h4>
-                <p>
-                  A liquidity solution to help businesses to expand and grow, while
-                  mitigationg risk.
-                </p>
-                <a href="/about#contact" className={style["learnMore"]}>
-                  Get in touch
-                  <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-                </a>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <h4>B2B Single-sided staking</h4>
-                <p>
-                  A high-interest earning opportunity of up to 32.5% without the
-                  complexity.
-                </p>
-                <a href="/staking" className={style["learnMore"]}>
-                  Learn more
-                  <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-                </a>
-              </Grid>
-              <Grid item xs={12} md={4}>
-                <h4>Trad-Fi bonds</h4>
-                <p>
-                  A long-term investment vehicle to safely park funds and earn stable
-                  yields
-                </p>
-                <a href="/trad-fi" className={style["learnMore"]}>
-                  Learn More
-                  <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
-                </a>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-      </Box>
-      <Box className={`${style["__section"]} ${style["banners"]} flexCenterRow`}>
-        <Paper className={`${style["usdbBanner"]} usdbBanner`}>
-          <Box sx={{ width: { md: "40%" } }}>
-            <h1>Discover how USDB can strengthen your product or service.</h1>
-            <p>
-              Are you part of a financial institution or a DeFi protocol? Speak with a
-              member of our team today to learn more.
-            </p>
-          </Box>
-          <Button
-            href="/about#contact"
-            variant="contained"
-            className={`${style["bannerButton"]} inverted`}
-          >
-            Get in touch
-          </Button>
-        </Paper>
-      </Box>
-      <Box
-        className={`${style["__section"]} flexCenterRow`}
-        sx={{ margin: "0 auto" }}
-        maxWidth="md"
-      >
-        <Headline {...sectionText} />
-        <Box className="flexCenterRow" sx={{ flexWrap: "wrap" }}>
-          <Button
-            className={`${style["networkSafe"]} thinButton`}
-            variant="contained"
-            color="primary"
-          >
-            ETH safe
-          </Button>
-          <Button
-            className={`${style["networkSafe"]} thinButton`}
-            variant="contained"
-            color="primary"
-          >
-            FTM safe
-          </Button>
-          <Button
-            className={`${style["networkSafe"]} thinButton`}
-            variant="contained"
-            color="primary"
-          >
-            BSC safe
-          </Button>
-          <Button
-            className={`${style["networkSafe"]} thinButton`}
-            variant="contained"
-            color="primary"
-          >
-            MOVR safe
-          </Button>
-        </Box>
-      </Box>
-      <Box
-        className={`${style["__section"]} flexCenterRow`}
-        sx={{ margin: "0 auto 10em auto" }}
-        maxWidth="md"
-      >
-        <Grid container rowSpacing={6}>
-          {teammates.map((teammate, index) => (
-            <Grid item xs={6} sm={6} md={4} key={`teammate-${index}`}>
-              <TeammateProfile teammate={teammate} />
-            </Grid>
-          ))}
-        </Grid>
-      </Box>
-      <Box
-        className={`${style["__section"]} flexCenterRow`}
-        sx={{ margin: "0 auto 10em auto" }}
-        maxWidth="md"
-        id="contact"
-      >
-        <Headline {...partnerProgram} />
-        <Box maxWidth="512px">
-          <Input
-            placeholder="What's your name? *"
-            sx={{ marginTop: "4em" }}
-            className="contact"
-            required
-          />
-          <Input
-            placeholder="What's your email address? *"
-            className="contact"
-            required
-          />
-          <Input placeholder="What's your organization's name?" className="contact" />
-          <Input placeholder="What's your website url?" className="contact" />
-          <Button variant="outlined" sx={{ marginTop: "4em", padding: "1em 6em" }}>
-            Submit
-          </Button>
-        </Box>
-      </Box>
-      <Box
-        className={`${style["__section"]} ${style["banners"]} flexCenterRow`}
-        sx={{ margin: "0 auto 10em auto" }}
-      >
-        <Paper className={`${style["usdbBanner2"]} usdbBanner2`}>
-          <h1>Receive email updates</h1>
-          <Input
-            className="outlined"
-            placeholder="Enter your email address"
-            sx={{ marginRight: "2em", width: "300px", marginBottom: { xs: "1em" } }}
-          />
-          <Button variant="outlined">Subscribe</Button>
-          <p>No spam. Never shared. Opt out at any time.</p>
-        </Paper>
-      </Box>
+      <AboutTile
+        icon={AboutUSDB}
+        title="USDB Stablecoin"
+        text="The Balance ecosystem / organization is formed to carry out the purpose of its name– to balance FHM & USDB against one another in a way that feeds value into the continued use case of both assets. FHM, as a value capturing mechanism, feeds the minting of USDB through a proof of burn mechanism similar to UST on Luna."
+        link="https://www.usdbalance.com/"
+        docsLink="https://fantohm.gitbook.io/documentation/usdb/introduction"
+      />
+      <AboutTile
+        icon={AboutFHM}
+        title="FHM Protocol"
+        text="FHM is a Reserve & Rewards Protocol inspired by the Protocol Owned Liquidity software developments of OHM. FHM features compounding, single disbursement bonds as the safest possible bonding mechanism to ensure the longevity of exchange liquidity in relation to neighbouring protocols with similar principles."
+        link="https://fantohm.com/"
+        docsLink="https://fantohm.gitbook.io/documentation/"
+      />
+      <AboutTile
+        icon={AboutBridge}
+        title="DEX & Bridge"
+        text="USDB and FHM are expanding beyond the EVM realm with the first bridge to Terra being completed in the near future. We have successfully bridged both ways and are now awaiting the completion of audits to confirm our capability in this regard."
+        link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
+      />
+      <AboutTile
+        icon={AboutLiquidity}
+        title="Liquidity Solution"
+        text="Will allow sFHM to be used as a tool for funding and seeding USDB lp pools as a business development tool and consumer investment option. This means every FHM stakeholder has access to everything necessary to new startups on the blockchain."
+        link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
+      />
+      <AboutTile
+        icon={AboutUSDBBank}
+        title="USDB Bank"
+        text="We are building a lending and borrowing structure that will fall under our USDBank which you may have already seen teased in the usdbalance.com site ui."
+      />
+      <AboutTile icon={AboutUSDBBank} title="NFT Marketplace" text="Coming soon" />
+      <AboutTile
+        icon={AboutFinancialNFT}
+        title="Financial NFTs"
+        text="We are building a financial NFTs that will act as a receipt for a new game-changing financial product."
+      />
     </>
   );
 };
