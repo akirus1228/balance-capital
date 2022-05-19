@@ -199,13 +199,11 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
               {props.listing.terms.apr}%
             </Typography>
           </Box>
-          {!!allowance && (
-            <Box className="flex fc">
-              <Button variant="contained" onClick={handleMakeOffer}>
-                Make Offer
-              </Button>
-            </Box>
-          )}
+          <Box className="flex fc">
+            <Button variant="contained" onClick={handleMakeOffer}>
+              Make Offer
+            </Button>
+          </Box>
           <Box className="flex fc">
             {(!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) &&
               checkErc20AllowanceStatus === "idle" &&

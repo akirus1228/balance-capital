@@ -1,8 +1,11 @@
 import {
+  addresses,
   checkNftPermission,
   isDev,
   NetworkIds,
+  requestErc20Allowance,
   requestNftPermission,
+  selectErc20AllowanceByAddress,
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import {
@@ -69,15 +72,26 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   // select logged in user
   const { user } = useSelector((state: RootState) => state.backend);
   // nft permission status updates from state
-  const { checkPermStatus, requestPermStatus } = useSelector(
-    (state: RootState) => state.wallet
-  );
+  const {
+    checkPermStatus,
+    requestPermStatus,
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    platformFee,
+  } = useSelector((state: RootState) => state.wallet);
   // select perm status for this asset from state
   const hasPermission = useSelector((state: RootState) =>
     selectNftPermFromAsset(state, props.asset)
   );
   // status of createListing
   const { createListingStatus } = useSelector((state: RootState) => state.listings);
+  // select the USDB allowance provided to lending contract for this address
+  const usdbAllowance = useSelector((state: RootState) =>
+    selectErc20AllowanceByAddress(state, {
+      walletAddress: address,
+      erc20TokenAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
+    })
+  );
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
@@ -116,7 +130,11 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   // watch the status of the wallet for pending txns to clear
   useEffect(() => {
-    if (checkPermStatus !== "loading" && requestPermStatus !== "loading") {
+    if (
+      checkPermStatus !== "loading" &&
+      requestPermStatus !== "loading" &&
+      requestErc20AllowanceStatus !== "loading"
+    ) {
       setPending(false);
     } else {
       setPending(true);
@@ -280,6 +298,22 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     }
   }, [isCreateOfferLoading, createOfferResponse]);
 
+  // request allowance necessary to create loan with these terms
+  const handleRequestAllowance = useCallback(() => {
+    if (provider && address && props.listing) {
+      setPending(true);
+      dispatch(
+        requestErc20Allowance({
+          networkId: chainId || (isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum),
+          provider,
+          walletAddress: address,
+          assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
+          amount: props.listing.terms.amount * (1 + platformFee),
+        })
+      );
+    }
+  }, [chainId, address, props.listing?.terms.amount, provider]);
+
   return (
     <Box className="flex fc">
       <Box className="flex fc">
@@ -339,11 +373,22 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           Update Terms
         </Button>
       )}
-      {!isOwner && (
-        <Button variant="contained" onClick={handleMakeOffer}>
-          Make Offer
-        </Button>
-      )}
+      {!isOwner &&
+        !pending &&
+        props.listing &&
+        usdbAllowance >= props.listing?.terms.amount * (1 + platformFee) && (
+          <Button variant="contained" onClick={handleMakeOffer}>
+            Make Offer
+          </Button>
+        )}
+      {!isOwner &&
+        !pending &&
+        props.listing &&
+        usdbAllowance < props.listing?.terms.amount * (1 + platformFee) && (
+          <Button variant="contained" onClick={handleRequestAllowance}>
+            Allow [name] to Access your USDB
+          </Button>
+        )}
       {pending && (
         <Button variant="contained" disabled>
           Pending...
