@@ -74,6 +74,7 @@ export const AssetDetailsPage = (): JSX.Element => {
       <AssetDetails
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
+        listing={listing}
       />
       {!listing && !asset && <h1>Loading...</h1>}
       {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (

@@ -9,7 +9,7 @@ export type TermDetails = {
   duration: number;
 };
 
-export const useTermDetails = (terms: Terms): TermDetails => {
+export const useTermDetails = (terms: Terms | undefined): TermDetails => {
   console.log("useListingTerms");
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);

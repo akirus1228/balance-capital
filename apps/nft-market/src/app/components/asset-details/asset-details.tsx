@@ -1,5 +1,7 @@
 import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import { useGetLoansQuery } from "../../api/backend-api";
 import { useWalletAsset } from "../../hooks/use-wallet-asset";
+import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
 import StatusInfo from "./status-info/status-info";
@@ -7,11 +9,27 @@ import StatusInfo from "./status-info/status-info";
 export interface AssetDetailsProps {
   contractAddress: string;
   tokenId: string;
+  listing?: Listing;
 }
 
-export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
+export const AssetDetails = ({
+  contractAddress,
+  tokenId,
+  listing,
+  ...props
+}: AssetDetailsProps): JSX.Element => {
   console.log("asset from assetDetails");
-  const asset = useWalletAsset(props.contractAddress, props.tokenId);
+  const asset = useWalletAsset(contractAddress, tokenId);
+  const { data: loan, isLoading: isLoanLoading } = useGetLoansQuery(
+    {
+      skip: 0,
+      take: 1,
+      assetId: asset !== null ? asset.id : "",
+    },
+    {
+      skip: !asset || asset === null || !asset.id || !listing,
+    }
+  );
 
   return (
     <Container>
@@ -84,7 +102,13 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                 </Paper>
               </Box>
             </Box>
-            <StatusInfo asset={asset} />
+            {!!listing && (
+              <StatusInfo
+                asset={asset}
+                listing={listing}
+                loan={loan ? loan[0] : undefined}
+              />
+            )}
           </Grid>
         </Grid>
       ) : (
