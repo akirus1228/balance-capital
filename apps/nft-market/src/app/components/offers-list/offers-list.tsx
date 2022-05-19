@@ -1,13 +1,5 @@
-import {
-  Box,
-  Container,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableHead,
-  TableRow,
-} from "@mui/material";
+import { PaperTable, PaperTableCell, PaperTableHead } from "@fantohm/shared-ui-themes";
+import { Container, TableBody, TableCell, TableRow } from "@mui/material";
 import { useGetOffersQuery } from "../../api/backend-api";
 import { Offer } from "../../types/backend-types";
 import { OfferListItem } from "./offer-list-item";
@@ -21,27 +13,25 @@ export const OffersList = (props: OffersListProps): JSX.Element => {
 
   return (
     <Container>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Offered by</TableCell>
-              <TableCell>Offered value</TableCell>
-              <TableCell>Repayment</TableCell>
-              <TableCell>Apr</TableCell>
-              <TableCell>Duration</TableCell>
-              <TableCell>Expires</TableCell>
-              <TableCell>Offer made</TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {offers &&
-              !isLoading &&
-              offers.map((offer: Offer) => <OfferListItem offer={offer} />)}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <PaperTable>
+        <PaperTableHead>
+          <TableRow>
+            <PaperTableCell>Offered by</PaperTableCell>
+            <PaperTableCell>Offered value</PaperTableCell>
+            <PaperTableCell>Repayment</PaperTableCell>
+            <PaperTableCell>Apr</PaperTableCell>
+            <PaperTableCell>Duration</PaperTableCell>
+            <PaperTableCell>Expires</PaperTableCell>
+            <PaperTableCell>Offer made</PaperTableCell>
+            <PaperTableCell></PaperTableCell>
+          </TableRow>
+        </PaperTableHead>
+        <TableBody>
+          {offers &&
+            !isLoading &&
+            offers.map((offer: Offer) => <OfferListItem offer={offer} />)}
+        </TableBody>
+      </PaperTable>
     </Container>
   );
 };

@@ -1,6 +1,6 @@
 import { formatCurrency } from "@fantohm/shared-helpers";
-import { Avatar, Box, Button, Paper, styled, TableCell, TableRow } from "@mui/material";
-import { PaperTableRow } from "@fantohm/shared-ui-themes";
+import { Avatar, Button } from "@mui/material";
+import { PaperTableCell, PaperTableRow } from "@fantohm/shared-ui-themes";
 import { useTermDetails } from "../../hooks/use-term-details";
 import { Offer } from "../../types/backend-types";
 
@@ -13,19 +13,19 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
 
   return (
     <PaperTableRow>
-      <TableCell>
+      <PaperTableCell>
         <Avatar />
-      </TableCell>
-      <TableCell>{formatCurrency(repaymentTotal, 2)}</TableCell>
-      <TableCell>{formatCurrency(repaymentAmount, 2)}</TableCell>
-      <TableCell>{offer.term.apr}%</TableCell>
-      <TableCell>{offer.term.duration} days</TableCell>
-      <TableCell>**calc expiration time**</TableCell>
-      <TableCell>
+      </PaperTableCell>
+      <PaperTableCell>{formatCurrency(repaymentTotal, 2)}</PaperTableCell>
+      <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>
+      <PaperTableCell>{offer.term.apr}%</PaperTableCell>
+      <PaperTableCell>{offer.term.duration} days</PaperTableCell>
+      <PaperTableCell>**calc expiration time**</PaperTableCell>
+      <PaperTableCell>
         <Button variant="contained" className="offer">
           Accept
         </Button>
-      </TableCell>
+      </PaperTableCell>
     </PaperTableRow>
   );
 };

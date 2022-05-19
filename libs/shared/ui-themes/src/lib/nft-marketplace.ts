@@ -1,5 +1,14 @@
 import { createTheme } from "@mui/material/styles";
-import { AppBar, styled, Switch, TableRow, ThemeOptions } from "@mui/material";
+import {
+  AppBar,
+  styled,
+  Switch,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
+  ThemeOptions,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
@@ -72,9 +81,44 @@ export const FooterBar = styled(AppBar)(({ theme }) => ({
   },
 }));
 
+export const PaperTable = styled(Table)(({ theme }) => ({
+  borderCollapse: "separate",
+  borderSpacing: "1em",
+}));
+
+export const PaperTableHead = styled(TableHead)(({ theme }) => ({
+  borderBottom: "none",
+}));
+
 export const PaperTableRow = styled(TableRow)(({ theme }) => ({
-  background: "#FFF",
+  background: "transparent",
+  backgroundColor: "transparent",
   borderRadius: "24px",
+  boxShadow: "2px 12px 33px #7E9AA926",
+  border: "none",
+  borderBottom: "none",
+  position: "relative",
+}));
+
+export const PaperTableCell = styled(TableCell)(({ theme }) => ({
+  border: "none",
+  borderBottom: "none",
+  background: "transparent",
+  backgroundColor: "transparent",
+  position: "relative",
+  padding: "2em 0",
+  ":first-child": {
+    borderTopLeftRadius: "24px",
+    borderBottomLeftRadius: "24px",
+    borderWidth: "0",
+    paddingLeft: "2em",
+  },
+  ":list-child": {
+    borderTopRightRadius: "24px",
+    borderBottomRightRadius: "24px",
+    borderWidth: "0",
+    paddingRight: "2em",
+  },
 }));
 
 // global theme options that apply to both light and dark
@@ -113,7 +157,7 @@ const globalTheme: ThemeOptions = {
             marginTop: "1em",
             borderRadius: "10px",
             padding: "0.5em",
-            boxShadow: "2px 12px 33px rgb(0 0 0 / 20%)",
+            boxShadow: "2px 12px 33px #7E9AA926",
           },
           "&.MuiAccordion-root, &.MuiAccordion-root:last-of-type": {
             padding: "1.75em 0 1em 0",
