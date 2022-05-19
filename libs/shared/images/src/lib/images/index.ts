@@ -45,6 +45,8 @@ import AboutLiquidity from "./about_page/About_Liquidity.png";
 import AboutFinancialNFT from "./about_page/About_Financial_NFT.png";
 import AboutUSDB from "./about_page/About_USDB.png";
 import AboutUSDBBank from "./about_page/About_USDB_Bank.png";
+import AboutNFTMarketplace from "./about_page/About_NFT_Marketplace.png";
+import AboutBalanceEcosystem from "./about_page/About_Balance_ecosystem.png";
 
 export {
   NFTsIcon,
@@ -94,4 +96,6 @@ export {
   AboutLiquidity,
   AboutUSDB,
   AboutUSDBBank,
+  AboutBalanceEcosystem,
+  AboutNFTMarketplace,
 };

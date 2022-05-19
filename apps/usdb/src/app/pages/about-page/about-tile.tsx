@@ -58,7 +58,7 @@ export function AboutTile({
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
-          alignItems: "center",
+          alignItems: "start",
           paddingTop: "30px",
         }}
       >
@@ -87,16 +87,29 @@ export function AboutTile({
               paddingTop: "30px",
             }}
           >
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleOnClick}
-              sx={{ px: "4em", display: { md: "flex" } }}
-              className={style["link"]}
-              disabled={link === undefined}
-            >
-              Enter App
-            </Button>
+            {link === undefined ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOnClick}
+                sx={{ px: "4em", display: { md: "flex" } }}
+                className={style["link"]}
+                disabled={link === undefined}
+              >
+                Coming Soon
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOnClick}
+                sx={{ px: "4em", display: { md: "flex" } }}
+                className={style["link"]}
+                disabled={link === undefined}
+              >
+                Enter App
+              </Button>
+            )}
             {docsLink !== undefined ? (
               <Button
                 variant="contained"

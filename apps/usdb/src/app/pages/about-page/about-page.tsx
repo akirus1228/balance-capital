@@ -16,8 +16,8 @@ import {
   AboutLiquidity,
   AboutUSDB,
   AboutUSDBBank,
-  BalanceDefine1,
-  BalanceDefine2,
+  AboutBalanceEcosystem,
+  AboutNFTMarketplace,
 } from "@fantohm/shared/images";
 import AboutTile from "./about-tile";
 
@@ -33,6 +33,92 @@ export const AboutPage = (): JSX.Element => {
 
   return (
     <>
+      <Grid
+        container
+        rowSpacing={6}
+        className={style["productGrid"]}
+        style={{ marginTop: "50px" }}
+      >
+        <Grid
+          item
+          xs={6}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingLeft: { sm: "0%", md: "5%" },
+            paddingRight: { sm: "0%", md: "5%" },
+            width: { sm: "300px", md: "100%" },
+          }}
+        >
+          <img
+            src={AboutBalanceEcosystem as string}
+            style={{ width: "100%" }}
+            className={style["image"]}
+            alt=""
+          />
+        </Grid>
+        <Grid
+          item
+          sm={12}
+          md={6}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "start",
+            alignItems: "center",
+            paddingTop: "30px",
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              flexDirection: "column",
+            }}
+            className={style["iconLinkContainer"]}
+          >
+            <Grid item xs={12}>
+              <h1 className={style["title"]}>The Balance Ecosystem</h1>
+            </Grid>
+
+            <Grid item xs={12}>
+              <h1 className={style["text"]}>
+                The Balance Ecosystem is an open-source economy of conjoined banking and
+                commerce initiatives formed in March of 2022.The Balance Ecosystem is an
+                open-source economy of conjoined banking and commerce initiatives formed
+                in March of 2022 with the unveiling of investment opportunities derived
+                solely from the technical application, maintenance, and consumer use of
+                USDB.
+              </h1>
+            </Grid>
+            <Grid item xs={12}>
+              <h1 className={style["text"]}>
+                The Balance Ecosystem depends on the administration of the Balance
+                Organisation to produce and refine the collected systems of FHM & USDB’s
+                use cases until such a time as they might be further decentralised.
+                Through a continuing dialogue between the Balance Organisation and the FHM
+                Stakeholders’ DAO via governance throughout the development and
+                implementation of these systems, the Balance Ecosystem aims to produce the
+                first, ever, decentralised reserve currency.
+              </h1>
+            </Grid>
+          </Box>
+        </Grid>
+        <Grid
+          item
+          xs={12}
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            paddingTop: "30px",
+          }}
+        >
+          <img src={AboutDivider as string} style={{ width: "100%" }} />
+        </Grid>
+      </Grid>
       <AboutTile
         icon={AboutUSDB}
         title="USDB Stablecoin"
@@ -64,7 +150,7 @@ export const AboutPage = (): JSX.Element => {
         title="USDB Bank"
         text="We are building a lending and borrowing structure that will fall under our USDBank which you may have already seen teased in the usdbalance.com site ui."
       />
-      <AboutTile icon={AboutUSDBBank} title="NFT Marketplace" text="Coming soon" />
+      <AboutTile icon={AboutNFTMarketplace} title="NFT Marketplace" text="Coming soon" />
       <AboutTile
         icon={AboutFinancialNFT}
         title="Financial NFTs"

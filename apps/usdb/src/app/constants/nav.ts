@@ -33,6 +33,9 @@ export const footerItems: FooterItem[] = [
   {
     label: "Products",
     pages: [
+      { title: "FHM", href: "https://fantohm.com/" },
+      { title: "NFFT Lending", href: "https://fantohm.com/" },
+      { title: "Dex", href: "https://app.fantohm.com/#/dex" },
       { title: "Tradfi", href: "/trad-fi" },
       { title: "Stablecoin Farming", href: "/staking" },
       { title: "xFHM", href: "", params: { comingSoon: true } },
