@@ -218,7 +218,7 @@ export const backendApi = createApi({
   }),
   endpoints: (builder) => ({
     // Assets
-    getAssets: builder.query<Asset[], BackendAssetQueryParams>({
+    getAssets: builder.query<Asset[], Partial<BackendAssetQueryParams>>({
       query: (queryParams) => ({
         url: `asset/all`,
         params: {
@@ -256,7 +256,7 @@ export const backendApi = createApi({
       invalidatesTags: (result, error, arg) => [{ type: "Asset", id: arg.id }],
     }),
     // Listings
-    getListings: builder.query<Listing[], ListingQueryParam>({
+    getListings: builder.query<Listing[], Partial<ListingQueryParam>>({
       query: (queryParams) => ({
         url: `asset-listing/all`,
         params: {
@@ -310,7 +310,7 @@ export const backendApi = createApi({
       invalidatesTags: ["Terms", "Asset", "Terms"],
     }),
     // Loans
-    getLoans: builder.query<Loan[], BackendLoanQueryParams>({
+    getLoans: builder.query<Loan[], Partial<BackendLoanQueryParams>>({
       query: (queryParams) => ({
         url: `loan/all`,
         params: {

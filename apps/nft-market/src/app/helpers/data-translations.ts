@@ -6,7 +6,6 @@ import {
   Asset,
   AssetStatus,
   CreateListingRequest,
-  IncludesTerm,
   IncludesTerms,
   Listing,
   ListingStatus,

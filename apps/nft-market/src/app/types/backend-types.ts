@@ -1,9 +1,8 @@
 // request types
-export interface CreateListingRequest {
+export type CreateListingRequest = {
   asset: Asset | string;
-  term: Terms | string; //convert term to term for api
   status: ListingStatus;
-}
+} & IncludesTerms;
 
 // response types
 export type LoginResponse = User;
@@ -25,8 +24,7 @@ export type AllListingsResponse = {
 export type CreateListingResponse = {
   asset: Asset;
   status: ListingStatus;
-  term: Terms;
-};
+} & IncludesTerms;
 
 // data models
 export enum AssetStatus {
@@ -85,10 +83,6 @@ export enum ListingStatus {
 }
 
 export type IncludesTerms = {
-  term: Terms;
-};
-
-export type IncludesTerm = {
   term: Terms;
 };
 
@@ -250,8 +244,8 @@ export type Offer = {
   id?: string;
   lender: User;
   assetListing: Listing;
-  term: Terms;
-} & StandardBackendObject;
+} & StandardBackendObject &
+  IncludesTerms;
 
 export type BackendStandardQuery = {
   skip: number;

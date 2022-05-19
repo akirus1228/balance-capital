@@ -10,7 +10,7 @@ import {
   Offer,
 } from "../../types/backend-types";
 import { useCallback, useEffect, useState } from "react";
-import { useCreateLoanMutation } from "../../api/backend-api";
+import { useCreateLoanMutation, useGetAssetsQuery } from "../../api/backend-api";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
@@ -34,6 +34,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const { user } = useSelector((state: RootState) => state.backend);
   const { address: walletAddress, provider } = useWeb3Context();
   const { repaymentTotal, repaymentAmount } = useTermDetails(offer.term);
+
   // createloan backend api call
   const [
     createLoan,
@@ -47,6 +48,16 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
 
   const asset = useSelector((state: RootState) =>
     selectAssetById(state, offer.assetListing.asset.id || "")
+  );
+
+  // getAssets backend api call
+  const { data: assets, isLoading: isAssetsLoading } = useGetAssetsQuery(
+    {
+      openseaIds: [asset.openseaId || ""],
+    },
+    {
+      skip: !asset || !!asset.id,
+    }
   );
 
   // select perm status for this asset from state
