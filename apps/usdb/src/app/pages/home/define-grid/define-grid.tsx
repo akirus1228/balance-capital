@@ -2,8 +2,114 @@ import { Box, Button, Grid, OutlinedInput, Typography } from "@mui/material";
 import IconLink from "../../../components/icon-link/icon-link";
 import style from "./define-grid.module.scss";
 import { BalanceDefine1, BalanceDefine2 } from "@fantohm/shared/images";
+import { error, info } from "@fantohm/shared-web3";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 
 export const DefineGrid = (): JSX.Element => {
+  const [websiteUrl, setWebsiteUrl] = useState("");
+  const [organizationName, setOrganizationName] = useState("");
+  const [sector, setSector] = useState("");
+  const [product, setProduct] = useState("");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+
+  async function updateContact() {
+    const options = {
+      method: "PUT",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({
+        email: email,
+        attributes: {
+          name: name,
+          email: email,
+          organizationName: organizationName,
+          sector: sector,
+          websiteUrl: websiteUrl,
+          product: product,
+        },
+      }),
+    };
+
+    await fetch("https://api.sendinblue.com/v3/contacts", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+  }
+
+  async function createContact() {
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({
+        email: email,
+        attributes: {
+          name: name,
+          email: email,
+          organizationName: organizationName,
+          sector: sector,
+          websiteUrl: websiteUrl,
+          product: product,
+        },
+        updateEnabled: true,
+      }),
+    };
+
+    const response = await fetch("https://api.sendinblue.com/v3/contacts", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch(async (err) => await updateContact());
+  }
+
+  const onSubmitEmail = async () => {
+    if (
+      email === "" ||
+      name === "" ||
+      organizationName === "" ||
+      sector === "" ||
+      product === "" ||
+      websiteUrl === ""
+    ) {
+      // eslint-disable-next-line no-alert
+      return dispatch(error("Please enter a valid value for each field!"));
+    }
+    await createContact();
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({ emails: [email] }),
+    };
+
+    await fetch("https://api.sendinblue.com/v3/contacts/lists/3/contacts/add", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+    setEmail("");
+    setSector("");
+    setOrganizationName("");
+    setName("");
+    setProduct("");
+    setWebsiteUrl("");
+    dispatch(info("Success!"));
+    return;
+  };
+
   return (
     <Grid
       container
@@ -161,14 +267,26 @@ export const DefineGrid = (): JSX.Element => {
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your name? *"
+          value={name}
+          onChange={(e) => {
+            setName(e.target.value);
+          }}
         />
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s the name of your organization?"
+          value={organizationName}
+          onChange={(e) => {
+            setOrganizationName(e.target.value);
+          }}
         />
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your website url?"
+          value={websiteUrl}
+          onChange={(e) => {
+            setWebsiteUrl(e.target.value);
+          }}
         />
       </Grid>
       <Grid
@@ -186,14 +304,26 @@ export const DefineGrid = (): JSX.Element => {
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your email address? *"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.target.value);
+          }}
         />
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What sector do you operate within?"
+          value={sector}
+          onChange={(e) => {
+            setSector(e.target.value);
+          }}
         />
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What product are you interested in?"
+          value={product}
+          onChange={(e) => {
+            setProduct(e.target.value);
+          }}
         />
       </Grid>
       <Grid
@@ -225,6 +355,7 @@ export const DefineGrid = (): JSX.Element => {
           color="primary"
           sx={{ px: "6em", display: { md: "flex" } }}
           className={style["link"]}
+          onClick={onSubmitEmail}
         >
           Submit
         </Button>

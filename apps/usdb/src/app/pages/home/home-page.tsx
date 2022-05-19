@@ -30,11 +30,47 @@ export const HomePage = (): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const dispatch = useDispatch();
 
+  async function createContact() {
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({ updateEnabled: true, email: email }),
+    };
+
+    await fetch("https://api.sendinblue.com/v3/contacts", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+  }
+
   const onSubmitEmail = async () => {
-    if (!email.includes("@")) {
+    if (!email.includes("@") && !email.includes(".")) {
       // eslint-disable-next-line no-alert
       return dispatch(error("Please enter a valid email!"));
     }
+    await createContact();
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({ emails: [email] }),
+    };
+
+    await fetch("https://api.sendinblue.com/v3/contacts/lists/2/contacts/add", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+    setEmail("");
+    dispatch(info("Success!"));
     return;
   };
 

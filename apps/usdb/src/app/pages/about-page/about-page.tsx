@@ -51,12 +51,12 @@ export const AboutPage = (): JSX.Element => {
         icon={AboutBridge}
         title="DEX & Bridge"
         text="USDB and FHM are expanding beyond the EVM realm with the first bridge to Terra being completed in the near future. We have successfully bridged both ways and are now awaiting the completion of audits to confirm our capability in this regard."
-        link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
+        link="https://app.fantohm.com/#/dex"
       />
       <AboutTile
         icon={AboutLiquidity}
         title="Liquidity Solution"
-        text="Will allow sFHM to be used as a tool for funding and seeding USDB lp pools as a business development tool and consumer investment option. This means every FHM stakeholder has access to everything necessary to new startups on the blockchain."
+        text="We understand that managing token liquidity is tough. We’ve built the perfect solution to help projects maximise the liquidity they can unlock. Making sure deep liquidity is available for your ecosystem. Helping you achieve your long-term mission and short-term needs."
         link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
       />
       <AboutTile

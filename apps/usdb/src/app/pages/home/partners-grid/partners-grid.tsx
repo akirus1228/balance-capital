@@ -69,78 +69,112 @@ export const PartnersGrid = (): JSX.Element => {
           justifyContent="center"
         >
           <Grid item md={3} xs={6}>
-            <img src={SpookySwapIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://spookyswap.finance/">
+              <img
+                src={SpookySwapIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              title="FHM"
-              src={DebridgeIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://debridge.finance/">
+              <img
+                title="FHM"
+                src={DebridgeIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              title="Liquidity Solutions"
-              src={LiquidDriverIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://www.liquiddriver.finance/">
+              <img
+                title="Liquidity Solutions"
+                src={LiquidDriverIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              title="NFT Lending"
-              src={RangoIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://rango.exchange/">
+              <img
+                title="NFT Lending"
+                src={RangoIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              title="Financial NFTs"
-              src={BeetsIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://beets.fi/#/">
+              <img
+                title="Financial NFTs"
+                src={BeetsIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              title="USDB Bank"
-              src={SynapseIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://synapseprotocol.com/landing">
+              <img
+                title="USDB Bank"
+                src={SynapseIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={IncognitoIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://incognito.org/">
+              <img src={IncognitoIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={HuobiIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://www.huobiwallet.com/en">
+              <img src={HuobiIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img
-              src={CoinTelegramIcon}
-              alt="USDB logo"
-              className={style["partnerIcon"]}
-            />
+            <a href="https://cointelegraph.com/">
+              <img
+                src={CoinTelegramIcon}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={DefiantIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://thedefiant.io/">
+              <img src={DefiantIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={CIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://thedefiant.io/">
+              <img src={CIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={UnknownIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://www.xdefi.io/">
+              <img src={UnknownIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={DIAIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://www.diadata.org/">
+              <img src={DIAIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={WanchainIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://www.wanchain.org/">
+              <img src={WanchainIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
           <Grid item md={3} xs={6}>
-            <img src={WarpIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            <a href="https://www.warp.finance/">
+              <img src={WarpIcon} alt="USDB logo" className={style["partnerIcon"]} />
+            </a>
           </Grid>
         </Grid>
       </Grid>

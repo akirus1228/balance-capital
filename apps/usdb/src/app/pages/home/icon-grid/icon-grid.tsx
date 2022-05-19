@@ -81,7 +81,7 @@ export const IconGrid = (): JSX.Element => {
         <IconLink
           title="Dex & Bridge"
           icon={BridgeIcon}
-          link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
+          link="https://app.fantohm.com/#/dex"
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
