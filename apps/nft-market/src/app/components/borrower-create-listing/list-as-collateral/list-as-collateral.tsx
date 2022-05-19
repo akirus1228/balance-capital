@@ -2,7 +2,7 @@ import { Box, Button, Dialog, IconButton, Typography } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import style from "./list-as-collateral.module.scss";
 import { useState } from "react";
-import { TermsForm } from "./terms-form/terms-form";
+import { TermsForm } from "../../terms-form/terms-form";
 import { Asset } from "../../../types/backend-types";
 
 export interface ListAsCollateralProps {
@@ -11,7 +11,7 @@ export interface ListAsCollateralProps {
   onClose: (value: boolean) => void;
 }
 
-enum DialogState {
+export enum DialogState {
   DISCLAIMER,
   TERMS,
 }
@@ -70,7 +70,9 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
       </Box>
       <Box className={`flex fc ${style["body"]}`}>
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
-        {dialogState === DialogState.TERMS && <TermsForm asset={props.asset} />}
+        {dialogState === DialogState.TERMS && (
+          <TermsForm asset={props.asset} onClose={onClose} />
+        )}
       </Box>
     </Dialog>
   );

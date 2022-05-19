@@ -1,5 +1,5 @@
 import { CustomInnerSwitch, setTheme } from "@fantohm/shared-ui-themes";
-import { useWeb3Context } from "@fantohm/shared-web3";
+import { isDev, NetworkIds, useWeb3Context } from "@fantohm/shared-web3";
 import {
   Avatar,
   Box,
@@ -41,7 +41,7 @@ export const UserMenu = (): JSX.Element => {
   const { connect, disconnect, connected, address } = useWeb3Context();
 
   const onClickConnect = (event: MouseEvent<HTMLButtonElement>) => {
-    connect(false);
+    connect(false, isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum);
   };
 
   // theme control

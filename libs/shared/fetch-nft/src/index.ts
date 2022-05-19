@@ -48,3 +48,4 @@ export class FetchNFTClient {
 }
 
 export * from "./utils/types";
+export * from "./eth/helpers";

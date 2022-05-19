@@ -1,37 +1,33 @@
-import { defaultNetworkId, useWeb3Context } from "@fantohm/shared-web3";
-import { Box, Container, Grid } from "@mui/material";
-import { useEffect } from "react";
+import { useWeb3Context } from "@fantohm/shared-web3";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
+import { useGetListingsQuery } from "../../api/backend-api";
+import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
 import { RootState } from "../../store";
-import { loadAssetsFromOpensea } from "../../store/reducers/asset-slice";
-import { Asset } from "../../types/backend-types";
+import { selectMyAssets } from "../../store/selectors/asset-selectors";
 import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
-  const dispatch = useDispatch();
-  const { chainId, address } = useWeb3Context();
-  const assetState = useSelector((state: RootState) => state.assets);
-  const myAssets = useSelector((state: RootState) =>
-    state.assets.assets.filter(
-      (asset: Asset) => asset.owner?.address.toLowerCase() === address.toLowerCase()
-    )
+  const { address } = useWeb3Context();
+  const myAssets = useSelector((state: RootState) => selectMyAssets(state, address));
+
+  // load assets from opensea api
+  const { data: assets, isLoading: assetsLoading } = useGetOpenseaAssetsQuery(
+    { owner: address, limit: 50 },
+    { skip: !address }
   );
 
-  // Load assets and nfts in current wallet
-  useEffect(() => {
-    if (
-      address &&
-      chainId &&
-      assetState.assetStatus !== "loading" &&
-      assetState.nextOpenseaLoad < Date.now()
-    ) {
-      dispatch(
-        loadAssetsFromOpensea({ networkId: chainId || defaultNetworkId, address })
-      );
-    }
-  }, [chainId, address, assetState.assetStatus]);
+  // using the opensea assets, crosscheck with backend api for correlated data
+  const { data, isLoading: isAssetLoading } = useGetListingsQuery(
+    {
+      openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
+      skip: 0,
+      take: 50,
+    },
+    { skip: !assets }
+  );
 
   return (
     <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
@@ -42,6 +38,7 @@ export const BorrowPage = (): JSX.Element => {
             <BorrowerAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
+            {(assetsLoading || isAssetLoading) && <CircularProgress />}
             <AssetList assets={myAssets} type="borrow" />
           </Grid>
         </Grid>
