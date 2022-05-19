@@ -195,16 +195,23 @@ export type Loan = {
   term: Terms;
 } & StandardBackendObject;
 
-type Updatable = {
+export type Updatable = {
   updatedAt?: string;
 };
 
-type Deleteable = {
+export type Deleteable = {
   deletedAt?: string;
 };
 
-type Creatable = {
+export type Creatable = {
   createdAt?: string;
 };
 
 export type StandardBackendObject = Updatable & Creatable & Deleteable;
+
+export type Offer = {
+  id?: string;
+  lender: User;
+  assetListing: Listing;
+  term: Terms;
+} & StandardBackendObject;

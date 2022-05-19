@@ -21,6 +21,7 @@ import {
   NotificationStatus,
   CreateListingResponse,
   Loan,
+  Offer,
 } from "../types/backend-types";
 import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
@@ -190,7 +191,16 @@ export const markAsRead = async (
 
 export const backendApi = createApi({
   reducerPath: "backendApi",
-  tagTypes: ["Asset", "Listing", "Loan", "Notification", "Order", "Terms", "User"],
+  tagTypes: [
+    "Asset",
+    "Listing",
+    "Loan",
+    "Notification",
+    "Offer",
+    "Order",
+    "Terms",
+    "User",
+  ],
   baseQuery: fetchBaseQuery({
     baseUrl: NFT_MARKETPLACE_API_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -200,27 +210,7 @@ export const backendApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getListings: builder.query<Listing[], ListingQueryParam>({
-      query: (queryParams) => ({
-        url: `asset-listing/all`,
-        params: queryParams,
-      }),
-      transformResponse: (response: AllListingsResponse, meta, arg) =>
-        response.data.map((listing: BackendListing) => {
-          const { term, ...formattedListing } = listing;
-          return { ...formattedListing, terms: term } as Listing;
-        }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const { data }: { data: Listing[] } = await queryFulfilled;
-        const assets = data.map((listing: Listing) => listing.asset);
-        dispatch(updateListings(listingAryToListings(data)));
-        dispatch(updateAssets(assetAryToAssets(assets)));
-      },
-      providesTags: (result, error, queryParams) =>
-        result
-          ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
-          : ["Listing"],
-    }),
+    // Assets
     getAssets: builder.query<Asset[], BackendAssetQueryParam>({
       query: (queryParams) => ({
         url: `asset/all`,
@@ -255,6 +245,28 @@ export const backendApi = createApi({
       },
       invalidatesTags: (result, error, arg) => [{ type: "Asset", id: arg.id }],
     }),
+    // Listings
+    getListings: builder.query<Listing[], ListingQueryParam>({
+      query: (queryParams) => ({
+        url: `asset-listing/all`,
+        params: queryParams,
+      }),
+      transformResponse: (response: AllListingsResponse, meta, arg) =>
+        response.data.map((listing: BackendListing) => {
+          const { term, ...formattedListing } = listing;
+          return { ...formattedListing, terms: term } as Listing;
+        }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Listing[] } = await queryFulfilled;
+        const assets = data.map((listing: Listing) => listing.asset);
+        dispatch(updateListings(listingAryToListings(data)));
+        dispatch(updateAssets(assetAryToAssets(assets)));
+      },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
+          : ["Listing"],
+    }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
       query: (body) => {
         return {
@@ -274,6 +286,7 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Listing", "Asset", "Terms"],
     }),
+    // Terms
     updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
       query: ({ id, ...patch }) => ({
         url: `term/${id}`,
@@ -282,6 +295,7 @@ export const backendApi = createApi({
       }),
       invalidatesTags: ["Terms", "Asset", "Terms"],
     }),
+    // Loans
     getLoans: builder.query<Loan[], BackendAssetQueryParam>({
       query: (queryParams) => ({
         url: `loan/all`,
@@ -324,13 +338,24 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
+    // Offers
+    createOffer: builder.mutation<Offer, Partial<Offer>>({
+      query: (body) => {
+        return {
+          url: `offer`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Offer"],
+    }),
   }),
 });
+
 export const {
   useGetAssetQuery,
   useGetAssetsQuery,
   useDeleteAssetMutation,
-  // useGetListingQuery,
   useGetListingsQuery,
   useDeleteListingMutation,
   useGetLoansQuery,
@@ -338,4 +363,5 @@ export const {
   useDeleteLoanMutation,
   useCreateListingMutation,
   useUpdateTermsMutation,
+  useCreateOfferMutation,
 } = backendApi;

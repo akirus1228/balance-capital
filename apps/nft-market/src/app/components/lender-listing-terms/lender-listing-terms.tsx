@@ -24,6 +24,8 @@ import {
 import style from "./lender-listing-terms.module.scss";
 import { RootState } from "../../store";
 import { useTermDetails } from "../../hooks/use-term-details";
+import TermsForm from "../terms-form/terms-form";
+import MakeOffer from "../make-offer/make-offer";
 
 export interface LenderListingTermsProps {
   listing: Listing;
@@ -33,22 +35,32 @@ export interface LenderListingTermsProps {
 export function LenderListingTerms(props: LenderListingTermsProps) {
   const dispatch = useDispatch();
   const { provider, chainId, address } = useWeb3Context();
+  // local store of terms to pass between methods
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
+  // logged in user
   const { user } = useSelector((state: RootState) => state.backend);
+  // status of contract calls for allowance and platform fee
   const { checkErc20AllowanceStatus, requestErc20AllowanceStatus, platformFee } =
     useSelector((state: RootState) => state.wallet);
+  // status that tracks the status of a createLoan contract call
   const { loanCreationStatus } = useSelector((state: RootState) => state.loans);
+  // select the USDB allowance provided to lending contract for this address
   const allowance = useSelector((state: RootState) =>
     selectErc20AllowanceByAddress(state, {
       walletAddress: address,
       erc20TokenAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
     })
   );
+
+  // helper to calculate term details like repayment amount
   const { repaymentAmount } = useTermDetails(props.listing.terms);
+  // createloan backend api call
   const [
     createLoan,
     { isLoading: isCreating, error: createLoanError, data: createLoanData },
   ] = useCreateLoanMutation();
+
+  // query assets from the backend API
   const { data: asset, isLoading: isAssetLoading } = useGetAssetQuery(
     props.listing.asset.id,
     { skip: !props.listing.asset }
@@ -137,8 +149,20 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     }
   }, [chainId, address, provider]);
 
+  // make offer code
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const handleMakeOffer = () => {
+    setDialogOpen(true);
+  };
+
+  const onListDialogClose = (accepted: boolean) => {
+    console.log(accepted);
+    setDialogOpen(false);
+  };
+
   return (
     <Container sx={props.sx}>
+      <MakeOffer onClose={onListDialogClose} open={dialogOpen} listing={props.listing} />
       <Paper>
         <Box className="flex fr fj-sa fw">
           <Box className="flex fc">
@@ -171,9 +195,13 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
               {props.listing.terms.apr}%
             </Typography>
           </Box>
-          <Box className="flex fc">
-            <Button variant="contained">Make Offer</Button>
-          </Box>
+          {!!allowance && allowance >= props.listing.terms.amount * (1 + platformFee) && (
+            <Box className="flex fc">
+              <Button variant="contained" onClick={handleMakeOffer}>
+                Make Offer
+              </Button>
+            </Box>
+          )}
           <Box className="flex fc">
             {(!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) &&
               checkErc20AllowanceStatus === "idle" &&
