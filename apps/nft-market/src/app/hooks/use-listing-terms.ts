@@ -29,20 +29,20 @@ export const useListingTermDetails = (listing: Listing): ListingTermDetails => {
   }, [amount, duration, apr]);
 
   // handle internal updates
-  // only update value if the terms have changed
+  // only update value if the term have changed
   useEffect(() => {
-    if (listing && listing.terms) {
-      if (listing.terms.amount && listing.terms.amount !== amount) {
-        setAmount(listing.terms.amount);
+    if (listing && listing.term) {
+      if (listing.term.amount && listing.term.amount !== amount) {
+        setAmount(listing.term.amount);
       }
-      if (listing.terms.apr && listing.terms.apr !== apr) {
-        setApr(listing.terms.apr);
+      if (listing.term.apr && listing.term.apr !== apr) {
+        setApr(listing.term.apr);
       }
-      if (listing.terms.duration && listing.terms.duration !== duration) {
-        setDuration(listing.terms.duration);
+      if (listing.term.duration && listing.term.duration !== duration) {
+        setDuration(listing.term.duration);
       }
     }
-  }, [JSON.stringify(listing.terms)]);
+  }, [JSON.stringify(listing.term)]);
 
   return { repaymentAmount, repaymentTotal, amount, apr, duration };
 };

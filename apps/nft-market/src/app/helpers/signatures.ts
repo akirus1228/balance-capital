@@ -10,7 +10,7 @@ export const signTerms = async (
   chainId: number,
   nftContractAddress: string,
   tokenId: string,
-  terms: Terms
+  term: Terms
 ): Promise<string> => {
   const payload = ethers.utils.defaultAbiCoder.encode(
     [
@@ -28,9 +28,9 @@ export const signTerms = async (
       nftContractAddress,
       addresses[chainId]["USDB_ADDRESS"],
       tokenId,
-      terms.duration,
-      ethers.utils.parseEther(terms.amount.toString()),
-      terms.apr * 100,
+      term.duration,
+      ethers.utils.parseEther(term.amount.toString()),
+      term.apr * 100,
       nftTokenType.ERC721,
     ]
   );

@@ -33,7 +33,7 @@ const ListedInfo = ({
         <span className={style["strong"]}>{listing.asset.name} </span>
         <span>is currently listed seeking a loan amount of &nbsp;</span>
         <span className={style["strong"]}>
-          of {formatCurrency(listing.terms.amount)} in USDB.{" "}
+          of {formatCurrency(listing.term.amount)} in USDB.{" "}
         </span>
         <span>Listing expires </span>
         <span className={style["strong"]}>11:53 PM, 20 July 2022 (GMT +1)</span>
@@ -71,7 +71,7 @@ const LockedInfo = ({
 };
 
 export const StatusInfo = ({ asset, listing, loan }: StatusInfoProps): JSX.Element => {
-  const { repaymentTotal } = useTermDetails(listing?.terms);
+  const { repaymentTotal } = useTermDetails(listing?.term);
 
   console.log(loan);
 

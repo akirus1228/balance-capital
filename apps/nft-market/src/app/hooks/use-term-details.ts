@@ -9,7 +9,7 @@ export type TermDetails = {
   duration: number;
 };
 
-export const useTermDetails = (terms: Terms | undefined): TermDetails => {
+export const useTermDetails = (term: Terms | undefined): TermDetails => {
   console.log("useListingTerms");
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);
@@ -29,20 +29,20 @@ export const useTermDetails = (terms: Terms | undefined): TermDetails => {
   }, [amount, duration, apr]);
 
   // handle internal updates
-  // only update value if the terms have changed
+  // only update value if the term have changed
   useEffect(() => {
-    if (terms) {
-      if (terms.amount && terms.amount !== amount) {
-        setAmount(terms.amount);
+    if (term) {
+      if (term.amount && term.amount !== amount) {
+        setAmount(term.amount);
       }
-      if (terms.apr && terms.apr !== apr) {
-        setApr(terms.apr);
+      if (term.apr && term.apr !== apr) {
+        setApr(term.apr);
       }
-      if (terms.duration && terms.duration !== duration) {
-        setDuration(terms.duration);
+      if (term.duration && term.duration !== duration) {
+        setDuration(term.duration);
       }
     }
-  }, [JSON.stringify(terms)]);
+  }, [JSON.stringify(term)]);
 
   return { repaymentAmount, repaymentTotal, amount, apr, duration };
 };

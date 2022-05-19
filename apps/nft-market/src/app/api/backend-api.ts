@@ -8,7 +8,6 @@ import {
   AllAssetsResponse,
   AllListingsResponse,
   Asset,
-  BackendListing,
   CreateAssetResponse,
   CreateListingRequest,
   AllNotificationsResponse,
@@ -24,6 +23,8 @@ import {
   Offer,
   BackendAssetQueryParams,
   BackendLoanQueryParams,
+  BackendOfferQueryParams,
+  BackendStandardQuery,
 } from "../types/backend-types";
 import { ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
@@ -32,7 +33,6 @@ import {
   dropHelperDates,
   listingAryToListings,
   listingToCreateListingRequest,
-  termsToTerm,
 } from "../helpers/data-translations";
 import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
 import { updateListings } from "../store/reducers/listing-slice";
@@ -84,17 +84,17 @@ export const getListingByOpenseaIds = (
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
       const { term, ...listing } = resp.data.data[0];
-      return { ...listing, terms: term };
+      return { ...listing, term: term };
     });
 };
 
 export const createListing = (
   signature: string,
   asset: Asset,
-  terms: Terms
+  term: Terms
 ): Promise<Listing | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const listingParams = listingToCreateListingRequest(asset, terms);
+  const listingParams = listingToCreateListingRequest(asset, term);
   // post
   return axios
     .post(url, listingParams, {
@@ -127,7 +127,7 @@ const createListingResponseToListing = (
   createListingResponse: CreateListingResponse
 ): Listing => {
   const { term, ...listing } = createListingResponse;
-  return { ...listing, terms: term };
+  return { ...listing, term: term };
 };
 
 export const getNotifications = (
@@ -191,6 +191,11 @@ export const markAsRead = async (
     });
 };
 
+const standardQueryParams: BackendStandardQuery = {
+  skip: 0,
+  take: 50,
+};
+
 export const backendApi = createApi({
   reducerPath: "backendApi",
   tagTypes: [
@@ -216,7 +221,10 @@ export const backendApi = createApi({
     getAssets: builder.query<Asset[], BackendAssetQueryParams>({
       query: (queryParams) => ({
         url: `asset/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: AllAssetsResponse, meta, arg) => response.data,
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
@@ -251,12 +259,15 @@ export const backendApi = createApi({
     getListings: builder.query<Listing[], ListingQueryParam>({
       query: (queryParams) => ({
         url: `asset-listing/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: AllListingsResponse, meta, arg) =>
-        response.data.map((listing: BackendListing) => {
+        response.data.map((listing: Listing) => {
           const { term, ...formattedListing } = listing;
-          return { ...formattedListing, terms: term } as Listing;
+          return { ...formattedListing, term: term } as Listing;
         }),
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         const { data }: { data: Listing[] } = await queryFulfilled;
@@ -295,13 +306,17 @@ export const backendApi = createApi({
         method: "PUT",
         body: patch,
       }),
+      transformResponse: (response: Terms, meta, arg) => response,
       invalidatesTags: ["Terms", "Asset", "Terms"],
     }),
     // Loans
     getLoans: builder.query<Loan[], BackendLoanQueryParams>({
       query: (queryParams) => ({
         url: `loan/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: { count: number; data: Loan[] }, meta, arg) =>
         response.data,
@@ -312,12 +327,13 @@ export const backendApi = createApi({
     }),
     createLoan: builder.mutation<Loan, Loan>({
       query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
+        const { collection, ...asset } = dropHelperDates({ ...assetListing.asset });
         const loanRequest = {
           ...loan,
           assetListing: {
-            ...termsToTerm(dropHelperDates({ ...assetListing })),
-            asset: dropHelperDates({ ...assetListing.asset }),
-            term: dropHelperDates({ ...assetListing.terms }),
+            ...dropHelperDates({ ...assetListing }),
+            asset,
+            term: dropHelperDates({ ...assetListing.term }),
           },
           borrower: dropHelperDates({ ...borrower }),
           lender: dropHelperDates({ ...lender }),
@@ -342,10 +358,13 @@ export const backendApi = createApi({
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
     // Offers
-    getOffers: builder.query<Offer[], BackendAssetQueryParams>({
+    getOffers: builder.query<Offer[], Partial<BackendOfferQueryParams>>({
       query: (queryParams) => ({
         url: `offer/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: { count: number; data: Offer[] }, meta, arg) =>
         response.data,
@@ -364,6 +383,15 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Offer"],
     }),
+    deleteOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...offer }) => {
+        return {
+          url: `offer/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Asset", "Listing", "Terms", "Offer"],
+    }),
   }),
 });
 
@@ -380,4 +408,5 @@ export const {
   useUpdateTermsMutation,
   useGetOffersQuery,
   useCreateOfferMutation,
+  useDeleteOfferMutation,
 } = backendApi;

@@ -59,7 +59,7 @@ export const HomePage = (): JSX.Element => {
           </Box>
           <Box sx={{ borderTop: "1px solid #f2f3f3", padding: "50px" }}>
             <Typography>
-              Lend with USDB and earn a passive yield, on your own terms.
+              Lend with USDB and earn a passive yield, on your own term.
             </Typography>
           </Box>
         </Box>

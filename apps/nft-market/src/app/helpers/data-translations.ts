@@ -61,12 +61,12 @@ export const dropHelperDates = <T extends StandardBackendObject>(obj: T): T => {
 
 export const listingToCreateListingRequest = (
   asset: Asset,
-  terms: Terms
+  term: Terms
 ): CreateListingRequest => {
-  // convert terms to term
+  // convert term to term
   const tempListing: CreateListingRequest = {
     asset: asset,
-    term: terms,
+    term: term,
     status: ListingStatus.Listed,
   };
   // if the asset isn't in the database we need to pass the asset without the ID
@@ -80,26 +80,4 @@ export const listingToCreateListingRequest = (
   }
 
   return tempListing;
-};
-
-export const termsToTerm = <T extends IncludesTerms>(obj: T): IncludesTerm => {
-  // convert terms to term
-  const { terms, ...objNoTerms } = obj;
-  const tempObj: IncludesTerm = {
-    ...objNoTerms,
-    term: terms,
-  };
-
-  return tempObj;
-};
-
-export const termToTerms = <T extends IncludesTerm>(obj: T): IncludesTerms => {
-  // convert terms to term
-  const { term, ...objNoTerm } = obj;
-  const tempObj: IncludesTerms = {
-    ...objNoTerm,
-    terms: term,
-  };
-
-  return tempObj;
 };

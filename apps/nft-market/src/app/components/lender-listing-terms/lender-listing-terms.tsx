@@ -34,7 +34,7 @@ export interface LenderListingTermsProps {
 export function LenderListingTerms(props: LenderListingTermsProps) {
   const dispatch = useDispatch();
   const { provider, chainId, address } = useWeb3Context();
-  // local store of terms to pass between methods
+  // local store of term to pass between methods
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
   // logged in user
   const { user } = useSelector((state: RootState) => state.backend);
@@ -52,7 +52,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   );
 
   // helper to calculate term details like repayment amount
-  const { repaymentAmount } = useTermDetails(props.listing.terms);
+  const { repaymentAmount } = useTermDetails(props.listing.term);
   // createloan backend api call
   const [
     createLoan,
@@ -65,9 +65,9 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     { skip: !props.listing.asset }
   );
 
-  // click accept terms button
+  // click accept term button
   const handleAcceptTerms = useCallback(() => {
-    if (!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) {
+    if (!allowance || allowance < props.listing.term.amount * (1 + platformFee)) {
       console.warn("Insufficiant allownace. Trigger request");
       return;
     }
@@ -84,10 +84,10 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
         status: ListingStatus.Completed,
         asset: { ...props.listing.asset, status: AssetStatus.Locked },
       },
-      term: props.listing.terms,
+      term: props.listing.term,
       status: LoanStatus.Active,
     };
-    setCachedTerms(props.listing.terms);
+    setCachedTerms(props.listing.term);
 
     createLoan(createLoanRequest);
   }, [props.listing, provider, chainId, asset, allowance, user.address]);
@@ -134,10 +134,10 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
           provider,
           walletAddress: address,
           assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-          amount: props.listing.terms.amount * (1 + platformFee),
+          amount: props.listing.term.amount * (1 + platformFee),
         })
       );
-  }, [chainId, address, props.listing.terms.amount, provider]);
+  }, [chainId, address, props.listing.term.amount, provider]);
 
   // check to see if we have an approval for the amount required for this txn
   useEffect(() => {
@@ -172,7 +172,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
           <Box className="flex fc">
             <Typography className={style["label"]}>Principal</Typography>
             <Typography className={`${style["data"]} ${style["primary"]}`}>
-              {props.listing.terms.amount.toLocaleString("en-US", {
+              {props.listing.term.amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
@@ -190,13 +190,13 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
           <Box className="flex fc">
             <Typography className={style["label"]}>Duration</Typography>
             <Typography className={`${style["data"]}`}>
-              {props.listing.terms.duration} days
+              {props.listing.term.duration} days
             </Typography>
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>APY</Typography>
             <Typography className={`${style["data"]}`}>
-              {props.listing.terms.apr}%
+              {props.listing.term.apr}%
             </Typography>
           </Box>
           <Box className="flex fc">
@@ -205,7 +205,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
             </Button>
           </Box>
           <Box className="flex fc">
-            {(!allowance || allowance < props.listing.terms.amount * (1 + platformFee)) &&
+            {(!allowance || allowance < props.listing.term.amount * (1 + platformFee)) &&
               checkErc20AllowanceStatus === "idle" &&
               requestErc20AllowanceStatus === "idle" && (
                 <Button variant="outlined" onClick={handleRequestAllowance}>
@@ -213,7 +213,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
                 </Button>
               )}
             {!!allowance &&
-              allowance >= props.listing.terms.amount * (1 + platformFee) &&
+              allowance >= props.listing.term.amount * (1 + platformFee) &&
               !isCreating && (
                 <Button
                   variant="outlined"

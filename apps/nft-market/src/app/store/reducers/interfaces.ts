@@ -16,7 +16,7 @@ export interface AssetAsyncThunk {
 }
 
 export interface TermsAsyncThunk {
-  readonly terms: Terms;
+  readonly term: Terms;
 }
 
 export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}

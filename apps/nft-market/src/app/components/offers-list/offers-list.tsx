@@ -1,18 +1,27 @@
 import { PaperTable, PaperTableCell, PaperTableHead } from "@fantohm/shared-ui-themes";
-import { Container, TableBody, TableCell, TableRow } from "@mui/material";
+import { CircularProgress, Container, TableBody, TableRow } from "@mui/material";
 import { useGetOffersQuery } from "../../api/backend-api";
-import { Offer } from "../../types/backend-types";
+import { BackendOfferQueryParams, Offer } from "../../types/backend-types";
 import { OfferListItem } from "./offer-list-item";
 import style from "./offers-list.module.scss";
 
 /* eslint-disable-next-line */
-export interface OffersListProps {}
+export interface OffersListProps {
+  queryParams?: Partial<BackendOfferQueryParams>;
+}
 
-export const OffersList = (props: OffersListProps): JSX.Element => {
-  const { data: offers, isLoading } = useGetOffersQuery({ skip: 0, take: 50 });
+export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
+  const { data: offers, isLoading } = useGetOffersQuery(queryParams || {});
 
+  if (isLoading) {
+    return <CircularProgress />;
+  }
+  if ((!offers || offers.length < 1) && !isLoading) {
+    return <></>;
+  }
   return (
-    <Container>
+    <Container sx={{ pt: "4em" }}>
+      <h2 className={style["title"]}>Offers receved</h2>
       <PaperTable>
         <PaperTableHead>
           <TableRow>

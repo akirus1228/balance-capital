@@ -1,7 +1,7 @@
 // request types
 export interface CreateListingRequest {
   asset: Asset | string;
-  term: Terms | string; //convert terms to term for api
+  term: Terms | string; //convert term to term for api
   status: ListingStatus;
 }
 
@@ -18,7 +18,7 @@ export type CreateAssetResponse = {
 };
 
 export type AllListingsResponse = {
-  data: BackendListing[];
+  data: Listing[];
   count: number;
 };
 
@@ -78,14 +78,14 @@ export type Terms = {
 } & StandardBackendObject;
 
 export enum ListingStatus {
-  Pending = "Pending",
+  Pending = "PENDING",
   Listed = "LISTED",
   Completed = "COMPLETED",
-  Cancelled = "Cancelled",
+  Cancelled = "CANCELLED",
 }
 
 export type IncludesTerms = {
-  terms: Terms;
+  term: Terms;
 };
 
 export type IncludesTerm = {
@@ -100,17 +100,9 @@ export type Listing = {
 } & StandardBackendObject &
   IncludesTerms;
 
-export type BackendListing = {
-  id?: string;
-  asset: Asset;
-  term: Terms;
-  status: ListingStatus;
-  cacheExpire?: number;
-} & StandardBackendObject;
-
 export type Chain = "eth" | "sol";
 
-export type Asset = {
+export type BackendAsset = {
   status: AssetStatus;
   cacheExpire?: number;
   openseaLoaded?: number;
@@ -135,8 +127,11 @@ export type Asset = {
   assetContractAddress: string;
   chain: Chain;
   wallet: string;
-  collection: Collection;
 } & StandardBackendObject;
+
+export type Asset = BackendAsset & {
+  collection: Collection;
+};
 
 export type Collection = {
   banner_image_url?: string;
@@ -276,4 +271,11 @@ export type BackendLoanQueryParams = {
   lenderAddress?: string;
   borrowerAddress?: string;
   status?: LoanStatus;
+} & BackendStandardQuery;
+
+export type BackendOfferQueryParams = {
+  assetId: string;
+  assetListingId: string;
+  lenderAddress: string;
+  borrowerAddress: string;
 } & BackendStandardQuery;

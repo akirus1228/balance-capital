@@ -30,10 +30,11 @@ import {
   Offer,
   Terms,
 } from "../../types/backend-types";
-import { createListing } from "../../store/reducers/listing-slice";
+import { createListing, updateListing } from "../../store/reducers/listing-slice";
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
 import { useCreateOfferMutation, useUpdateTermsMutation } from "../../api/backend-api";
+import { updateAsset } from "../../store/reducers/asset-slice";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -54,16 +55,16 @@ export const termTypes: TermTypes = {
 export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const dispatch = useDispatch();
   const { address, chainId, provider } = useWeb3Context();
-  // update terms backend api call
+  // update term backend api call
   const [updateTerms, { isLoading: isTermsUpdateLoading, data: updateTermsResponse }] =
     useUpdateTermsMutation();
   // primary form pending state
   const [pending, setPending] = useState(false);
-  // primary terms variables
-  const [duration, setDuration] = useState(props?.listing?.terms.duration || 1);
+  // primary term variables
+  const [duration, setDuration] = useState(props?.listing?.term.duration || 1);
   const [durationType, setDurationType] = useState("days");
-  const [apr, setApr] = useState(props?.listing?.terms.apr || 25);
-  const [amount, setAmount] = useState(props?.listing?.terms.amount || 10000);
+  const [apr, setApr] = useState(props?.listing?.term.apr || 25);
+  const [amount, setAmount] = useState(props?.listing?.term.amount || 10000);
   const [repaymentAmount, setRepaymentAmount] = useState(2500);
   const [repaymentTotal, setRepaymentTotal] = useState(12500);
   // create offer api call
@@ -140,7 +141,12 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     } else {
       setPending(true);
     }
-  }, [checkPermStatus, requestPermStatus]);
+  }, [
+    checkPermStatus,
+    requestPermStatus,
+    requestErc20AllowanceStatus,
+    checkErc20AllowanceStatus,
+  ]);
 
   const isOwner = useMemo(() => {
     return address.toLowerCase() === props.asset?.owner?.address.toLowerCase();
@@ -159,28 +165,28 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     }
     const expirationAt = new Date();
     expirationAt.setDate(expirationAt.getDate() + 1);
-    const terms: Terms = {
+    const term: Terms = {
       amount,
       apr,
       duration,
       expirationAt,
       signature: "",
     };
-    const termsSignature = await signTerms(
+    const termSignature = await signTerms(
       provider,
       asset.owner?.address || "",
       chainId,
       asset.assetContractAddress,
       asset.tokenId,
-      terms
+      term
     );
-    terms.signature = termsSignature;
-    dispatch(createListing({ terms, asset }));
+    term.signature = termSignature;
+    dispatch(createListing({ term, asset }));
     return;
   };
 
   const handleUpdateTerms = async () => {
-    if (!provider || !chainId) return;
+    if (!provider || !chainId || !props.listing) return;
     console.log("update listing");
     // send listing data to backend
     setPending(true);
@@ -192,32 +198,43 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     }
     const expirationAt = new Date();
     expirationAt.setDate(expirationAt.getDate() + 1);
-    const terms: Terms = {
-      ...props?.listing?.terms,
+    const term: Terms = {
+      ...props?.listing?.term,
       amount,
       apr,
       duration: termTypes[durationType] * duration,
       expirationAt,
       signature: "",
     };
-    const termsSignature = await signTerms(
+    const termSignature = await signTerms(
       provider,
       asset.owner?.address || "",
       chainId,
       asset.assetContractAddress,
       asset.tokenId,
-      terms
+      term
     );
-    terms.signature = termsSignature;
-    updateTerms(terms);
+    term.signature = termSignature;
+    updateTerms(term);
     return;
   };
 
   useEffect(() => {
+    console.log(`isTermsUpdateLoading ${isTermsUpdateLoading}`);
+    console.log(`updateTermsResponse ${updateTermsResponse}`);
+    console.log(`props.listing ${props.listing}`);
+    if (
+      !isTermsUpdateLoading &&
+      typeof updateTermsResponse !== "undefined" &&
+      props.listing
+    ) {
+      console.log(updateTermsResponse);
+      dispatch(updateListing({ ...props.listing, term: updateTermsResponse }));
+    }
     if (!isTermsUpdateLoading && updateTermsResponse) {
       props.onClose(true);
     }
-  }, [isTermsUpdateLoading, updateTermsResponse]);
+  }, [isTermsUpdateLoading, updateTermsResponse, props.listing]);
 
   const handleDurationChange = (event: BaseSyntheticEvent) => {
     setDuration(event.target.value);
@@ -269,7 +286,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
     term.signature = await signTerms(
       provider,
-      props.asset.owner?.address || "",
+      user.address || "",
       chainId || isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
       props.asset.assetContractAddress,
       props.asset.tokenId,
@@ -299,7 +316,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     }
   }, [isCreateOfferLoading, createOfferResponse]);
 
-  // request allowance necessary to create loan with these terms
+  // request allowance necessary to create loan with these term
   const handleRequestAllowance = useCallback(() => {
     if (provider && address && props.listing) {
       setPending(true);
@@ -313,7 +330,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
         })
       );
     }
-  }, [chainId, address, props.listing?.terms.amount, provider]);
+  }, [chainId, address, props.listing?.term.amount, provider]);
 
   return (
     <Box className="flex fc">

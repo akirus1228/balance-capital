@@ -93,7 +93,7 @@ export const AssetDetailsPage = (): JSX.Element => {
           sx={{ mt: "3em" }}
         />
       )}
-      {isOwner && <OffersList />}
+      {isOwner && asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
     </>
   );
 };

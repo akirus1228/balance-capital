@@ -23,7 +23,7 @@ export const Footer = (): JSX.Element => {
     },
     {
       title: "Terms",
-      href: "/terms",
+      href: "/term",
     },
     {
       title: "Privacy",

@@ -6,8 +6,10 @@ import {
   useGetListingsQuery,
   useGetLoansQuery,
   useDeleteLoanMutation,
+  useGetOffersQuery,
+  useDeleteOfferMutation,
 } from "../../api/backend-api";
-import { Asset, Listing, Loan } from "../../types/backend-types";
+import { Asset, Listing, Loan, Offer } from "../../types/backend-types";
 import "./test-helper.module.scss";
 
 /* eslint-disable-next-line */
@@ -32,6 +34,12 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
   });
   const [deleteLoan] = useDeleteLoanMutation();
 
+  const { data: offers, isLoading: isOffersLoading } = useGetOffersQuery({
+    skip: 0,
+    take: 50,
+  });
+  const [deleteOffer] = useDeleteOfferMutation();
+
   const handleDeleteAll = () => {
     if (assets && assets.length > 0) {
       assets?.forEach((asset: Asset) => deleteAsset(asset));
@@ -44,13 +52,36 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
     if (loans && loans.length > 0) {
       loans?.forEach((loan: Partial<Loan>) => deleteLoan(loan));
     }
+
+    if (offers && offers.length > 0) {
+      offers?.forEach((offer: Partial<Offer>) => deleteOffer(offer));
+    }
+  };
+
+  const handleDeleteAssets = () => {
+    if (assets && assets.length > 0) {
+      assets?.forEach((asset: Asset) => deleteAsset(asset));
+    }
+  };
+
+  const handleDeleteOffers = () => {
+    if (offers && offers.length > 0) {
+      offers?.forEach((offer: Partial<Offer>) => deleteOffer(offer));
+    }
   };
 
   return (
     <div>
-      <Box>Assets: {assets && assets.length}</Box>
+      <Box>
+        Assets: {assets && assets.length}{" "}
+        <Button onClick={handleDeleteAssets}>Delete</Button>
+      </Box>
       <Box>Listings: {listings && listings.length}</Box>
       <Box>Loans: {loans && loans.length}</Box>
+      <Box>
+        Offers: {offers && offers.length}{" "}
+        <Button onClick={handleDeleteOffers}>Delete</Button>
+      </Box>
       <Button onClick={handleDeleteAll}>Delete All</Button>
     </div>
   );
