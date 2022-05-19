@@ -133,7 +133,8 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     if (
       checkPermStatus !== "loading" &&
       requestPermStatus !== "loading" &&
-      requestErc20AllowanceStatus !== "loading"
+      requestErc20AllowanceStatus !== "loading" &&
+      checkErc20AllowanceStatus !== "loading"
     ) {
       setPending(false);
     } else {
@@ -308,7 +309,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           provider,
           walletAddress: address,
           assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-          amount: props.listing.terms.amount * (1 + platformFee),
+          amount: amount * (1 + platformFee),
         })
       );
     }
@@ -376,7 +377,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance >= props.listing?.terms.amount * (1 + platformFee) && (
+        usdbAllowance >= amount * (1 + platformFee) && (
           <Button variant="contained" onClick={handleMakeOffer}>
             Make Offer
           </Button>
@@ -384,7 +385,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance < props.listing?.terms.amount * (1 + platformFee) && (
+        usdbAllowance < amount * (1 + platformFee) && (
           <Button variant="contained" onClick={handleRequestAllowance}>
             Allow [name] to Access your USDB
           </Button>
