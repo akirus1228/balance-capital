@@ -339,6 +339,18 @@ export const backendApi = createApi({
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
     // Offers
+    getOffers: builder.query<Offer[], BackendAssetQueryParam>({
+      query: (queryParams) => ({
+        url: `offer/all`,
+        params: queryParams,
+      }),
+      transformResponse: (response: { count: number; data: Offer[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Offer" as const, id })), "Offer"]
+          : ["Offer"],
+    }),
     createOffer: builder.mutation<Offer, Partial<Offer>>({
       query: (body) => {
         return {
@@ -363,5 +375,6 @@ export const {
   useDeleteLoanMutation,
   useCreateListingMutation,
   useUpdateTermsMutation,
+  useGetOffersQuery,
   useCreateOfferMutation,
 } = backendApi;

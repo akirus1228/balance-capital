@@ -1,5 +1,5 @@
 import { createTheme } from "@mui/material/styles";
-import { AppBar, styled, Switch, ThemeOptions } from "@mui/material";
+import { AppBar, styled, Switch, TableRow, ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
@@ -27,6 +27,7 @@ const nftLightColors = {
   errorColor: "#CC335C",
   errorBackground: "#CC335C40",
   backgroundColor: "#fdfefe",
+  containedPrimaryBtn: "#374FFF",
   paperBg: "#FFF",
   gray: "#696C80",
   iconButtonBg: "#181A1C0F",
@@ -39,6 +40,7 @@ const nftDarkColors = {
   errorColor: "#CC335C",
   errorBackground: "#CC335C40",
   backgroundColor: "#000",
+  containedPrimaryBtn: "#374FFF",
   paperBg: "#0E0F10",
   gray: "#929BA0",
   iconButtonBg: "#181A1CD4",
@@ -70,6 +72,11 @@ export const FooterBar = styled(AppBar)(({ theme }) => ({
   },
 }));
 
+export const PaperTableRow = styled(TableRow)(({ theme }) => ({
+  background: "#FFF",
+  borderRadius: "24px",
+}));
+
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
   palette: {
@@ -95,10 +102,12 @@ const globalTheme: ThemeOptions = {
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: "53px",
-          padding: "2.5em",
+          borderRadius: "24px",
+          boxShadow: "2px 30px 34px #7E9AA926",
+          padding: "1.5em",
           "&.MuiAppBar-root": {
             padding: "0",
+            boxShadow: "none",
           },
           "&.MuiMenu-paper": {
             marginTop: "1em",
@@ -146,6 +155,10 @@ const globalTheme: ThemeOptions = {
           borderRadius: "36px",
           padding: "1em 3em",
           fontSize: "1em",
+          "&.offer": {
+            padding: "0.5em 2em",
+            background: nftLightColors.containedPrimaryBtn,
+          },
         },
       },
       defaultProps: {

@@ -10,6 +10,7 @@ import { BorrowerCreateListing } from "../../components/borrower-create-listing/
 import { BorrowerListingDetails } from "../../components/borrower-listing-details/borrower-listing-details";
 import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borrower-loan-details";
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
+import OffersList from "../../components/offers-list/offers-list";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingByAddress } from "../../store/selectors/listing-selectors";
@@ -90,6 +91,7 @@ export const AssetDetailsPage = (): JSX.Element => {
           sx={{ mt: "3em" }}
         />
       )}
+      {isOwner && <OffersList />}
     </>
   );
 };

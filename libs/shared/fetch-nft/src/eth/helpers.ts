@@ -221,6 +221,7 @@ export const assetToCollectible = async (
     assetContractAddress: asset.asset_contract?.address ?? null,
     chain: "eth",
     wallet: asset.wallet,
+    collection: asset.collection,
   };
 };
 
