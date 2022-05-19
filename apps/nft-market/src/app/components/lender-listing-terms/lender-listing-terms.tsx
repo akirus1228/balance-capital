@@ -12,20 +12,19 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateLoanMutation, useGetAssetQuery } from "../../api/backend-api";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
-import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import {
   AssetStatus,
   BackendLoadingStatus,
   Listing,
   ListingStatus,
   Loan,
+  LoanStatus,
   Terms,
 } from "../../types/backend-types";
 import style from "./lender-listing-terms.module.scss";
 import { RootState } from "../../store";
 import { useTermDetails } from "../../hooks/use-term-details";
-import TermsForm from "../terms-form/terms-form";
-import MakeOffer from "../make-offer/make-offer";
+import { MakeOffer } from "../make-offer/make-offer";
 
 export interface LenderListingTermsProps {
   listing: Listing;
@@ -86,6 +85,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
         asset: { ...props.listing.asset, status: AssetStatus.Locked },
       },
       term: props.listing.terms,
+      status: LoanStatus.Active,
     };
     setCachedTerms(props.listing.terms);
 
@@ -117,7 +117,11 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   useEffect(() => {
     // contract call successfully completed
     if (loanCreationStatus === BackendLoadingStatus.succeeded) {
-      alert("WOOT!");
+      console.log("created");
+      // todo: display success notification growl
+    } else if (loanCreationStatus === BackendLoadingStatus.failed) {
+      console.log("failed");
+      // todo: display error notification growl
     }
   }, [loanCreationStatus]);
 
@@ -195,7 +199,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
               {props.listing.terms.apr}%
             </Typography>
           </Box>
-          {!!allowance && allowance >= props.listing.terms.amount * (1 + platformFee) && (
+          {!!allowance && (
             <Box className="flex fc">
               <Button variant="contained" onClick={handleMakeOffer}>
                 Make Offer

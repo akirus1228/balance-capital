@@ -57,7 +57,8 @@ export const AssetDetailsPage = (): JSX.Element => {
   // load loans for this contract
   const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery({
     skip: 0,
-    take: 50,
+    take: 1,
+    assetId: asset?.id || "",
   });
 
   // is the user the owner of the asset?

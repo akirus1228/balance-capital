@@ -222,12 +222,19 @@ export enum BackendLoadingStatus {
   failed = "failed",
 }
 
+export enum LoanStatus {
+  Active = "ACTIVE",
+  Default = "DEFAULT",
+  Complete = "COMPLETE",
+}
+
 export type Loan = {
   id?: string;
   lender: Person;
   borrower: Person;
   assetListing: Listing;
   term: Terms;
+  status: LoanStatus;
 } & StandardBackendObject;
 
 export type Updatable = {
@@ -250,3 +257,23 @@ export type Offer = {
   assetListing: Listing;
   term: Terms;
 } & StandardBackendObject;
+
+export type BackendStandardQuery = {
+  skip: number;
+  take: number;
+};
+
+export type BackendAssetQueryParams = {
+  status?: string;
+  openseaIds?: string[];
+  contractAddress?: string;
+  mediaType?: string;
+} & BackendStandardQuery;
+
+export type BackendLoanQueryParams = {
+  assetId?: string;
+  assetListingId?: string;
+  lenderAddress?: string;
+  borrowerAddress?: string;
+  status?: LoanStatus;
+} & BackendStandardQuery;

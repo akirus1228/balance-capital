@@ -9,7 +9,6 @@ import {
   Theme,
   Typography,
 } from "@mui/material";
-import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import { useTermDetails } from "../../hooks/use-term-details";
 import { Asset, Loan } from "../../types/backend-types";
 import style from "./borrower-loan-details.module.scss";

@@ -22,8 +22,10 @@ import {
   CreateListingResponse,
   Loan,
   Offer,
+  BackendAssetQueryParams,
+  BackendLoanQueryParams,
 } from "../types/backend-types";
-import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
+import { ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
 import {
   assetAryToAssets,
@@ -211,7 +213,7 @@ export const backendApi = createApi({
   }),
   endpoints: (builder) => ({
     // Assets
-    getAssets: builder.query<Asset[], BackendAssetQueryParam>({
+    getAssets: builder.query<Asset[], BackendAssetQueryParams>({
       query: (queryParams) => ({
         url: `asset/all`,
         params: queryParams,
@@ -296,7 +298,7 @@ export const backendApi = createApi({
       invalidatesTags: ["Terms", "Asset", "Terms"],
     }),
     // Loans
-    getLoans: builder.query<Loan[], BackendAssetQueryParam>({
+    getLoans: builder.query<Loan[], BackendLoanQueryParams>({
       query: (queryParams) => ({
         url: `loan/all`,
         params: queryParams,
@@ -309,8 +311,9 @@ export const backendApi = createApi({
           : ["Loan"],
     }),
     createLoan: builder.mutation<Loan, Loan>({
-      query: ({ id, borrower, lender, assetListing, term }) => {
+      query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
         const loanRequest = {
+          ...loan,
           assetListing: {
             ...termsToTerm(dropHelperDates({ ...assetListing })),
             asset: dropHelperDates({ ...assetListing.asset }),
@@ -339,7 +342,7 @@ export const backendApi = createApi({
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
     // Offers
-    getOffers: builder.query<Offer[], BackendAssetQueryParam>({
+    getOffers: builder.query<Offer[], BackendAssetQueryParams>({
       query: (queryParams) => ({
         url: `offer/all`,
         params: queryParams,

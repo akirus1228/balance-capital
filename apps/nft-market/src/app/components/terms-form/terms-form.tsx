@@ -124,8 +124,8 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   }, [checkPermStatus, requestPermStatus]);
 
   const isOwner = useMemo(() => {
-    return props.asset.owner?.address === address;
-  }, [props.asset]);
+    return address.toLowerCase() === props.asset?.owner?.address.toLowerCase();
+  }, [props.asset, address]);
 
   const handleCreateListing = async () => {
     if (!provider || !chainId) return;
