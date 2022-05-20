@@ -32,14 +32,8 @@ export const headerPages: Page[] = [
 export const balanceheaderPages: Page[] = [
   { title: "USDB", href: "/usdb", params: { comingSoon: false } },
   { title: "FHM", href: "https://fantohm.com/", params: { comingSoon: false } },
-  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
-  { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
-  { title: "USDB Bank", href: "", params: { comingSoon: true } },
-  {
-    title: "Bridge",
-    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
-    params: { comingSoon: false },
-  },
+  { title: "Dex", href: "https://app.fantohm.com/#/dex", params: { comingSoon: false } },
+  { title: "NFT Marketplace", href: "", params: { comingSoon: true } },
 ];
 
 export const footerItems: FooterItem[] = [

@@ -185,7 +185,7 @@ export const HomeHeader = (): JSX.Element => {
           >
             <Box>
               <Link
-                to=""
+                to={pathname}
                 className={styles["headerLink"]}
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
