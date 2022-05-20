@@ -100,8 +100,14 @@ export const App = (): JSX.Element => {
                     />
                     <Typography>
                       I agree that I have read, understood and accepted all of the{" "}
-                      <a>Terms</a>
-                      <a>and Privacy Policy</a>.
+                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                        Terms
+                      </a>{" "}
+                      and{" "}
+                      <a href="./../assets/Privacy_Policy.pdf" target="_blank">
+                        Privacy Policy
+                      </a>{" "}
+                      .
                     </Typography>
                   </Box>
                 </Box>

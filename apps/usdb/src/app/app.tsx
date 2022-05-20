@@ -133,8 +133,15 @@ export const App = (): JSX.Element => {
                       onChange={() => setIsChecked(!isChecked)}
                     />
                     <Typography>
-                      I agree that I have read, understood and accepted all of the Terms
-                      and Privacy Policy.
+                      I agree that I have read, understood and accepted all of the{" "}
+                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                        Terms
+                      </a>{" "}
+                      and{" "}
+                      <a href="./../assets/Privacy_Policy.pdf" target="_blank">
+                        Privacy Policy
+                      </a>{" "}
+                      .
                     </Typography>
                   </Box>
                 </Box>
