@@ -31,8 +31,8 @@ import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slic
 import { BalanceLogo } from "@fantohm/shared/images";
 import styles from "./home-header.module.scss";
 import { NetworkMenu } from "./network-menu";
-import { headerPages, Page } from "../../../constants/nav";
-import style from "../../../pages/home/home-page.module.scss";
+import { balanceheaderPages, Page } from "../../../constants/nav";
+import style from "../../../pages/home/balance-home-page.module.scss";
 
 export const HomeHeader = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
@@ -145,7 +145,7 @@ export const HomeHeader = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {headerPages.map((page: Page) => (
+              {balanceheaderPages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
                   href={page?.params?.comingSoon ? "#" : page.href}
@@ -200,7 +200,7 @@ export const HomeHeader = (): JSX.Element => {
                   "aria-labelledby": "products-button",
                 }}
               >
-                {headerPages.map((page: any) => {
+                {balanceheaderPages.map((page: any) => {
                   return (
                     <MenuLink
                       // href={page.href ? page.href : '#'}

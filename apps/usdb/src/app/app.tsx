@@ -22,15 +22,16 @@ import { Header, Footer } from "./components/template";
 import { ScrollToTop } from "./components/scroll-to-top/scroll-to-top";
 import { Messages } from "./components/messages/messages";
 import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
-import { HomePage } from "./pages/home/home-page";
+import { BalanceHomePage } from "./pages/home/balance-home-page";
 import { TradFiDeposit } from "./pages/trad-fi/deposit/deposit";
 import { TradFi } from "./pages/trad-fi/trad-fi";
 import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 import { loadAppDetails } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
-import AboutPage from "./pages/about-page/about-page";
+import BalanceAboutPage from "./pages/balance-about-page/balance-about-page";
 import { HomeHeader } from "./components/template/header/home-header";
+import HomePage from "./pages/home/home-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -103,7 +104,9 @@ export const App = (): JSX.Element => {
           <Header />
         )}
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<BalanceHomePage />} />
+          <Route path="/usdb" element={<HomePage />} />
+          <Route path="/usdb-about" element={<BalanceAboutPage />} />
           <Route path="/staking" element={<StakingChoicePage />} />
           <Route path="/staking-v1" element={<StakingV1Page />} />
           <Route path="/trad-fi" element={<TradFi />}>
@@ -112,7 +115,7 @@ export const App = (): JSX.Element => {
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
           <Route path="/my-account" element={<MyAccount />} />
-          <Route path="/about" element={<AboutPage />} />
+          <Route path="/about" element={<BalanceAboutPage />} />
           <Route
             path="*"
             element={

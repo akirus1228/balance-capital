@@ -1,6 +1,6 @@
 import { Box, Button, Grid } from "@mui/material";
 import { useNavigate, useHref } from "react-router-dom";
-import style from "./about-page.module.scss";
+import style from "./balance-about-page.module.scss";
 import { useCallback } from "react";
 import { AboutDivider } from "@fantohm/shared/images";
 
@@ -13,7 +13,7 @@ export interface IconLinkProps {
   docsLink?: string | undefined;
 }
 
-export function AboutTile({
+export function BalanceAboutTile({
   icon,
   title,
   link = undefined,
@@ -143,4 +143,4 @@ export function AboutTile({
   );
 }
 
-export default AboutTile;
+export default BalanceAboutTile;

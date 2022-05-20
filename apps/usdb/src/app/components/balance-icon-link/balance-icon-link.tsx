@@ -1,6 +1,6 @@
 import { Box, Grid } from "@mui/material";
 import { useNavigate, useHref } from "react-router-dom";
-import style from "./icon-link.module.scss";
+import style from "./balance-icon-link.module.scss";
 import { useCallback } from "react";
 
 /* eslint-disable-next-line */
@@ -11,7 +11,12 @@ export interface IconLinkProps {
   link?: string | undefined;
 }
 
-export function IconLink({ icon, title, link = undefined, text = "" }: IconLinkProps) {
+export function BalanceIconLink({
+  icon,
+  title,
+  link = undefined,
+  text = "",
+}: IconLinkProps) {
   const navigate = useNavigate();
 
   const handleOnClick = useCallback(() => {
@@ -70,4 +75,4 @@ export function IconLink({ icon, title, link = undefined, text = "" }: IconLinkP
   );
 }
 
-export default IconLink;
+export default BalanceIconLink;

@@ -15,7 +15,7 @@
     @media (max-width:400px) {
         padding:0 25px;
     }
-    
+
     .heroLogo {
         height: 100%;
         max-width:325px;
@@ -36,7 +36,7 @@
             font-size:27px;
             padding:0;
         }
-        
+
     }
 
     .heroSubtitle {
@@ -84,4 +84,27 @@
         padding-left:0 !important;
         padding-right:0;
     }
+}
+
+.styledInput {
+  border-radius: 30px !important;
+  height: 60px;
+  font-size: 16px;
+  width:90% !important;
+  max-width:100%;
+  padding-left:.5em !important;
+  padding-right:.5em;
+  @media (max-width:600px) {
+    width:100%;
+    margin-left:0;
+
+  }
+}
+
+.email-div {
+  height: 300px;
+  @media (max-width:600px) {
+    padding-bottom: 150px;
+    height: 400px;
+  }
 }

@@ -1,5 +1,5 @@
 import { Box, Grid, Typography } from "@mui/material";
-import IconLink from "../../../components/icon-link/icon-link";
+import BalanceIconLink from "../../../components/balance-icon-link/balance-icon-link";
 import style from "./investment-options.module.scss";
 import { OneIcon, TwoIcon, ThreeIcon } from "@fantohm/shared/images";
 import InvestmentLink from "./investment-link";
@@ -33,7 +33,7 @@ export const InvestmentOptions = (): JSX.Element => {
           linkText="For investors"
           text="We serve our stakeholders through a shared purpose of advancing sustainable economic growth and opportunity."
         />
-        {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
+        {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
     </Grid>
   );

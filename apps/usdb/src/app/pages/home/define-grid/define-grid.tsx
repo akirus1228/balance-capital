@@ -1,5 +1,5 @@
 import { Box, Button, Grid, OutlinedInput, Typography } from "@mui/material";
-import IconLink from "../../../components/icon-link/icon-link";
+import BalanceIconLink from "../../../components/balance-icon-link/balance-icon-link";
 import style from "./define-grid.module.scss";
 import { BalanceDefine1, BalanceDefine2 } from "@fantohm/shared/images";
 import { error, info } from "@fantohm/shared-web3";

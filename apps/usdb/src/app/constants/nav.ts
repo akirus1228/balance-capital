@@ -29,13 +29,23 @@ export const headerPages: Page[] = [
   },
 ];
 
+export const balanceheaderPages: Page[] = [
+  { title: "USDB", href: "/usdb", params: { comingSoon: false } },
+  { title: "FHM", href: "https://fantohm.com/", params: { comingSoon: false } },
+  { title: "Mint USDB", href: "/mint", params: { comingSoon: false } },
+  { title: "xFHM", href: "/xfhm?enable-testnet=true", params: { comingSoon: true } },
+  { title: "USDB Bank", href: "", params: { comingSoon: true } },
+  {
+    title: "Bridge",
+    href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
+    params: { comingSoon: false },
+  },
+];
+
 export const footerItems: FooterItem[] = [
   {
     label: "Products",
     pages: [
-      { title: "FHM", href: "https://fantohm.com/" },
-      { title: "NFFT Lending", href: "https://fantohm.com/" },
-      { title: "Dex", href: "https://app.fantohm.com/#/dex" },
       { title: "Tradfi", href: "/trad-fi" },
       { title: "Stablecoin Farming", href: "/staking" },
       { title: "xFHM", href: "", params: { comingSoon: true } },

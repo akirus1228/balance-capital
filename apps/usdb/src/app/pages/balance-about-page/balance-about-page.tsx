@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Headline from "../../components/headline/headline";
 import Logo from "../../components/logo/logo";
-import style from "./about-page.module.scss";
+import style from "./balance-about-page.module.scss";
 import {
   TeammateProfile,
   Teammate,
@@ -19,9 +19,9 @@ import {
   AboutBalanceEcosystem,
   AboutNFTMarketplace,
 } from "@fantohm/shared/images";
-import AboutTile from "./about-tile";
+import BalanceAboutTile from "./balance-about-tile";
 
-export const AboutPage = (): JSX.Element => {
+export const BalanceAboutPage = (): JSX.Element => {
   // mailchimp integration
   // useEffect(() => {
   //   const script = document.createElement("script");
@@ -119,39 +119,43 @@ export const AboutPage = (): JSX.Element => {
           <img src={AboutDivider as string} style={{ width: "100%" }} />
         </Grid>
       </Grid>
-      <AboutTile
+      <BalanceAboutTile
         icon={AboutUSDB}
         title="USDB Stablecoin"
         text="The Balance ecosystem / organization is formed to carry out the purpose of its name– to balance FHM & USDB against one another in a way that feeds value into the continued use case of both assets. FHM, as a value capturing mechanism, feeds the minting of USDB through a proof of burn mechanism similar to UST on Luna."
         link="https://www.usdbalance.com/"
         docsLink="https://fantohm.gitbook.io/documentation/usdb/introduction"
       />
-      <AboutTile
+      <BalanceAboutTile
         icon={AboutFHM}
         title="FHM Protocol"
         text="FHM is a Reserve & Rewards Protocol inspired by the Protocol Owned Liquidity software developments of OHM. FHM features compounding, single disbursement bonds as the safest possible bonding mechanism to ensure the longevity of exchange liquidity in relation to neighbouring protocols with similar principles."
         link="https://fantohm.com/"
         docsLink="https://fantohm.gitbook.io/documentation/"
       />
-      <AboutTile
+      <BalanceAboutTile
         icon={AboutBridge}
         title="DEX & Bridge"
         text="USDB and FHM are expanding beyond the EVM realm with the first bridge to Terra being completed in the near future. We have successfully bridged both ways and are now awaiting the completion of audits to confirm our capability in this regard."
         link="https://app.fantohm.com/#/dex"
       />
-      <AboutTile
+      <BalanceAboutTile
         icon={AboutLiquidity}
         title="Liquidity Solution"
         text="We understand that managing token liquidity is tough. We’ve built the perfect solution to help projects maximise the liquidity they can unlock. Making sure deep liquidity is available for your ecosystem. Helping you achieve your long-term mission and short-term needs."
         link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
       />
-      <AboutTile
+      <BalanceAboutTile
         icon={AboutUSDBBank}
         title="USDB Bank"
         text="We are building a lending and borrowing structure that will fall under our USDBank which you may have already seen teased in the usdbalance.com site ui."
       />
-      <AboutTile icon={AboutNFTMarketplace} title="NFT Marketplace" text="Coming soon" />
-      <AboutTile
+      <BalanceAboutTile
+        icon={AboutNFTMarketplace}
+        title="NFT Marketplace"
+        text="Coming soon"
+      />
+      <BalanceAboutTile
         icon={AboutFinancialNFT}
         title="Financial NFTs"
         text="We are building a financial NFTs that will act as a receipt for a new game-changing financial product."
@@ -160,4 +164,4 @@ export const AboutPage = (): JSX.Element => {
   );
 };
 
-export default AboutPage;
+export default BalanceAboutPage;

@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
 
-import IconGrid from "./icon-grid";
+import BalanceAboutPage from "./balance-about-page";
 
-describe("IconGrid", () => {
+describe("AboutPage", () => {
   it("should render successfully", () => {
-    const { baseElement } = render(<IconGrid />);
+    const { baseElement } = render(<BalanceAboutPage />);
     expect(baseElement).toBeTruthy();
   });
 });
