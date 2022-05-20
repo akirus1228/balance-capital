@@ -38,7 +38,9 @@ export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
         <TableBody>
           {offers &&
             !isLoading &&
-            offers.map((offer: Offer) => <OfferListItem offer={offer} />)}
+            offers.map((offer: Offer, index: number) => (
+              <OfferListItem key={`offer-${index}`} offer={offer} />
+            ))}
         </TableBody>
       </PaperTable>
     </Container>

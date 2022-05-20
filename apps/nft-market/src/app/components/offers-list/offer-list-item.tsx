@@ -116,7 +116,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     }
 
     const createLoanRequest: Loan = {
-      lender: user,
+      lender: offer.lender,
       borrower: asset.owner,
       assetListing: {
         ...offer.assetListing,

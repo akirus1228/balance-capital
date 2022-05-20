@@ -8,8 +8,10 @@ import {
   useDeleteLoanMutation,
   useGetOffersQuery,
   useDeleteOfferMutation,
+  useGetTermsQuery,
+  useDeleteTermsMutation,
 } from "../../api/backend-api";
-import { Asset, Listing, Loan, Offer } from "../../types/backend-types";
+import { Asset, Listing, Loan, Offer, Terms } from "../../types/backend-types";
 import "./test-helper.module.scss";
 
 /* eslint-disable-next-line */
@@ -40,6 +42,12 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
   });
   const [deleteOffer] = useDeleteOfferMutation();
 
+  const { data: terms, isLoading: isTermsLoading } = useGetTermsQuery({
+    skip: 0,
+    take: 50,
+  });
+  const [deleteTerms] = useDeleteTermsMutation();
+
   const handleDeleteAll = () => {
     if (assets && assets.length > 0) {
       assets?.forEach((asset: Asset) => deleteAsset(asset));
@@ -56,6 +64,10 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
     if (offers && offers.length > 0) {
       offers?.forEach((offer: Partial<Offer>) => deleteOffer(offer));
     }
+
+    if (terms && terms.length > 0) {
+      terms?.forEach((term: Partial<Terms>) => deleteTerms(term));
+    }
   };
 
   const handleDeleteAssets = () => {
@@ -70,6 +82,12 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
     }
   };
 
+  const handleDeleteTerms = () => {
+    if (terms && terms.length > 0) {
+      terms?.forEach((term: Partial<Terms>) => deleteTerms(term));
+    }
+  };
+
   return (
     <div>
       <Box>
@@ -81,6 +99,9 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
       <Box>
         Offers: {offers && offers.length}{" "}
         <Button onClick={handleDeleteOffers}>Delete</Button>
+      </Box>
+      <Box>
+        Terms: {terms && terms.length} <Button onClick={handleDeleteTerms}>Delete</Button>
       </Box>
       <Button onClick={handleDeleteAll}>Delete All</Button>
     </div>

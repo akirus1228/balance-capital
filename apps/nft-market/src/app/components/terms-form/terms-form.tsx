@@ -276,7 +276,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     if (!props.listing || !provider || !props.asset.owner) return;
     const expirationAt = new Date();
     expirationAt.setDate(expirationAt.getDate() + 1);
-    const term: Terms = {
+    const { id, ...listingTerm } = props.listing.term;
+    const preSigTerm: Terms = {
+      ...listingTerm,
       amount: amount,
       duration: termTypes[durationType] * duration,
       apr: apr,
@@ -284,31 +286,28 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       signature: "",
     };
 
-    term.signature = await signTerms(
+    const signature = await signTerms(
       provider,
-      user.address || "",
+      props.listing.asset.wallet || "",
       chainId || isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
       props.asset.assetContractAddress,
       props.asset.tokenId,
-      term
+      preSigTerm
     );
+
+    const term = {
+      ...preSigTerm,
+      signature,
+    };
 
     const offer: Offer = {
       lender: user,
       assetListing: props.listing,
       term,
     };
+    console.log(offer);
     createOffer(offer);
-  }, [
-    props.listing,
-    provider,
-    props.asset,
-    amount,
-    duration,
-    apr,
-    chainId,
-    props.listing,
-  ]);
+  }, [props.listing, provider, props.asset, amount, duration, apr]);
 
   useEffect(() => {
     if (!isCreateOfferLoading && !!createOfferResponse) {
@@ -330,7 +329,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
         })
       );
     }
-  }, [chainId, address, props.listing?.term.amount, provider]);
+  }, [chainId, address, amount, provider]);
 
   return (
     <Box className="flex fc">

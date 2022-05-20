@@ -300,6 +300,21 @@ export const backendApi = createApi({
       invalidatesTags: ["Listing", "Asset", "Terms"],
     }),
     // Terms
+    getTerms: builder.query<Terms[], Partial<BackendStandardQuery>>({
+      query: (queryParams) => ({
+        url: `term/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Terms[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Terms" as const, id })), "Terms"]
+          : ["Terms"],
+    }),
     updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
       query: ({ id, ...patch }) => ({
         url: `term/${id}`,
@@ -307,7 +322,16 @@ export const backendApi = createApi({
         body: patch,
       }),
       transformResponse: (response: Terms, meta, arg) => response,
-      invalidatesTags: ["Terms", "Asset", "Terms"],
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
+    deleteTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
+      query: ({ id, ...terms }) => {
+        return {
+          url: `term/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Listing", "Terms", "Offer"],
     }),
     // Loans
     getLoans: builder.query<Loan[], Partial<BackendLoanQueryParams>>({
@@ -327,12 +351,12 @@ export const backendApi = createApi({
     }),
     createLoan: builder.mutation<Loan, Loan>({
       query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
-        const { collection, ...asset } = dropHelperDates({ ...assetListing.asset });
+        const { collection, ...asset } = dropHelperDates({ ...assetListing.asset }); // backend doesn't like collection
         const loanRequest = {
           ...loan,
           assetListing: {
             ...dropHelperDates({ ...assetListing }),
-            asset,
+            asset: dropHelperDates({ ...asset }),
             term: dropHelperDates({ ...assetListing.term }),
           },
           borrower: dropHelperDates({ ...borrower }),
@@ -405,7 +429,9 @@ export const {
   useCreateLoanMutation,
   useDeleteLoanMutation,
   useCreateListingMutation,
+  useGetTermsQuery,
   useUpdateTermsMutation,
+  useDeleteTermsMutation,
   useGetOffersQuery,
   useCreateOfferMutation,
   useDeleteOfferMutation,

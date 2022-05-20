@@ -34,7 +34,7 @@ export const signTerms = async (
       nftTokenType.ERC721,
     ]
   );
-  console.log(payload);
+
   const payloadHash = ethers.utils.keccak256(payload);
   const signature = await provider
     .getSigner()
