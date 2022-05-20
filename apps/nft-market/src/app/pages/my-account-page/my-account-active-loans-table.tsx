@@ -7,7 +7,6 @@ import {
 } from "@fantohm/shared-ui-themes";
 import {
   Avatar,
-  Button,
   Chip,
   LinearProgress,
   TableBody,
