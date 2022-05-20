@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId } from "@fantohm/shared-web3";
+import { useWeb3Context, defaultNetworkId, loadPlatformFee } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -23,6 +23,7 @@ export const App = (): JSX.Element => {
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
   const backend = useSelector((state: RootState) => state.backend);
+  const { platformFee } = useSelector((state: RootState) => state.wallet);
 
   const [theme, setTheme] = useState(NftLight);
   const { address, chainId, connected, hasCachedProvider, connect, provider } =
@@ -53,10 +54,22 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (provider && connected && address !== backend.authorizedAccount) {
+    if (
+      provider &&
+      connected &&
+      address !== backend.authorizedAccount &&
+      backend.accountStatus != "pending"
+    ) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
+    }
+  }, [provider, address, connected, backend.authorizedAccount, backend.accountStatus]);
+
+  // when a user connects their wallet login to the backend api
+  useEffect(() => {
+    if (provider && connected) {
+      dispatch(loadPlatformFee({ networkId: chainId || defaultNetworkId, address }));
     }
   }, [address, connected, backend.authorizedAccount]);
 

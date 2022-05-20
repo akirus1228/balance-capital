@@ -4,6 +4,7 @@ import { Box, Typography } from "@mui/material";
 // import MyAccountDetailsTable from "../../../../../usdb/src/app/pages/my-account/my-account-details-table";
 // import { shorten } from "../../../../../usdb/src/app/pages/my-account/my-account";
 import { useWeb3Context } from "@fantohm/shared-web3";
+import { useGetLoansQuery } from "../../api/backend-api";
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -12,6 +13,26 @@ export function shorten(str: string) {
 
 export const MyAccountPage = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
+  const { data: activeBorrowerLoans, isLoading: activeBorrowerLoansIsListing } =
+    useGetLoansQuery({
+      take: 50,
+      skip: 0,
+    });
+  const { data: activeLenderLoans, isLoading: activeLenderLoansIsListing } =
+    useGetLoansQuery({
+      take: 50,
+      skip: 0,
+    });
+  const { data: historicalBorrowerLoans, isLoading: historicalBorrowerLoansIsListing } =
+    useGetLoansQuery({
+      take: 50,
+      skip: 0,
+    });
+  const { data: historicalLenderLoans, isLoading: historicalLenderLoansIsListing } =
+    useGetLoansQuery({
+      take: 50,
+      skip: 0,
+    });
 
   const listings = [];
   return (
@@ -21,14 +42,14 @@ export const MyAccountPage = (): JSX.Element => {
           My Account <span style={{ color: "#858E93" }}>{shorten(address)}</span>
         </Typography>
       </Box>
-      <h2>Active loans as borrower({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Active loans as lender({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Previous loans as borrower({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Previous loans as lender({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
+      <h2>Active loans as borrower({activeBorrowerLoans?.length})</h2>
+      <MyAccountActiveLoansTable loans={activeBorrowerLoans} />
+      <h2>Active loans as lender({activeLenderLoans?.length})</h2>
+      <MyAccountActiveLoansTable loans={activeLenderLoans} />
+      <h2>Previous loans as borrower({historicalBorrowerLoans?.length})</h2>
+      <MyAccountActiveLoansTable loans={historicalBorrowerLoans} />
+      <h2>Previous loans as lender({historicalLenderLoans?.length})</h2>
+      <MyAccountActiveLoansTable loans={historicalLenderLoans} />
     </div>
   );
 };

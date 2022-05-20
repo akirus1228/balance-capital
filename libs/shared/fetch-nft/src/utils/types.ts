@@ -36,6 +36,7 @@ export type Collectible = {
   assetContractAddress: Nullable<string>;
   chain: Chain;
   wallet: string;
+  collection?: any;
 };
 
 export type CollectibleState = {

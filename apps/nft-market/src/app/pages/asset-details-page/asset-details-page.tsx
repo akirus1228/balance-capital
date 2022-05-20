@@ -3,21 +3,22 @@ import { CircularProgress } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useGetListingsQuery } from "../../api/backend-api";
+import { useGetListingsQuery, useGetLoansQuery } from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import { AssetDetails } from "../../components/asset-details/asset-details";
 import { BorrowerCreateListing } from "../../components/borrower-create-listing/borrower-create-listing";
 import { BorrowerListingDetails } from "../../components/borrower-listing-details/borrower-listing-details";
 import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borrower-loan-details";
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
+import OffersList from "../../components/offers-list/offers-list";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingByAddress } from "../../store/selectors/listing-selectors";
-import { AssetStatus } from "../../types/backend-types";
+import { AssetStatus, Loan } from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
-  console.log("LenderAssetDetailsPage Render");
+  console.log("AssetDetailsPage Render");
   const params = useParams();
   const { address } = useWeb3Context();
   // find listing from store
@@ -53,12 +54,19 @@ export const AssetDetailsPage = (): JSX.Element => {
     { skip: !assets }
   );
 
+  // load loans for this contract
+  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery({
+    skip: 0,
+    take: 1,
+    assetId: asset?.id || "",
+  });
+
   // is the user the owner of the asset?
   const isOwner = useMemo(() => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, address]);
 
-  if (isListingLoading || isAssetLoading || !asset) {
+  if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return <CircularProgress />;
   }
   return (
@@ -66,6 +74,7 @@ export const AssetDetailsPage = (): JSX.Element => {
       <AssetDetails
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
+        listing={listing}
       />
       {!listing && !asset && <h1>Loading...</h1>}
       {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (
@@ -78,8 +87,13 @@ export const AssetDetailsPage = (): JSX.Element => {
         <BorrowerListingDetails asset={asset} sx={{ mt: "3em" }} />
       )}
       {isOwner && asset?.status === AssetStatus.Locked && (
-        <BorrowerLoanDetails asset={asset} sx={{ mt: "3em" }} />
+        <BorrowerLoanDetails
+          asset={asset}
+          loan={loans ? loans[0] : ({} as Loan)}
+          sx={{ mt: "3em" }}
+        />
       )}
+      {isOwner && asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
     </>
   );
 };

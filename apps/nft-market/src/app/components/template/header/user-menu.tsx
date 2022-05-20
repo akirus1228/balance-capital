@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
 } from "@mui/material";
-import { MouseEvent, useState } from "react";
+import { MouseEvent, MouseEventHandler, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
@@ -24,6 +24,7 @@ import ArrowForwardOutlinedIcon from "@mui/icons-material/ArrowForwardOutlined";
 import { addressEllipsis } from "@fantohm/shared-helpers";
 import { RootState } from "../../../store";
 import AvatarPlaceholder from "../../../../assets/images/temp-avatar.png";
+import { logout } from "../../../store/reducers/backend-slice";
 
 export const UserMenu = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -43,6 +44,11 @@ export const UserMenu = (): JSX.Element => {
 
   const onClickConnect = (event: MouseEvent<HTMLButtonElement>) => {
     connect(false, isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum);
+  };
+
+  const onClickDisconnect = () => {
+    disconnect();
+    dispatch(logout());
   };
 
   // theme control
@@ -118,7 +124,7 @@ export const UserMenu = (): JSX.Element => {
           <CustomInnerSwitch onClick={toggleTheme} />
         </MenuItem>
         <Divider />
-        <MenuItem onClick={disconnect}>
+        <MenuItem onClick={onClickDisconnect}>
           <Icon component={LogoutOutlinedIcon} />
           Disconnect
         </MenuItem>
