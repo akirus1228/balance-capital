@@ -6,16 +6,7 @@ export interface CreateListingRequest {
 }
 
 // response types
-export type LoginResponse = {
-  address: string;
-  createdAt: string;
-  description?: string;
-  email?: string;
-  id: string;
-  name?: string;
-  profileImageUrl?: string;
-  updatedAt: string;
-};
+export type LoginResponse = User;
 
 export type AllAssetsResponse = {
   data: Asset[];
@@ -29,6 +20,12 @@ export type CreateAssetResponse = {
 export type AllListingsResponse = {
   data: BackendListing[];
   count: number;
+};
+
+export type CreateListingResponse = {
+  asset: Asset;
+  status: ListingStatus;
+  term: Terms;
 };
 
 // data models
@@ -51,16 +48,25 @@ export enum AssetChain {
   sol,
 }
 
-export type Owner = {
+export type Person = {
   id?: string;
   address: string;
-  createdAt?: string;
-  updatedAt?: string;
   name?: string;
   email?: string;
   description?: string;
   profileImageUrl?: string;
-};
+} & StandardBackendObject;
+
+export type Owner = {
+  id?: string;
+  address: string;
+  name?: string;
+  email?: string;
+  description?: string;
+  profileImageUrl?: string;
+} & StandardBackendObject;
+
+export type User = Person;
 
 export type Terms = {
   id?: string;
@@ -68,9 +74,8 @@ export type Terms = {
   apr: number;
   duration: number;
   expirationAt: Date;
-  createdAt?: string;
-  updatedAt?: string;
-};
+  signature: string;
+} & StandardBackendObject;
 
 export enum ListingStatus {
   Pending = "Pending",
@@ -79,34 +84,37 @@ export enum ListingStatus {
   Cancelled = "Cancelled",
 }
 
-export interface Listing {
+export type IncludesTerms = {
+  terms: Terms;
+};
+
+export type IncludesTerm = {
+  term: Terms;
+};
+
+export type Listing = {
   id?: string;
   asset: Asset;
-  terms: Terms;
   status: ListingStatus;
-  createdAt?: string;
-  updatedAt?: string;
   cacheExpire?: number;
-}
+} & StandardBackendObject &
+  IncludesTerms;
 
-export interface BackendListing {
+export type BackendListing = {
   id?: string;
   asset: Asset;
   term: Terms;
   status: ListingStatus;
-  createdAt?: string;
-  updatedAt?: string;
   cacheExpire?: number;
-}
+} & StandardBackendObject;
 
 export type Chain = "eth" | "sol";
 
-export interface Asset {
+export type Asset = {
   status: AssetStatus;
   cacheExpire?: number;
   openseaLoaded?: number;
   hasPermission?: boolean;
-  owner?: Owner;
   id?: string;
   tokenId: string;
   openseaId?: string;
@@ -119,6 +127,7 @@ export interface Asset {
   videoUrl: Nullable<string>;
   threeDUrl: Nullable<string>;
   isOwned: boolean;
+  owner?: Owner;
   dateCreated: Nullable<string>;
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;
@@ -126,7 +135,7 @@ export interface Asset {
   assetContractAddress: string;
   chain: Chain;
   wallet: string;
-}
+} & StandardBackendObject;
 
 export type Nullable<T> = T | null;
 
@@ -157,10 +166,7 @@ export type Notification = {
   importance: Importance;
   message: string;
   status: NotificationStatus;
-  createdAt?: string;
-  updatedAt?: string;
-  deletedAt?: string;
-};
+} & StandardBackendObject;
 
 export type ApiResponse = {
   success: boolean;
@@ -173,3 +179,32 @@ export type EditNotificationRequest = {
   message: string;
   status: NotificationStatus;
 };
+
+export enum BackendLoadingStatus {
+  idle = "idle",
+  loading = "loading",
+  succeeded = "succeeded",
+  failed = "failed",
+}
+
+export type Loan = {
+  id?: string;
+  lender: Person;
+  borrower: Person;
+  assetListing: Listing;
+  term: Terms;
+} & StandardBackendObject;
+
+type Updatable = {
+  updatedAt?: string;
+};
+
+type Deleteable = {
+  deletedAt?: string;
+};
+
+type Creatable = {
+  createdAt?: string;
+};
+
+export type StandardBackendObject = Updatable & Creatable & Deleteable;

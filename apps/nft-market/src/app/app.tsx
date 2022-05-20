@@ -9,14 +9,15 @@ import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
 import { RootState } from "./store";
-import BorrowPage from "./pages/borrow-page/borrow-page";
-import LendPage from "./pages/lend-page/lend-page";
-import MyAccountPage from "./pages/my-account-page/my-account-page";
-import BorrowerAssetDetailsPage from "./pages/borrower-asset-details-page/borrower-asset-details-page";
-import NotificationsPage from "./pages/notifications/notifications-page";
+import { BorrowPage } from "./pages/borrow-page/borrow-page";
+import { LendPage } from "./pages/lend-page/lend-page";
+import { MyAccountPage } from "./pages/my-account-page/my-account-page";
+import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount } from "./store/reducers/backend-slice";
 import Typography from "@mui/material/Typography";
+import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
+import TestHelper from "./pages/test-helper/test-helper";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -57,17 +58,12 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (
-      provider &&
-      connected &&
-      ["unknown", "failed"].includes(backend.accountStatus) &&
-      backend.authSignature === null
-    ) {
+    if (provider && connected && address !== backend.authorizedAccount) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [address, backend.accountStatus, connected]);
+  }, [address, connected, backend.authorizedAccount]);
 
   const handleAgree = () => {
     setPromptTerms(false);
@@ -103,8 +99,9 @@ export const App = (): JSX.Element => {
                       onChange={() => setIsChecked(!isChecked)}
                     />
                     <Typography>
-                      I agree that I have read, understood and accepted all of the Terms
-                      and Privacy Policy.
+                      I agree that I have read, understood and accepted all of the{" "}
+                      <a>Terms</a>
+                      <a>and Privacy Policy</a>.
                     </Typography>
                   </Box>
                 </Box>
@@ -128,13 +125,20 @@ export const App = (): JSX.Element => {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/borrow" element={<BorrowPage />} />
-            <Route
-              path="/borrow/:contractAddress/:tokenId"
-              element={<BorrowerAssetDetailsPage />}
-            />
+            {/*<Route*/}
+            {/*  path="/borrow/:contractAddress/:tokenId"*/}
+            {/*  element={<BorrowerAssetDetailsPage />}*/}
+            {/*/>*/}
             <Route path="/notifications" element={<NotificationsPage />} />
             <Route path="/lend" element={<LendPage />} />
             <Route path="/my-account" element={<MyAccountPage />} />
+            <Route path="/" element={<HomePage />} />
+            <Route path="/borrow" element={<BorrowPage />} />
+            <Route
+              path="/asset/:contractAddress/:tokenId"
+              element={<AssetDetailsPage />}
+            />
+            <Route path="/th" element={<TestHelper />} />
             <Route
               path="*"
               element={
