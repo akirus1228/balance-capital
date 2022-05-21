@@ -39,17 +39,14 @@ returns: void
 */
 export const createListing = createAsyncThunk(
   "listings/createListing",
-  async (
-    { asset, terms }: ListingAsyncThunk,
-    { getState, rejectWithValue, dispatch }
-  ) => {
+  async ({ asset, term }: ListingAsyncThunk, { getState, rejectWithValue, dispatch }) => {
     console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
       const listing = await BackendApi.createListing(
         thisState.backend.authSignature,
         asset,
-        terms
+        term
       );
       if (!listing) {
         rejectWithValue("Failed to create listing");

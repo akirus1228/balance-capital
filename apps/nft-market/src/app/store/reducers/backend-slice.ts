@@ -97,7 +97,13 @@ const initialState: BackendData = {
 const backendSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.authSignature = null;
+      state.authorizedAccount = "";
+      state.accountStatus = "unknown";
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(authorizeAccount.pending, (state, action) => {
       state.accountStatus = "pending";
@@ -132,4 +138,4 @@ const backendSlice = createSlice({
 
 export const backendReducer = backendSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-//export const {} = walletSlice.actions;
+export const { logout } = backendSlice.actions;

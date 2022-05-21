@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { Listing } from "../types/backend-types";
+import { Listing, Terms } from "../types/backend-types";
 
-export type ListingTermDetails = {
+export type TermDetails = {
   repaymentAmount: number;
   repaymentTotal: number;
   amount: number;
@@ -9,7 +9,7 @@ export type ListingTermDetails = {
   duration: number;
 };
 
-export const useListingTermDetails = (listing: Listing): ListingTermDetails => {
+export const useTermDetails = (term: Terms | undefined): TermDetails => {
   console.log("useListingTerms");
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);
@@ -31,18 +31,18 @@ export const useListingTermDetails = (listing: Listing): ListingTermDetails => {
   // handle internal updates
   // only update value if the term have changed
   useEffect(() => {
-    if (listing && listing.term) {
-      if (listing.term.amount && listing.term.amount !== amount) {
-        setAmount(listing.term.amount);
+    if (term) {
+      if (term.amount && term.amount !== amount) {
+        setAmount(term.amount);
       }
-      if (listing.term.apr && listing.term.apr !== apr) {
-        setApr(listing.term.apr);
+      if (term.apr && term.apr !== apr) {
+        setApr(term.apr);
       }
-      if (listing.term.duration && listing.term.duration !== duration) {
-        setDuration(listing.term.duration);
+      if (term.duration && term.duration !== duration) {
+        setDuration(term.duration);
       }
     }
-  }, [JSON.stringify(listing.term)]);
+  }, [JSON.stringify(term)]);
 
   return { repaymentAmount, repaymentTotal, amount, apr, duration };
 };

@@ -1,5 +1,7 @@
-import { Box, Chip, Container, Grid, Skeleton, Typography } from "@mui/material";
+import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import { useGetLoansQuery } from "../../api/backend-api";
 import { useWalletAsset } from "../../hooks/use-wallet-asset";
+import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
 import StatusInfo from "./status-info/status-info";
@@ -7,11 +9,27 @@ import StatusInfo from "./status-info/status-info";
 export interface AssetDetailsProps {
   contractAddress: string;
   tokenId: string;
+  listing?: Listing;
 }
 
-export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
+export const AssetDetails = ({
+  contractAddress,
+  tokenId,
+  listing,
+  ...props
+}: AssetDetailsProps): JSX.Element => {
   console.log("asset from assetDetails");
-  const asset = useWalletAsset(props.contractAddress, props.tokenId);
+  const asset = useWalletAsset(contractAddress, tokenId);
+  const { data: loan, isLoading: isLoanLoading } = useGetLoansQuery(
+    {
+      skip: 0,
+      take: 1,
+      assetId: asset !== null ? asset.id : "",
+    },
+    {
+      skip: !asset || asset === null || !asset.id || !listing,
+    }
+  );
 
   return (
     <Container>
@@ -32,7 +50,7 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
           </Grid>
           <Grid item xs={12} md={6}>
             <Box sx={{ display: "flex", flexDirection: "column" }}>
-              <Typography>{asset.name}</Typography>
+              <Typography>{asset.collection?.name || ""}</Typography>
               <h1>{asset.name}</h1>
             </Box>
             <Box
@@ -48,7 +66,7 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
               <Typography sx={{ mx: "10px" }}>.</Typography>
               <Chip label={asset.mediaType || "Art"} />
             </Box>
-            <Box sx={{ display: "flex", flexDirection: "row" }}>
+            <Box sx={{ display: "flex", flexDirection: "row", mb: "3em" }}>
               <Box
                 sx={{
                   display: "flex",
@@ -59,11 +77,12 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                   width: "100%",
                 }}
               >
-                <Box
+                <Paper
                   sx={{
                     display: "flex",
                     flexDirection: "row",
                     justifyContent: "space-around",
+                    alignItems: "center",
                   }}
                 >
                   <Box
@@ -71,6 +90,7 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "space-around",
+                      alignItems: "center",
                     }}
                   >
                     <AssetOwnerTag asset={asset} sx={{ mb: "3em" }} />
@@ -79,10 +99,16 @@ export const AssetDetails = (props: AssetDetailsProps): JSX.Element => {
                     <Typography className={style["label"]}>Listed</Typography>
                     <Typography className={style["name"]}>14 hours ago</Typography>
                   </Box>
-                </Box>
+                </Paper>
               </Box>
             </Box>
-            <StatusInfo asset={asset} />
+            {!!listing && (
+              <StatusInfo
+                asset={asset}
+                listing={listing}
+                loan={loan ? loan[0] : undefined}
+              />
+            )}
           </Grid>
         </Grid>
       ) : (

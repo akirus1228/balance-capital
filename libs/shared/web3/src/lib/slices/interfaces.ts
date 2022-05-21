@@ -162,3 +162,19 @@ export type AssetLocAsyncThunk = {
   assetAddress: string;
   tokenId: string;
 };
+
+export type AssetAddressAsyncThunk = {
+  assetAddress: string;
+};
+
+export type InteractiveErc20AsyncThunk = AssetAddressAsyncThunk &
+  IBaseAsyncThunk &
+  IInteractiveAsyncThunk;
+
+export type InteractiveWalletErc20AsyncThunk = {
+  walletAddress: string;
+} & InteractiveErc20AsyncThunk;
+
+export type Erc20AllowanceAsyncThunk = {
+  amount: number;
+} & InteractiveWalletErc20AsyncThunk;
