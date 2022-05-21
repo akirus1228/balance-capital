@@ -1,21 +1,23 @@
-import { Box, Button, Container, Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 
-import ArrowRightUp from "../../../assets/icons/arrow-right-up.svg";
+import ConnectWalletImage from "../../../assets/images/connect-wallet.png";
+import ChooseNftCollateraliseImage from "../../../assets/images/choose-nft-collateralise.png";
+import AcceptOfferImage from "../../../assets/images/accept-offer.png";
 
 export const Borrowers = (): JSX.Element => {
   const steps = [
     {
-      backgroundImage: "",
+      backgroundImage: ConnectWalletImage,
       title: "Connect your wallet",
       description: "We’ll scan your wallet to find eligible NFTs to borrow against",
     },
     {
-      backgroundImage: "",
+      backgroundImage: ChooseNftCollateraliseImage,
       title: "Choose an NFT to collateralise",
       description: "Pick your NFT, set your terms and wait for the offers to roll in",
     },
     {
-      backgroundImage: "",
+      backgroundImage: AcceptOfferImage,
       title: "Accept the best offer and receive the funds immediately",
       description: "Funds can be accessed immediately",
     },
@@ -39,15 +41,6 @@ export const Borrowers = (): JSX.Element => {
             <Typography variant="h4">Unleash the value of your NFTs</Typography>
           </Box>
         </Box>
-        <Box sx={{ display: "flex" }}>
-          <Typography variant="h5" style={{ textAlign: "right" }}>
-            get <br />
-            started
-          </Typography>
-          <Box sx={{ mt: "5px", ml: "20px" }}>
-            <img src={ArrowRightUp} alt="Lend" />
-          </Box>
-        </Box>
       </Box>
       <Grid container spacing={4} sx={{ mt: "50px" }}>
         {steps.map((step: any, index: number) => {
@@ -59,14 +52,21 @@ export const Borrowers = (): JSX.Element => {
                   flexDirection: "column",
                   justifyContent: "end",
                   height: "300px",
-                  background: "red",
                   borderRadius: "30px",
+                  boxShadow: "0px 3px 30px #70707086",
                   p: "40px",
                 }}
               >
-                <Typography variant="h6">{step.title}</Typography>
+                <Box sx={{ display: "flex", justifyContent: "center", mb: "20px" }}>
+                  <img src={step?.backgroundImage} alt={step?.title} />
+                </Box>
+                <Typography variant="h6" textAlign="center">
+                  {step?.title}
+                </Typography>
                 <Box sx={{ mt: "10px" }}>
-                  <Typography variant="body1">{step.description}</Typography>
+                  <Typography variant="body1" textAlign="center">
+                    {step?.description}
+                  </Typography>
                 </Box>
               </Box>
             </Grid>

@@ -3,6 +3,8 @@ import { Box, Grid } from "@mui/material";
 import Jumbotron from "./jumbotron";
 import Borrowers from "./borrowers";
 import Lenders from "./lenders";
+import VerifiedCollections from "./verified-collections";
+import BackedLoan from "./backed-loan";
 
 export const HomePage = (): JSX.Element => {
   return (
@@ -28,6 +30,8 @@ export const HomePage = (): JSX.Element => {
       <Jumbotron />
       <Borrowers />
       <Lenders />
+      <VerifiedCollections />
+      <BackedLoan />
     </Box>
   );
 };
