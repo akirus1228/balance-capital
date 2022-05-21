@@ -143,6 +143,13 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          borderRadius: "25%",
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
