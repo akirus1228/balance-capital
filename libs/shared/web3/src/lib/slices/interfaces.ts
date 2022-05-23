@@ -181,12 +181,6 @@ export interface IUsdbNftRedeemAsyncThunk extends IBaseAsyncThunk {
   readonly provider: JsonRpcProvider;
 }
 
-export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
-  readonly walletAddress: string;
-  readonly assetAddress: string;
-  readonly tokenId: string;
-}
-
 export interface IStakingBackedNftAsyncThunk extends IBaseAsyncThunk {
   readonly nftId?: number;
   readonly type: number;
@@ -213,3 +207,28 @@ export interface IAmpsRedeemNftAsyncThunk
   readonly address: string;
   readonly callback?: any;
 }
+
+// wallet
+export type AssetLocAsyncThunk = {
+  networkId: number;
+  provider: JsonRpcProvider;
+  walletAddress: string;
+  assetAddress: string;
+  tokenId: string;
+};
+
+export type AssetAddressAsyncThunk = {
+  assetAddress: string;
+};
+
+export type InteractiveErc20AsyncThunk = AssetAddressAsyncThunk &
+  IBaseAsyncThunk &
+  IInteractiveAsyncThunk;
+
+export type InteractiveWalletErc20AsyncThunk = {
+  walletAddress: string;
+} & InteractiveErc20AsyncThunk;
+
+export type Erc20AllowanceAsyncThunk = {
+  amount: number;
+} & InteractiveWalletErc20AsyncThunk;

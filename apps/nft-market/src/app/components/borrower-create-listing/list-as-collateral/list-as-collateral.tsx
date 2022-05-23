@@ -40,7 +40,7 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
           NFT.
         </Typography>
         <Typography>
-          You can repay a loan at any time within the agreed terms, but you must still pay
+          You can repay a loan at any time within the agreed term, but you must still pay
           the full interest amount.
         </Typography>
         <Typography>

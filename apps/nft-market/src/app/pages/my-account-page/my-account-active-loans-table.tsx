@@ -1,15 +1,22 @@
+import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
+import {
+  PaperTable,
+  PaperTableCell,
+  PaperTableHead,
+  PaperTableRow,
+} from "@fantohm/shared-ui-themes";
 import {
   Avatar,
-  Paper,
-  Table,
+  Chip,
+  LinearProgress,
   TableBody,
-  TableCell,
   TableContainer,
-  TableHead,
   TableRow,
-  Typography,
 } from "@mui/material";
-import { Listing } from "../../types/backend-types";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { RootState } from "../../store";
+import { Loan, LoanStatus } from "../../types/backend-types";
 import style from "./my-account.module.scss";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
@@ -19,98 +26,80 @@ export const currencyFormat = new Intl.NumberFormat("en-US", {
   minimumFractionDigits: 2,
 });
 
-export const MyAccountActiveLoansTable = ({
-  listings,
-}: {
-  listings: Listing[];
-}): JSX.Element => {
+type MyAccountActiveLoansTableProps = {
+  loans: Loan[] | undefined;
+};
+
+export const MyAccountActiveLoansTable = (
+  props: MyAccountActiveLoansTableProps
+): JSX.Element => {
+  const { user } = useSelector((state: RootState) => state.backend);
+  if (typeof props.loans === "undefined") {
+    return <LinearProgress />;
+  }
+  if (props.loans.length < 1) {
+    return <></>;
+  }
   return (
-    <Paper elevation={0} sx={{ marginTop: "10px" }} className={style["rowCard"]}>
-      <TableContainer>
-        <Table aria-label="Active investments">
-          <TableHead>
-            <TableRow>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Asset
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Name
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Loan Value
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Repayment
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  APR
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Duration
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Due
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Borrower
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Lender
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography variant="subtitle2" className={style["subTitle"]}>
-                  Status
-                </Typography>
-              </TableCell>
-              <TableCell></TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {listings.map((listing: Listing, index) => (
-              <TableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
-                <TableCell>
-                  <Avatar />
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">{listing.asset.name}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">{listing.terms.amount}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">{listing.terms.amount}%</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="h6">{listing.terms.apr}</Typography>
-                </TableCell>
-                <TableCell>{listing.terms.duration}</TableCell>
-                <TableCell>{listing.terms.duration}</TableCell>
-                <TableCell>{listing.asset.wallet}</TableCell>
-                <TableCell>{listing.asset.wallet}</TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <TableContainer>
+      <PaperTable aria-label="Active investments">
+        <PaperTableHead>
+          <TableRow>
+            <PaperTableCell>Asset</PaperTableCell>
+            <PaperTableCell>Name</PaperTableCell>
+            <PaperTableCell>Loan Value</PaperTableCell>
+            <PaperTableCell>Repayment</PaperTableCell>
+            <PaperTableCell>APR</PaperTableCell>
+            <PaperTableCell>Duration</PaperTableCell>
+            <PaperTableCell>Due</PaperTableCell>
+            <PaperTableCell>Borrower</PaperTableCell>
+            <PaperTableCell>Lender</PaperTableCell>
+            <PaperTableCell>Status</PaperTableCell>
+            <PaperTableCell></PaperTableCell>
+          </TableRow>
+        </PaperTableHead>
+        <TableBody>
+          {props.loans.map((loan: Loan, index: number) => (
+            <PaperTableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
+              <PaperTableCell>
+                <Avatar
+                  className="squared"
+                  alt={loan.assetListing.asset.name || ""}
+                  src={loan.assetListing.asset.frameUrl || ""}
+                />
+              </PaperTableCell>
+              <PaperTableCell>
+                <Link
+                  to={`/asset/${loan.assetListing.asset.assetContractAddress}/${loan.assetListing.asset.tokenId}`}
+                >
+                  {loan.assetListing.asset.name}
+                </Link>
+              </PaperTableCell>
+              <PaperTableCell>{formatCurrency(loan.term.amount, 2)}</PaperTableCell>
+              <PaperTableCell>{loan.term.amount}%</PaperTableCell>
+              <PaperTableCell>{loan.term.apr}</PaperTableCell>
+              <PaperTableCell>{loan.term.duration}</PaperTableCell>
+              <PaperTableCell>{loan.term.duration}</PaperTableCell>
+              <PaperTableCell>
+                {loan.borrower.address === user.address
+                  ? "You"
+                  : addressEllipsis(loan.borrower.address)}
+              </PaperTableCell>
+              <PaperTableCell>
+                {loan.lender.address === user.address
+                  ? "You"
+                  : addressEllipsis(loan.lender.address)}
+              </PaperTableCell>
+              <PaperTableCell>
+                {loan.status === LoanStatus.Active && <Chip label="Escrow" />}
+                {loan.status === LoanStatus.Default && <Chip label="Foreclose" />}
+                {loan.status === LoanStatus.Complete && <Chip label="Completed" />}
+              </PaperTableCell>
+            </PaperTableRow>
+          ))}
+        </TableBody>
+      </PaperTable>
+    </TableContainer>
   );
 };
 
