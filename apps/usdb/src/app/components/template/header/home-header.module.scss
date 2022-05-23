@@ -108,6 +108,7 @@
 
 .headerLink {
   color: #707070;
+  display: flex;
   margin-right: 2.5em;
   &:hover {
     color: #000;
@@ -116,8 +117,15 @@
 
 .headerLinkDark {
   color: #FFF;
+  display: flex;
   margin-right: 2.5em;
   &:hover {
     color: #707070;
   }
+}
+
+.link {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: clip;
 }

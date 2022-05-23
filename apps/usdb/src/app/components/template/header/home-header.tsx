@@ -255,10 +255,17 @@ export const HomeHeader = (): JSX.Element => {
               href="/#get-started"
               sx={{
                 px: "3em",
-                display: { xs: "none", md: "flex", width: "100%" },
+                display: {
+                  xs: "none",
+                  md: "flex",
+                  width: "100%",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "clip",
+                },
               }}
               className={style["link"]}
-              style={{ marginTop: "20px" }}
+              style={{ display: "flex" }}
             >
               Get started
             </Button>
