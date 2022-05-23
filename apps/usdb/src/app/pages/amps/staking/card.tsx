@@ -249,29 +249,40 @@ export default function StakingCard(props: any) {
                   </Grid>
 
                   <Grid item xs={12}>
-                    {stakeNftPoolData && (
+                    {!connected ? (
                       <Button
                         variant="contained"
                         color="primary"
-                        id="bond-btn"
-                        className="paperButton transaction-button"
-                        onClick={() => onStake()}
-                        disabled={
-                          (stakedType !== -1 && stakedType !== index) ||
-                          isPendingTxn(
-                            pendingTransactions,
-                            "unstake_" + stakeNftPoolData.name
-                          )
-                        }
+                        className="paperButton cardActionButton"
+                        onClick={() => connect(false)}
                       >
-                        {stakedType === index
-                          ? txnButtonText(
-                              pendingTransactions,
-                              "unstake_" + stakeNftPoolData.name,
-                              "Unstake"
-                            )
-                          : "Stake"}
+                        Connect Wallet
                       </Button>
+                    ) : (
+                      stakeNftPoolData && (
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          id="bond-btn"
+                          className="paperButton transaction-button"
+                          onClick={() => onStake()}
+                          disabled={
+                            (stakedType !== -1 && stakedType !== index) ||
+                            isPendingTxn(
+                              pendingTransactions,
+                              "unstake_" + stakeNftPoolData.name
+                            )
+                          }
+                        >
+                          {stakedType === index
+                            ? txnButtonText(
+                                pendingTransactions,
+                                "unstake_" + stakeNftPoolData.name,
+                                "Unstake"
+                              )
+                            : "Stake"}
+                        </Button>
+                      )
                     )}
                   </Grid>
                 </Grid>

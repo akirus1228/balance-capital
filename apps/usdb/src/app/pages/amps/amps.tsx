@@ -225,7 +225,7 @@ export default function Amps() {
             stakedType={stakedType}
           />
           <StakingCard
-            title="365 day lock up"
+            title="360 day lock up"
             index={2}
             onStake={() => onStake(2)}
             stakedType={stakedType}
