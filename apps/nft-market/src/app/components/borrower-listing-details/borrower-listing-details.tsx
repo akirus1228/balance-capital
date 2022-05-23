@@ -18,15 +18,19 @@ export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
   console.log("BorrowerListingDetails render");
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
   const listing: Listing = useSelector((state: RootState) =>
     selectListingFromAsset(state, props.asset)
   );
 
-  useGetListingsQuery({
-    skip: 0,
-    take: 50,
-    openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
-  });
+  useGetListingsQuery(
+    {
+      skip: 0,
+      take: 50,
+      openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
+    },
+    { skip: !authSignature }
+  );
 
   // calculate repayment totals
   const { repaymentTotal } = useListingTermDetails(listing);

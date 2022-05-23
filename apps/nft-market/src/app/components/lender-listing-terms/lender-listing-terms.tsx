@@ -37,7 +37,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   // local store of term to pass between methods
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
   // logged in user
-  const { user } = useSelector((state: RootState) => state.backend);
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
   // status of contract calls for allowance and platform fee
   const { checkErc20AllowanceStatus, requestErc20AllowanceStatus, platformFee } =
     useSelector((state: RootState) => state.wallet);
@@ -62,7 +62,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   // query assets from the backend API
   const { data: asset, isLoading: isAssetLoading } = useGetAssetQuery(
     props.listing.asset.id,
-    { skip: !props.listing.asset }
+    { skip: !props.listing.asset || !authSignature }
   );
 
   // click accept term button

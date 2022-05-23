@@ -31,7 +31,7 @@ export type OfferListItemProps = {
 export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const dispatch = useDispatch();
   const [isRequestingPerms, setIsRequestingPerms] = useState(false);
-  const { user } = useSelector((state: RootState) => state.backend);
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
   const { address: walletAddress, provider } = useWeb3Context();
   const { repaymentTotal, repaymentAmount } = useTermDetails(offer.term);
 
@@ -56,7 +56,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       openseaIds: [asset.openseaId || ""],
     },
     {
-      skip: !asset || !!asset.id,
+      skip: !asset || !!asset.id || !authSignature,
     }
   );
 

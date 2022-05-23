@@ -12,6 +12,7 @@ import style from "./borrow-page.module.scss";
 export const BorrowPage = (): JSX.Element => {
   const { address } = useWeb3Context();
   const myAssets = useSelector((state: RootState) => selectMyAssets(state, address));
+  const { authSignature } = useSelector((state: RootState) => state.backend);
 
   // load assets from opensea api
   const { data: assets, isLoading: assetsLoading } = useGetOpenseaAssetsQuery(
@@ -26,7 +27,7 @@ export const BorrowPage = (): JSX.Element => {
       skip: 0,
       take: 50,
     },
-    { skip: !assets }
+    { skip: !assets || !authSignature }
   );
 
   return (

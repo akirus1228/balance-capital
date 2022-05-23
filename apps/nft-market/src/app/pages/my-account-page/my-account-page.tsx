@@ -4,6 +4,8 @@ import { Box, Container, Typography } from "@mui/material";
 import { useWeb3Context } from "@fantohm/shared-web3";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { LoanStatus } from "../../types/backend-types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -12,6 +14,7 @@ export function shorten(str: string) {
 
 export const MyAccountPage = (): JSX.Element => {
   const { provider, address, chainId } = useWeb3Context();
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   const { data: activeBorrowerLoans, isLoading: activeBorrowerLoansIsListing } =
     useGetLoansQuery(
       {
@@ -20,7 +23,7 @@ export const MyAccountPage = (): JSX.Element => {
         status: LoanStatus.Active,
         borrowerAddress: address,
       },
-      { skip: !address }
+      { skip: !address || !authSignature }
     );
   const { data: activeLenderLoans, isLoading: activeLenderLoansIsListing } =
     useGetLoansQuery(
@@ -30,7 +33,7 @@ export const MyAccountPage = (): JSX.Element => {
         status: LoanStatus.Active,
         lenderAddress: address,
       },
-      { skip: !address }
+      { skip: !address || !authSignature }
     );
   const { data: historicalBorrowerLoans, isLoading: historicalBorrowerLoansIsListing } =
     useGetLoansQuery(
@@ -40,7 +43,7 @@ export const MyAccountPage = (): JSX.Element => {
         status: LoanStatus.Complete,
         borrowerAddress: address,
       },
-      { skip: !address }
+      { skip: !address || !authSignature }
     );
   const { data: historicalLenderLoans, isLoading: historicalLenderLoansIsListing } =
     useGetLoansQuery(
@@ -50,10 +53,9 @@ export const MyAccountPage = (): JSX.Element => {
         status: LoanStatus.Complete,
         lenderAddress: address,
       },
-      { skip: !address }
+      { skip: !address || !authSignature }
     );
 
-  const listings = [];
   return (
     <Container>
       <Box className={style["myAccountContainer"]}>

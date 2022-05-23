@@ -12,6 +12,7 @@ export const useWalletAsset = (
   tokenId: string
 ): Asset | null => {
   console.log("useWalletAsset");
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   const asset = useSelector((state: RootState) =>
     selectAssetByAddress(state, { tokenId, contractAddress })
   );
@@ -35,7 +36,7 @@ export const useWalletAsset = (
         ? osAssets.map((asset: OpenseaAsset) => asset.id.toString())
         : [],
     },
-    { skip: !osAssets && isAssetLoading }
+    { skip: !osAssets || isAssetLoading || !authSignature }
   );
 
   return asset || ({} as Asset);
