@@ -66,6 +66,16 @@ export const MintNftPage = (): JSX.Element => {
   });
 
   useEffect(() => {
+    dispatch(
+      getNftTokenUri({
+        id: -1,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (metadata: NftMetadata) => {
+          setNftMetadata(metadata);
+        },
+      })
+    );
+
     if (!connected || !address) return;
     dispatch(
       getNftList({
@@ -73,16 +83,6 @@ export const MintNftPage = (): JSX.Element => {
         networkId: chainId ?? defaultNetworkId,
         callback: (list: Array<number>) => {
           setNftIds(list);
-        },
-      })
-    );
-
-    dispatch(
-      getNftTokenUri({
-        id: -1,
-        networkId: chainId ?? defaultNetworkId,
-        callback: (metadata: NftMetadata) => {
-          setNftMetadata(metadata);
         },
       })
     );
@@ -138,6 +138,10 @@ export const MintNftPage = (): JSX.Element => {
         })
       );
     }
+  };
+
+  const onConnect = () => {
+    connect(false);
   };
 
   const onInvest = async () => {
@@ -299,7 +303,16 @@ export const MintNftPage = (): JSX.Element => {
               <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
               <span>If needed</span>
             </Box>
-            {hasAllowance() ? (
+            {!connected ? (
+              <Button
+                variant="contained"
+                color={stdButtonColor}
+                className="paperButton cardActionButton"
+                onClick={onConnect}
+              >
+                Connect Wallet
+              </Button>
+            ) : hasAllowance() ? (
               <Button
                 variant="contained"
                 color={stdButtonColor}
