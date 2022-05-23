@@ -113,3 +113,11 @@
     color: #000;
   }
 }
+
+.headerLinkDark {
+  color: #FFF;
+  margin-right: 2.5em;
+  &:hover {
+    color: #707070;
+  }
+}

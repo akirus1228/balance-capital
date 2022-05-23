@@ -28,7 +28,7 @@ import { Link, useLocation } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
-import { BalanceLogo } from "@fantohm/shared/images";
+import { BalanceLogo, BalanceLogoDark } from "@fantohm/shared/images";
 import styles from "./home-header.module.scss";
 import { NetworkMenu } from "./network-menu";
 import { balanceheaderPages, Page } from "../../../constants/nav";
@@ -111,7 +111,11 @@ export const HomeHeader = (): JSX.Element => {
             }}
           >
             <Link to="/">
-              <img src={BalanceLogo} alt="USDB logo" width="60%" />
+              <img
+                src={themeType === "light" ? BalanceLogo : BalanceLogoDark}
+                alt="USDB logo"
+                width="40%"
+              />
             </Link>
           </Typography>
 
@@ -186,7 +190,9 @@ export const HomeHeader = (): JSX.Element => {
             <Box>
               <Link
                 to={pathname}
-                className={styles["headerLink"]}
+                className={
+                  themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+                }
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
                 Products
@@ -219,25 +225,54 @@ export const HomeHeader = (): JSX.Element => {
                 })}
               </Menu>
             </Box>
-            <Link to="/about" className={styles["headerLink"]}>
+            <Link
+              to="/about"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
               About
             </Link>
-            <Link to={{ pathname: "/#docs" }} className={styles["headerLink"]}>
+            <Link
+              to={{ pathname: "/#docs" }}
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
               Docs
             </Link>
-            <Link to="/#audit" className={styles["headerLink"]}>
+            <Link
+              to="/#audit"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
               Audits
             </Link>
             <Button
               variant="contained"
               color="primary"
               href="/#get-started"
-              sx={{ px: "3em", display: { xs: "none", md: "flex", height: "3em" } }}
+              sx={{
+                px: "3em",
+                display: { xs: "none", md: "flex", width: "100%" },
+              }}
               className={style["link"]}
+              style={{ marginTop: "20px" }}
             >
               Get started
             </Button>
           </Box>
+          <Tooltip title="Toggle Light/Dark Mode">
+            <Button
+              onClick={toggleTheme}
+              sx={{ display: { xs: "none", md: "flex" } }}
+              color="primary"
+              className={`menuButton ${styles["toggleTheme"]}`}
+            >
+              <SvgIcon component={WbSunnyOutlinedIcon} fontSize="large" />
+            </Button>
+          </Tooltip>
         </Toolbar>
       </Container>
       {!allowedChain && connected && (

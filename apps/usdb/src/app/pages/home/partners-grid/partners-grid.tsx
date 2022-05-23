@@ -3,7 +3,7 @@ import style from "./partners-grid.module.scss";
 import {
   BeetsIcon,
   CIcon,
-  CoinTelegramIcon,
+  CoinTelegraphIcon,
   DebridgeIcon,
   DefiantIcon,
   DIAIcon,
@@ -16,13 +16,35 @@ import {
   UnknownIcon,
   WanchainIcon,
   WarpIcon,
-  HackenIcon,
-  SpadetechIcon,
-  TechrateIcon,
+  BeetsIconDark,
+  CIconDark,
+  CoinTelegraphIconDark,
+  DebridgeIconDark,
+  DefiantIconDark,
+  DIAIconDark,
+  HuobiIconDark,
+  IncognitoIconDark,
+  LiquidDriverIconDark,
+  RangoIconDark,
+  SpookySwapIconDark,
+  SynapseIconDark,
+  UnknownIconDark,
+  WanchainIconDark,
+  WarpIconDark,
 } from "@fantohm/shared/images";
 import lightBG from "../../../../../../../libs/shared/ui-themes/src/lib/images/USDB_gradient_light.png";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { useEffect, useState } from "react";
+import { USDBDark, USDBLight } from "@fantohm/shared-ui-themes";
 
 export const PartnersGrid = (): JSX.Element => {
+  const themeType = useSelector((state: RootState) => state.app.theme);
+  const [theme, setTheme] = useState(USDBDark);
+
+  useEffect(() => {
+    setTheme(themeType === "light" ? USDBLight : USDBDark);
+  }, [themeType]);
   return (
     <Box
       style={{ alignContent: "center", justifyContent: "center", marginTop: "150px" }}
@@ -71,7 +93,7 @@ export const PartnersGrid = (): JSX.Element => {
           <Grid item md={3} xs={6}>
             <a href="https://spookyswap.finance/">
               <img
-                src={SpookySwapIcon}
+                src={theme === USDBLight ? SpookySwapIcon : SpookySwapIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -81,7 +103,7 @@ export const PartnersGrid = (): JSX.Element => {
             <a href="https://debridge.finance/">
               <img
                 title="FHM"
-                src={DebridgeIcon}
+                src={theme === USDBLight ? DebridgeIcon : DebridgeIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -91,7 +113,7 @@ export const PartnersGrid = (): JSX.Element => {
             <a href="https://www.liquiddriver.finance/">
               <img
                 title="Liquidity Solutions"
-                src={LiquidDriverIcon}
+                src={theme === USDBLight ? LiquidDriverIcon : LiquidDriverIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -101,7 +123,7 @@ export const PartnersGrid = (): JSX.Element => {
             <a href="https://rango.exchange/">
               <img
                 title="NFT Lending"
-                src={RangoIcon}
+                src={theme === USDBLight ? RangoIcon : RangoIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -111,7 +133,7 @@ export const PartnersGrid = (): JSX.Element => {
             <a href="https://beets.fi/#/">
               <img
                 title="Financial NFTs"
-                src={BeetsIcon}
+                src={theme === USDBLight ? BeetsIcon : BeetsIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -121,7 +143,7 @@ export const PartnersGrid = (): JSX.Element => {
             <a href="https://synapseprotocol.com/landing">
               <img
                 title="USDB Bank"
-                src={SynapseIcon}
+                src={theme === USDBLight ? SynapseIcon : SynapseIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -129,18 +151,26 @@ export const PartnersGrid = (): JSX.Element => {
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://incognito.org/">
-              <img src={IncognitoIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? IncognitoIcon : IncognitoIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://www.huobiwallet.com/en">
-              <img src={HuobiIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? HuobiIcon : HuobiIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://cointelegraph.com/">
               <img
-                src={CoinTelegramIcon}
+                src={theme === USDBLight ? CoinTelegraphIcon : CoinTelegraphIconDark}
                 alt="USDB logo"
                 className={style["partnerIcon"]}
               />
@@ -148,32 +178,56 @@ export const PartnersGrid = (): JSX.Element => {
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://thedefiant.io/">
-              <img src={DefiantIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? DefiantIcon : DefiantIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://thedefiant.io/">
-              <img src={CIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? CIcon : CIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://www.xdefi.io/">
-              <img src={UnknownIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? UnknownIcon : UnknownIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://www.diadata.org/">
-              <img src={DIAIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? DIAIcon : DIAIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://www.wanchain.org/">
-              <img src={WanchainIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? WanchainIcon : WanchainIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
           <Grid item md={3} xs={6}>
             <a href="https://www.warp.finance/">
-              <img src={WarpIcon} alt="USDB logo" className={style["partnerIcon"]} />
+              <img
+                src={theme === USDBLight ? WarpIcon : WarpIconDark}
+                alt="USDB logo"
+                className={style["partnerIcon"]}
+              />
             </a>
           </Grid>
         </Grid>

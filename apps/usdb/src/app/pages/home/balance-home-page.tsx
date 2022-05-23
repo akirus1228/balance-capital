@@ -134,10 +134,10 @@ export const BalanceHomePage = (): JSX.Element => {
                   }}
                 >
                   <Box style={{ marginLeft: "5em" }}>
-                    <Typography style={{ fontSize: "36px" }}>
+                    <Typography style={{ fontSize: "36px", color: "#000000" }}>
                       Infrastructure for decentralized finance
                     </Typography>
-                    <Typography style={{ marginTop: "20px" }}>
+                    <Typography style={{ marginTop: "20px", color: "#000000" }}>
                       We are leveraging our decentralized business experience to help
                       build a more sustainable, inclusive crypto investment economy. See
                       how we're delivering on our commitments alongside our stakeholders
@@ -225,7 +225,9 @@ export const BalanceHomePage = (): JSX.Element => {
               >
                 <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]} />
                 <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]}>
-                  <Typography style={{ marginLeft: "40px", fontSize: "20px" }}>
+                  <Typography
+                    style={{ marginLeft: "40px", fontSize: "20px", color: "#000000" }}
+                  >
                     Receive email updates
                   </Typography>
                   <Grid
@@ -252,6 +254,7 @@ export const BalanceHomePage = (): JSX.Element => {
                         className={`${style["styledInput"]}`}
                         placeholder="Enter your email address"
                         value={email}
+                        style={{ color: "#000000", borderColor: "#000000" }}
                         onChange={(e) => {
                           setEmail(e.target.value);
                         }}
@@ -269,7 +272,7 @@ export const BalanceHomePage = (): JSX.Element => {
                       </Button>
                     </Grid>
                   </Grid>
-                  <Typography style={{ marginLeft: "40px" }}>
+                  <Typography style={{ marginLeft: "40px", color: "#000000" }}>
                     No spam. Never shared. Opt out at any time.
                   </Typography>
                 </Grid>

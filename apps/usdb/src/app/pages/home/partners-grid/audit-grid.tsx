@@ -1,8 +1,25 @@
 import { Box, Grid, Typography } from "@mui/material";
 import style from "./partners-grid.module.scss";
-import { HackenIcon, SpadetechIcon, TechrateIcon } from "@fantohm/shared/images";
+import {
+  HackenIcon,
+  SpadetechIcon,
+  TechrateIcon,
+  HackenIconDark,
+  SpadetechIconDark,
+  TechrateIconDark,
+} from "@fantohm/shared/images";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
+import { useEffect, useState } from "react";
+import { USDBDark, USDBLight } from "@fantohm/shared-ui-themes";
 
 export const AuditGrid = (): JSX.Element => {
+  const themeType = useSelector((state: RootState) => state.app.theme);
+  const [theme, setTheme] = useState(USDBDark);
+
+  useEffect(() => {
+    setTheme(themeType === "light" ? USDBLight : USDBDark);
+  }, [themeType]);
   return (
     <Box
       style={{ alignContent: "center", justifyContent: "center", marginTop: "150px" }}
@@ -33,13 +50,25 @@ export const AuditGrid = (): JSX.Element => {
           </Typography>{" "}
         </Grid>
         <Grid item md={3} sm={3}>
-          <img src={TechrateIcon} alt="USDB logo" className={style["auditIcon"]} />
+          <img
+            src={theme === USDBLight ? TechrateIcon : TechrateIconDark}
+            alt="USDB logo"
+            className={style["auditIcon"]}
+          />
         </Grid>
         <Grid item md={3} sm={3}>
-          <img src={HackenIcon} alt="USDB logo" className={style["auditIcon"]} />
+          <img
+            src={theme === USDBLight ? HackenIcon : HackenIconDark}
+            alt="USDB logo"
+            className={style["auditIcon"]}
+          />
         </Grid>
         <Grid item md={3} sm={3}>
-          <img src={SpadetechIcon} alt="USDB logo" className={style["auditIcon"]} />
+          <img
+            src={theme === USDBLight ? SpadetechIcon : SpadetechIconDark}
+            alt="USDB logo"
+            className={style["auditIcon"]}
+          />
         </Grid>
       </Grid>
     </Box>

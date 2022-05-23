@@ -14,7 +14,7 @@ import NFTLendingIcon from "./USDB_nft_lending.png";
 import BridgeIcon from "./USDB_dex.png";
 import BeetsIcon from "./partners/Beets.png";
 import CIcon from "./partners/C.png";
-import CoinTelegramIcon from "./partners/CoinTelegram.png";
+import CoinTelegraphIcon from "./partners/CoinTelegraph.png";
 import DebridgeIcon from "./partners/Debridge.png";
 import DefiantIcon from "./partners/Defiant.png";
 import DIAIcon from "./partners/DIA.png";
@@ -24,7 +24,7 @@ import LiquidDriverIcon from "./partners/LiquidDriver.png";
 import RangoIcon from "./partners/Rango.png";
 import SpookySwapIcon from "./partners/SpookySwap.png";
 import SynapseIcon from "./partners/Synapse.png";
-import UnknownIcon from "./partners/unknown.png";
+import UnknownIcon from "./partners/XDefi.png";
 import WanchainIcon from "./partners/Wanchain.png";
 import WarpIcon from "./partners/Warp.png";
 import OneIcon from "./numbers/1.png";
@@ -47,6 +47,25 @@ import AboutUSDB from "./about_page/About_USDB.png";
 import AboutUSDBBank from "./about_page/About_USDB_Bank.png";
 import AboutNFTMarketplace from "./about_page/About_NFT_Marketplace.png";
 import AboutBalanceEcosystem from "./about_page/About_Balance_ecosystem.png";
+import BeetsIconDark from "./partners/BeetsDark.png";
+import CIconDark from "./partners/CDark.png";
+import CoinTelegraphIconDark from "./partners/CoinTelegraphDark.png";
+import DebridgeIconDark from "./partners/DebridgeDark.png";
+import DefiantIconDark from "./partners/DefiantDark.png";
+import DIAIconDark from "./partners/DIADark.png";
+import HuobiIconDark from "./partners/HuobiDark.png";
+import IncognitoIconDark from "./partners/IncognitoDark.png";
+import LiquidDriverIconDark from "./partners/LiquidDriverDark.png";
+import RangoIconDark from "./partners/RangoDark.png";
+import SpookySwapIconDark from "./partners/SpookySwapDark.png";
+import SynapseIconDark from "./partners/SynapseDark.png";
+import UnknownIconDark from "./partners/XDefiDark.png";
+import WanchainIconDark from "./partners/WanchainDark.png";
+import WarpIconDark from "./partners/WarpDark.png";
+import HackenIconDark from "./audits/HackenDark.png";
+import SpadetechIconDark from "./audits/SpadetechDark.png";
+import TechrateIconDark from "./audits/TechrateDark.png";
+import BalanceLogoDark from "./Balance_Logo_Dark.png";
 
 export {
   NFTsIcon,
@@ -65,7 +84,7 @@ export {
   NFTLendingIcon,
   BeetsIcon,
   CIcon,
-  CoinTelegramIcon,
+  CoinTelegraphIcon,
   DebridgeIcon,
   DefiantIcon,
   DIAIcon,
@@ -98,4 +117,23 @@ export {
   AboutUSDBBank,
   AboutBalanceEcosystem,
   AboutNFTMarketplace,
+  BeetsIconDark,
+  CIconDark,
+  CoinTelegraphIconDark,
+  DebridgeIconDark,
+  DefiantIconDark,
+  DIAIconDark,
+  HuobiIconDark,
+  IncognitoIconDark,
+  LiquidDriverIconDark,
+  RangoIconDark,
+  SpookySwapIconDark,
+  SynapseIconDark,
+  UnknownIconDark,
+  WanchainIconDark,
+  WarpIconDark,
+  SpadetechIconDark,
+  HackenIconDark,
+  TechrateIconDark,
+  BalanceLogoDark,
 };
