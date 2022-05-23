@@ -14,7 +14,7 @@ import { LendPage } from "./pages/lend-page/lend-page";
 import { MyAccountPage } from "./pages/my-account-page/my-account-page";
 import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
-import { authorizeAccount } from "./store/reducers/backend-slice";
+import { authorizeAccount, logout } from "./store/reducers/backend-slice";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
 import TestHelper from "./pages/test-helper/test-helper";
 
@@ -32,6 +32,13 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     setTheme(themeType === "light" ? NftLight : NftDark);
   }, [themeType]);
+
+  // if the wallet address doesn't equal the logged in user, log out
+  useEffect(() => {
+    if (address !== backend.user.address) {
+      dispatch(logout());
+    }
+  }, [address, backend.user]);
 
   // check for cached wallet connection
   useEffect(() => {
