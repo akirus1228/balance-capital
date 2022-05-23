@@ -39,8 +39,7 @@ export const UserMenu = (): JSX.Element => {
   };
 
   // web3 wallet
-  const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
-    useWeb3Context();
+  const { connect, disconnect, connected, address } = useWeb3Context();
 
   const onClickConnect = (event: MouseEvent<HTMLButtonElement>) => {
     connect(false, isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum);
@@ -65,11 +64,17 @@ export const UserMenu = (): JSX.Element => {
         aria-haspopup="true"
         aria-expanded={open ? "true" : undefined}
         onClick={handleClick}
-        sx={{ background: "#FFF", minWidth: "300px", py: "0.5em", fontSize: "16px" }}
+        sx={{ background: "#FFF", py: "0.5em", fontSize: "16px" }}
       >
-        <Avatar sx={{ mr: "1em" }} src={AvatarPlaceholder}></Avatar>
+        <Box sx={{ display: { xs: "none", md: "block" } }}>
+          <Avatar sx={{ mr: "1em" }} src={AvatarPlaceholder}></Avatar>
+        </Box>
         {addressEllipsis(address)}
-        <Icon sx={{ ml: "1em" }} component={ArrowDropDownIcon}></Icon>
+        <Box
+          sx={{ display: "flex", alignItems: "center", ml: { xs: "0.2em", sm: "1em" } }}
+        >
+          <Icon component={ArrowDropDownIcon}></Icon>
+        </Box>
       </Button>
       <Menu
         id="user-menu"
@@ -138,7 +143,7 @@ export const UserMenu = (): JSX.Element => {
           backgroundColor: "#FFF",
           color: "#000",
           padding: "0.9em",
-          minWidth: "300px",
+          minWidth: { xs: "60px", sm: "250px" },
           fontSize: "16px",
         }}
       >
