@@ -23,7 +23,6 @@ export const LendPage = (): JSX.Element => {
     }
     setAssets(
       listings.map((listing: Listing): Asset => {
-        console.log(listing.asset);
         return listing.asset;
       })
     );
