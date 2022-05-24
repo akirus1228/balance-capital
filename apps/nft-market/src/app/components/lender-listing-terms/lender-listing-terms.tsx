@@ -107,10 +107,8 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   useEffect(() => {
     // contract call successfully completed
     if (loanCreationStatus === BackendLoadingStatus.succeeded) {
-      console.log("created");
       // todo: display success notification growl
     } else if (loanCreationStatus === BackendLoadingStatus.failed) {
-      console.log("failed");
       // todo: display error notification growl
     }
   }, [loanCreationStatus]);
@@ -150,7 +148,6 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   };
 
   const onListDialogClose = (accepted: boolean) => {
-    console.log(accepted);
     setDialogOpen(false);
   };
 

@@ -132,7 +132,6 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
       )
         .unwrap()
         .then((loanDetails: LoanDetails) => loanDetails);
-      console.log(tempLoan);
       if (tempLoan.endTime === 0) break;
       tempContractLoans.push(tempLoan);
     }

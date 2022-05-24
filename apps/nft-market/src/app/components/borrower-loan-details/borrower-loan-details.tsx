@@ -94,9 +94,6 @@ export const BorrowerLoanDetails = ({
   }, [asset, loan]);
 
   const handleRepayLoan = useCallback(async () => {
-    console.log("repay loan");
-    console.log(`loan.contractLoanId ${loan.contractLoanId}`);
-    console.log(provider);
     if (!loan.contractLoanId || !provider) return;
     if (usdbAllowance && usdbAllowance >= loanDetails.amountDue) {
       const repayLoanParams = {
@@ -105,7 +102,6 @@ export const BorrowerLoanDetails = ({
         provider,
         networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
       };
-      console.log(repayLoanParams);
       const repayLoanResult = await dispatch(repayLoan(repayLoanParams)).unwrap();
       if (repayLoanResult === false) return; //todo: throw nice error
       const updateLoanRequest: Loan = {
@@ -118,12 +114,11 @@ export const BorrowerLoanDetails = ({
       };
       updateLoan(updateLoanRequest);
     } else {
-      console.log(`insufficiant allowance: ${usdbAllowance}`);
+      console.warn(`insufficiant allowance: ${usdbAllowance}`);
     }
   }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
 
   const handleRequestAllowance = useCallback(async () => {
-    console.log("request allowance");
     if (!provider) return;
     dispatch(
       requestErc20Allowance({

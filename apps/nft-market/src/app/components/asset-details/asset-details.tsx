@@ -20,7 +20,6 @@ export const AssetDetails = ({
   listing,
   ...props
 }: AssetDetailsProps): JSX.Element => {
-  console.log("asset from assetDetails");
   const { authSignature } = useSelector((state: RootState) => state.backend);
   const asset = useWalletAsset(contractAddress, tokenId);
   const { data: loan, isLoading: isLoanLoading } = useGetLoansQuery(

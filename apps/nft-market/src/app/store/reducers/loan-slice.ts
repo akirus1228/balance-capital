@@ -100,9 +100,7 @@ export const contractCreateLoan = createAsyncThunk(
     { loan, provider, networkId }: LoanAsyncThunk,
     { rejectWithValue, dispatch }
   ) => {
-    console.log("loan-slice: contractCreateLoan");
     const signer = provider.getSigner();
-    console.log("contractCreateLoan 2");
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
       usdbLending,
@@ -122,7 +120,6 @@ export const contractCreateLoan = createAsyncThunk(
       nftTokenType: 0, // token type
       sig: loan.term.signature,
     };
-    console.log(params);
     // call the contract
     const approveTx: ContractTransaction = await lendingContract["createLoan"](
       params.lender,
@@ -136,19 +133,12 @@ export const contractCreateLoan = createAsyncThunk(
       params.nftTokenType,
       params.sig
     );
-    console.log(approveTx);
     const response: ContractReceipt = await approveTx.wait();
-    console.log(response);
     const event: Event | undefined = response.events?.find(
       (event: CreateLoanEvent | Event) => !!event.event && event.event === "LoanCreated"
     );
     if (event && event.args) {
       const [originator, borrower, nftAddress, nftTokenId, currentId] = event.args;
-      // console.log(`originator ${originator}`);
-      // console.log(`borrower ${borrower}`);
-      // console.log(`nftAddress ${nftAddress}`);
-      // console.log(`nftTokenId ${nftTokenId}`);
-      // console.log(`currentId ${currentId}`);
       // update loan record with Id
       return +currentId;
     } else {
@@ -172,7 +162,6 @@ export const repayLoan = createAsyncThunk(
     { loanId, amountDue, provider, networkId }: RepayLoanAsyncThunk,
     { rejectWithValue, dispatch }
   ) => {
-    console.log("loan-slice: repayLoan");
     const signer = provider.getSigner();
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
@@ -183,9 +172,7 @@ export const repayLoan = createAsyncThunk(
       loanId,
       amountDue
     );
-    console.log(repayTxn);
     const response: ContractReceipt = await repayTxn.wait();
-    console.log(response);
     const event: Event | undefined = response.events?.find(
       (event: RepayLoanEvent | Event) => !!event.event && event.event === "LoanLiquidated"
     );
@@ -212,15 +199,11 @@ export const getLoanDetailsFromContract = createAsyncThunk(
     { loanId, networkId, provider }: LoanDetailsAsyncThunk,
     { rejectWithValue, dispatch }
   ) => {
-    console.log("getting loan details");
-    console.log(`loanId ${loanId}`);
-    console.log(`networkId ${networkId}`);
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
       usdbLending,
       provider
     );
-    console.log("Contract init pass");
     // call the contract
     const loanDetails: LoanDetailsResponse = await lendingContract["loans"](loanId);
     return {

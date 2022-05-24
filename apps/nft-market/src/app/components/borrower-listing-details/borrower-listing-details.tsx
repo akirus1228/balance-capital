@@ -17,7 +17,6 @@ export interface BorrowerListingDetailsProps {
 export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
-  console.log("BorrowerListingDetails render");
   const { user, authSignature } = useSelector((state: RootState) => state.backend);
   const listing: Listing = useSelector((state: RootState) =>
     selectListingFromAsset(state, props.asset)
@@ -42,7 +41,6 @@ export const BorrowerListingDetails = (
   };
 
   const onListDialogClose = (accepted: boolean) => {
-    console.log(accepted);
     setDialogOpen(false);
   };
 

@@ -363,7 +363,6 @@ export const backendApi = createApi({
           lender: dropHelperDates({ ...lender }),
           term: dropHelperDates({ ...term }),
         };
-        console.log(loanRequest);
         return {
           url: `loan`,
           method: "POST",

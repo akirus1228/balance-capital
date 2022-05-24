@@ -18,7 +18,6 @@ import { AssetStatus, Loan } from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
-  console.log("AssetDetailsPage Render");
   const params = useParams();
   const { address } = useWeb3Context();
   const { authSignature } = useSelector((state: RootState) => state.backend);

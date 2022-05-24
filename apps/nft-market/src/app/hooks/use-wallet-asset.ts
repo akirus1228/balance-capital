@@ -10,7 +10,6 @@ export const useWalletAsset = (
   contractAddress: string,
   tokenId: string
 ): Asset | null => {
-  console.log("useWalletAsset");
   const { authSignature } = useSelector((state: RootState) => state.backend);
   const asset = useSelector((state: RootState) =>
     selectAssetByAddress(state, { tokenId, contractAddress })

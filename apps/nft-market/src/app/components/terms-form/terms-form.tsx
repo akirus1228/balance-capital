@@ -96,7 +96,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   // request permission to access the NFT from the contract
   const handlePermissionRequest = useCallback(() => {
-    console.log("request permissions");
     if (chainId && address && props.asset.assetContractAddress && provider) {
       setPending(true);
       dispatch(
@@ -116,7 +115,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   // check the contract to see if we have perms already
   useEffect(() => {
     if (chainId && address && props.asset.assetContractAddress && provider && isOwner) {
-      console.log(`Check perms`);
       dispatch(
         checkNftPermission({
           networkId: chainId,
@@ -154,7 +152,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   const handleCreateListing = async () => {
     if (!provider || !chainId) return;
-    console.log("create listing");
     // send listing data to backend
     setPending(true);
     let asset: Asset;
@@ -187,7 +184,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
 
   const handleUpdateTerms = async () => {
     if (!provider || !chainId || !props.listing) return;
-    console.log("update listing");
     // send listing data to backend
     setPending(true);
     let asset: Asset;
@@ -220,15 +216,11 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   };
 
   useEffect(() => {
-    console.log(`isTermsUpdateLoading ${isTermsUpdateLoading}`);
-    console.log(`updateTermsResponse ${updateTermsResponse}`);
-    console.log(`props.listing ${props.listing}`);
     if (
       !isTermsUpdateLoading &&
       typeof updateTermsResponse !== "undefined" &&
       props.listing
     ) {
-      console.log(updateTermsResponse);
       dispatch(updateListing({ ...props.listing, term: updateTermsResponse }));
     }
     if (!isTermsUpdateLoading && updateTermsResponse) {
@@ -306,7 +298,6 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       term,
       status: OfferStatus.Ready,
     };
-    console.log(offer);
     createOffer(offer);
   }, [props.listing, provider, props.asset, amount, duration, apr]);
 

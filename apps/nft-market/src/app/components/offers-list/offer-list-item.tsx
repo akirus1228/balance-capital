@@ -91,7 +91,6 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   // check the contract to see if we have perms already
   useEffect(() => {
     if (offer.assetListing.asset.assetContractAddress && provider) {
-      console.log(`Check perms`);
       dispatch(
         checkNftPermission({
           networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
@@ -118,7 +117,6 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
           tokenId: offer.assetListing.asset.tokenId,
         })
       );
-      console.log(response);
     }
   }, [offer.id, provider, hasPermission]);
 
@@ -159,7 +157,6 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       contractCreateLoan(createLoanParams)
     ).unwrap();
 
-    console.log(createLoanResult);
     if (createLoanResult) {
       createLoanRequest.contractLoanId = createLoanResult;
       createLoan(createLoanRequest);

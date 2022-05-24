@@ -9,7 +9,6 @@ import { Asset, Listing, ListingStatus } from "../../types/backend-types";
 import style from "./lend-page.module.scss";
 
 export const LendPage = (): JSX.Element => {
-  console.log("render LendPage");
   const [assets, setAssets] = useState<Asset[]>([]);
   const { authSignature } = useSelector((state: RootState) => state.backend);
   const { data: listings, isLoading } = useGetListingsQuery(

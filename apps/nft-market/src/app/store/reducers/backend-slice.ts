@@ -43,7 +43,6 @@ export const authorizeAccount = createAsyncThunk(
   "backend/authorizeAccount",
   async ({ address, networkId, provider }: SignerAsyncThunk, { rejectWithValue }) => {
     const loginResponse: LoginResponse = await BackendApi.doLogin(address);
-    console.log(loginResponse);
     if (loginResponse.id) {
       const signature = await BackendApi.handleSignMessage(address, provider);
       if (!signature) {
