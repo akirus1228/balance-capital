@@ -66,10 +66,12 @@ export type LoanDetails = {
   nftTokenId: number;
   starttime: number;
   endTime: number;
+  endDateTime: Date;
   loanAmount: number;
   amountDue: number;
   amountDueGwei: BigNumber;
   nftTokenType: TokenType;
+  loanId: number;
 };
 
 export enum LoanDetailsStatus {
@@ -221,7 +223,6 @@ export const getLoanDetailsFromContract = createAsyncThunk(
     console.log("Contract init pass");
     // call the contract
     const loanDetails: LoanDetailsResponse = await lendingContract["loans"](loanId);
-    console.log(loanDetails);
     return {
       nftAddress: loanDetails.nftAddress,
       borrower: loanDetails.borrower,
@@ -231,10 +232,12 @@ export const getLoanDetailsFromContract = createAsyncThunk(
       nftTokenId: +loanDetails.nftTokenId,
       starttime: +loanDetails.starttime,
       endTime: loanDetails.endTime.toNumber(),
+      endDateTime: new Date(+loanDetails.endTime * 1000),
       loanAmount: +ethers.utils.formatEther(loanDetails.loanAmount),
       amountDue: +ethers.utils.formatEther(loanDetails.amountDue),
       amountDueGwei: loanDetails.amountDue,
       nftTokenType: loanDetails.nftTokenType,
+      loanId,
     } as LoanDetails;
   }
 );

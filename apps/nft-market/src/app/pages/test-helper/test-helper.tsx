@@ -1,4 +1,7 @@
-import { Button, Box } from "@mui/material";
+import { isDev, NetworkIds, useWeb3Context } from "@fantohm/shared-web3";
+import { Button, Box, CircularProgress } from "@mui/material";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import {
   useDeleteAssetMutation,
   useDeleteListingMutation,
@@ -11,13 +14,39 @@ import {
   useGetTermsQuery,
   useDeleteTermsMutation,
 } from "../../api/backend-api";
+import store from "../../store";
+import { getLoanDetailsFromContract, LoanDetails } from "../../store/reducers/loan-slice";
 import { Asset, Listing, Loan, Offer, Terms } from "../../types/backend-types";
 import "./test-helper.module.scss";
 
+const LoanStatusTl = ["Created", "Repaid", "Liquidated"];
+
 /* eslint-disable-next-line */
 export interface TestHelperProps {}
+type AppDispatch = typeof store.dispatch;
+
+const SimpleLoanDetail = ({ loanDetails }: { loanDetails: LoanDetails }): JSX.Element => {
+  return (
+    <Box sx={{ mb: "1em", border: "1px solid lightgray" }}>
+      <Box>LoanId: {loanDetails.loanId}</Box>
+      <Box>Lender: {loanDetails.lender}</Box>
+      <Box>Borrower: {loanDetails.borrower}</Box>
+      <Box>Amount Due: {loanDetails.amountDue}</Box>
+      <Box>
+        End Time: {loanDetails.endDateTime.toLocaleTimeString()}{" "}
+        {loanDetails.endDateTime.toLocaleDateString()}
+      </Box>
+      <Box>Status: {LoanStatusTl[loanDetails.status]}</Box>
+    </Box>
+  );
+};
 
 export const TestHelper = (props: TestHelperProps): JSX.Element => {
+  const dispatch: AppDispatch = useDispatch();
+  const [contractLoans, setContractLoans] = useState<LoanDetails[]>();
+  const [isPending, setIsPending] = useState(false);
+  const { provider } = useWeb3Context();
+
   const { data: assets } = useGetAssetsQuery({
     skip: 0,
     take: 50,
@@ -88,6 +117,29 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
     }
   };
 
+  const handleGetAllLoansFromContract = async () => {
+    if (!provider) return;
+    setIsPending(true);
+    const tempContractLoans: LoanDetails[] = [];
+    let tempLoan;
+    for (let i = 1; i < 100; i++) {
+      tempLoan = await dispatch(
+        getLoanDetailsFromContract({
+          loanId: i,
+          networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
+          provider,
+        })
+      )
+        .unwrap()
+        .then((loanDetails: LoanDetails) => loanDetails);
+      console.log(tempLoan);
+      if (tempLoan.endTime === 0) break;
+      tempContractLoans.push(tempLoan);
+    }
+    setContractLoans(tempContractLoans);
+    setIsPending(false);
+  };
+
   return (
     <div>
       <Box>
@@ -104,6 +156,11 @@ export const TestHelper = (props: TestHelperProps): JSX.Element => {
         Terms: {terms && terms.length} <Button onClick={handleDeleteTerms}>Delete</Button>
       </Box>
       <Button onClick={handleDeleteAll}>Delete All</Button>
+      <Button onClick={handleGetAllLoansFromContract}>Get All Loans</Button>
+      {isPending && <CircularProgress />}
+      {contractLoans?.map((loanDetails: LoanDetails, index: number) => (
+        <SimpleLoanDetail key={`ld-${index}`} loanDetails={loanDetails} />
+      ))}
     </div>
   );
 };
