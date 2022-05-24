@@ -8,11 +8,16 @@ import {
   Loan,
   LoanStatus,
   Offer,
+  OfferStatus,
 } from "../../types/backend-types";
 import { useCallback, useEffect, useState } from "react";
-import { useCreateLoanMutation, useGetAssetsQuery } from "../../api/backend-api";
+import {
+  useCreateLoanMutation,
+  useGetAssetsQuery,
+  useUpdateOfferMutation,
+} from "../../api/backend-api";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
+import store, { RootState } from "../../store";
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { selectAssetById } from "../../store/selectors/asset-selectors";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
@@ -28,10 +33,14 @@ export type OfferListItemProps = {
   offer: Offer;
 };
 
+type AppDispatch = typeof store.dispatch;
+
 export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
+  const [isPending, setIsPending] = useState(false);
   const [isRequestingPerms, setIsRequestingPerms] = useState(false);
-  const { user } = useSelector((state: RootState) => state.backend);
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
+  const { loanCreationStatus } = useSelector((state: RootState) => state.loans);
   const { address: walletAddress, provider } = useWeb3Context();
   const { repaymentTotal, repaymentAmount } = useTermDetails(offer.term);
 
@@ -41,22 +50,22 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     { isLoading: isCreating, error: createLoanError, data: createLoanData },
   ] = useCreateLoanMutation();
 
+  const [updateOffer, { isLoading: isUpdatingOffer }] = useUpdateOfferMutation();
+
   // nft permission status updates from state
-  const { checkPermStatus, requestPermStatus, platformFee } = useSelector(
-    (state: RootState) => state.wallet
-  );
+  const { requestPermStatus } = useSelector((state: RootState) => state.wallet);
 
   const asset = useSelector((state: RootState) =>
     selectAssetById(state, offer.assetListing.asset.id || "")
   );
 
   // getAssets backend api call
-  const { data: assets, isLoading: isAssetsLoading } = useGetAssetsQuery(
+  useGetAssetsQuery(
     {
       openseaIds: [asset.openseaId || ""],
     },
     {
-      skip: !asset || !!asset.id,
+      skip: !asset || !!asset.id || !authSignature,
     }
   );
 
@@ -65,10 +74,23 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     selectNftPermFromAsset(state, offer.assetListing.asset)
   );
 
+  useEffect(() => {
+    if (
+      (isUpdatingOffer ||
+        isCreating ||
+        requestPermStatus === "loading" ||
+        loanCreationStatus === "loading") &&
+      isPending
+    ) {
+      setIsPending(true);
+    } else {
+      setIsPending(false);
+    }
+  }, [isUpdatingOffer, isCreating, requestPermStatus, loanCreationStatus, isPending]);
+
   // check the contract to see if we have perms already
   useEffect(() => {
     if (offer.assetListing.asset.assetContractAddress && provider) {
-      console.log(`Check perms`);
       dispatch(
         checkNftPermission({
           networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
@@ -85,6 +107,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     // create the loan
     if (!hasPermission && provider) {
       setIsRequestingPerms(true);
+      setIsPending(true);
       const response = await dispatch(
         requestNftPermission({
           networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
@@ -94,7 +117,6 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
           tokenId: offer.assetListing.asset.tokenId,
         })
       );
-      console.log(response);
     }
   }, [offer.id, provider, hasPermission]);
 
@@ -108,12 +130,10 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const handleAcceptOffer = useCallback(async () => {
     // create the loan
     if (!hasPermission || !provider || !asset.owner) {
-      console.log(`hasPermission ${hasPermission}`);
-      console.log(`provider ${provider}`);
-      console.log(`offer.assetListing.asset.owner ${offer.assetListing.asset.owner}`);
       console.warn("You must first provide permission to your NFT");
       return;
     }
+    setIsPending(true);
 
     const createLoanRequest: Loan = {
       lender: offer.lender,
@@ -126,29 +146,26 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       term: offer.term,
       status: LoanStatus.Active,
     };
-    console.log(createLoanRequest);
-    createLoan(createLoanRequest);
-  }, [offer.id, offer.term, offer.assetListing, provider, hasPermission]);
 
-  // after api call to create loan is complete, execute contract call to create loan
-  useEffect(() => {
-    if (
-      provider &&
-      typeof createLoanError === "undefined" &&
-      isCreating === false &&
-      createLoanData
-    ) {
-      const createLoanParams = {
-        loan: {
-          ...createLoanData,
-          term: offer.term,
-        },
-        provider,
-        networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
-      };
-      dispatch(contractCreateLoan(createLoanParams));
+    const createLoanParams = {
+      loan: createLoanRequest,
+      provider,
+      networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
+    };
+
+    const createLoanResult = await dispatch(
+      contractCreateLoan(createLoanParams)
+    ).unwrap();
+
+    if (createLoanResult) {
+      createLoanRequest.contractLoanId = createLoanResult;
+      createLoan(createLoanRequest);
     }
-  }, [isCreating]);
+
+    // update offer as accepted
+    const updateOfferRequest = { ...offer, status: OfferStatus.Accepted };
+    updateOffer(updateOfferRequest);
+  }, [offer.id, offer.term, offer.assetListing, provider, hasPermission]);
 
   return (
     <PaperTableRow>
@@ -161,14 +178,24 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
       <PaperTableCell>**calc expiration time**</PaperTableCell>
       <PaperTableCell>
-        {!hasPermission && (
+        {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleRequestPermission}>
             Accept
           </Button>
         )}
-        {hasPermission && (
+        {hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleAcceptOffer}>
             Accept
+          </Button>
+        )}
+        {isPending && (
+          <Button variant="contained" className="offer">
+            Pending...
+          </Button>
+        )}
+        {offer.status !== OfferStatus.Ready && (
+          <Button variant="contained" className="offer">
+            {offer.status}
           </Button>
         )}
       </PaperTableCell>

@@ -363,7 +363,6 @@ export const backendApi = createApi({
           lender: dropHelperDates({ ...lender }),
           term: dropHelperDates({ ...term }),
         };
-        console.log(loanRequest);
         return {
           url: `loan`,
           method: "POST",
@@ -371,6 +370,15 @@ export const backendApi = createApi({
         };
       },
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
+    }),
+    updateLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `loan/${id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      transformResponse: (response: Loan, meta, arg) => response,
+      invalidatesTags: ["Listing", "Offer", "Loan", "Asset"],
     }),
     deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
       query: ({ id, ...loan }) => {
@@ -407,6 +415,15 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Offer"],
     }),
+    updateOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `offer/${id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      transformResponse: (response: Offer, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
     deleteOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
       query: ({ id, ...offer }) => {
         return {
@@ -427,6 +444,7 @@ export const {
   useDeleteListingMutation,
   useGetLoansQuery,
   useCreateLoanMutation,
+  useUpdateLoanMutation,
   useDeleteLoanMutation,
   useCreateListingMutation,
   useGetTermsQuery,
@@ -434,5 +452,6 @@ export const {
   useDeleteTermsMutation,
   useGetOffersQuery,
   useCreateOfferMutation,
+  useUpdateOfferMutation,
   useDeleteOfferMutation,
 } = backendApi;

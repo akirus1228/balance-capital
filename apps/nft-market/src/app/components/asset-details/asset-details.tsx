@@ -1,6 +1,8 @@
 import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { useWalletAsset } from "../../hooks/use-wallet-asset";
+import { RootState } from "../../store";
 import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
@@ -18,7 +20,7 @@ export const AssetDetails = ({
   listing,
   ...props
 }: AssetDetailsProps): JSX.Element => {
-  console.log("asset from assetDetails");
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   const asset = useWalletAsset(contractAddress, tokenId);
   const { data: loan, isLoading: isLoanLoading } = useGetLoansQuery(
     {
@@ -27,7 +29,7 @@ export const AssetDetails = ({
       assetId: asset !== null ? asset.id : "",
     },
     {
-      skip: !asset || asset === null || !asset.id || !listing,
+      skip: !asset || asset === null || !asset.id || !listing || !authSignature,
     }
   );
 

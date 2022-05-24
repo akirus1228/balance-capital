@@ -27,8 +27,6 @@ export interface ListingState {
   readonly createListingStatus: BackendLoadingStatus;
 }
 
-const cacheTime = 300 * 1000; // 5 minutes
-
 /*
 createListing: loads all listings
 params:
@@ -40,7 +38,6 @@ returns: void
 export const createListing = createAsyncThunk(
   "listings/createListing",
   async ({ asset, term }: ListingAsyncThunk, { getState, rejectWithValue, dispatch }) => {
-    console.log("backend-slice: createListing");
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
       const listing = await BackendApi.createListing(

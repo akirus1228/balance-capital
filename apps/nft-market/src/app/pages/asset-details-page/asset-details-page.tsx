@@ -18,9 +18,9 @@ import { AssetStatus, Loan } from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
-  console.log("AssetDetailsPage Render");
   const params = useParams();
   const { address } = useWeb3Context();
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   // find listing from store
   const listing = useSelector((state: RootState) =>
     selectListingByAddress(state, {
@@ -51,15 +51,18 @@ export const AssetDetailsPage = (): JSX.Element => {
       take: 50,
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
     },
-    { skip: !assets }
+    { skip: !assets || !authSignature }
   );
 
   // load loans for this contract
-  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery({
-    skip: 0,
-    take: 1,
-    assetId: asset?.id || "",
-  });
+  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery(
+    {
+      skip: 0,
+      take: 1,
+      assetId: asset?.id || "",
+    },
+    { skip: !authSignature }
+  );
 
   // is the user the owner of the asset?
   const isOwner = useMemo(() => {

@@ -17,7 +17,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { RootState } from "../../store";
 import { Loan, LoanStatus } from "../../types/backend-types";
-import style from "./my-account.module.scss";
+// import style from "./my-account.module.scss";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
   style: "currency",
