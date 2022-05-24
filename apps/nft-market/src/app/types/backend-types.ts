@@ -241,10 +241,19 @@ export type Creatable = {
 
 export type StandardBackendObject = Updatable & Creatable & Deleteable;
 
+export enum OfferStatus {
+  Accepted = "ACCEPTED",
+  Cancelled = "CANCELLED",
+  Complete = "COMPLETE",
+  Expired = "EXPIRED",
+  Ready = "READY",
+}
+
 export type Offer = {
   id?: string;
   lender: User;
   assetListing: Listing;
+  status: OfferStatus;
 } & StandardBackendObject &
   IncludesTerms;
 

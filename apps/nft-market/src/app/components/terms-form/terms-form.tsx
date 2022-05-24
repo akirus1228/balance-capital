@@ -28,6 +28,7 @@ import {
   BackendLoadingStatus,
   Listing,
   Offer,
+  OfferStatus,
   Terms,
 } from "../../types/backend-types";
 import { createListing, updateListing } from "../../store/reducers/listing-slice";
@@ -303,6 +304,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       lender: user,
       assetListing: props.listing,
       term,
+      status: OfferStatus.Ready,
     };
     console.log(offer);
     createOffer(offer);
