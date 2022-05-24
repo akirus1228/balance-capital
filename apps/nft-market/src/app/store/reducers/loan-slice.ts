@@ -1,15 +1,9 @@
-import {
-  createAsyncThunk,
-  createSelector,
-  createSlice,
-  PayloadAction,
-} from "@reduxjs/toolkit";
+import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
 import { addresses, isDev, loadState, usdbLending } from "@fantohm/shared-web3";
 import { BackendLoadingStatus, Loan } from "../../types/backend-types";
 import { LoanAsyncThunk } from "./interfaces";
 import { RootState } from "..";
-import { ContractReceipt, ContractTransaction, ethers, Event, Transaction } from "ethers";
-import { TransactionReceipt } from "@ethersproject/abstract-provider";
+import { ContractReceipt, ContractTransaction, ethers, Event } from "ethers";
 
 export type CreateLoanEvent = {
   event: string;
@@ -35,8 +29,6 @@ export interface LoansState {
   readonly isDev: boolean;
   readonly loanCreationStatus: BackendLoadingStatus;
 }
-
-const cacheTime = 300 * 1000; // 5 minutes
 
 /*
 createLoan: add loan to contract
@@ -95,13 +87,7 @@ export const contractCreateLoan = createAsyncThunk(
       (event: CreateLoanEvent | Event) => !!event.event && event.event === "LoanCreated"
     );
     if (event && event.args) {
-      const [originator, borrower, nftAddress, nftTokenId, currentId] = event.args;
-      // console.log(`originator ${originator}`);
-      // console.log(`borrower ${borrower}`);
-      // console.log(`nftAddress ${nftAddress}`);
-      // console.log(`nftTokenId ${nftTokenId}`);
-      // console.log(`currentId ${currentId}`);
-      // update loan record with Id
+      const { currentId } = event.args;
       return +currentId;
     } else {
       return false;

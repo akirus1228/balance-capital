@@ -12,11 +12,10 @@ export const LendPage = (): JSX.Element => {
   console.log("render LendPage");
   const [assets, setAssets] = useState<Asset[]>([]);
   const { authSignature } = useSelector((state: RootState) => state.backend);
-  const {
-    data: listings,
-    error,
-    isLoading,
-  } = useGetListingsQuery({ skip: 0, take: 50 }, { skip: !authSignature });
+  const { data: listings, isLoading } = useGetListingsQuery(
+    { skip: 0, take: 50 },
+    { skip: !authSignature }
+  );
 
   useEffect(() => {
     console.log("Set Assets");

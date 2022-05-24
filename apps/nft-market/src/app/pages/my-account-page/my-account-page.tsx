@@ -13,48 +13,44 @@ export function shorten(str: string) {
 }
 
 export const MyAccountPage = (): JSX.Element => {
-  const { provider, address, chainId } = useWeb3Context();
+  const { address } = useWeb3Context();
   const { authSignature } = useSelector((state: RootState) => state.backend);
-  const { data: activeBorrowerLoans, isLoading: activeBorrowerLoansIsListing } =
-    useGetLoansQuery(
-      {
-        take: 50,
-        skip: 0,
-        status: LoanStatus.Active,
-        borrowerAddress: address,
-      },
-      { skip: !address || !authSignature }
-    );
-  const { data: activeLenderLoans, isLoading: activeLenderLoansIsListing } =
-    useGetLoansQuery(
-      {
-        take: 50,
-        skip: 0,
-        status: LoanStatus.Active,
-        lenderAddress: address,
-      },
-      { skip: !address || !authSignature }
-    );
-  const { data: historicalBorrowerLoans, isLoading: historicalBorrowerLoansIsListing } =
-    useGetLoansQuery(
-      {
-        take: 50,
-        skip: 0,
-        status: LoanStatus.Complete,
-        borrowerAddress: address,
-      },
-      { skip: !address || !authSignature }
-    );
-  const { data: historicalLenderLoans, isLoading: historicalLenderLoansIsListing } =
-    useGetLoansQuery(
-      {
-        take: 50,
-        skip: 0,
-        status: LoanStatus.Complete,
-        lenderAddress: address,
-      },
-      { skip: !address || !authSignature }
-    );
+  const { data: activeBorrowerLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Active,
+      borrowerAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: activeLenderLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Active,
+      lenderAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: historicalBorrowerLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Complete,
+      borrowerAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: historicalLenderLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Complete,
+      lenderAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
 
   return (
     <Container>

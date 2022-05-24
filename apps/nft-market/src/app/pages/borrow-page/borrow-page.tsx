@@ -1,6 +1,6 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
 import { Box, CircularProgress, Container, Grid } from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useGetListingsQuery } from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
@@ -21,7 +21,7 @@ export const BorrowPage = (): JSX.Element => {
   );
 
   // using the opensea assets, crosscheck with backend api for correlated data
-  const { data, isLoading: isAssetLoading } = useGetListingsQuery(
+  const { isLoading: isAssetLoading } = useGetListingsQuery(
     {
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
       skip: 0,

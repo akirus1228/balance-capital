@@ -27,8 +27,6 @@ export interface ListingState {
   readonly createListingStatus: BackendLoadingStatus;
 }
 
-const cacheTime = 300 * 1000; // 5 minutes
-
 /*
 createListing: loads all listings
 params:

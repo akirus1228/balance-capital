@@ -18,31 +18,31 @@ import "./test-helper.module.scss";
 export interface TestHelperProps {}
 
 export const TestHelper = (props: TestHelperProps): JSX.Element => {
-  const { data: assets, isLoading: isAssetsLoading } = useGetAssetsQuery({
+  const { data: assets } = useGetAssetsQuery({
     skip: 0,
     take: 50,
   });
   const [deleteAsset] = useDeleteAssetMutation();
 
-  const { data: listings, isLoading: isListingsLoading } = useGetListingsQuery({
+  const { data: listings } = useGetListingsQuery({
     skip: 0,
     take: 50,
   });
   const [deleteListing] = useDeleteListingMutation();
 
-  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery({
+  const { data: loans } = useGetLoansQuery({
     skip: 0,
     take: 50,
   });
   const [deleteLoan] = useDeleteLoanMutation();
 
-  const { data: offers, isLoading: isOffersLoading } = useGetOffersQuery({
+  const { data: offers } = useGetOffersQuery({
     skip: 0,
     take: 50,
   });
   const [deleteOffer] = useDeleteOfferMutation();
 
-  const { data: terms, isLoading: isTermsLoading } = useGetTermsQuery({
+  const { data: terms } = useGetTermsQuery({
     skip: 0,
     take: 50,
   });

@@ -42,16 +42,14 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   ] = useCreateLoanMutation();
 
   // nft permission status updates from state
-  const { checkPermStatus, requestPermStatus, platformFee } = useSelector(
-    (state: RootState) => state.wallet
-  );
+  const { requestPermStatus } = useSelector((state: RootState) => state.wallet);
 
   const asset = useSelector((state: RootState) =>
     selectAssetById(state, offer.assetListing.asset.id || "")
   );
 
   // getAssets backend api call
-  const { data: assets, isLoading: isAssetsLoading } = useGetAssetsQuery(
+  useGetAssetsQuery(
     {
       openseaIds: [asset.openseaId || ""],
     },
