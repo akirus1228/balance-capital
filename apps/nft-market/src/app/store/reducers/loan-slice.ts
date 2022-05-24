@@ -87,7 +87,13 @@ export const contractCreateLoan = createAsyncThunk(
       (event: CreateLoanEvent | Event) => !!event.event && event.event === "LoanCreated"
     );
     if (event && event.args) {
-      const { currentId } = event.args;
+      const [originator, borrower, nftAddress, nftTokenId, currentId] = event.args;
+      // console.log(`originator ${originator}`);
+      // console.log(`borrower ${borrower}`);
+      // console.log(`nftAddress ${nftAddress}`);
+      // console.log(`nftTokenId ${nftTokenId}`);
+      // console.log(`currentId ${currentId}`);
+      // update loan record with Id
       return +currentId;
     } else {
       return false;

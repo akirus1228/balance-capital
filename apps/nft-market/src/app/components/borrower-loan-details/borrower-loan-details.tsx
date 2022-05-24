@@ -23,7 +23,6 @@ export const BorrowerLoanDetails = (props: BorrowerLoanDetailsProps): JSX.Elemen
   const { repaymentAmount, repaymentTotal, amount, apr, duration } = useTermDetails(
     props.loan.term
   );
-  console.log(props.loan);
 
   if (!props.loan || !props.loan.term) {
     return <CircularProgress />;

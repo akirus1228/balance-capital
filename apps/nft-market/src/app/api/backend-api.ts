@@ -407,6 +407,15 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Offer"],
     }),
+    updateOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `offer/${id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      transformResponse: (response: Offer, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
     deleteOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
       query: ({ id, ...offer }) => {
         return {
@@ -434,5 +443,6 @@ export const {
   useDeleteTermsMutation,
   useGetOffersQuery,
   useCreateOfferMutation,
+  useUpdateOfferMutation,
   useDeleteOfferMutation,
 } = backendApi;
