@@ -181,12 +181,12 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
       <PaperTableCell>**calc expiration time**</PaperTableCell>
       <PaperTableCell>
-        {!hasPermission && !isPending && (
+        {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleRequestPermission}>
-            Permit
+            Accept
           </Button>
         )}
-        {hasPermission && !isPending && (
+        {hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleAcceptOffer}>
             Accept
           </Button>
@@ -194,6 +194,11 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
         {isPending && (
           <Button variant="contained" className="offer">
             Pending...
+          </Button>
+        )}
+        {offer.status !== OfferStatus.Ready && (
+          <Button variant="contained" className="offer">
+            {offer.status}
           </Button>
         )}
       </PaperTableCell>
