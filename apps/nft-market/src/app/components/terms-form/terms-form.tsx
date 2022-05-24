@@ -34,7 +34,6 @@ import { createListing, updateListing } from "../../store/reducers/listing-slice
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
 import { useCreateOfferMutation, useUpdateTermsMutation } from "../../api/backend-api";
-import { updateAsset } from "../../store/reducers/asset-slice";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -66,7 +65,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const [apr, setApr] = useState(props?.listing?.term.apr || 25);
   const [amount, setAmount] = useState(props?.listing?.term.amount || 10000);
   const [repaymentAmount, setRepaymentAmount] = useState(2500);
-  const [repaymentTotal, setRepaymentTotal] = useState(12500);
+  //const [repaymentTotal, setRepaymentTotal] = useState(12500);
   // create offer api call
   const [createOffer, { isLoading: isCreateOfferLoading, data: createOfferResponse }] =
     useCreateOfferMutation();
@@ -262,7 +261,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     const realPercent = wholePercent / 100;
     const _repaymentAmount = amount * realPercent;
     setRepaymentAmount(_repaymentAmount);
-    setRepaymentTotal(_repaymentAmount + amount);
+    //setRepaymentTotal(_repaymentAmount + amount);
   }, [durationType, duration, amount, apr]);
 
   useEffect(() => {

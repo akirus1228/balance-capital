@@ -6,7 +6,6 @@ import {
   Asset,
   AssetStatus,
   CreateListingRequest,
-  IncludesTerms,
   Listing,
   ListingStatus,
   StandardBackendObject,

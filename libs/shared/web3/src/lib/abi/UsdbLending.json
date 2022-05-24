@@ -168,8 +168,8 @@
       "name": "loans",
       "outputs": [
         { "internalType": "address", "name": "nftAddress", "type": "address" },
-        { "internalType": "address payable", "name": "borrower", "type": "address" },
-        { "internalType": "address payable", "name": "lender", "type": "address" },
+        { "internalType": "address", "name": "borrower", "type": "address" },
+        { "internalType": "address", "name": "lender", "type": "address" },
         { "internalType": "address", "name": "currency", "type": "address" },
         { "internalType": "enum LendingCore.Status", "name": "status", "type": "uint8" },
         { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
@@ -177,7 +177,6 @@
         { "internalType": "uint256", "name": "endTime", "type": "uint256" },
         { "internalType": "uint256", "name": "loanAmount", "type": "uint256" },
         { "internalType": "uint256", "name": "amountDue", "type": "uint256" },
-        { "internalType": "uint256", "name": "platformFeeAmount", "type": "uint256" },
         { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" }
       ],
       "stateMutability": "view",
@@ -267,34 +266,8 @@
       "type": "function"
     },
     {
-      "inputs": [
-        { "internalType": "address", "name": "from", "type": "address" },
-        { "internalType": "address", "name": "to", "type": "address" },
-        { "internalType": "address", "name": "nftAddress", "type": "address" },
-        { "internalType": "uint256", "name": "nftTokenId", "type": "uint256" },
-        { "internalType": "uint8", "name": "nftTokenType", "type": "uint8" }
-      ],
-      "name": "transferNFT",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
       "inputs": [{ "internalType": "address", "name": "newOwner", "type": "address" }],
       "name": "transferOwnership",
-      "outputs": [],
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "inputs": [
-        { "internalType": "address", "name": "from", "type": "address" },
-        { "internalType": "address payable", "name": "to", "type": "address" },
-        { "internalType": "address", "name": "currency", "type": "address" },
-        { "internalType": "uint256", "name": "quantity1", "type": "uint256" },
-        { "internalType": "uint256", "name": "quantity2", "type": "uint256" }
-      ],
-      "name": "transferToken",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

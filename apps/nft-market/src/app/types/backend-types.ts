@@ -224,6 +224,7 @@ export type Loan = {
   assetListing: Listing;
   term: Terms;
   status: LoanStatus;
+  contractLoanId?: number;
 } & StandardBackendObject;
 
 export type Updatable = {

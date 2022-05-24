@@ -22,7 +22,7 @@ import {
   Terms,
 } from "../../types/backend-types";
 import style from "./lender-listing-terms.module.scss";
-import { RootState } from "../../store";
+import store, { RootState } from "../../store";
 import { useTermDetails } from "../../hooks/use-term-details";
 import { MakeOffer } from "../make-offer/make-offer";
 
@@ -31,8 +31,10 @@ export interface LenderListingTermsProps {
   sx?: SxProps<Theme>;
 }
 
+type AppDispatch = typeof store.dispatch;
+
 export function LenderListingTerms(props: LenderListingTermsProps) {
-  const dispatch = useDispatch();
+  const dispatch: AppDispatch = useDispatch();
   const { provider, chainId, address } = useWeb3Context();
   // local store of term to pass between methods
   const [cachedTerms, setCachedTerms] = useState<Terms>({} as Terms);
@@ -66,7 +68,7 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
   );
 
   // click accept term button
-  const handleAcceptTerms = useCallback(() => {
+  const handleAcceptTerms = useCallback(async () => {
     if (!allowance || allowance < props.listing.term.amount * (1 + platformFee)) {
       console.warn("Insufficiant allownace. Trigger request");
       return;
@@ -75,7 +77,6 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       console.warn("missing critical data");
       return;
     }
-
     const createLoanRequest: Loan = {
       lender: user,
       borrower: asset.owner,
@@ -87,31 +88,20 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
       term: props.listing.term,
       status: LoanStatus.Active,
     };
-    setCachedTerms(props.listing.term);
 
-    createLoan(createLoanRequest);
-  }, [props.listing, provider, chainId, asset, allowance, user.address]);
-
-  // after api call to create loan is complete, execute contract call to create loan
-  useEffect(() => {
-    if (
-      provider &&
-      chainId &&
-      typeof createLoanError === "undefined" &&
-      isCreating === false &&
-      createLoanData
-    ) {
-      const createLoanParams = {
-        loan: {
-          ...createLoanData,
-          term: cachedTerms,
-        },
-        provider,
-        networkId: chainId,
-      };
-      dispatch(contractCreateLoan(createLoanParams));
+    const createLoanParams = {
+      loan: createLoanRequest,
+      provider,
+      networkId: chainId,
+    };
+    const createLoanResult = await dispatch(
+      contractCreateLoan(createLoanParams)
+    ).unwrap();
+    if (createLoanResult) {
+      createLoanRequest.contractLoanId = createLoanResult;
+      createLoan(createLoanRequest);
     }
-  }, [isCreating]);
+  }, [props.listing, provider, chainId, asset, allowance, user.address]);
 
   // contract call creation status update
   useEffect(() => {
@@ -214,7 +204,8 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
               )}
             {!!allowance &&
               allowance >= props.listing.term.amount * (1 + platformFee) &&
-              !isCreating && (
+              !isCreating &&
+              loanCreationStatus !== "loading" && (
                 <Button
                   variant="outlined"
                   onClick={handleAcceptTerms}
@@ -225,7 +216,8 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
               )}
             {(checkErc20AllowanceStatus === "loading" ||
               requestErc20AllowanceStatus === "loading" ||
-              isCreating) && (
+              isCreating ||
+              loanCreationStatus === "loading") && (
               <Button variant="outlined" disabled={true}>
                 Pending...
               </Button>

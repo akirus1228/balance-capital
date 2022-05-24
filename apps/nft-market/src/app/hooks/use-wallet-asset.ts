@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { Asset } from "../types/backend-types";
 import { selectAssetByAddress } from "../store/selectors/asset-selectors";
@@ -28,7 +27,7 @@ export const useWalletAsset = (
     { skip: !!asset }
   );
 
-  const { data: beAssets, isLoading: isBeLoading } = useGetAssetsQuery(
+  useGetAssetsQuery(
     {
       skip: 0,
       take: 1,

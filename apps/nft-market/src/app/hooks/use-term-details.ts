@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Listing, Terms } from "../types/backend-types";
+import { Terms } from "../types/backend-types";
 
 export type TermDetails = {
   repaymentAmount: number;

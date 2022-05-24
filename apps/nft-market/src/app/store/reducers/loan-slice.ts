@@ -1,9 +1,26 @@
-import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit";
+import {
+  createAsyncThunk,
+  createSelector,
+  createSlice,
+  PayloadAction,
+} from "@reduxjs/toolkit";
 import { addresses, isDev, loadState, usdbLending } from "@fantohm/shared-web3";
 import { BackendLoadingStatus, Loan } from "../../types/backend-types";
 import { LoanAsyncThunk } from "./interfaces";
 import { RootState } from "..";
-import { ethers } from "ethers";
+import { ContractReceipt, ContractTransaction, ethers, Event, Transaction } from "ethers";
+import { TransactionReceipt } from "@ethersproject/abstract-provider";
+
+export type CreateLoanEvent = {
+  event: string;
+  args: {
+    borrower: string;
+    lender: string;
+    loanId: string;
+    nftAddress: string;
+    nftTokenId: string;
+  };
+};
 
 export type Loans = {
   [loanId: string]: Loan;
@@ -43,24 +60,8 @@ export const contractCreateLoan = createAsyncThunk(
       usdbLending,
       signer
     );
-    console.log("contractCreateLoan 3");
-    console.log(`loan.borrower.address ${loan.borrower.address}`);
-    console.log(
-      `loan.assetListing.asset.assetContractAddress ${loan.assetListing.asset.assetContractAddress}`
-    );
-    console.log(
-      `addresses[networkId]["USDB_ADDRESS"] ${addresses[networkId]["USDB_ADDRESS"]}`
-    );
-    console.log(`loan.assetListing.asset.tokenId ${loan.assetListing.asset.tokenId}`);
-    console.log(`loan.term.duration ${loan.term.duration}`);
-    console.log(
-      `ethers.utils.parseEther(loan.term.amount.toString()) ${ethers.utils.parseEther(
-        loan.term.amount.toString()
-      )}`
-    );
-    console.log(`loan.term.apr ${loan.term.apr}`);
-    console.log(`loan.term.signature ${loan.term.signature}`);
 
+    // put the params in an object to make it very clear in contract call
     const params = {
       borrower: loan.borrower.address,
       lender: loan.lender.address,
@@ -74,7 +75,8 @@ export const contractCreateLoan = createAsyncThunk(
       sig: loan.term.signature,
     };
     console.log(params);
-    const approveTx = await lendingContract["createLoan"](
+    // call the contract
+    const approveTx: ContractTransaction = await lendingContract["createLoan"](
       params.lender,
       params.borrower,
       params.nftAddress,
@@ -86,10 +88,24 @@ export const contractCreateLoan = createAsyncThunk(
       params.nftTokenType,
       params.sig
     );
-    console.log("contractCreateLoan 4");
-    await approveTx.wait();
-    console.log("contractCreateLoan 5");
     console.log(approveTx);
+    const response: ContractReceipt = await approveTx.wait();
+    console.log(response);
+    const event: Event | undefined = response.events?.find(
+      (event: CreateLoanEvent | Event) => !!event.event && event.event === "LoanCreated"
+    );
+    if (event && event.args) {
+      const [originator, borrower, nftAddress, nftTokenId, currentId] = event.args;
+      // console.log(`originator ${originator}`);
+      // console.log(`borrower ${borrower}`);
+      // console.log(`nftAddress ${nftAddress}`);
+      // console.log(`nftTokenId ${nftTokenId}`);
+      // console.log(`currentId ${currentId}`);
+      // update loan record with Id
+      return +currentId;
+    } else {
+      return false;
+    }
   }
 );
 
