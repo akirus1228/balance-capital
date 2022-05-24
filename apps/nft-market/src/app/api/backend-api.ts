@@ -372,6 +372,15 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
     }),
+    updateLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `loan/${id}`,
+        method: "PUT",
+        body: patch,
+      }),
+      transformResponse: (response: Loan, meta, arg) => response,
+      invalidatesTags: ["Listing", "Offer", "Loan", "Asset"],
+    }),
     deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
       query: ({ id, ...loan }) => {
         return {
@@ -436,6 +445,7 @@ export const {
   useDeleteListingMutation,
   useGetLoansQuery,
   useCreateLoanMutation,
+  useUpdateLoanMutation,
   useDeleteLoanMutation,
   useCreateListingMutation,
   useGetTermsQuery,
