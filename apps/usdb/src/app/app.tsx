@@ -113,6 +113,7 @@ export const App = (): JSX.Element => {
           </Route>
           <Route path="/xfhm" element={<XfhmLqdrPage />} />
           <Route path="/mint" element={<Mint />} />
+          {/*<Route path="/fhm" element={<FhmPage />} />*/}
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/about" element={<BalanceAboutPage />} />
           <Route
