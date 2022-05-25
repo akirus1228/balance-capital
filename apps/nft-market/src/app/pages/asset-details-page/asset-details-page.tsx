@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ import { BorrowerCreateListing } from "../../components/borrower-create-listing/
 import { BorrowerListingDetails } from "../../components/borrower-listing-details/borrower-listing-details";
 import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borrower-loan-details";
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
+import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-details";
 import OffersList from "../../components/offers-list/offers-list";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
@@ -82,6 +83,13 @@ export const AssetDetailsPage = (): JSX.Element => {
       {!listing && !asset && <h1>Loading...</h1>}
       {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (
         <LenderListingTerms listing={listing} sx={{ mt: "3em" }} />
+      )}
+      {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Locked && (
+        <LenderLoanDetails
+          asset={asset}
+          loan={loans ? loans[0] : ({} as Loan)}
+          sx={{ mt: "3em" }}
+        />
       )}
       {isOwner && [AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />

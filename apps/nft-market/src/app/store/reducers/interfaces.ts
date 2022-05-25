@@ -30,8 +30,8 @@ export interface LoanAsyncThunk extends IBaseAsyncThunk {
 
 export interface LoanDetailsAsyncThunk extends IBaseAsyncThunk {
   readonly loanId: number;
-  networkId: number;
-  provider: JsonRpcProvider;
+  readonly networkId: number;
+  readonly provider: JsonRpcProvider;
 }
 
 export interface RepayLoanAsyncThunk extends IBaseAsyncThunk {

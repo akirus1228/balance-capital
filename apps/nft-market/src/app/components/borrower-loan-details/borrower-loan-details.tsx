@@ -91,7 +91,7 @@ export const BorrowerLoanDetails = ({
     )
       .unwrap()
       .then((loanDetails: LoanDetails) => setLoanDetails(loanDetails));
-  }, [asset, loan]);
+  }, [loan]);
 
   const handleRepayLoan = useCallback(async () => {
     if (!loan.contractLoanId || !provider) return;
@@ -132,19 +132,30 @@ export const BorrowerLoanDetails = ({
   }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
 
   useEffect(() => {
+    // if nothing is loading and pending is true, stop pending
     if (
-      (isLoanUpdating ||
+      isLoanUpdating === false &&
+      requestErc20AllowanceStatus !== "loading" &&
+      checkErc20AllowanceStatus !== "loading" &&
+      repayLoanStatus !== "loading" &&
+      isPending === true
+    ) {
+      setIsPending(false);
+    }
+
+    // if pending is false, but something is loading, start pending
+    if (
+      isPending === false &&
+      (isLoanUpdating === true ||
         requestErc20AllowanceStatus === "loading" ||
         checkErc20AllowanceStatus === "loading" ||
-        repayLoanStatus === "loading") &&
-      !isPending
+        repayLoanStatus === "loading")
     ) {
       setIsPending(true);
-    } else {
-      setIsPending(false);
     }
   }, [
     isPending,
+    isLoanUpdating,
     requestErc20AllowanceStatus,
     checkErc20AllowanceStatus,
     repayLoanStatus,
@@ -187,12 +198,12 @@ export const BorrowerLoanDetails = ({
             </Box>
           </Box>
           <Box className="flex fc">
-            {usdbAllowance >= loanDetails.amountDue && (
+            {usdbAllowance >= loanDetails.amountDue && !isPending && (
               <Button variant="contained" onClick={handleRepayLoan}>
                 Repay loan
               </Button>
             )}
-            {usdbAllowance < loanDetails.amountDue && (
+            {usdbAllowance < loanDetails.amountDue && !isPending && (
               <Button variant="contained" onClick={handleRequestAllowance}>
                 Repay loan.
               </Button>
