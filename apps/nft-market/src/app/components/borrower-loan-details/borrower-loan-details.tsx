@@ -198,12 +198,12 @@ export const BorrowerLoanDetails = ({
             </Box>
           </Box>
           <Box className="flex fc">
-            {usdbAllowance >= loanDetails.amountDue && (
+            {usdbAllowance >= loanDetails.amountDue && !isPending && (
               <Button variant="contained" onClick={handleRepayLoan}>
                 Repay loan
               </Button>
             )}
-            {usdbAllowance < loanDetails.amountDue && (
+            {usdbAllowance < loanDetails.amountDue && !isPending && (
               <Button variant="contained" onClick={handleRequestAllowance}>
                 Repay loan.
               </Button>

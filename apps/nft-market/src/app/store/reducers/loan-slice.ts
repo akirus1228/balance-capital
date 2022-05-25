@@ -41,6 +41,7 @@ export interface LoansState {
   readonly loanCreationStatus: BackendLoadingStatus;
   readonly loanReadStatus: BackendLoadingStatus;
   readonly repayLoanStatus: BackendLoadingStatus;
+  readonly forecloseLoanStatus: BackendLoadingStatus;
 }
 
 export type LoanDetailsResponse = {
@@ -96,10 +97,7 @@ returns: void
 */
 export const contractCreateLoan = createAsyncThunk(
   "loan/contractCreateLoan",
-  async (
-    { loan, provider, networkId }: LoanAsyncThunk,
-    { rejectWithValue, dispatch }
-  ) => {
+  async ({ loan, provider, networkId }: LoanAsyncThunk) => {
     const signer = provider.getSigner();
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
@@ -158,10 +156,7 @@ returns: number | boolean
 */
 export const repayLoan = createAsyncThunk(
   "loan/repayLoan",
-  async (
-    { loanId, amountDue, provider, networkId }: RepayLoanAsyncThunk,
-    { rejectWithValue, dispatch }
-  ) => {
+  async ({ loanId, amountDue, provider, networkId }: RepayLoanAsyncThunk) => {
     const signer = provider.getSigner();
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
@@ -186,6 +181,39 @@ export const repayLoan = createAsyncThunk(
 );
 
 /*
+forecloseLoan: add loan to contract
+params:
+- loanId: number;
+- provider: JsonRpcProvider;
+- networkId: number;
+returns: number | boolean
+*/
+export const forecloseLoan = createAsyncThunk(
+  "loan/forecloseLoan",
+  async ({ loanId, provider, networkId }: LoanDetailsAsyncThunk) => {
+    const signer = provider.getSigner();
+    const lendingContract = new ethers.Contract(
+      addresses[networkId]["USDB_LENDING_ADDRESS"],
+      usdbLending,
+      signer
+    );
+    const liquidateTxn: ContractTransaction = await lendingContract["liquidateLoan"](
+      loanId
+    );
+    const response: ContractReceipt = await liquidateTxn.wait();
+    const event: Event | undefined = response.events?.find(
+      (event: RepayLoanEvent | Event) => !!event.event && event.event === "LoanTerminated"
+    );
+    if (event && event.args) {
+      const [lender, borrower, nftAddress, nftTokenId, loanId] = event.args;
+      return +loanId;
+    } else {
+      return false;
+    }
+  }
+);
+
+/*
 getLoanDetailsFromContract: add loan to contract
 params:
 - loanId: number
@@ -195,10 +223,7 @@ returns: void
 */
 export const getLoanDetailsFromContract = createAsyncThunk(
   "loan/getLoanDetailsFromContract",
-  async (
-    { loanId, networkId, provider }: LoanDetailsAsyncThunk,
-    { rejectWithValue, dispatch }
-  ) => {
+  async ({ loanId, networkId, provider }: LoanDetailsAsyncThunk) => {
     const lendingContract = new ethers.Contract(
       addresses[networkId]["USDB_LENDING_ADDRESS"],
       usdbLending,
@@ -234,6 +259,7 @@ const initialState: LoansState = {
   loanCreationStatus: BackendLoadingStatus.idle,
   loanReadStatus: BackendLoadingStatus.idle,
   repayLoanStatus: BackendLoadingStatus.idle,
+  forecloseLoanStatus: BackendLoadingStatus.idle,
 };
 
 // create slice and initialize reducers
@@ -271,6 +297,16 @@ const loansSlice = createSlice({
     });
     builder.addCase(repayLoan.rejected, (state, action) => {
       state.repayLoanStatus = BackendLoadingStatus.failed;
+    });
+    builder.addCase(forecloseLoan.pending, (state, action) => {
+      state.forecloseLoanStatus = BackendLoadingStatus.loading;
+    });
+    builder.addCase(forecloseLoan.fulfilled, (state, action) => {
+      state.forecloseLoanStatus = BackendLoadingStatus.succeeded;
+      // dispatch update loan status
+    });
+    builder.addCase(forecloseLoan.rejected, (state, action) => {
+      state.forecloseLoanStatus = BackendLoadingStatus.failed;
     });
   },
 });

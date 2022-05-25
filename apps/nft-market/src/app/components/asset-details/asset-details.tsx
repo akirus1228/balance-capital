@@ -1,3 +1,4 @@
+import { prettifySeconds } from "@fantohm/shared-web3";
 import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
@@ -99,7 +100,9 @@ export const AssetDetails = ({
                   </Box>
                   <Box>
                     <Typography className={style["label"]}>Listed</Typography>
-                    <Typography className={style["name"]}>14 hours ago</Typography>
+                    <Typography className={style["name"]}>
+                      {listing?.createdAt} hours ago
+                    </Typography>
                   </Box>
                 </Paper>
               </Box>
