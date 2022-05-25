@@ -66,6 +66,16 @@ import HackenIconDark from "./audits/HackenDark.png";
 import SpadetechIconDark from "./audits/SpadetechDark.png";
 import TechrateIconDark from "./audits/TechrateDark.png";
 import BalanceLogoDark from "./Balance_Logo_Dark.png";
+import FHMBanner from "./FHM_Banner.png";
+import FHMCoin from "./FHM_Coin.png";
+import FHMLaptop from "./FHM_Laptop.png";
+import FHMLaptop2 from "./FHM_Laptop_2.png";
+import Pwntr0n from "./multisig/pwntr0n.png";
+import Rayne from "./multisig/Rayne.png";
+import Kanan from "./multisig/Kanan.png";
+import Sleepy_Neko from "./multisig/Sleepy_Neko.png";
+import Lilbobross from "./multisig/Lilbobross.png";
+import AtomicSwap from "./multisig/AtomicSwap.png";
 
 export {
   NFTsIcon,
@@ -136,4 +146,14 @@ export {
   HackenIconDark,
   TechrateIconDark,
   BalanceLogoDark,
+  FHMBanner,
+  FHMCoin,
+  FHMLaptop,
+  FHMLaptop2,
+  Rayne,
+  Pwntr0n,
+  AtomicSwap,
+  Kanan,
+  Sleepy_Neko,
+  Lilbobross,
 };
