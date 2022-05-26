@@ -4,7 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Box, CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId, loadPlatformFee } from "@fantohm/shared-web3";
+import {
+  useWeb3Context,
+  defaultNetworkId,
+  loadPlatformFee,
+  isDev,
+  NetworkIds,
+} from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -28,8 +34,15 @@ export const App = (): JSX.Element => {
   const { platformFee } = useSelector((state: RootState) => state.wallet);
 
   const [theme, setTheme] = useState(NftLight);
-  const { address, chainId, connected, hasCachedProvider, connect, provider } =
-    useWeb3Context();
+  const {
+    address,
+    chainId,
+    connected,
+    hasCachedProvider,
+    connect,
+    provider,
+    switchEthereumChain,
+  } = useWeb3Context();
 
   useEffect(() => {
     setTheme(themeType === "light" ? NftLight : NftDark);
@@ -81,6 +94,16 @@ export const App = (): JSX.Element => {
       );
     }
   }, [provider, address, connected, authorizedAccount, accountStatus, user]);
+
+  // when a user connects their wallet login to the backend api
+  useEffect(() => {
+    if (provider && connected && address) {
+      const expectedChain = isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum;
+      if (switchEthereumChain && chainId !== expectedChain) {
+        switchEthereumChain(expectedChain);
+      }
+    }
+  }, [provider, address, connected]);
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
