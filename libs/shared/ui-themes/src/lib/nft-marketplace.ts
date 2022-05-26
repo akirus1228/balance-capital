@@ -107,6 +107,7 @@ export const PaperTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: "transparent",
   position: "relative",
   padding: "2em 0",
+  fontSize: "20px",
   ":first-child": {
     borderTopLeftRadius: "24px",
     borderBottomLeftRadius: "24px",

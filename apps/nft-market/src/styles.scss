@@ -31,6 +31,22 @@ html, body {
     justify-content: end;
   }
 
+  .flex.ai-b {
+    align-items: baseline;
+  }
+
+  .flex.ai-c {
+    align-items: center;
+  }
+
+  .flex.ai-s {
+    align-items: stretch;
+  }
+
+  .flex.ai-fe {
+    align-items: flex-end;
+  }
+
   .flex.fr {
     flex-direction: row;
   }
