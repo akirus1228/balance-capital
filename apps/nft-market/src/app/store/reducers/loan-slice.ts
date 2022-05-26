@@ -202,7 +202,7 @@ export const forecloseLoan = createAsyncThunk(
     );
     const response: ContractReceipt = await liquidateTxn.wait();
     const event: Event | undefined = response.events?.find(
-      (event: RepayLoanEvent | Event) => !!event.event && event.event === "LoanTerminated"
+      (event: Event) => !!event.event && event.event === "LoanTerminated"
     );
     if (event && event.args) {
       const [lender, borrower, nftAddress, nftTokenId, loanId] = event.args;

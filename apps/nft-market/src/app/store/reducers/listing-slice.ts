@@ -49,7 +49,7 @@ export const createListing = createAsyncThunk(
         rejectWithValue("Failed to create listing");
       }
       if (typeof listing !== "boolean") {
-        dispatch(updateAsset({ ...listing.asset, owner: { address: asset.wallet } }));
+        dispatch(updateAsset({ ...listing.asset, owner: thisState.backend.user }));
       }
       return listing;
     } else {
