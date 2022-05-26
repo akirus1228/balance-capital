@@ -160,7 +160,7 @@ const globalTheme: ThemeOptions = {
             color: "#FFF",
           },
           "&.grey": {
-            backgroundColor: "#AAAAAA1f",
+            backgroundColor: "#AAAAAAb0",
             color: "#000",
           },
         },
