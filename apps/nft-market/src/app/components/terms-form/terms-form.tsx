@@ -156,7 +156,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setPending(true);
     let asset: Asset;
     if (props.asset.status === AssetStatus.New) {
-      asset = { ...props.asset, owner: { address } };
+      asset = { ...props.asset, owner: user };
     } else {
       asset = props.asset;
     }
@@ -188,7 +188,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setPending(true);
     let asset: Asset;
     if (props.asset.status === AssetStatus.New) {
-      asset = { ...props.asset, owner: { address } };
+      asset = { ...props.asset, owner: user };
     } else {
       asset = props.asset;
     }
@@ -229,7 +229,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   }, [isTermsUpdateLoading, updateTermsResponse, props.listing]);
 
   const handleDurationChange = (event: BaseSyntheticEvent) => {
-    setDuration(event.target.value);
+    setDuration(+event.target.value);
   };
 
   const handleDurationTypeChange = (event: SelectChangeEvent) => {
@@ -241,11 +241,11 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   };
 
   const handleAprChange = (event: BaseSyntheticEvent) => {
-    setApr(event.target.value);
+    setApr(+event.target.value);
   };
 
   const handleAmountChange = (event: BaseSyntheticEvent) => {
-    setAmount(event.target.value);
+    setAmount(+event.target.value);
   };
 
   // calculate repayment totals

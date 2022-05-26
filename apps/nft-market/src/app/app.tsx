@@ -68,13 +68,14 @@ export const App = (): JSX.Element => {
       connected &&
       address &&
       address.toLowerCase() !== authorizedAccount.toLowerCase() &&
-      accountStatus !== "pending"
+      accountStatus !== "pending" &&
+      typeof user.address == "undefined"
     ) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [provider, address, connected, authorizedAccount, accountStatus]);
+  }, [provider, address, connected, authorizedAccount, accountStatus, user]);
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {

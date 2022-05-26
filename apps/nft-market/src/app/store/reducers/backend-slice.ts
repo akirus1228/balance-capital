@@ -87,6 +87,7 @@ const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
   authorizedAccount: null,
+  user: {} as User,
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
@@ -101,6 +102,7 @@ const backendSlice = createSlice({
       state.authSignature = null;
       state.authorizedAccount = "";
       state.accountStatus = "unknown";
+      state.user = {} as User;
     },
   },
   extraReducers: (builder) => {

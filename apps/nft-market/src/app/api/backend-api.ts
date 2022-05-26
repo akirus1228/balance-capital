@@ -319,7 +319,7 @@ export const backendApi = createApi({
       query: ({ id, ...patch }) => ({
         url: `term/${id}`,
         method: "PUT",
-        body: patch,
+        body: { ...patch, id },
       }),
       transformResponse: (response: Terms, meta, arg) => response,
       invalidatesTags: ["Terms", "Listing", "Offer"],
@@ -375,7 +375,7 @@ export const backendApi = createApi({
       query: ({ id, ...patch }) => ({
         url: `loan/${id}`,
         method: "PUT",
-        body: patch,
+        body: { ...patch, id },
       }),
       transformResponse: (response: Loan, meta, arg) => response,
       invalidatesTags: ["Listing", "Offer", "Loan", "Asset"],
@@ -419,7 +419,7 @@ export const backendApi = createApi({
       query: ({ id, ...patch }) => ({
         url: `offer/${id}`,
         method: "PUT",
-        body: patch,
+        body: { ...patch, id },
       }),
       transformResponse: (response: Offer, meta, arg) => response,
       invalidatesTags: ["Terms", "Listing", "Offer"],

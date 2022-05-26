@@ -14,8 +14,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useUpdateLoanMutation } from "../../api/backend-api";
 import store, { RootState } from "../../store";
-import { getLoanDetailsFromContract, LoanDetails } from "../../store/reducers/loan-slice";
-import { Asset, Loan } from "../../types/backend-types";
+import {
+  forecloseLoan,
+  getLoanDetailsFromContract,
+  LoanDetails,
+} from "../../store/reducers/loan-slice";
+import { Asset, AssetStatus, Loan, LoanStatus } from "../../types/backend-types";
 import style from "./lender-loan-details.module.scss";
 
 /* eslint-disable-next-line */
@@ -53,9 +57,39 @@ export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
       .then((loanDetails: LoanDetails) => setLoanDetails(loanDetails));
   }, [loan]);
 
-  const handleForecloseLoan = useCallback(() => {
-    //do something
-  }, []);
+  const handleForecloseLoan = useCallback(async () => {
+    console.log("Handle foreclose loan");
+    if (!loan.contractLoanId || !provider) {
+      console.warn("Missing prereqs");
+      return;
+    }
+    console.log(`+loan.contractLoanId ${loan.contractLoanId}`);
+    console.log(`provider ${provider}`);
+    setIsPending(true);
+    const result = await dispatch(
+      forecloseLoan({
+        loanId: +loan.contractLoanId,
+        provider,
+        networkId: isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum,
+      })
+    ).unwrap();
+
+    const updateLoanRequest: Loan = {
+      ...loan,
+      assetListing: {
+        ...loan.assetListing,
+        asset: {
+          ...loan.assetListing.asset,
+          status: AssetStatus.Ready,
+          owner: user,
+        },
+      },
+      status: LoanStatus.Default,
+    };
+    updateLoan(updateLoanRequest);
+    setIsPending(false);
+    console.log(result);
+  }, [loan, provider]);
 
   if (!loan || !loan.term || !loanDetails.amountDue) {
     return <CircularProgress />;
@@ -94,7 +128,7 @@ export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
             </Box>
           </Box>
           <Box className="flex fc">
-            {loanDetails.endTime < Date.now() && (
+            {loanDetails.endTime < Date.now() && !isPending && (
               <Button variant="contained" onClick={handleForecloseLoan}>
                 Foreclose Loan
               </Button>
