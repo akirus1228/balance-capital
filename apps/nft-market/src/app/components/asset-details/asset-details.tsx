@@ -7,6 +7,7 @@ import { RootState } from "../../store";
 import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
 import style from "./asset-details.module.scss";
+import QuickStatus from "./quick-status/quick-status";
 import StatusInfo from "./status-info/status-info";
 
 export interface AssetDetailsProps {
@@ -96,14 +97,9 @@ export const AssetDetails = ({
                       alignItems: "center",
                     }}
                   >
-                    <AssetOwnerTag asset={asset} sx={{ mb: "3em" }} />
+                    <AssetOwnerTag asset={asset} />
                   </Box>
-                  <Box>
-                    <Typography className={style["label"]}>Listed</Typography>
-                    <Typography className={style["name"]}>
-                      {listing?.createdAt} hours ago
-                    </Typography>
-                  </Box>
+                  <QuickStatus listing={listing} />
                 </Paper>
               </Box>
             </Box>
