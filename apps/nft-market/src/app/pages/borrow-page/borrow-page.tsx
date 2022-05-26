@@ -40,6 +40,11 @@ export const BorrowPage = (): JSX.Element => {
           </Grid>
           <Grid item xs={12} md={10}>
             {(assetsLoading || isAssetLoading) && <CircularProgress />}
+            {(!address || !authSignature) && (
+              <Box className="flex fr fj-c">
+                <h1>Please connect your wallet.</h1>
+              </Box>
+            )}
             <AssetList assets={myAssets} type="borrow" />
           </Grid>
         </Grid>
