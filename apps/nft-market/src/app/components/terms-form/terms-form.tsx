@@ -1,6 +1,7 @@
 import {
   addresses,
   checkNftPermission,
+  formatCurrency,
   isDev,
   NetworkIds,
   requestErc20Allowance,
@@ -15,6 +16,7 @@ import {
   MenuItem,
   Select,
   SelectChangeEvent,
+  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -35,6 +37,7 @@ import { createListing, updateListing } from "../../store/reducers/listing-slice
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
 import { useCreateOfferMutation, useUpdateTermsMutation } from "../../api/backend-api";
+import { USDBToken } from "@fantohm/shared/images";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -324,46 +327,85 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   }, [chainId, address, amount, provider]);
 
   return (
-    <Box className="flex fc">
+    <Box className="flex fc" sx={{ padding: "1em" }}>
       <Box className="flex fc">
-        <Typography>How much would you like to borrow?</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Box className={`flex fr ${style["leftSide"]}`}>
-            <Icon>USDB</Icon>
+        <Typography sx={{ color: "#aaaaaa", mb: "0.5em" }}>
+          How much would you like to borrow?
+        </Typography>
+        <Box className={`flex fr ai-c ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>
+            <img
+              style={{ height: "28px", width: "28px" }}
+              src={USDBToken}
+              alt="USDB Token Icon"
+            />
             USDB
           </Box>
           <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField type="number" value={amount} onChange={handleAmountChange} />
-            <Typography>{amount}</Typography>
+            <TextField
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
+            <Typography sx={{ color: "#aaaaaa" }}>{formatCurrency(amount, 2)}</Typography>
           </Box>
         </Box>
       </Box>
-      <Box className="flex fc">
-        <Typography>Set loan duration</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Select
-            value={durationType}
-            className={`flex fr ${style["leftSide"]}`}
-            onChange={handleDurationTypeChange}
-          >
-            <MenuItem value="days">Days</MenuItem>
-            <MenuItem value="weeks">Weeks</MenuItem>
-            <MenuItem value="months">Months</MenuItem>
-          </Select>
-          <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField value={duration} type="number" onChange={handleDurationChange} />
+      <Box className="flex fc" sx={{ my: "1em" }}>
+        <Typography sx={{ color: "#aaaaaa", mb: "0.5em" }}>Set loan duration</Typography>
+        <Box className={`flex fr ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>
+            <Select
+              value={durationType}
+              onChange={handleDurationTypeChange}
+              variant="standard"
+              sx={{ background: "transparent" }}
+              className="borderless"
+            >
+              <MenuItem value="days">Days</MenuItem>
+              <MenuItem value="weeks">Weeks</MenuItem>
+              <MenuItem value="months">Months</MenuItem>
+            </Select>
+          </Box>
+          <Box className={`flex fr fj-fs ${style["rightSide"]}`}>
+            <TextField
+              value={duration}
+              type="number"
+              onChange={handleDurationChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
           </Box>
         </Box>
       </Box>
-      <Box className="flex fc">
-        <Typography>Set repayment APR</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Select value="apr" className={`flex fr ${style["leftSide"]}`}>
-            <MenuItem value="apr">APR</MenuItem>
-          </Select>
+      <Box className="flex fc" sx={{ mt: "1em", mb: "2em" }}>
+        <Box className="flex fj-sb" sx={{ color: "#aaaaaa", mb: "0.5em" }}>
+          <Typography>Set repayment APR</Typography>
+          <Typography sx={{ fontSize: "smaller", color: "#000" }}>
+            Repayment Amount:
+          </Typography>
+        </Box>
+        <Box className={`flex fr ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>APR</Box>
           <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField value={apr} type="number" onChange={handleAprChange} />
-            <Typography>{repaymentAmount}</Typography>
+            <TextField
+              value={apr}
+              type="number"
+              onChange={handleAprChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
+            <Typography sx={{ color: "#aaaaaa" }}>
+              {formatCurrency(repaymentAmount, 2)}
+            </Typography>
           </Box>
         </Box>
       </Box>

@@ -72,7 +72,7 @@ export const App = (): JSX.Element => {
       provider &&
       connected &&
       address &&
-      address.toLowerCase() !== authorizedAccount.toLowerCase() &&
+      (!authorizedAccount || address.toLowerCase() !== authorizedAccount.toLowerCase()) &&
       accountStatus !== "pending" &&
       typeof user.address == "undefined"
     ) {

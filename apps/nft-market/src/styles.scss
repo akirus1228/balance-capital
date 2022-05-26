@@ -31,6 +31,10 @@ html, body {
     justify-content: end;
   }
 
+  .flex.fj-fs {
+    justify-content: flex-start;
+  }
+
   .flex.ai-b {
     align-items: baseline;
   }

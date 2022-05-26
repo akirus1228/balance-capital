@@ -177,6 +177,17 @@ const globalTheme: ThemeOptions = {
         elevation: 0,
       },
     },
+    MuiSelect: {
+      styleOverrides: {
+        standard: {
+          "&.borderless": {
+            "::before,::after": {
+              bottomBorder: "none",
+            },
+          },
+        },
+      },
+    },
     MuiBackdrop: {
       styleOverrides: {
         root: {
