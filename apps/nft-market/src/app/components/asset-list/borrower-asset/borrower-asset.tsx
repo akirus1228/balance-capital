@@ -58,6 +58,8 @@ export const BorrowerAsset = (props: BorrowerAssetProps): JSX.Element => {
         display: "flex",
         flexDirection: "column",
         width: "fit-content",
+        margin: "1em",
+        padding: "0",
       }}
     >
       <Box sx={{ position: "absolute" }}>
