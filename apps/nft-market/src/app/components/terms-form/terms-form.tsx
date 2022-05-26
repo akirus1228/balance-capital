@@ -156,7 +156,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     setPending(true);
     let asset: Asset;
     if (props.asset.status === AssetStatus.New) {
-      asset = { ...props.asset, owner: { address } };
+      asset = { ...props.asset, owner: user };
     } else {
       asset = props.asset;
     }
