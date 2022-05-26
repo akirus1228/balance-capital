@@ -11,10 +11,11 @@ import style from "./lend-page.module.scss";
 export const LendPage = (): JSX.Element => {
   const [assets, setAssets] = useState<Asset[]>([]);
   const { authSignature } = useSelector((state: RootState) => state.backend);
-  const { data: listings, isLoading } = useGetListingsQuery(
-    { skip: 0, take: 50, status: ListingStatus.Listed },
-    { skip: !authSignature }
-  );
+  const { data: listings, isLoading } = useGetListingsQuery({
+    skip: 0,
+    take: 50,
+    status: ListingStatus.Listed,
+  });
 
   useEffect(() => {
     if (!listings) {

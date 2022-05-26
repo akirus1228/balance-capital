@@ -85,7 +85,15 @@ export const AssetDetailsPage = (): JSX.Element => {
         listing={activeListing}
       />
       {!activeListing && !asset && <h1>Loading...</h1>}
+      {!authSignature &&
+        activeListing &&
+        activeListing.asset?.status === AssetStatus.Listed && (
+          <Box className="flex fr fj-c">
+            <h2>Connect your wallet to fund the loan or make an offer.</h2>
+          </Box>
+        )}
       {asset &&
+        authSignature &&
         !isOwner &&
         activeListing &&
         activeListing.asset?.status === AssetStatus.Listed && (
@@ -94,7 +102,8 @@ export const AssetDetailsPage = (): JSX.Element => {
       {asset &&
         !isOwner &&
         activeListing &&
-        activeListing.asset?.status === AssetStatus.Locked && (
+        activeListing.asset?.status === AssetStatus.Locked &&
+        authSignature && (
           <LenderLoanDetails
             asset={asset}
             loan={loans ? loans[0] : ({} as Loan)}
