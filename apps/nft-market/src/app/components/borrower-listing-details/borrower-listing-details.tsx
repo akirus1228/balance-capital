@@ -28,7 +28,7 @@ export const BorrowerListingDetails = (
       take: 50,
       openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
     },
-    { skip: !authSignature }
+    { skip: !authSignature || !user.address }
   );
 
   // calculate repayment totals

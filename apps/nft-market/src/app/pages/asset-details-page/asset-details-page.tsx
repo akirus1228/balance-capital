@@ -14,8 +14,8 @@ import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-
 import OffersList from "../../components/offers-list/offers-list";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
-import { selectListingByAddress } from "../../store/selectors/listing-selectors";
-import { AssetStatus, Loan } from "../../types/backend-types";
+import { selectListingsByAddress } from "../../store/selectors/listing-selectors";
+import { AssetStatus, Listing, ListingStatus, Loan } from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
@@ -23,8 +23,8 @@ export const AssetDetailsPage = (): JSX.Element => {
   const { address } = useWeb3Context();
   const { authSignature } = useSelector((state: RootState) => state.backend);
   // find listing from store
-  const listing = useSelector((state: RootState) =>
-    selectListingByAddress(state, {
+  const listings = useSelector((state: RootState) =>
+    selectListingsByAddress(state, {
       contractAddress: params["contractAddress"] || "123",
       tokenId: params["tokenId"] || "123",
     })
@@ -70,6 +70,10 @@ export const AssetDetailsPage = (): JSX.Element => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, address]);
 
+  const activeListing = useMemo(() => {
+    return listings.find((listing: Listing) => listing.status === ListingStatus.Listed);
+  }, [listings]);
+
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return <CircularProgress />;
   }
@@ -78,19 +82,25 @@ export const AssetDetailsPage = (): JSX.Element => {
       <AssetDetails
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
-        listing={listing}
+        listing={activeListing}
       />
-      {!listing && !asset && <h1>Loading...</h1>}
-      {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (
-        <LenderListingTerms listing={listing} sx={{ mt: "3em" }} />
-      )}
-      {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Locked && (
-        <LenderLoanDetails
-          asset={asset}
-          loan={loans ? loans[0] : ({} as Loan)}
-          sx={{ mt: "3em" }}
-        />
-      )}
+      {!activeListing && !asset && <h1>Loading...</h1>}
+      {asset &&
+        !isOwner &&
+        activeListing &&
+        activeListing.asset?.status === AssetStatus.Listed && (
+          <LenderListingTerms listing={activeListing} sx={{ mt: "3em" }} />
+        )}
+      {asset &&
+        !isOwner &&
+        activeListing &&
+        activeListing.asset?.status === AssetStatus.Locked && (
+          <LenderLoanDetails
+            asset={asset}
+            loan={loans ? loans[0] : ({} as Loan)}
+            sx={{ mt: "3em" }}
+          />
+        )}
       {isOwner && [AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
       )}
