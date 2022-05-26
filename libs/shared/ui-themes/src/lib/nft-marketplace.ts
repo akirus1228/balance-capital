@@ -155,6 +155,14 @@ const globalTheme: ThemeOptions = {
       styleOverrides: {
         root: {
           boxShadow: "2px 30px 34px #7E9AA926",
+          "&.blue": {
+            backgroundColor: "#374fff",
+            color: "#FFF",
+          },
+          "&.grey": {
+            backgroundColor: "#AAAAAA1f",
+            color: "#000",
+          },
         },
       },
     },

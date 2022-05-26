@@ -37,7 +37,10 @@ export const BorrowPage = (): JSX.Element => {
         url={myAssets.length > 0 ? myAssets[0].imageUrl : undefined}
         height="300px"
       />
-      <h1>Choose an asset to collateralize</h1>
+      <Box className="flex fr fj-sb ai-c">
+        <h1>Choose an asset to collateralize</h1>
+        <span>{myAssets.length} assets available</span>
+      </Box>
       <Box sx={{ mt: "3em" }}>
         <Grid container maxWidth="xl" columnSpacing={5}>
           <Grid item xs={0} md={2}>

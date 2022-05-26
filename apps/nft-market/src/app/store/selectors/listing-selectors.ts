@@ -41,7 +41,7 @@ export const selectListingsByAddress = createSelector(
     const matches: [string, Listing][] = Object.entries(listings).filter(
       ([listingId, listing]) =>
         listing.asset.assetContractAddress === addressParams.contractAddress &&
-        listing.asset.tokenId == addressParams.tokenId
+        listing.asset.tokenId === addressParams.tokenId
     );
     return matches.map(([listingId, listing]) => listing);
   }

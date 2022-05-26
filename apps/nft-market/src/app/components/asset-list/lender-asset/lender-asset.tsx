@@ -4,6 +4,9 @@ import MoreHorizOutlinedIcon from "@mui/icons-material/MoreHorizOutlined";
 import PreviewImage from "../preview-image/preview-image";
 // import style from "./lender-asset.module.scss";
 import { Link } from "react-router-dom";
+import { useMemo } from "react";
+import { capitalizeFirstLetter } from "@fantohm/shared-helpers";
+import { AssetStatus } from "../../../types/backend-types";
 
 export interface LenderAssetProps {
   contractAddress: string;
@@ -12,6 +15,20 @@ export interface LenderAssetProps {
 
 export function LenderAsset(props: LenderAssetProps) {
   const asset = useWalletAsset(props.contractAddress, props.tokenId);
+  const chipColor = useMemo(() => {
+    if (!asset) return;
+    switch (asset.status) {
+      case AssetStatus.New:
+      case AssetStatus.Ready:
+        return "grey";
+      case AssetStatus.Listed:
+        return "blue";
+      case AssetStatus.Locked:
+        return "dark";
+      default:
+        return;
+    }
+  }, [asset]);
 
   if (asset === null) {
     return <h3>Loading...</h3>;
@@ -34,7 +51,8 @@ export function LenderAsset(props: LenderAssetProps) {
             left: "20px",
             zIndex: 10,
           }}
-          label={asset.status || "Unlisted"}
+          label={capitalizeFirstLetter(asset.status.toLowerCase()) || "Unlisted"}
+          className={chipColor}
         />
       </Box>
       <Box sx={{ position: "absolute" }}>
