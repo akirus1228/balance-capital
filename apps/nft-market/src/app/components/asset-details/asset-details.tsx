@@ -6,6 +6,7 @@ import { useWalletAsset } from "../../hooks/use-wallet-asset";
 import { RootState } from "../../store";
 import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
+import HeaderBlurryImage from "../header-blurry-image/header-blurry-image";
 import style from "./asset-details.module.scss";
 import QuickStatus from "./quick-status/quick-status";
 import StatusInfo from "./status-info/status-info";
@@ -37,31 +38,7 @@ export const AssetDetails = ({
 
   return (
     <Container>
-      <Box
-        sx={{
-          position: "absolute",
-          width: "100vw",
-          height: "251px",
-          top: "0",
-          left: "0",
-          zIndex: "-1",
-          opacity: "0.23",
-          overflow: "hidden",
-        }}
-      >
-        <Box
-          sx={{
-            backgroundImage: `url("${asset?.imageUrl}")`,
-            height: "100%",
-            width: "100%",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat",
-            backgroundSize: "100vw",
-            position: "relative",
-            filter: "blur(8px)",
-          }}
-        ></Box>
-      </Box>
+      <HeaderBlurryImage url={asset?.imageUrl} />
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>

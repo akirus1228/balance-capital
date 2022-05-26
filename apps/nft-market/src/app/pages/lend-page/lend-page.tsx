@@ -4,6 +4,7 @@ import { useSelector } from "react-redux";
 import { useGetListingsQuery } from "../../api/backend-api";
 import LenderAssetFilter from "../../components/asset-filter/lender-asset-filter/lender-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
+import HeaderBlurryImage from "../../components/header-blurry-image/header-blurry-image";
 import { RootState } from "../../store";
 import { Asset, Listing, ListingStatus } from "../../types/backend-types";
 import style from "./lend-page.module.scss";
@@ -29,9 +30,13 @@ export const LendPage = (): JSX.Element => {
   }, [listings]);
 
   return (
-    <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
+    <Container className={style["lendPageContainer"]} maxWidth={`xl`}>
+      <HeaderBlurryImage
+        url={listings ? listings[0].asset.imageUrl : undefined}
+        height="300px"
+      />
       <h1>Explore loan requests</h1>
-      <Box sx={{ mt: "2em" }}>
+      <Box sx={{ mt: "3em" }}>
         <Grid container maxWidth="xl" columnSpacing={5}>
           <Grid item xs={0} md={2}>
             <LenderAssetFilter />
