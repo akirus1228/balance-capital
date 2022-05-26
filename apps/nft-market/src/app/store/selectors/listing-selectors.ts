@@ -10,11 +10,12 @@ import { Listings } from "../reducers/listing-slice";
 
 const selectListings = (state: RootState) => state.listings.listings;
 
-const selectListingAsset = (state: RootState, asset: Asset) => asset;
+const selectListingAsset = (state: RootState, asset: Asset | null) => asset;
 export const selectListingFromAsset = createSelector(
   selectListings,
   selectListingAsset,
   (listings, asset) => {
+    if (asset === null) return {} as Listing;
     const key = Object.keys(listings).find((key: string) => {
       const rtn =
         listings[key].asset.assetContractAddress === asset.assetContractAddress &&
