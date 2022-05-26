@@ -10,7 +10,7 @@ import {
   Offer,
   OfferStatus,
 } from "../../types/backend-types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useCreateLoanMutation,
   useGetAssetsQuery,
@@ -167,6 +167,11 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     updateOffer(updateOfferRequest);
   }, [offer.id, offer.term, offer.assetListing, provider, hasPermission]);
 
+  const offerExpires = useMemo(() => {
+    const offerDateTime = new Date(offer.term.expirationAt);
+    return `${offerDateTime.toLocaleTimeString()} ${offerDateTime.toLocaleDateString()}`;
+  }, [offer.term]);
+
   return (
     <PaperTableRow>
       <PaperTableCell>
@@ -176,7 +181,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>
       <PaperTableCell>{offer.term.apr}%</PaperTableCell>
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
-      <PaperTableCell>**calc expiration time**</PaperTableCell>
+      <PaperTableCell>{offerExpires}</PaperTableCell>
       <PaperTableCell>
         {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleRequestPermission}>

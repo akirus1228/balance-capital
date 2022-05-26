@@ -37,7 +37,12 @@ export const App = (): JSX.Element => {
 
   // if the wallet address doesn't equal the logged in user, log out
   useEffect(() => {
-    if (address && user && address.toLowerCase() !== user.address.toLowerCase()) {
+    if (
+      address &&
+      user &&
+      user.address &&
+      address.toLowerCase() !== user.address.toLowerCase()
+    ) {
       dispatch(logout());
     }
   }, [address, user]);
