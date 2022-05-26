@@ -151,6 +151,13 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          boxShadow: "2px 30px 34px #7E9AA926",
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -346,6 +353,20 @@ const USDBLightBase: ThemeOptions = {
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+        },
+      },
+    },
     MuiToggleButton: {
       styleOverrides: {
         root: {
@@ -437,6 +458,20 @@ const USDBDarkBase: ThemeOptions = {
           "&.closeButton": {
             color: nftDarkColors.color,
             background: nftDarkColors.iconButtonBg,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
           },
         },
       },

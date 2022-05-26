@@ -37,6 +37,31 @@ export const AssetDetails = ({
 
   return (
     <Container>
+      <Box
+        sx={{
+          position: "absolute",
+          width: "100vw",
+          height: "251px",
+          top: "0",
+          left: "0",
+          zIndex: "-1",
+          opacity: "0.23",
+          overflow: "hidden",
+        }}
+      >
+        <Box
+          sx={{
+            backgroundImage: `url("${asset?.imageUrl}")`,
+            height: "100%",
+            width: "100%",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            backgroundSize: "100vw",
+            position: "relative",
+            filter: "blur(8px)",
+          }}
+        ></Box>
+      </Box>
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>
@@ -66,9 +91,9 @@ export const AssetDetails = ({
                 pb: "3em",
               }}
             >
-              <Chip label={asset.status || "Unlisted"} />
+              <Chip label={asset.status || "Unlisted"} className="dark" />
               <Typography sx={{ mx: "10px" }}>.</Typography>
-              <Chip label={asset.mediaType || "Art"} />
+              <Chip label={asset.mediaType || "Art"} className="light" />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row", mb: "3em" }}>
               <Box

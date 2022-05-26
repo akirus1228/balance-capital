@@ -75,7 +75,11 @@ export const AssetDetailsPage = (): JSX.Element => {
   }, [listings]);
 
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   return (
     <>
