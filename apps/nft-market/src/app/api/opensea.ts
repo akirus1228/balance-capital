@@ -128,7 +128,7 @@ const openseaConfig = (): OpenseaConfig => {
       : "6f2462b6e7174e9bbe807169db342ec4",
     apiEndpoint: isDev()
       ? "https://testnets-api.opensea.io/api/v1"
-      : "https://api.opensea.io/api/v1/assets",
+      : "https://api.opensea.io/api/v1",
   };
 
   return openSeaConfig;
