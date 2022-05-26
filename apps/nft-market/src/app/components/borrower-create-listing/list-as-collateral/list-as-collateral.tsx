@@ -63,12 +63,21 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
 
   return (
     <Dialog onClose={handleClose} open={open} sx={{ padding: "1.5em" }}>
-      <Box className={`flex fr fj-e ${style["header"]}`}>
+      <Box className="flex fr fj-c">
+        <h1 style={{ margin: "0 0 0.5em 0" }}>List as collateral</h1>
+      </Box>
+      <Box
+        className={`flex fr fj-e ${style["header"]}`}
+        sx={{ position: "absolute", right: "16px" }}
+      >
         <IconButton onClick={handleClose}>
           <CancelOutlinedIcon />
         </IconButton>
       </Box>
-      <Box className={`flex fc ${style["body"]}`}>
+      <Box
+        className={`flex fc ${style["body"]}`}
+        sx={{ borderTop: "1px solid #aaaaaa", paddingTop: "1em" }}
+      >
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
         {dialogState === DialogState.TERMS && (
           <TermsForm asset={props.asset} onClose={onClose} />
