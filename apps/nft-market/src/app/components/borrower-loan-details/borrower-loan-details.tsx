@@ -3,6 +3,7 @@ import {
   checkErc20Allowance,
   isDev,
   NetworkIds,
+  prettifySeconds,
   requestErc20Allowance,
   selectErc20AllowanceByAddress,
   useWeb3Context,
@@ -193,7 +194,9 @@ export const BorrowerLoanDetails = ({
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until loan expires</Typography>
             <Box className="flex fr w100">
-              <Typography className={`${style["data"]}`}>55/60 days</Typography>
+              <Typography className={`${style["data"]}`}>
+                {prettifySeconds(loanDetails.endTime - Date.now() / 1000)}
+              </Typography>
               <LinearProgress variant="determinate" value={10} />
             </Box>
           </Box>
