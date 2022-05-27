@@ -80,7 +80,11 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
       >
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
         {dialogState === DialogState.TERMS && (
-          <TermsForm asset={props.asset} onClose={onClose} />
+          <TermsForm
+            asset={props.asset}
+            onClose={onClose}
+            key={`list-terms-${props.asset.openseaId}`}
+          />
         )}
       </Box>
     </Dialog>

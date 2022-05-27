@@ -1,5 +1,5 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useListingTermDetails } from "../../hooks/use-listing-terms";
 import { RootState } from "../../store";
@@ -36,9 +36,10 @@ export const BorrowerListingDetails = (
 
   // update term
   const [dialogOpen, setDialogOpen] = useState(false);
-  const onClickButton = () => {
+  const onClickButton = useCallback(() => {
+    console.log("Open dialog");
     setDialogOpen(true);
-  };
+  }, []);
 
   const onListDialogClose = (accepted: boolean) => {
     setDialogOpen(false);

@@ -35,6 +35,7 @@ export const UpdateTerms = (props: UpdateTermsProps): JSX.Element => {
         sx={{ borderTop: "1px solid #aaaaaa", paddingTop: "1em" }}
       >
         <TermsForm
+          key={`update-terms-${props.listing.id}`}
           asset={props.listing.asset}
           listing={props.listing}
           onClose={onClose}
