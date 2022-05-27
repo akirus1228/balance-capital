@@ -47,7 +47,11 @@ export const BorrowPage = (): JSX.Element => {
             <BorrowerAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
-            {(assetsLoading || isAssetLoading) && <CircularProgress />}
+            {(assetsLoading || isAssetLoading) && (
+              <Box className="flex fr fj-c">
+                <CircularProgress />
+              </Box>
+            )}
             {(!address || !authSignature) && (
               <Box className="flex fr fj-c">
                 <h1>Please connect your wallet.</h1>

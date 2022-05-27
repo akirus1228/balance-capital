@@ -1,5 +1,5 @@
 import { PaperTable, PaperTableCell, PaperTableHead } from "@fantohm/shared-ui-themes";
-import { CircularProgress, Container, TableBody, TableRow } from "@mui/material";
+import { Box, CircularProgress, Container, TableBody, TableRow } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useGetOffersQuery } from "../../api/backend-api";
 import { RootState } from "../../store";
@@ -19,7 +19,11 @@ export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
   });
 
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   if ((!offers || offers.length < 1) && !isLoading) {
     return <></>;

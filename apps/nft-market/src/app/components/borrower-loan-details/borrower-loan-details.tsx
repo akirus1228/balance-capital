@@ -163,7 +163,11 @@ export const BorrowerLoanDetails = ({
   ]);
 
   if (!loan || !loan.term || !loanDetails.amountDue) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   return (
     <Container sx={sx}>
