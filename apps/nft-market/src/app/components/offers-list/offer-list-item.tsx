@@ -30,7 +30,7 @@ import {
   prettifySeconds,
 } from "@fantohm/shared-web3";
 import style from "./offers-list.module.scss";
-import tmpAvatar from "../../../assets/images/temp-avatar.png";
+import SimpleProfile from "../simple-profile/simple-profile";
 
 export type OfferListItemProps = {
   offer: Offer;
@@ -192,17 +192,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   return (
     <PaperTableRow className={style["row"]}>
       <PaperTableCell>
-        <Box className="flex fr ai-c">
-          <Avatar src={offer.lender.profileImageUrl || tmpAvatar} />
-          <Box className="flex fc" sx={{ ml: "1em" }}>
-            <span className={style["ownerName"]}>
-              {offer.lender.name || addressEllipsis(offer.lender.address)}
-            </span>
-            <span className={style["ownerAddress"]}>
-              {addressEllipsis(offer.lender.address)}
-            </span>
-          </Box>
-        </Box>
+        <SimpleProfile user={offer.lender} />
       </PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentTotal, 2)}</PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>

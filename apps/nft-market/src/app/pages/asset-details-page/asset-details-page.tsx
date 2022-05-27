@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -12,6 +12,8 @@ import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borr
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
 import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-details";
 import OffersList from "../../components/offers-list/offers-list";
+import OwnerInfo from "../../components/owner-info/owner-info";
+import PreviousLoans from "../../components/previous-loans/previous-loans";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingsByAddress } from "../../store/selectors/listing-selectors";
@@ -128,6 +130,16 @@ export const AssetDetailsPage = (): JSX.Element => {
         />
       )}
       {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
+      <Container>
+        <Grid container>
+          <Grid item xs={12} md={4}>
+            <OwnerInfo owner={asset.owner} />
+          </Grid>
+          <Grid item xs={12} md={8}>
+            <PreviousLoans asset={asset} />
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };
