@@ -77,6 +77,11 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     selectNftPermFromAsset(state, offer.assetListing.asset)
   );
 
+  // is the user the owner of the asset?
+  const isOwner = useMemo(() => {
+    return user.address.toLowerCase() === asset?.owner?.address.toLowerCase();
+  }, [asset, user]);
+
   useEffect(() => {
     if (
       (isUpdatingOffer ||
@@ -173,7 +178,15 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const offerExpires = useMemo(() => {
     const offerDateTime = new Date(offer.term.expirationAt);
     const expiresInSeconds = offerDateTime.getTime() - Date.now();
-    return prettifySeconds(expiresInSeconds / 1000);
+    const prettyTime = prettifySeconds(expiresInSeconds / 1000);
+    return prettyTime !== "Instant" ? prettyTime : "Expired";
+  }, [offer.term]);
+
+  const offerCreatedSecondsAgo = useMemo(() => {
+    if (!offer.term.createdAt) return 0;
+    const offerDateTime = new Date(offer.term.createdAt);
+    const createdAgo = Date.now() - offerDateTime.getTime();
+    return prettifySeconds(createdAgo / 1000);
   }, [offer.term]);
 
   return (
@@ -197,12 +210,12 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
       <PaperTableCell>{offerExpires}</PaperTableCell>
       <PaperTableCell>
-        {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
+        {isOwner && !hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleRequestPermission}>
             Accept
           </Button>
         )}
-        {hasPermission && !isPending && offer.status === OfferStatus.Ready && (
+        {isOwner && hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleAcceptOffer}>
             Accept
           </Button>
@@ -217,6 +230,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
             {offer.status}
           </Button>
         )}
+        {!isOwner && <span>{offerCreatedSecondsAgo} ago</span>}
       </PaperTableCell>
     </PaperTableRow>
   );
