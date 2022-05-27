@@ -132,11 +132,11 @@ export const AssetDetailsPage = (): JSX.Element => {
       )}
       {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
       <Container maxWidth="xl">
-        <Grid container>
-          <Grid item xs={12} md={4}>
+        <Grid container columnSpacing={3}>
+          <Grid item xs={12} md={5}>
             <OwnerInfo owner={asset.owner} />
           </Grid>
-          <Grid item xs={12} md={8}>
+          <Grid item xs={12} md={7}>
             <PreviousLoans asset={asset} />
           </Grid>
         </Grid>

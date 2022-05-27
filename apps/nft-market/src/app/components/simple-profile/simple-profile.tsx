@@ -1,14 +1,15 @@
 import { addressEllipsis } from "@fantohm/shared-helpers";
-import { Avatar, Box, CircularProgress } from "@mui/material";
+import { Avatar, Box, CircularProgress, SxProps, Theme } from "@mui/material";
 import { User } from "../../types/backend-types";
 import tmpAvatar from "../../../assets/images/temp-avatar.png";
 import style from "./simple-profile.module.scss";
 
 export interface SimpleProfileProps {
   user: User;
+  sx?: SxProps<Theme>;
 }
 
-export const SimpleProfile = ({ user }: SimpleProfileProps): JSX.Element => {
+export const SimpleProfile = ({ user, sx }: SimpleProfileProps): JSX.Element => {
   if (!user) {
     return (
       <Box className="flex fr fj-c">
@@ -17,7 +18,7 @@ export const SimpleProfile = ({ user }: SimpleProfileProps): JSX.Element => {
     );
   }
   return (
-    <Box className="flex fr ai-c">
+    <Box className="flex fr ai-c" sx={sx}>
       <Avatar src={user.profileImageUrl || tmpAvatar} />
       <Box className="flex fc" sx={{ ml: "1em" }}>
         <span className={style["ownerName"]}>

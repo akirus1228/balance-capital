@@ -1,4 +1,4 @@
-import { formatCurrency } from "@fantohm/shared-helpers";
+import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
 import {
   PaperTable,
   PaperTableCell,
@@ -12,6 +12,7 @@ import {
   TableContainer,
   TableRow,
 } from "@mui/material";
+import { useMemo } from "react";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { useTermDetails } from "../../hooks/use-term-details";
 import { Asset, Loan, LoanStatus } from "../../types/backend-types";
@@ -51,27 +52,37 @@ export const PreviousLoans = ({ asset }: PreviousLoansProps): JSX.Element => {
       <PaperTable aria-label="Active investments">
         <PaperTableHead>
           <TableRow>
-            <PaperTableCell>Lender</PaperTableCell>
-            <PaperTableCell>Borrower</PaperTableCell>
-            <PaperTableCell>Value</PaperTableCell>
-            <PaperTableCell>Repayment</PaperTableCell>
-            <PaperTableCell>APR</PaperTableCell>
-            <PaperTableCell>Start Date</PaperTableCell>
-            <PaperTableCell>Duration</PaperTableCell>
-            <PaperTableCell>Status</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Lender</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Borrower</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Value</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Repayment</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>APR</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Start Date</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Duration</PaperTableCell>
+            <PaperTableCell sx={{ fontSize: "16px" }}>Status</PaperTableCell>
           </TableRow>
         </PaperTableHead>
         <TableBody>
           {loans.map((loan: Loan, index: number) => (
             <PaperTableRow key={`ma-invests-table-${index}`} id={`invests-${index}`}>
-              <PaperTableCell>{loan.lender.id}</PaperTableCell>
-              <PaperTableCell>{loan.borrower.id}</PaperTableCell>
-              <PaperTableCell>{formatCurrency(loan.term.amount, 2)}</PaperTableCell>
-              <PaperTableCell>repayment amount</PaperTableCell>
-              <PaperTableCell>{loan.term.apr}%</PaperTableCell>
-              <PaperTableCell>{loan.createdAt}</PaperTableCell>
-              <PaperTableCell>{loan.term.duration}</PaperTableCell>
-              <PaperTableCell>{loan.status}</PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>
+                {addressEllipsis(loan.lender.id || "", 3)}
+              </PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>
+                {addressEllipsis(loan.borrower.id || "", 3)}
+              </PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>
+                {formatCurrency(loan.term.amount, 2)}
+              </PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>repayment amount</PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>{loan.term.apr}%</PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>
+                {new Date(Date.parse(loan.createdAt || "yesterday")).toLocaleDateString()}
+              </PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>
+                {loan.term.duration} days
+              </PaperTableCell>
+              <PaperTableCell sx={{ fontSize: "16px" }}>{loan.status}</PaperTableCell>
             </PaperTableRow>
           ))}
         </TableBody>
