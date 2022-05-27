@@ -70,12 +70,44 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
         </Box>
       </Paper>
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
-        <Box className="flex fc fw ai-c" sx={{ mr: "2em" }}>
-          <CircleGraph progress={10} />
+        <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
+          <CircleGraph progress={10} sx={{ mr: "2em" }} />
+          <Box className="flex fc">
+            <span>
+              Default rate <Icon component={InfoOutlinedIcon} />
+            </span>
+            <Box className="flex fr">
+              <Box className="flex fc">
+                <span>Loans repaid</span>
+                <span>7</span>
+              </Box>
+              <Box className="flex fc">
+                <span>Loans defaulted</span>
+                <span>0</span>
+              </Box>
+            </Box>
+          </Box>
         </Box>
       </Paper>
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
-        <Box className="flex fc fw ai-c" sx={{ mr: "2em" }}></Box>
+        <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
+          <CircleGraph progress={83} sx={{ mr: "2em" }} />
+          <Box className="flex fc">
+            <span>
+              Loan Activity <Icon component={InfoOutlinedIcon} />
+            </span>
+            <Box className="flex fr">
+              <Box className="flex fc">
+                <span>Loans borrowed</span>
+                <span>7</span>
+              </Box>
+              <Box className="flex fc">
+                <span>Loans given</span>
+                <span>1</span>
+              </Box>
+            </Box>
+          </Box>
+        </Box>
       </Paper>
     </Box>
   );

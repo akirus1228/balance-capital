@@ -1,10 +1,11 @@
-import { Box } from "@mui/material";
+import { Box, SxProps, Theme } from "@mui/material";
 import { useEffect, useRef, useState } from "react";
 import style from "./circle-graph.module.scss";
 
 /* eslint-disable-next-line */
 export interface CircleGraphProps {
   progress: number;
+  sx?: SxProps<Theme>;
 }
 
 export const CircleGraph = (props: CircleGraphProps): JSX.Element => {
@@ -35,7 +36,7 @@ export const CircleGraph = (props: CircleGraphProps): JSX.Element => {
   }, [props.progress, pCircle.current]);
 
   return (
-    <Box>
+    <Box sx={props.sx}>
       <svg
         className="progress-ring"
         width="120"
