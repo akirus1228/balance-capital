@@ -132,6 +132,7 @@ export const BalanceAboutPage = (): JSX.Element => {
         text="FHM is a Reserve & Rewards Protocol inspired by the Protocol Owned Liquidity software developments of OHM. FHM features compounding, single disbursement bonds as the safest possible bonding mechanism to ensure the longevity of exchange liquidity in relation to neighbouring protocols with similar principles."
         link="https://fantohm.com/"
         docsLink="https://fantohm.gitbook.io/documentation/"
+        learnMore="/fhm"
       />
       <BalanceAboutTile
         icon={AboutBridge}
@@ -144,6 +145,7 @@ export const BalanceAboutPage = (): JSX.Element => {
         title="Liquidity Solution"
         text="We understand that managing token liquidity is tough. We’ve built the perfect solution to help projects maximise the liquidity they can unlock. Making sure deep liquidity is available for your ecosystem. Helping you achieve your long-term mission and short-term needs."
         link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
+        learnMore="./../../../assets/USDB_Liquiduty_Solution.pdf"
       />
       <BalanceAboutTile
         icon={AboutUSDBBank}

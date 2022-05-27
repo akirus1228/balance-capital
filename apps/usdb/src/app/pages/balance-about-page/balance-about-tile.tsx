@@ -11,6 +11,7 @@ export interface IconLinkProps {
   text: string;
   link?: string | undefined;
   docsLink?: string | undefined;
+  learnMore?: string | undefined;
 }
 
 export function BalanceAboutTile({
@@ -19,6 +20,7 @@ export function BalanceAboutTile({
   link = undefined,
   text = "",
   docsLink = undefined,
+  learnMore = undefined,
 }: IconLinkProps) {
   const navigate = useNavigate();
 
@@ -27,6 +29,20 @@ export function BalanceAboutTile({
     if (isHttpLink) window.open(link, "_blank");
     else if (link) navigate(link);
   }, [navigate, link]);
+
+  const handleOnDocsClick = useCallback(() => {
+    const toLink = docsLink;
+    const isHttpLink = toLink?.startsWith("http");
+    if (isHttpLink) window.open(toLink, "_blank");
+    else if (docsLink) navigate(docsLink);
+  }, [navigate, docsLink, learnMore]);
+
+  const handleOnLearnClick = useCallback(() => {
+    const toLink = learnMore;
+    const isHttpLink = toLink?.startsWith("http");
+    if (isHttpLink) window.open(toLink, "_blank");
+    else if (learnMore) window.open(learnMore);
+  }, [navigate, docsLink, learnMore]);
   const setOpacity = link ? {} : { opacity: "0.4" };
   return (
     <Grid
@@ -91,7 +107,7 @@ export function BalanceAboutTile({
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleOnClick}
+                onClick={handleOnDocsClick}
                 sx={{ px: "4em", display: { md: "flex" } }}
                 className={style["link"]}
                 disabled={link === undefined}
@@ -114,11 +130,24 @@ export function BalanceAboutTile({
               <Button
                 variant="contained"
                 color="primary"
-                onClick={handleOnClick}
+                onClick={handleOnDocsClick}
                 sx={{ px: "4em", display: { md: "flex" }, marginLeft: "20px" }}
                 className={style["link"]}
               >
                 Documentation
+              </Button>
+            ) : (
+              <></>
+            )}
+            {learnMore !== undefined ? (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={handleOnLearnClick}
+                sx={{ px: "4em", display: { md: "flex" }, marginLeft: "20px" }}
+                className={style["link"]}
+              >
+                Learn more
               </Button>
             ) : (
               <></>

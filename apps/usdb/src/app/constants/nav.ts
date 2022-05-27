@@ -59,7 +59,7 @@ export const footerItems: FooterItem[] = [
         title: "Audits",
         href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit",
       },
-      { title: "FantOHM", href: "https://fantohm.com" },
+      { title: "FantOHM", href: "https://app.fantohm.com/" },
     ],
   },
   {
