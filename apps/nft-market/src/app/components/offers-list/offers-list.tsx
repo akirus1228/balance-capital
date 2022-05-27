@@ -29,7 +29,7 @@ export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
     return <></>;
   }
   return (
-    <Container sx={{ pt: "4em" }}>
+    <Container sx={{ pt: "4em" }} maxWidth="xl">
       <h2 className={style["title"]}>Offers receved</h2>
       <PaperTable>
         <PaperTableHead>

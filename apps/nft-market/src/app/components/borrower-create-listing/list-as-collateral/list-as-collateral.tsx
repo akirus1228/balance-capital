@@ -67,7 +67,7 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
         <h1 style={{ margin: "0 0 0.5em 0" }}>List as collateral</h1>
       </Box>
       <Box
-        className={`flex fr fj-e ${style["header"]}`}
+        className={`flex fr fj-fe ${style["header"]}`}
         sx={{ position: "absolute", right: "16px" }}
       >
         <IconButton onClick={handleClose}>

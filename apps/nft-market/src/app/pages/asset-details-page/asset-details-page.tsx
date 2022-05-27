@@ -89,6 +89,7 @@ export const AssetDetailsPage = (): JSX.Element => {
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
         listing={activeListing}
+        sx={{ mt: "5em" }}
       />
       {!activeListing && !asset && <h1>Loading...</h1>}
       {!authSignature &&
@@ -130,7 +131,7 @@ export const AssetDetailsPage = (): JSX.Element => {
         />
       )}
       {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
-      <Container>
+      <Container maxWidth="xl">
         <Grid container>
           <Grid item xs={12} md={4}>
             <OwnerInfo owner={asset.owner} />

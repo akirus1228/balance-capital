@@ -22,7 +22,7 @@ export interface PreviousLoansProps {
 }
 
 export const PreviousLoans = ({ asset }: PreviousLoansProps): JSX.Element => {
-  const { data: loans } = useGetLoansQuery(
+  const { data: loans, isLoading } = useGetLoansQuery(
     {
       take: 50,
       skip: 0,
@@ -32,10 +32,17 @@ export const PreviousLoans = ({ asset }: PreviousLoansProps): JSX.Element => {
     { skip: !asset }
   );
 
-  if (!asset || !loans || typeof loans === "undefined") {
+  if (!asset || !loans || typeof loans === "undefined" || isLoading) {
     return (
       <Box className="flex fr fj-c">
         <CircularProgress />
+      </Box>
+    );
+  }
+  if (!isLoading && loans.length < 1) {
+    return (
+      <Box className="flex fr fj-c">
+        <h2>No loan history for this asset</h2>
       </Box>
     );
   }

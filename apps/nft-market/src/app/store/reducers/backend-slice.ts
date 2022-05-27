@@ -84,11 +84,11 @@ export const loadNotifications = createAsyncThunk(
 // initial wallet slice state
 const previousState = loadState("backend");
 const initialState: BackendData = {
-  accountStatus: "unknown",
   authSignature: null,
   authorizedAccount: null,
   user: {} as User,
   ...previousState,
+  accountStatus: "unknown",
   status: "idle",
   loadAssetStatus: [],
 };

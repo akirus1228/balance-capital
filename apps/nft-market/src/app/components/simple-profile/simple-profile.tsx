@@ -21,9 +21,9 @@ export const SimpleProfile = ({ user }: SimpleProfileProps): JSX.Element => {
       <Avatar src={user.profileImageUrl || tmpAvatar} />
       <Box className="flex fc" sx={{ ml: "1em" }}>
         <span className={style["ownerName"]}>
-          {user.name || addressEllipsis(user.address)}
+          {user.name || addressEllipsis(user.address, 3)}
         </span>
-        <span className={style["ownerAddress"]}>{addressEllipsis(user.address)}</span>
+        <span className={style["ownerAddress"]}>{addressEllipsis(user.address, 3)}</span>
       </Box>
     </Box>
   );

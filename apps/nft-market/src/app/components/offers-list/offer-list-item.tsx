@@ -215,7 +215,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
             Pending...
           </Button>
         )}
-        {offer.status !== OfferStatus.Ready && (
+        {isOwner && offer.status !== OfferStatus.Ready && (
           <Button variant="contained" className="offer">
             {offer.status}
           </Button>
