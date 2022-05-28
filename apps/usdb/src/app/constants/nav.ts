@@ -28,7 +28,7 @@ export const headerPages: Page[] = [
     params: { comingSoon: false },
   },
   { title: "Backed NFT", href: "/backed-nft", params: { comingSoon: false } },
-  { title: "Amps", href: "/amps", params: { comingSoon: false } },
+  { title: "Amps", href: "/amps", params: { comingSoon: true } },
 ];
 
 export const footerItems: FooterItem[] = [
@@ -44,7 +44,7 @@ export const footerItems: FooterItem[] = [
         href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
       },
       { title: "Backed NFT", href: "/backed-nft" },
-      { title: "Amps", href: "/amps", params: { comingSoon: false } },
+      { title: "Amps", href: "/amps", params: { comingSoon: true } },
     ],
   },
   {
