@@ -228,12 +228,12 @@ export const usdbBuy = new StableBond({
   },
 });
 
-export const usdbNft30 = new StableBond({
+export const usdbNft180 = new StableBond({
   apr: 0,
-  days: 30,
+  days: 180,
   name: "usdbNft",
   type: BondType.USDB_NFT,
-  displayName: "USDB ➜ NFT 30d",
+  displayName: "USDB ➜ NFT 180d",
   bondToken: "USDB",
   decimals: 18,
   isAvailable: {
@@ -262,12 +262,12 @@ export const usdbNft30 = new StableBond({
   },
 });
 
-export const usdbNft60 = new StableBond({
+export const usdbNft360 = new StableBond({
   apr: 0,
-  days: 60,
+  days: 360,
   name: "usdbNft",
   type: BondType.USDB_NFT,
-  displayName: "USDB ➜ NFT 60d",
+  displayName: "USDB ➜ NFT 360d",
   bondToken: "USDB",
   decimals: 18,
   isAvailable: {
@@ -296,12 +296,12 @@ export const usdbNft60 = new StableBond({
   },
 });
 
-export const usdbNft90 = new StableBond({
+export const usdbNft720 = new StableBond({
   apr: 0,
-  days: 90,
+  days: 720,
   name: "usdbNft",
   type: BondType.USDB_NFT,
-  displayName: "USDB ➜ NFT 90d",
+  displayName: "USDB ➜ NFT 720d",
   bondToken: "USDB",
   decimals: 18,
   isAvailable: {
@@ -446,9 +446,9 @@ export const allBonds = [
   lqdrUsdbPol,
   usdbFhmBurn,
   usdbBuy,
-  usdbNft30,
-  usdbNft60,
-  usdbNft90,
+  usdbNft180,
+  usdbNft360,
+  usdbNft720,
   stakeNftPool1,
   stakeNftPool2,
   stakeNftPool3,

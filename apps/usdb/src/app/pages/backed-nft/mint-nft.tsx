@@ -52,8 +52,8 @@ export const MintNftPage = (): JSX.Element => {
   const [tokenBalance, setTokenBalance] = useState(usdbBalance);
   const [amount, setAmount] = useState("");
 
-  const [vestingPeriod, setVestingPeriod] = useState(30);
-  const [valueRoi, setValueRoi] = useState("3.0");
+  const [vestingPeriod, setVestingPeriod] = useState(180);
+  const [valueRoi, setValueRoi] = useState("10.0");
   const [valueApy, setValueApy] = useState(42.58);
   const dispatch = useDispatch();
   const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
@@ -116,9 +116,9 @@ export const MintNftPage = (): JSX.Element => {
 
   const updateVestingPeriod = (period: number) => {
     const values = {
-      30: ["3.0", 42.58],
-      60: ["6.5", 45.91],
-      90: ["10.0", 46.41],
+      180: ["10.0", 42.58],
+      360: ["12.0", 45.91],
+      720: ["15.0", 46.41],
     };
     setVestingPeriod(period);
 
@@ -196,30 +196,30 @@ export const MintNftPage = (): JSX.Element => {
                   <Box className={`flexCenterRow w100`} sx={{ mb: "2em", mt: "1em" }}>
                     <Box
                       className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 30 ? style["active"] : ""
+                        vestingPeriod === 180 ? style["active"] : ""
                       }`}
-                      onClick={() => updateVestingPeriod(30)}
+                      onClick={() => updateVestingPeriod(180)}
                       flex={1}
                     >
-                      <span>30 days</span>
+                      <span>180 days</span>
                     </Box>
                     <Box
                       className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 60 ? style["active"] : ""
+                        vestingPeriod === 360 ? style["active"] : ""
                       }`}
-                      onClick={() => updateVestingPeriod(60)}
+                      onClick={() => updateVestingPeriod(360)}
                       flex={1}
                     >
-                      <span>60 days</span>
+                      <span>360 days</span>
                     </Box>
                     <Box
                       className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 90 ? style["active"] : ""
+                        vestingPeriod === 720 ? style["active"] : ""
                       }`}
-                      onClick={() => updateVestingPeriod(90)}
+                      onClick={() => updateVestingPeriod(720)}
                       flex={1}
                     >
-                      <span>90 days</span>
+                      <span>720 days</span>
                     </Box>
                   </Box>
                   <Box className={style["vestingDescription"]}>
