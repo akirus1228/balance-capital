@@ -14,6 +14,7 @@ import {
   redeemNft,
   getNftTokenUri,
   IUsdbNftRedeemAsyncThunk,
+  getNftImageUri,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../store";
@@ -31,6 +32,7 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
   const [fhmPrice, setFhmPrice] = useState(0);
   const [nftDetails, setNftDetails] = useState<INftItemDetails | null>(null);
   const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
+  const [nftImageUri, setNftImageUri] = useState<null | string>(null);
 
   useEffect(() => {
     dispatch(
@@ -46,8 +48,10 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
       getNftTokenUri({
         id: nftId,
         networkId: chainId ?? defaultNetworkId,
-        callback: (metadata: NftMetadata) => {
+        callback: async (metadata: NftMetadata) => {
           setNftMetadata(metadata);
+          const nftImageUri = await getNftImageUri(metadata.tokenId);
+          setNftImageUri(nftImageUri);
         },
       })
     );
@@ -122,7 +126,7 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
     <Grid container spacing={0} flex={1} sx={{ mb: "2em" }}>
       <Grid item xs={12} md={5} flex={1}>
         <Box className={style["nftItemImageBox"]}>
-          {nftMetadata ? <img src={nftMetadata?.image} /> : <Skeleton />}
+          {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
         </Box>
       </Grid>
       <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>

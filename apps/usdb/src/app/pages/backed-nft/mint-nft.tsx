@@ -1,4 +1,3 @@
-import axios from "axios";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
@@ -30,11 +29,13 @@ import {
   useWeb3Context,
   getNftList,
   getNftTokenUri,
+  getNftImageUri,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 
 export interface NftMetadata {
+  tokenId: number;
   name: string;
   image: string;
   description: string;
@@ -56,6 +57,7 @@ export const MintNftPage = (): JSX.Element => {
   const [valueApy, setValueApy] = useState(42.58);
   const dispatch = useDispatch();
   const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
+  const [nftImageUri, setNftImageUri] = useState<null | string>(null);
   const [nftIds, setNftIds] = useState<Array<number>>([]);
 
   useEffect(() => {
@@ -70,8 +72,10 @@ export const MintNftPage = (): JSX.Element => {
       getNftTokenUri({
         id: -1,
         networkId: chainId ?? defaultNetworkId,
-        callback: (metadata: NftMetadata) => {
+        callback: async (metadata: NftMetadata) => {
           setNftMetadata(metadata);
+          const nftImageUri = await getNftImageUri(metadata.tokenId);
+          setNftImageUri(nftImageUri);
         },
       })
     );
@@ -145,6 +149,7 @@ export const MintNftPage = (): JSX.Element => {
   };
 
   const onInvest = async () => {
+    if (!nftMetadata) return;
     const slippage = 0;
     await dispatch(
       investUsdbNftBond({
@@ -153,7 +158,7 @@ export const MintNftPage = (): JSX.Element => {
         networkId: chainId || defaultNetworkId,
         provider,
         address,
-        // nftImageUri: nftMetadataUri,
+        tokenId: nftMetadata.tokenId
       } as IInvestUsdbNftBondAsyncThunk)
     );
   };
@@ -183,7 +188,7 @@ export const MintNftPage = (): JSX.Element => {
                 <Grid item xs={12} md={5} flex={1}>
                   <Box className={style["nftImageBox"]}>
                     {/* <label>NFT Image here</label> */}
-                    {nftMetadata ? <img src={nftMetadata?.image} /> : <Skeleton />}
+                    {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>

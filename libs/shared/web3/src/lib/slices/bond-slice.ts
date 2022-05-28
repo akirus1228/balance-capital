@@ -25,6 +25,7 @@ import { waitUntilBlock } from "../helpers/network-helper";
 import { calculateUserBondDetails, getBalances } from "./account-slice";
 import { BondType, PaymentToken } from "../lib/bond";
 import { addresses } from "../constants";
+import { mintBackedNft } from "../lib/api";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
@@ -869,7 +870,7 @@ export const cancelBond = createAsyncThunk(
 export const investUsdbNftBond = createAsyncThunk(
   "bonding/investUsdbNftBond",
   async (
-    { value, address, bond, networkId, provider }: IInvestUsdbNftBondAsyncThunk,
+    { tokenId, value, address, bond, networkId, provider }: IInvestUsdbNftBondAsyncThunk,
     { dispatch }
   ) => {
     if (!provider) {
@@ -915,6 +916,9 @@ export const investUsdbNftBond = createAsyncThunk(
       uaData.txHash = investTx.hash;
 
       dispatch(getBalances({ address, networkId }));
+      setTimeout(() => {
+        if (tokenId) mintBackedNft(tokenId);
+      }, 5000);
     } catch (e: any) {
       console.log(e);
       uaData.approved = false;

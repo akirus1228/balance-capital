@@ -690,6 +690,7 @@ export const getNftTokenUri = createAsyncThunk(
     const base64Metadata = await usdbNftContract["tokenURI"](tokenId);
     const json = atob(base64Metadata.substring(29));
     const metadata = JSON.parse(json);
+    metadata.tokenId = Number(tokenId);
     callback(metadata);
     return {};
   }

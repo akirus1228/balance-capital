@@ -163,6 +163,7 @@ export interface IInvestUsdbNftBondAsyncThunk
     IInteractiveAsyncThunk {
   readonly address: string;
   readonly value: string;
+  readonly tokenId?: number;
 }
 
 export interface IUsdbNftListAsyncThunk extends IBaseAsyncThunk {
