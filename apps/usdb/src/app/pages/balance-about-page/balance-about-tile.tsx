@@ -3,6 +3,8 @@ import { useNavigate, useHref } from "react-router-dom";
 import style from "./balance-about-page.module.scss";
 import { useCallback } from "react";
 import { AboutDivider } from "@fantohm/shared/images";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 /* eslint-disable-next-line */
 export interface IconLinkProps {
@@ -23,6 +25,7 @@ export function BalanceAboutTile({
   learnMore = undefined,
 }: IconLinkProps) {
   const navigate = useNavigate();
+  const themeType = useSelector((state: RootState) => state.app.theme);
 
   const handleOnClick = useCallback(() => {
     const isHttpLink = link?.startsWith("http");
@@ -102,13 +105,20 @@ export function BalanceAboutTile({
               alignItems: "center",
               paddingTop: "30px",
             }}
+            style={{ color: "primary" }}
           >
             {link === undefined ? (
               <Button
                 variant="contained"
                 color="primary"
                 onClick={handleOnDocsClick}
-                sx={{ px: "4em", display: { md: "flex" } }}
+                sx={{
+                  px: "4em",
+                  display: { md: "flex" },
+                  color: themeType === "dark" ? "#FFFFFF" : "#000000",
+                  borderColor: themeType === "dark" ? "#FFFFFF" : "#000000",
+                }}
+                style={{ color: "primary" }}
                 className={style["link"]}
                 disabled={true}
               >
@@ -119,7 +129,12 @@ export function BalanceAboutTile({
                 variant="contained"
                 color="primary"
                 onClick={handleOnClick}
-                sx={{ px: "4em", display: { md: "flex" } }}
+                sx={{
+                  px: "4em",
+                  display: { md: "flex" },
+                  color: themeType === "dark" ? "#FFFFFF" : "#000000",
+                  borderColor: themeType === "dark" ? "#FFFFFF" : "#000000",
+                }}
                 className={style["link"]}
                 disabled={false}
               >
@@ -131,8 +146,15 @@ export function BalanceAboutTile({
                 variant="contained"
                 color="primary"
                 onClick={handleOnDocsClick}
-                sx={{ px: "4em", display: { md: "flex" }, marginLeft: "20px" }}
+                sx={{
+                  px: "4em",
+                  display: { md: "flex" },
+                  marginLeft: "20px",
+                  color: themeType === "dark" ? "#FFFFFF" : "#000000",
+                  borderColor: themeType === "dark" ? "#FFFFFF" : "#000000",
+                }}
                 className={style["link"]}
+                style={{ color: "primary" }}
               >
                 Documentation
               </Button>
@@ -144,7 +166,13 @@ export function BalanceAboutTile({
                 variant="contained"
                 color="primary"
                 onClick={handleOnLearnClick}
-                sx={{ px: "4em", display: { md: "flex" }, marginLeft: "20px" }}
+                sx={{
+                  px: "4em",
+                  display: { md: "flex" },
+                  marginLeft: "20px",
+                  color: themeType === "dark" ? "#FFFFFF" : "#000000",
+                  borderColor: themeType === "dark" ? "#FFFFFF" : "#000000",
+                }}
                 className={style["link"]}
               >
                 Learn more
