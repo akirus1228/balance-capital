@@ -141,7 +141,8 @@ export const FhmPage = (): JSX.Element => {
     >
       <Grid
         item
-        xs={12}
+        xs={10}
+        md={12}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -189,7 +190,7 @@ export const FhmPage = (): JSX.Element => {
           xs={12}
           sx={{
             display: "flex",
-            flexDirection: "row",
+            flexDirection: { xs: "column", md: "row" },
             justifyContent: "center",
             alignItems: "center",
             paddingTop: "30px",
@@ -241,14 +242,15 @@ export const FhmPage = (): JSX.Element => {
       </Grid>
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
           paddingTop: "30px",
-          marginLeft: "10%",
+          marginLeft: { xs: "0", md: "10%" },
         }}
       >
         <Box
@@ -282,7 +284,7 @@ export const FhmPage = (): JSX.Element => {
         item
         xs={4}
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
@@ -296,7 +298,7 @@ export const FhmPage = (): JSX.Element => {
         item
         xs={4}
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
@@ -308,7 +310,8 @@ export const FhmPage = (): JSX.Element => {
       </Grid>
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -348,14 +351,15 @@ export const FhmPage = (): JSX.Element => {
 
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
           paddingTop: "30px",
-          marginLeft: "10%",
+          marginLeft: { xs: "0", md: "10%" },
         }}
       >
         <Box
@@ -387,7 +391,7 @@ export const FhmPage = (): JSX.Element => {
         item
         xs={4}
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",

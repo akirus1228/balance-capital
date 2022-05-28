@@ -78,11 +78,11 @@ export const BalanceAboutPage = (): JSX.Element => {
             }}
             className={style["iconLinkContainer"]}
           >
-            <Grid item xs={12}>
+            <Grid item xs={10} md={12}>
               <h1 className={style["title"]}>The Balance Ecosystem</h1>
             </Grid>
 
-            <Grid item xs={12}>
+            <Grid item xs={10} md={12}>
               <h1 className={style["text"]}>
                 The Balance Ecosystem is an open-source economy of conjoined banking and
                 commerce initiatives formed in March of 2022.The Balance Ecosystem is an
@@ -92,7 +92,7 @@ export const BalanceAboutPage = (): JSX.Element => {
                 USDB.
               </h1>
             </Grid>
-            <Grid item xs={12}>
+            <Grid item xs={10} md={12}>
               <h1 className={style["text"]}>
                 The Balance Ecosystem depends on the administration of the Balance
                 Organisation to produce and refine the collected systems of FHM & USDB’s

@@ -119,7 +119,8 @@ export const DefineGrid = (): JSX.Element => {
     >
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -157,7 +158,7 @@ export const DefineGrid = (): JSX.Element => {
         item
         xs={4}
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
@@ -169,9 +170,9 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        xs={4}
+        md={4}
         sx={{
-          display: "flex",
+          display: { xs: "none", md: "flex" },
           flexDirection: "column",
           justifyContent: "start",
           alignItems: "start",
@@ -182,7 +183,8 @@ export const DefineGrid = (): JSX.Element => {
       </Grid>
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -220,7 +222,8 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",

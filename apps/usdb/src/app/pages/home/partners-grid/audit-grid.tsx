@@ -36,7 +36,7 @@ export const AuditGrid = (): JSX.Element => {
         }}
         className={style["productGrid"]}
       >
-        <Grid item md={12} xs={6}>
+        <Grid item md={12} xs={12}>
           <Typography
             style={{
               textAlign: "center",

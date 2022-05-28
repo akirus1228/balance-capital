@@ -30,6 +30,7 @@ export const headerPages: Page[] = [
 ];
 
 export const balanceheaderPages: Page[] = [
+  { title: "About", href: "/about", params: { comingSoon: false } },
   { title: "USDB", href: "/usdb", params: { comingSoon: false } },
   { title: "FHM", href: "https://fantohm.com/", params: { comingSoon: false } },
   { title: "Dex", href: "https://app.fantohm.com/#/dex", params: { comingSoon: false } },

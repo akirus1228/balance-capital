@@ -61,7 +61,7 @@ export function BalanceAboutTile({
           alignItems: "center",
           paddingLeft: { sm: "0%", md: "10%" },
           paddingRight: { sm: "0%", md: "10%" },
-          width: { sm: "300px", md: "100%" },
+          width: { sm: "100%", md: "100%" },
         }}
       >
         <img src={icon as string} style={{ width: "100%" }} className={style["image"]} />
@@ -85,11 +85,11 @@ export function BalanceAboutTile({
           }}
           className={style["iconLinkContainer"]}
         >
-          <Grid item xs={12}>
+          <Grid item xs={10} md={12}>
             <h1 className={style["title"]}>{title}</h1>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={10} md={12}>
             <h1 className={style["text"]}>{text}</h1>
           </Grid>
           <Grid
@@ -97,7 +97,7 @@ export function BalanceAboutTile({
             xs={12}
             sx={{
               display: "flex",
-              flexDirection: "row",
+              flexDirection: { xs: "column", md: "row" },
               justifyContent: "center",
               alignItems: "center",
               paddingTop: "30px",
@@ -110,7 +110,7 @@ export function BalanceAboutTile({
                 onClick={handleOnDocsClick}
                 sx={{ px: "4em", display: { md: "flex" } }}
                 className={style["link"]}
-                disabled={link === undefined}
+                disabled={true}
               >
                 Coming Soon
               </Button>
@@ -121,7 +121,7 @@ export function BalanceAboutTile({
                 onClick={handleOnClick}
                 sx={{ px: "4em", display: { md: "flex" } }}
                 className={style["link"]}
-                disabled={link === undefined}
+                disabled={false}
               >
                 Enter App
               </Button>

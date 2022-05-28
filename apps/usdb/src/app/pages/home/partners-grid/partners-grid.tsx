@@ -64,7 +64,7 @@ export const PartnersGrid = (): JSX.Element => {
         <Grid
           item
           md={12}
-          xs={6}
+          xs={12}
           style={{
             justifyContent: "center",
             alignContent: "center",
