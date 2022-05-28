@@ -42,7 +42,7 @@ export const UserMenu = (): JSX.Element => {
   const { connect, disconnect, connected, address } = useWeb3Context();
 
   const onClickConnect = (event: MouseEvent<HTMLButtonElement>) => {
-    connect(false, isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum);
+    connect(true, isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum);
   };
 
   const onClickDisconnect = () => {

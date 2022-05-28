@@ -5,6 +5,7 @@ import { useGetListingsQuery } from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-filter/borrower-asset-filter";
 import AssetList from "../../components/asset-list/asset-list";
+import HeaderBlurryImage from "../../components/header-blurry-image/header-blurry-image";
 import { RootState } from "../../store";
 import { selectMyAssets } from "../../store/selectors/asset-selectors";
 import style from "./borrow-page.module.scss";
@@ -32,14 +33,26 @@ export const BorrowPage = (): JSX.Element => {
 
   return (
     <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
-      <h1>Choose an asset to collateralize</h1>
-      <Box sx={{ mt: "2em" }}>
+      <HeaderBlurryImage
+        url={myAssets.length > 0 ? myAssets[0].imageUrl : undefined}
+        height="300px"
+      />
+      <Box className="flex fr fj-sb ai-c">
+        <h1>Choose an asset to collateralize</h1>
+        <span>{myAssets.length} assets available</span>
+      </Box>
+      <Box sx={{ mt: "3em" }}>
         <Grid container maxWidth="xl" columnSpacing={5}>
           <Grid item xs={0} md={2}>
             <BorrowerAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
             {(assetsLoading || isAssetLoading) && <CircularProgress />}
+            {(!address || !authSignature) && (
+              <Box className="flex fr fj-c">
+                <h1>Please connect your wallet.</h1>
+              </Box>
+            )}
             <AssetList assets={myAssets} type="borrow" />
           </Grid>
         </Grid>

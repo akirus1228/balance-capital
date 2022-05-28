@@ -6,7 +6,9 @@ import { useWalletAsset } from "../../hooks/use-wallet-asset";
 import { RootState } from "../../store";
 import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
+import HeaderBlurryImage from "../header-blurry-image/header-blurry-image";
 import style from "./asset-details.module.scss";
+import QuickStatus from "./quick-status/quick-status";
 import StatusInfo from "./status-info/status-info";
 
 export interface AssetDetailsProps {
@@ -36,6 +38,7 @@ export const AssetDetails = ({
 
   return (
     <Container>
+      <HeaderBlurryImage url={asset?.imageUrl} />
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>
@@ -65,9 +68,9 @@ export const AssetDetails = ({
                 pb: "3em",
               }}
             >
-              <Chip label={asset.status || "Unlisted"} />
+              <Chip label={asset.status || "Unlisted"} className="dark" />
               <Typography sx={{ mx: "10px" }}>.</Typography>
-              <Chip label={asset.mediaType || "Art"} />
+              <Chip label={asset.mediaType || "Art"} className="light" />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row", mb: "3em" }}>
               <Box
@@ -96,14 +99,9 @@ export const AssetDetails = ({
                       alignItems: "center",
                     }}
                   >
-                    <AssetOwnerTag asset={asset} sx={{ mb: "3em" }} />
+                    <AssetOwnerTag asset={asset} />
                   </Box>
-                  <Box>
-                    <Typography className={style["label"]}>Listed</Typography>
-                    <Typography className={style["name"]}>
-                      {listing?.createdAt} hours ago
-                    </Typography>
-                  </Box>
+                  <QuickStatus listing={listing} />
                 </Paper>
               </Box>
             </Box>

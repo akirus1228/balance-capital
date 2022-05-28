@@ -107,6 +107,7 @@ export const PaperTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: "transparent",
   position: "relative",
   padding: "2em 0",
+  fontSize: "20px",
   ":first-child": {
     borderTopLeftRadius: "24px",
     borderBottomLeftRadius: "24px",
@@ -150,6 +151,21 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          boxShadow: "2px 30px 34px #7E9AA926",
+          "&.blue": {
+            backgroundColor: "#374fff",
+            color: "#FFF",
+          },
+          "&.grey": {
+            backgroundColor: "#AAAAAAb0",
+            color: "#000",
+          },
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -174,6 +190,17 @@ const globalTheme: ThemeOptions = {
       },
       defaultProps: {
         elevation: 0,
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        standard: {
+          "&.borderless": {
+            "::before,::after": {
+              bottomBorder: "none",
+            },
+          },
+        },
       },
     },
     MuiBackdrop: {
@@ -334,6 +361,20 @@ const USDBLightBase: ThemeOptions = {
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+        },
+      },
+    },
     MuiToggleButton: {
       styleOverrides: {
         root: {
@@ -425,6 +466,20 @@ const USDBDarkBase: ThemeOptions = {
           "&.closeButton": {
             color: nftDarkColors.color,
             background: nftDarkColors.iconButtonBg,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
           },
         },
       },

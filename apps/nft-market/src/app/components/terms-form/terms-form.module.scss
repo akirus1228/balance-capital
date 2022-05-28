@@ -1,8 +1,14 @@
 .valueContainer {
     border-radius: 1em;
-    background: lightgray;
+    background: #f9f9f9;
+    padding: 1em;
 
     .leftSide {
-        border-right: 1px solid gray;
+        border-right: 2px solid #aaaaaa;
+        width: 25%;
     }
+    .rightSide {
+        padding-left: 1em;
+    }
+
 }

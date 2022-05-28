@@ -1,5 +1,5 @@
-import { formatCurrency } from "@fantohm/shared-helpers";
-import { Avatar, Button } from "@mui/material";
+import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
+import { Avatar, Box, Button, Typography } from "@mui/material";
 import { PaperTableCell, PaperTableRow } from "@fantohm/shared-ui-themes";
 import { useTermDetails } from "../../hooks/use-term-details";
 import {
@@ -10,7 +10,7 @@ import {
   Offer,
   OfferStatus,
 } from "../../types/backend-types";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   useCreateLoanMutation,
   useGetAssetsQuery,
@@ -27,7 +27,10 @@ import {
   requestNftPermission,
   useWeb3Context,
   checkNftPermission,
+  prettifySeconds,
 } from "@fantohm/shared-web3";
+import style from "./offers-list.module.scss";
+import tmpAvatar from "../../../assets/images/temp-avatar.png";
 
 export type OfferListItemProps = {
   offer: Offer;
@@ -167,16 +170,32 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     updateOffer(updateOfferRequest);
   }, [offer.id, offer.term, offer.assetListing, provider, hasPermission]);
 
+  const offerExpires = useMemo(() => {
+    const offerDateTime = new Date(offer.term.expirationAt);
+    const expiresInSeconds = offerDateTime.getTime() - Date.now();
+    return prettifySeconds(expiresInSeconds / 1000);
+  }, [offer.term]);
+
   return (
-    <PaperTableRow>
+    <PaperTableRow className={style["row"]}>
       <PaperTableCell>
-        <Avatar />
+        <Box className="flex fr ai-c">
+          <Avatar src={offer.lender.profileImageUrl || tmpAvatar} />
+          <Box className="flex fc" sx={{ ml: "1em" }}>
+            <span className={style["ownerName"]}>
+              {offer.lender.name || addressEllipsis(offer.lender.address)}
+            </span>
+            <span className={style["ownerAddress"]}>
+              {addressEllipsis(offer.lender.address)}
+            </span>
+          </Box>
+        </Box>
       </PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentTotal, 2)}</PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>
       <PaperTableCell>{offer.term.apr}%</PaperTableCell>
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
-      <PaperTableCell>**calc expiration time**</PaperTableCell>
+      <PaperTableCell>{offerExpires}</PaperTableCell>
       <PaperTableCell>
         {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer" onClick={handleRequestPermission}>
