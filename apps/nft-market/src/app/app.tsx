@@ -16,13 +16,15 @@ import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount, logout } from "./store/reducers/backend-slice";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
-import TestHelper from "./pages/test-helper/test-helper";
+import { TestHelper } from "./pages/test-helper/test-helper";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
-  const backend = useSelector((state: RootState) => state.backend);
+  const { user, authorizedAccount, accountStatus } = useSelector(
+    (state: RootState) => state.backend
+  );
   const { platformFee } = useSelector((state: RootState) => state.wallet);
 
   const [theme, setTheme] = useState(NftLight);
@@ -35,10 +37,10 @@ export const App = (): JSX.Element => {
 
   // if the wallet address doesn't equal the logged in user, log out
   useEffect(() => {
-    if (address !== backend.user.address) {
+    if (address && user && address.toLowerCase() !== user.address.toLowerCase()) {
       dispatch(logout());
     }
-  }, [address, backend.user]);
+  }, [address, user]);
 
   // check for cached wallet connection
   useEffect(() => {
@@ -64,21 +66,23 @@ export const App = (): JSX.Element => {
     if (
       provider &&
       connected &&
-      address !== backend.authorizedAccount &&
-      backend.accountStatus != "pending"
+      address &&
+      address.toLowerCase() !== authorizedAccount.toLowerCase() &&
+      accountStatus !== "pending" &&
+      typeof user.address == "undefined"
     ) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [provider, address, connected, backend.authorizedAccount, backend.accountStatus]);
+  }, [provider, address, connected, authorizedAccount, accountStatus, user]);
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
     if (provider && connected) {
       dispatch(loadPlatformFee({ networkId: chainId || defaultNetworkId, address }));
     }
-  }, [address, connected, backend.authorizedAccount]);
+  }, [address, connected, authorizedAccount]);
 
   return (
     <ThemeProvider theme={theme}>

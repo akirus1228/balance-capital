@@ -1,6 +1,5 @@
-import { useEffect } from "react";
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "../store";
 import { Asset } from "../types/backend-types";
 import { selectAssetByAddress } from "../store/selectors/asset-selectors";
@@ -11,7 +10,7 @@ export const useWalletAsset = (
   contractAddress: string,
   tokenId: string
 ): Asset | null => {
-  console.log("useWalletAsset");
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   const asset = useSelector((state: RootState) =>
     selectAssetByAddress(state, { tokenId, contractAddress })
   );
@@ -27,7 +26,7 @@ export const useWalletAsset = (
     { skip: !!asset }
   );
 
-  const { data: beAssets, isLoading: isBeLoading } = useGetAssetsQuery(
+  useGetAssetsQuery(
     {
       skip: 0,
       take: 1,
@@ -35,7 +34,7 @@ export const useWalletAsset = (
         ? osAssets.map((asset: OpenseaAsset) => asset.id.toString())
         : [],
     },
-    { skip: !osAssets && isAssetLoading }
+    { skip: !osAssets || isAssetLoading || !authSignature }
   );
 
   return asset || ({} as Asset);

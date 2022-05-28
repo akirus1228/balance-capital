@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Listing, Terms } from "../types/backend-types";
+import { Terms } from "../types/backend-types";
 
 export type TermDetails = {
   repaymentAmount: number;
@@ -10,7 +10,6 @@ export type TermDetails = {
 };
 
 export const useTermDetails = (term: Terms | undefined): TermDetails => {
-  console.log("useListingTerms");
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);
   const [amount, setAmount] = useState(0);

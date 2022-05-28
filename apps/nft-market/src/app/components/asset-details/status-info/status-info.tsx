@@ -73,8 +73,6 @@ const LockedInfo = ({
 export const StatusInfo = ({ asset, listing, loan }: StatusInfoProps): JSX.Element => {
   const { repaymentTotal } = useTermDetails(listing?.term);
 
-  console.log(loan);
-
   if (loan && loan.status === LoanStatus.Active) {
     return <LockedInfo loan={loan} repaymentTotal={repaymentTotal} />;
   } else if (!loan && listing) {

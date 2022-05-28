@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { CircularProgress } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -10,20 +10,21 @@ import { BorrowerCreateListing } from "../../components/borrower-create-listing/
 import { BorrowerListingDetails } from "../../components/borrower-listing-details/borrower-listing-details";
 import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borrower-loan-details";
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
+import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-details";
 import OffersList from "../../components/offers-list/offers-list";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
-import { selectListingByAddress } from "../../store/selectors/listing-selectors";
-import { AssetStatus, Loan } from "../../types/backend-types";
+import { selectListingsByAddress } from "../../store/selectors/listing-selectors";
+import { AssetStatus, Listing, ListingStatus, Loan } from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
-  console.log("AssetDetailsPage Render");
   const params = useParams();
   const { address } = useWeb3Context();
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   // find listing from store
-  const listing = useSelector((state: RootState) =>
-    selectListingByAddress(state, {
+  const listings = useSelector((state: RootState) =>
+    selectListingsByAddress(state, {
       contractAddress: params["contractAddress"] || "123",
       tokenId: params["tokenId"] || "123",
     })
@@ -51,20 +52,27 @@ export const AssetDetailsPage = (): JSX.Element => {
       take: 50,
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
     },
-    { skip: !assets }
+    { skip: !assets || !authSignature }
   );
 
   // load loans for this contract
-  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery({
-    skip: 0,
-    take: 1,
-    assetId: asset?.id || "",
-  });
+  const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery(
+    {
+      skip: 0,
+      take: 1,
+      assetId: asset?.id || "",
+    },
+    { skip: !authSignature }
+  );
 
   // is the user the owner of the asset?
   const isOwner = useMemo(() => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, address]);
+
+  const activeListing = useMemo(() => {
+    return listings.find((listing: Listing) => listing.status === ListingStatus.Listed);
+  }, [listings]);
 
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return <CircularProgress />;
@@ -74,12 +82,25 @@ export const AssetDetailsPage = (): JSX.Element => {
       <AssetDetails
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
-        listing={listing}
+        listing={activeListing}
       />
-      {!listing && !asset && <h1>Loading...</h1>}
-      {asset && !isOwner && listing && listing.asset?.status === AssetStatus.Listed && (
-        <LenderListingTerms listing={listing} sx={{ mt: "3em" }} />
-      )}
+      {!activeListing && !asset && <h1>Loading...</h1>}
+      {asset &&
+        !isOwner &&
+        activeListing &&
+        activeListing.asset?.status === AssetStatus.Listed && (
+          <LenderListingTerms listing={activeListing} sx={{ mt: "3em" }} />
+        )}
+      {asset &&
+        !isOwner &&
+        activeListing &&
+        activeListing.asset?.status === AssetStatus.Locked && (
+          <LenderLoanDetails
+            asset={asset}
+            loan={loans ? loans[0] : ({} as Loan)}
+            sx={{ mt: "3em" }}
+          />
+        )}
       {isOwner && [AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
       )}

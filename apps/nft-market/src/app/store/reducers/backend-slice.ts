@@ -43,7 +43,6 @@ export const authorizeAccount = createAsyncThunk(
   "backend/authorizeAccount",
   async ({ address, networkId, provider }: SignerAsyncThunk, { rejectWithValue }) => {
     const loginResponse: LoginResponse = await BackendApi.doLogin(address);
-    console.log(loginResponse);
     if (loginResponse.id) {
       const signature = await BackendApi.handleSignMessage(address, provider);
       if (!signature) {
@@ -88,6 +87,7 @@ const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
   authorizedAccount: null,
+  user: {} as User,
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
@@ -102,6 +102,7 @@ const backendSlice = createSlice({
       state.authSignature = null;
       state.authorizedAccount = "";
       state.accountStatus = "unknown";
+      state.user = {} as User;
     },
   },
   extraReducers: (builder) => {

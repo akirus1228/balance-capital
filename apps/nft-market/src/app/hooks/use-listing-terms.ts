@@ -10,7 +10,6 @@ export type ListingTermDetails = {
 };
 
 export const useListingTermDetails = (listing: Listing): ListingTermDetails => {
-  console.log("useListingTerms");
   const [repaymentAmount, setRepaymentAmount] = useState(0);
   const [repaymentTotal, setRepaymentTotal] = useState(0);
   const [amount, setAmount] = useState(0);

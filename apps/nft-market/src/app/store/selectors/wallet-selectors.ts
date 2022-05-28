@@ -1,4 +1,4 @@
-import { NftPermStatus, WalletState } from "@fantohm/shared-web3";
+import { NftPermStatus } from "@fantohm/shared-web3";
 import { createSelector } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { Asset } from "../../types/backend-types";

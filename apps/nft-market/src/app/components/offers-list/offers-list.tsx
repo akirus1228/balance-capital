@@ -1,6 +1,8 @@
 import { PaperTable, PaperTableCell, PaperTableHead } from "@fantohm/shared-ui-themes";
 import { CircularProgress, Container, TableBody, TableRow } from "@mui/material";
+import { useSelector } from "react-redux";
 import { useGetOffersQuery } from "../../api/backend-api";
+import { RootState } from "../../store";
 import { BackendOfferQueryParams, Offer } from "../../types/backend-types";
 import { OfferListItem } from "./offer-list-item";
 import style from "./offers-list.module.scss";
@@ -11,7 +13,10 @@ export interface OffersListProps {
 }
 
 export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
-  const { data: offers, isLoading } = useGetOffersQuery(queryParams || {});
+  const { authSignature } = useSelector((state: RootState) => state.backend);
+  const { data: offers, isLoading } = useGetOffersQuery(queryParams || {}, {
+    skip: !authSignature,
+  });
 
   if (isLoading) {
     return <CircularProgress />;

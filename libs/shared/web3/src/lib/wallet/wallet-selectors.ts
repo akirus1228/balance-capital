@@ -20,5 +20,5 @@ export const selectErc20AllowanceByAddress = createSelector(
   selectErc20Allowances,
   selectErc20Allowance,
   (erc20Allowance, { walletAddress, erc20TokenAddress }): number =>
-    erc20Allowance[`${walletAddress}:::${erc20TokenAddress}`]
+    erc20Allowance[`${walletAddress}:::${erc20TokenAddress}`] || 0
 );

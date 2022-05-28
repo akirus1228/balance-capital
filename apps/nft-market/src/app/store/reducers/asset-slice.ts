@@ -1,17 +1,12 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
-  assetToCollectible,
-  Collectible,
   FetchNFTClient,
   FetchNFTClientProps,
   isAssetValid,
 } from "@fantohm/shared/fetch-nft";
-import { IBaseAddressAsyncThunk, isDev, loadState } from "@fantohm/shared-web3";
-import { Asset, AssetStatus, BackendLoadingStatus } from "../../types/backend-types";
-import { BackendApi } from "../../api";
-import { BackendAssetQueryAsyncThunk, OpenseaAssetQueryAsyncThunk } from "./interfaces";
+import { isDev, loadState } from "@fantohm/shared-web3";
+import { Asset, BackendLoadingStatus } from "../../types/backend-types";
 import { OpenseaAsset } from "../../api/opensea";
-import { ethers } from "ethers";
 import { openseaAssetToAsset } from "../../helpers/data-translations";
 
 const OPENSEA_API_KEY = "6f2462b6e7174e9bbe807169db342ec4";
@@ -51,8 +46,6 @@ export interface AssetState {
   readonly assetLoadStatus: AssetLoadStatus;
   readonly openseaCache: OpenseaCache;
 }
-
-const cacheTime = 300 * 1000; // 5 minutes
 
 export const updateAssetsFromOpensea = createAsyncThunk(
   "asset/updateAssetsFromOpensea",
