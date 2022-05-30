@@ -114,12 +114,14 @@ export const AssetDetailsPage = (): JSX.Element => {
         authSignature &&
         !isOwner &&
         activeListing &&
+        activeListing.asset &&
         activeListing.asset?.status === AssetStatus.Listed && (
           <LenderListingTerms listing={activeListing} sx={{ mt: "3em" }} />
         )}
       {asset &&
         !isOwner &&
         activeLoan &&
+        activeLoan.assetListing &&
         activeLoan.assetListing.asset?.status === AssetStatus.Locked &&
         authSignature && (
           <LenderLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />

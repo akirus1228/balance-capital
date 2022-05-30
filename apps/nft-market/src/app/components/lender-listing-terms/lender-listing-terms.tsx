@@ -8,7 +8,7 @@ import {
   useWeb3Context,
 } from "@fantohm/shared-web3";
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useCreateLoanMutation, useGetAssetQuery } from "../../api/backend-api";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
@@ -151,6 +151,24 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
     }
   }, [chainId, address, provider]);
 
+  const hasAllowance = useMemo(() => {
+    return (
+      checkErc20AllowanceStatus === "idle" &&
+      requestErc20AllowanceStatus === "idle" &&
+      allowance.gte(
+        ethers.utils.parseEther(
+          (props.listing.term.amount * (1 + platformFee)).toString()
+        )
+      )
+    );
+  }, [
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    allowance,
+    props.listing.term.amount,
+    platformFee,
+  ]);
+
   // make offer code
   const [dialogOpen, setDialogOpen] = useState(false);
   const handleMakeOffer = () => {
@@ -202,34 +220,20 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
             </Button>
           </Box>
           <Box className="flex fc">
-            {(!allowance ||
-              allowance.lt(
-                ethers.utils.parseEther(
-                  (props.listing.term.amount * (1 + platformFee)).toString()
-                )
-              )) &&
-              checkErc20AllowanceStatus === "idle" &&
-              requestErc20AllowanceStatus === "idle" && (
-                <Button variant="outlined" onClick={handleRequestAllowance}>
-                  Provide Allowance to Your USDB
-                </Button>
-              )}
-            {!!allowance &&
-              allowance.gte(
-                ethers.utils.parseEther(
-                  (props.listing.term.amount * (1 + platformFee)).toString()
-                )
-              ) &&
-              !isCreating &&
-              loanCreationStatus !== "loading" && (
-                <Button
-                  variant="outlined"
-                  onClick={handleAcceptTerms}
-                  disabled={isCreating}
-                >
-                  Accept Terms
-                </Button>
-              )}
+            {!hasAllowance && (
+              <Button variant="outlined" onClick={handleRequestAllowance}>
+                Provide Allowance to Your USDB
+              </Button>
+            )}
+            {hasAllowance && !isCreating && loanCreationStatus !== "loading" && (
+              <Button
+                variant="outlined"
+                onClick={handleAcceptTerms}
+                disabled={isCreating}
+              >
+                Accept Terms
+              </Button>
+            )}
             {(checkErc20AllowanceStatus === "loading" ||
               requestErc20AllowanceStatus === "loading" ||
               isCreating ||
