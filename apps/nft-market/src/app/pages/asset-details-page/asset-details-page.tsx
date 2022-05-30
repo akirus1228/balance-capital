@@ -17,7 +17,13 @@ import PreviousLoans from "../../components/previous-loans/previous-loans";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingsByAddress } from "../../store/selectors/listing-selectors";
-import { AssetStatus, Listing, ListingStatus, Loan } from "../../types/backend-types";
+import {
+  AssetStatus,
+  Listing,
+  ListingStatus,
+  Loan,
+  LoanStatus,
+} from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
@@ -61,7 +67,7 @@ export const AssetDetailsPage = (): JSX.Element => {
   const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery(
     {
       skip: 0,
-      take: 1,
+      take: 40,
       assetId: asset?.id || "",
     },
     { skip: !authSignature }
@@ -75,6 +81,11 @@ export const AssetDetailsPage = (): JSX.Element => {
   const activeListing = useMemo(() => {
     return listings.find((listing: Listing) => listing.status === ListingStatus.Listed);
   }, [listings]);
+
+  const activeLoan = useMemo(() => {
+    if (!loans) return {} as Loan;
+    return loans.find((loan: Loan) => loan.status === LoanStatus.Active);
+  }, [loans]);
 
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return (
@@ -108,15 +119,10 @@ export const AssetDetailsPage = (): JSX.Element => {
         )}
       {asset &&
         !isOwner &&
-        loans &&
-        loans[0] &&
-        loans[0].assetListing.asset?.status === AssetStatus.Locked &&
+        activeLoan &&
+        activeLoan.assetListing.asset?.status === AssetStatus.Locked &&
         authSignature && (
-          <LenderLoanDetails
-            asset={asset}
-            loan={loans ? loans[0] : ({} as Loan)}
-            sx={{ mt: "3em" }}
-          />
+          <LenderLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />
         )}
       {isOwner && [AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
@@ -124,12 +130,8 @@ export const AssetDetailsPage = (): JSX.Element => {
       {isOwner && asset?.status === AssetStatus.Listed && (
         <BorrowerListingDetails asset={asset} sx={{ mt: "3em" }} />
       )}
-      {isOwner && asset?.status === AssetStatus.Locked && (
-        <BorrowerLoanDetails
-          asset={asset}
-          loan={loans ? loans[0] : ({} as Loan)}
-          sx={{ mt: "3em" }}
-        />
+      {isOwner && asset?.status === AssetStatus.Locked && activeLoan && (
+        <BorrowerLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />
       )}
       {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
       <Container maxWidth="xl">
