@@ -20,6 +20,8 @@ import { useGetWalletQuery } from "../../api/backend-api";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { formatCurrency } from "@fantohm/shared-helpers";
+import { useMemo } from "react";
+import ColorLabel from "./color-label";
 
 export interface OwnerInfoProps {
   owner: User | undefined;
@@ -32,6 +34,20 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
     user.address,
     { skip: !user.address }
   );
+
+  const defaultRate = useMemo(() => {
+    if (!ownerInfo) return 0;
+    if (ownerInfo?.loansRepaid === 0 && ownerInfo?.loansDefaulted === 0) return 0;
+    const totalLoans = ownerInfo.loansDefaulted + ownerInfo.loansRepaid;
+    return (ownerInfo.loansDefaulted / totalLoans) * 100;
+  }, [ownerInfo?.loansRepaid, ownerInfo?.loansDefaulted]);
+
+  const lendToBorrowRatio = useMemo(() => {
+    if (!ownerInfo) return 0;
+    if (ownerInfo?.loansBorrowed === 0 && ownerInfo?.loansGiven === 0) return 0;
+    const totalLoans = ownerInfo?.loansBorrowed + ownerInfo?.loansGiven;
+    return (ownerInfo.loansGiven / totalLoans) * 100;
+  }, [ownerInfo?.loansBorrowed, ownerInfo?.loansGiven]);
 
   if (!owner || isOwnerInfoLoading) {
     return (
@@ -82,21 +98,18 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
         {ownerInfo && (
           <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
-            <CircleGraph
-              progress={(ownerInfo.loansRepaid / ownerInfo.loansDefaulted) * 100}
-              sx={{ mr: "2em" }}
-            />
+            <CircleGraph progress={defaultRate} sx={{ mr: "2em" }} />
             <Box className="flex fc">
               <span>
                 Default rate <Icon component={InfoOutlinedIcon} />
               </span>
               <Box className="flex fr">
-                <Box className="flex fc">
-                  <span>Loans repaid</span>
+                <Box className="flex fc" sx={{ mr: "2em" }}>
+                  <ColorLabel color="#1B9385" label="Loans reapid" />
                   <span>{ownerInfo?.loansRepaid}</span>
                 </Box>
                 <Box className="flex fc">
-                  <span>Loans defaulted</span>
+                  <ColorLabel color="#5731C3" label="Loans defaulted" />
                   <span>{ownerInfo?.loansDefaulted}</span>
                 </Box>
               </Box>
@@ -107,21 +120,18 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
         {ownerInfo && (
           <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
-            <CircleGraph
-              progress={(ownerInfo.loansBorrowed / ownerInfo.loansGiven) * 100}
-              sx={{ mr: "2em" }}
-            />
+            <CircleGraph progress={lendToBorrowRatio} sx={{ mr: "2em" }} />
             <Box className="flex fc">
               <span>
                 Loan Activity <Icon component={InfoOutlinedIcon} />
               </span>
               <Box className="flex fr">
-                <Box className="flex fc">
-                  <span>Loans borrowed</span>
-                  <span>{ownerInfo?.totalBorrowed}</span>
+                <Box className="flex fc" sx={{ mr: "2em" }}>
+                  <ColorLabel color="#1B9385" label="Loans borrowed" />
+                  <span>{ownerInfo?.loansBorrowed}</span>
                 </Box>
                 <Box className="flex fc">
-                  <span>Loans given</span>
+                  <ColorLabel color="#5731C3" label="Loans given" />
                   <span>{ownerInfo?.loansGiven}</span>
                 </Box>
               </Box>
