@@ -97,7 +97,7 @@ export const BorrowerLoanDetails = ({
 
   const handleRepayLoan = useCallback(async () => {
     if (!loan.contractLoanId || !provider) return;
-    if (usdbAllowance && usdbAllowance >= loanDetails.amountDue) {
+    if (usdbAllowance && usdbAllowance.gte(loanDetails.amountDueGwei)) {
       const repayLoanParams = {
         loanId: loan.contractLoanId,
         amountDue: loanDetails.amountDueGwei,
@@ -122,7 +122,7 @@ export const BorrowerLoanDetails = ({
     checkErc20AllowanceStatus,
     requestErc20AllowanceStatus,
     usdbAllowance,
-    loanDetails.amountDue,
+    loanDetails.amountDueGwei,
   ]);
 
   const handleRequestAllowance = useCallback(async () => {
@@ -133,10 +133,15 @@ export const BorrowerLoanDetails = ({
         provider,
         walletAddress: user.address,
         assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-        amount: loanDetails.amountDue,
+        amount: loanDetails.amountDueGwei,
       })
     );
-  }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
+  }, [
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    usdbAllowance,
+    loanDetails.amountDueGwei,
+  ]);
 
   useEffect(() => {
     // if nothing is loading and pending is true, stop pending
@@ -211,16 +216,19 @@ export const BorrowerLoanDetails = ({
             </Box>
           </Box>
           <Box className="flex fc">
-            {usdbAllowance && usdbAllowance >= loanDetails.amountDue && !isPending && (
-              <Button variant="contained" onClick={handleRepayLoan}>
-                Repay loan
-              </Button>
-            )}
-            {usdbAllowance < loanDetails.amountDue && !isPending && (
-              <Button variant="contained" onClick={handleRequestAllowance}>
-                Repay loan.
-              </Button>
-            )}
+            {!!usdbAllowance &&
+              usdbAllowance.gte(loanDetails.amountDueGwei) &&
+              !isPending && (
+                <Button variant="contained" onClick={handleRepayLoan}>
+                  Repay loan
+                </Button>
+              )}
+            {(!usdbAllowance || usdbAllowance.lt(loanDetails.amountDueGwei)) &&
+              !isPending && (
+                <Button variant="contained" onClick={handleRequestAllowance}>
+                  Repay loan.
+                </Button>
+              )}
             {isPending && <Button variant="contained">Pending...</Button>}
           </Box>
         </Box>

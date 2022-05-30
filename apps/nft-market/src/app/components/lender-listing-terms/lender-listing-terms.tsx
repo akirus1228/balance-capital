@@ -25,6 +25,7 @@ import style from "./lender-listing-terms.module.scss";
 import store, { RootState } from "../../store";
 import { useTermDetails } from "../../hooks/use-term-details";
 import { MakeOffer } from "../make-offer/make-offer";
+import { BigNumber, ethers } from "ethers";
 
 export interface LenderListingTermsProps {
   listing: Listing;
@@ -69,7 +70,14 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
 
   // click accept term button
   const handleAcceptTerms = useCallback(async () => {
-    if (!allowance || allowance < props.listing.term.amount * (1 + platformFee)) {
+    if (
+      !allowance ||
+      allowance.lt(
+        ethers.utils.parseEther(
+          (props.listing.term.amount * (1 + platformFee)).toString()
+        )
+      )
+    ) {
       console.warn("Insufficiant allownace. Trigger request");
       return;
     }
@@ -122,7 +130,9 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
           provider,
           walletAddress: address,
           assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-          amount: props.listing.term.amount * (1 + platformFee),
+          amount: ethers.utils.parseEther(
+            (props.listing.term.amount * (1 + platformFee)).toString()
+          ),
         })
       );
   }, [chainId, address, props.listing.term.amount, provider]);
@@ -192,7 +202,12 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
             </Button>
           </Box>
           <Box className="flex fc">
-            {(!allowance || allowance < props.listing.term.amount * (1 + platformFee)) &&
+            {(!allowance ||
+              allowance.lt(
+                ethers.utils.parseEther(
+                  (props.listing.term.amount * (1 + platformFee)).toString()
+                )
+              )) &&
               checkErc20AllowanceStatus === "idle" &&
               requestErc20AllowanceStatus === "idle" && (
                 <Button variant="outlined" onClick={handleRequestAllowance}>
@@ -200,7 +215,11 @@ export function LenderListingTerms(props: LenderListingTermsProps) {
                 </Button>
               )}
             {!!allowance &&
-              allowance >= props.listing.term.amount * (1 + platformFee) &&
+              allowance.gte(
+                ethers.utils.parseEther(
+                  (props.listing.term.amount * (1 + platformFee)).toString()
+                )
+              ) &&
               !isCreating &&
               loanCreationStatus !== "loading" && (
                 <Button

@@ -108,8 +108,9 @@ export const AssetDetailsPage = (): JSX.Element => {
         )}
       {asset &&
         !isOwner &&
-        activeListing &&
-        activeListing.asset?.status === AssetStatus.Locked &&
+        loans &&
+        loans[0] &&
+        loans[0].assetListing.asset?.status === AssetStatus.Locked &&
         authSignature && (
           <LenderLoanDetails
             asset={asset}

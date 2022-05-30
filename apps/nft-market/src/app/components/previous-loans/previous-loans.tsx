@@ -12,17 +12,18 @@ import {
   TableContainer,
   TableRow,
 } from "@mui/material";
-import { useMemo } from "react";
+import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
-import { useTermDetails } from "../../hooks/use-term-details";
+import { RootState } from "../../store";
 import { Asset, Loan, LoanStatus } from "../../types/backend-types";
-import "./previous-loans.module.scss";
+import style from "./previous-loans.module.scss";
 
 export interface PreviousLoansProps {
   asset: Asset;
 }
 
 export const PreviousLoans = ({ asset }: PreviousLoansProps): JSX.Element => {
+  const { authSignature } = useSelector((state: RootState) => state.backend);
   const { data: loans, isLoading } = useGetLoansQuery(
     {
       take: 50,
@@ -30,7 +31,7 @@ export const PreviousLoans = ({ asset }: PreviousLoansProps): JSX.Element => {
       assetId: asset.id,
       status: LoanStatus.Complete,
     },
-    { skip: !asset }
+    { skip: !asset || !authSignature }
   );
 
   if (!asset || !loans || typeof loans === "undefined" || isLoading) {

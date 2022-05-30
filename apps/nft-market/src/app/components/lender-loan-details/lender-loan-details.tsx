@@ -1,4 +1,4 @@
-import { isDev, NetworkIds, useWeb3Context } from "@fantohm/shared-web3";
+import { isDev, NetworkIds, prettifySeconds, useWeb3Context } from "@fantohm/shared-web3";
 import {
   Box,
   Button,
@@ -126,12 +126,14 @@ export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until loan expires</Typography>
             <Box className="flex fr w100">
-              <Typography className={`${style["data"]}`}>55/60 days</Typography>
+              <Typography className={`${style["data"]}`}>
+                {prettifySeconds(loanDetails.endTime - Date.now() / 1000)}
+              </Typography>
               <LinearProgress variant="determinate" value={10} />
             </Box>
           </Box>
           <Box className="flex fc">
-            {loanDetails.endTime < Date.now() && !isPending && (
+            {loanDetails.endTime < Date.now() / 1000 && !isPending && (
               <Button variant="contained" onClick={handleForecloseLoan}>
                 Foreclose Loan
               </Button>

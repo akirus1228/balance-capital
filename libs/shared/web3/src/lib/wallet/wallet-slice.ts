@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { ierc20Abi, ierc721Abi, usdbLending } from "../abi";
 import { addresses } from "../constants";
 import { isDev, loadState } from "../helpers";
@@ -31,7 +31,7 @@ export type NftPermStatus = {
 };
 
 export type Erc20Allowance = {
-  [tokenIdentifier: string]: number;
+  [tokenIdentifier: string]: BigNumber;
 };
 
 export type NftPermissionPayload = {
@@ -205,7 +205,7 @@ export const requestErc20Allowance = createAsyncThunk(
       const nftContract = new ethers.Contract(assetAddress, ierc20Abi, signer);
       const approveTx = await nftContract["approve"](
         addresses[networkId]["USDB_LENDING_ADDRESS"] as string,
-        ethers.utils.parseEther(amount.toString())
+        amount
       );
       await approveTx.wait();
       const payload: Erc20Allowance = {};
@@ -254,13 +254,12 @@ export const checkErc20Allowance = createAsyncThunk(
     }
     try {
       const erc20Contract = new ethers.Contract(assetAddress, ierc20Abi, provider);
-      const response: string = await erc20Contract["allowance"](
+      const response: BigNumber = await erc20Contract["allowance"](
         walletAddress,
         addresses[networkId]["USDB_LENDING_ADDRESS"]
       );
-      const allowance = ethers.utils.formatEther(response);
       const payload: Erc20Allowance = {};
-      payload[`${walletAddress}:::${assetAddress}`] = +allowance;
+      payload[`${walletAddress}:::${assetAddress}`] = response;
       return payload;
     } catch (err) {
       console.log(err);
