@@ -29,10 +29,9 @@ export interface OwnerInfoProps {
 }
 
 export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
-  const { user } = useSelector((state: RootState) => state.backend);
   const { data: ownerInfo, isLoading: isOwnerInfoLoading } = useGetWalletQuery(
-    user.address,
-    { skip: !user.address }
+    owner?.address || "",
+    { skip: !owner || !owner.address }
   );
 
   const defaultRate = useMemo(() => {
