@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
 import {
   PaperTable,
@@ -18,7 +19,7 @@ import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { RootState } from "../../store";
 import { Asset, Loan, LoanStatus } from "../../types/backend-types";
-import style from "./previous-loans.module.scss";
+//import style from "./previous-loans.module.scss";
 
 export interface PreviousLoansProps {
   asset: Asset;
@@ -27,7 +28,7 @@ export interface PreviousLoansProps {
 
 export const PreviousLoans = ({ asset, sx }: PreviousLoansProps): JSX.Element => {
   const { authSignature } = useSelector((state: RootState) => state.backend);
-  const { data: loans, isLoading } = useGetLoansQuery(
+  const { data: completeLoans, isLoading: isCompleteLoansLoading } = useGetLoansQuery(
     {
       take: 50,
       skip: 0,
@@ -37,14 +38,37 @@ export const PreviousLoans = ({ asset, sx }: PreviousLoansProps): JSX.Element =>
     { skip: !asset || !authSignature }
   );
 
-  if (!asset || !loans || typeof loans === "undefined" || isLoading) {
+  const { data: defaultedLoans, isLoading: isDefaultedLoading } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      assetId: asset.id,
+      status: LoanStatus.Default,
+    },
+    { skip: !asset || !authSignature }
+  );
+
+  const loans: Loan[] = useMemo(() => {
+    if (isDefaultedLoading || isCompleteLoansLoading) return [];
+    if (typeof defaultedLoans === "undefined" || typeof completeLoans === "undefined")
+      return [];
+    return [...completeLoans, ...defaultedLoans];
+  }, [completeLoans, defaultedLoans]);
+
+  if (
+    !asset ||
+    !loans ||
+    typeof loans === "undefined" ||
+    isCompleteLoansLoading ||
+    isDefaultedLoading
+  ) {
     return (
       <Box className="flex fr fj-c">
         <CircularProgress />
       </Box>
     );
   }
-  if (!isLoading && loans.length < 1) {
+  if (!isDefaultedLoading && !isCompleteLoansLoading && loans.length < 1) {
     return (
       <Box className="flex fr fj-c">
         <h2>No loan history for this asset</h2>
