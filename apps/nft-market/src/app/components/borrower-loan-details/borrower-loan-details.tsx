@@ -53,8 +53,9 @@ export const BorrowerLoanDetails = ({
   const { repayLoanStatus } = useSelector((state: RootState) => state.loans);
 
   // status of allowance check or approval
-  const { checkErc20AllowanceStatus, requestErc20AllowanceStatus, platformFee } =
-    useSelector((state: RootState) => state.wallet);
+  const { checkErc20AllowanceStatus, requestErc20AllowanceStatus } = useSelector(
+    (state: RootState) => state.wallet
+  );
 
   // select the USDB allowance provided to lending contract for this address
   const usdbAllowance = useSelector((state: RootState) =>
@@ -117,7 +118,12 @@ export const BorrowerLoanDetails = ({
     } else {
       console.warn(`insufficiant allowance: ${usdbAllowance}`);
     }
-  }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
+  }, [
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    usdbAllowance,
+    loanDetails.amountDue,
+  ]);
 
   const handleRequestAllowance = useCallback(async () => {
     if (!provider) return;
@@ -205,7 +211,7 @@ export const BorrowerLoanDetails = ({
             </Box>
           </Box>
           <Box className="flex fc">
-            {usdbAllowance >= loanDetails.amountDue && !isPending && (
+            {usdbAllowance && usdbAllowance >= loanDetails.amountDue && !isPending && (
               <Button variant="contained" onClick={handleRepayLoan}>
                 Repay loan
               </Button>

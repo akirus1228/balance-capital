@@ -25,6 +25,7 @@ import {
   BackendLoanQueryParams,
   BackendOfferQueryParams,
   BackendStandardQuery,
+  PlatformWalletInfo,
 } from "../types/backend-types";
 import { ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
@@ -205,6 +206,7 @@ export const backendApi = createApi({
     "Notification",
     "Offer",
     "Order",
+    "PlatformWalletInfo",
     "Terms",
     "User",
   ],
@@ -433,6 +435,13 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Asset", "Listing", "Terms", "Offer"],
     }),
+    // Wallet
+    getWallet: builder.query<PlatformWalletInfo, string | undefined>({
+      query: (walletAddress) => ({
+        url: `wallet/${walletAddress}`,
+      }),
+      providesTags: ["PlatformWalletInfo"],
+    }),
   }),
 });
 
@@ -454,4 +463,5 @@ export const {
   useCreateOfferMutation,
   useUpdateOfferMutation,
   useDeleteOfferMutation,
+  useGetWalletQuery,
 } = backendApi;

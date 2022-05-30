@@ -33,14 +33,13 @@ type AppDispatch = typeof store.dispatch;
 
 export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
   const dispatch: AppDispatch = useDispatch();
-  const { provider, chainId } = useWeb3Context();
+  const { provider } = useWeb3Context();
   const [isPending, setIsPending] = useState(false);
   const [loanDetails, setLoanDetails] = useState<LoanDetails>({} as LoanDetails);
   // select logged in user
   const { user } = useSelector((state: RootState) => state.backend);
-  const { forecloseLoanStatus } = useSelector((state: RootState) => state.loans);
 
-  const [updateLoan, { isLoading: isLoanUpdating }] = useUpdateLoanMutation();
+  const [updateLoan] = useUpdateLoanMutation();
 
   useEffect(() => {
     console.log("Getloandetails");

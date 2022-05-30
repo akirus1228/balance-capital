@@ -16,6 +16,10 @@ import "./owner-info.module.scss";
 import ArrowRightUp from "../../../assets/icons/arrow-right-up.svg";
 import { isDev } from "@fantohm/shared-web3";
 import { CircleGraph } from "@fantohm/shared/ui-charts";
+import { useGetWalletQuery } from "../../api/backend-api";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { formatCurrency } from "@fantohm/shared-helpers";
 
 export interface OwnerInfoProps {
   owner: User | undefined;
@@ -23,7 +27,13 @@ export interface OwnerInfoProps {
 }
 
 export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
-  if (!owner) {
+  const { user } = useSelector((state: RootState) => state.backend);
+  const { data: ownerInfo, isLoading: isOwnerInfoLoading } = useGetWalletQuery(
+    user.address,
+    { skip: !user.address }
+  );
+
+  if (!owner || isOwnerInfoLoading) {
     return (
       <Box className="flex fr fj-c">
         <CircularProgress />
@@ -31,7 +41,7 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
     );
   }
   return (
-    <Box className="flex fc fj-fs" sx={{ ...sx }}>
+    <Box className="flex fc fj-fs" sx={{ mb: "5em", ...sx }}>
       <h2>Owner information</h2>
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px" }}>
         <Box className="flex fc fw ai-c" sx={{ mr: "2em" }}>
@@ -60,54 +70,64 @@ export const OwnerInfo = ({ owner, sx }: OwnerInfoProps): JSX.Element => {
           <Box className="flex fr fj-sb" sx={{ mt: "2em" }}>
             <Box className="flex fc" sx={{ mr: "2em" }}>
               <span style={{ color: "#8991A2" }}>Total borrowed</span>
-              <span>$**t borrowed**</span>
+              <span>{formatCurrency(ownerInfo?.totalBorrowed || 0)}</span>
             </Box>
             <Box className="flex fc">
               <span style={{ color: "#8991A2" }}>Total lent</span>
-              <span>$**t lent**</span>
+              <span>{formatCurrency(ownerInfo?.totalLent || 0)}</span>
             </Box>
           </Box>
         </Box>
       </Paper>
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
-        <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
-          <CircleGraph progress={10} sx={{ mr: "2em" }} />
-          <Box className="flex fc">
-            <span>
-              Default rate <Icon component={InfoOutlinedIcon} />
-            </span>
-            <Box className="flex fr">
-              <Box className="flex fc">
-                <span>Loans repaid</span>
-                <span>7</span>
-              </Box>
-              <Box className="flex fc">
-                <span>Loans defaulted</span>
-                <span>0</span>
+        {ownerInfo && (
+          <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
+            <CircleGraph
+              progress={(ownerInfo.loansRepaid / ownerInfo.loansDefaulted) * 100}
+              sx={{ mr: "2em" }}
+            />
+            <Box className="flex fc">
+              <span>
+                Default rate <Icon component={InfoOutlinedIcon} />
+              </span>
+              <Box className="flex fr">
+                <Box className="flex fc">
+                  <span>Loans repaid</span>
+                  <span>{ownerInfo?.loansRepaid}</span>
+                </Box>
+                <Box className="flex fc">
+                  <span>Loans defaulted</span>
+                  <span>{ownerInfo?.loansDefaulted}</span>
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
+        )}
       </Paper>
       <Paper className="flex fr fw ai-c" sx={{ minHeight: "180px", mt: "1em" }}>
-        <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
-          <CircleGraph progress={83} sx={{ mr: "2em" }} />
-          <Box className="flex fc">
-            <span>
-              Loan Activity <Icon component={InfoOutlinedIcon} />
-            </span>
-            <Box className="flex fr">
-              <Box className="flex fc">
-                <span>Loans borrowed</span>
-                <span>7</span>
-              </Box>
-              <Box className="flex fc">
-                <span>Loans given</span>
-                <span>1</span>
+        {ownerInfo && (
+          <Box className="flex fr fw ai-c" sx={{ mr: "2em" }}>
+            <CircleGraph
+              progress={(ownerInfo.loansBorrowed / ownerInfo.loansGiven) * 100}
+              sx={{ mr: "2em" }}
+            />
+            <Box className="flex fc">
+              <span>
+                Loan Activity <Icon component={InfoOutlinedIcon} />
+              </span>
+              <Box className="flex fr">
+                <Box className="flex fc">
+                  <span>Loans borrowed</span>
+                  <span>{ownerInfo?.totalBorrowed}</span>
+                </Box>
+                <Box className="flex fc">
+                  <span>Loans given</span>
+                  <span>{ownerInfo?.loansGiven}</span>
+                </Box>
               </Box>
             </Box>
           </Box>
-        </Box>
+        )}
       </Paper>
     </Box>
   );

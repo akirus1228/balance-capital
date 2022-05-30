@@ -283,3 +283,12 @@ export type BackendOfferQueryParams = {
   lenderAddress: string;
   borrowerAddress: string;
 } & BackendStandardQuery;
+
+export type PlatformWalletInfo = {
+  totalBorrowed: number;
+  totalLent: number;
+  loansRepaid: number;
+  loansDefaulted: number;
+  loansBorrowed: number;
+  loansGiven: number;
+};
