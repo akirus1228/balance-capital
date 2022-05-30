@@ -239,7 +239,7 @@ const globalTheme: ThemeOptions = {
             background: nftLightColors.containedPrimaryBtn,
           },
           "&.slim": {
-            padding: "0.5em 2em",
+            padding: "0.25em 2em",
           },
         },
       },

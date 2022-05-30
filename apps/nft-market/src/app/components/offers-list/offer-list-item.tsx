@@ -201,26 +201,39 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{offerExpires}</PaperTableCell>
       <PaperTableCell>
         {isOwner && !hasPermission && !isPending && offer.status === OfferStatus.Ready && (
-          <Button variant="contained" className="offer" onClick={handleRequestPermission}>
+          <Button
+            variant="contained"
+            className="offer slim"
+            onClick={handleRequestPermission}
+          >
             Accept
           </Button>
         )}
         {isOwner && hasPermission && !isPending && offer.status === OfferStatus.Ready && (
-          <Button variant="contained" className="offer" onClick={handleAcceptOffer}>
+          <Button variant="contained" className="offer slim" onClick={handleAcceptOffer}>
             Accept
           </Button>
         )}
         {isPending && (
-          <Button variant="contained" className="offer">
+          <Button variant="contained" className="offer slim">
             Pending...
           </Button>
         )}
-        {isOwner && offer.status !== OfferStatus.Ready && (
-          <Button variant="contained" className="offer">
-            {offer.status}
-          </Button>
+        {!isOwner && (
+          <span style={{ marginRight: "2em" }}>{offerCreatedSecondsAgo} ago</span>
         )}
-        {!isOwner && <span>{offerCreatedSecondsAgo} ago</span>}
+        {offer.status !== OfferStatus.Ready ||
+          (!isOwner && (
+            <Button
+              variant="contained"
+              className="offer slim"
+              disabled={[OfferStatus.Expired, OfferStatus.Cancelled].includes(
+                offer.status
+              )}
+            >
+              {offer.status}
+            </Button>
+          ))}
       </PaperTableCell>
     </PaperTableRow>
   );
