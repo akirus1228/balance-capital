@@ -7,9 +7,9 @@ import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
 import {
   useWeb3Context,
   defaultNetworkId,
-  loadPlatformFee,
   isDev,
   NetworkIds,
+  loadPlatformFee,
 } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
@@ -32,8 +32,6 @@ export const App = (): JSX.Element => {
   const { user, authorizedAccount, accountStatus } = useSelector(
     (state: RootState) => state.backend
   );
-  const { platformFee } = useSelector((state: RootState) => state.wallet);
-
   const backend = useSelector((state: RootState) => state.backend);
   const [promptTerms, setPromptTerms] = useState<boolean>(
     true
