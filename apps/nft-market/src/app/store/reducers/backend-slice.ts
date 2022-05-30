@@ -43,7 +43,6 @@ export const authorizeAccount = createAsyncThunk(
   "backend/authorizeAccount",
   async ({ address, networkId, provider }: SignerAsyncThunk, { rejectWithValue }) => {
     const loginResponse: LoginResponse = await BackendApi.doLogin(address);
-    console.log(loginResponse);
     if (loginResponse.id) {
       const signature = await BackendApi.handleSignMessage(address, provider);
       if (!signature) {
@@ -88,6 +87,7 @@ const initialState: BackendData = {
   accountStatus: "unknown",
   authSignature: null,
   authorizedAccount: null,
+  user: {} as User,
   ...previousState,
   status: "idle",
   loadAssetStatus: [],
@@ -97,7 +97,14 @@ const initialState: BackendData = {
 const backendSlice = createSlice({
   name: "wallet",
   initialState,
-  reducers: {},
+  reducers: {
+    logout: (state) => {
+      state.authSignature = null;
+      state.authorizedAccount = "";
+      state.accountStatus = "unknown";
+      state.user = {} as User;
+    },
+  },
   extraReducers: (builder) => {
     builder.addCase(authorizeAccount.pending, (state, action) => {
       state.accountStatus = "pending";
@@ -132,4 +139,4 @@ const backendSlice = createSlice({
 
 export const backendReducer = backendSlice.reducer;
 // actions are automagically generated and exported by the builder/thunk
-//export const {} = walletSlice.actions;
+export const { logout } = backendSlice.actions;

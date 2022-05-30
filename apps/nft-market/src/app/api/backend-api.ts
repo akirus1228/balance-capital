@@ -8,7 +8,6 @@ import {
   AllAssetsResponse,
   AllListingsResponse,
   Asset,
-  BackendListing,
   CreateAssetResponse,
   CreateListingRequest,
   AllNotificationsResponse,
@@ -21,15 +20,19 @@ import {
   NotificationStatus,
   CreateListingResponse,
   Loan,
+  Offer,
+  BackendAssetQueryParams,
+  BackendLoanQueryParams,
+  BackendOfferQueryParams,
+  BackendStandardQuery,
 } from "../types/backend-types";
-import { BackendAssetQueryParam, ListingQueryParam } from "../store/reducers/interfaces";
+import { ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
 import {
   assetAryToAssets,
   dropHelperDates,
   listingAryToListings,
   listingToCreateListingRequest,
-  termsToTerm,
 } from "../helpers/data-translations";
 import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
 import { updateListings } from "../store/reducers/listing-slice";
@@ -81,17 +84,17 @@ export const getListingByOpenseaIds = (
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
       const { term, ...listing } = resp.data.data[0];
-      return { ...listing, terms: term };
+      return { ...listing, term: term };
     });
 };
 
 export const createListing = (
   signature: string,
   asset: Asset,
-  terms: Terms
+  term: Terms
 ): Promise<Listing | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const listingParams = listingToCreateListingRequest(asset, terms);
+  const listingParams = listingToCreateListingRequest(asset, term);
   // post
   return axios
     .post(url, listingParams, {
@@ -124,7 +127,7 @@ const createListingResponseToListing = (
   createListingResponse: CreateListingResponse
 ): Listing => {
   const { term, ...listing } = createListingResponse;
-  return { ...listing, terms: term };
+  return { ...listing, term: term };
 };
 
 export const getNotifications = (
@@ -188,8 +191,23 @@ export const markAsRead = async (
     });
 };
 
+const standardQueryParams: BackendStandardQuery = {
+  skip: 0,
+  take: 50,
+};
+
 export const backendApi = createApi({
   reducerPath: "backendApi",
+  tagTypes: [
+    "Asset",
+    "Listing",
+    "Loan",
+    "Notification",
+    "Offer",
+    "Order",
+    "Terms",
+    "User",
+  ],
   baseQuery: fetchBaseQuery({
     baseUrl: NFT_MARKETPLACE_API_URL,
     prepareHeaders: (headers, { getState }) => {
@@ -199,55 +217,24 @@ export const backendApi = createApi({
     },
   }),
   endpoints: (builder) => ({
-    getListings: builder.query<Listing[], ListingQueryParam>({
-      query: (queryParams) => ({
-        url: `asset-listing/all`,
-        params: queryParams,
-      }),
-      transformResponse: (response: AllListingsResponse, meta, arg) =>
-        response.data.map((listing: BackendListing) => {
-          const { term, ...formattedListing } = listing;
-          return { ...formattedListing, terms: term } as Listing;
-        }),
-      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-        const { data }: { data: Listing[] } = await queryFulfilled;
-        const assets = data.map((listing: Listing) => listing.asset);
-        dispatch(updateListings(listingAryToListings(data)));
-        dispatch(updateAssets(assetAryToAssets(assets)));
-      },
-      // providesTags: (result, error, queryParams) => [
-      //   { type: "Asset Listings", queryParams },
-      // ],
-    }),
-    // getListing: builder.query<Listing, string>({
-    //   query: (id) => ({
-    //     url: `asset-listing/${id}`,
-    //   }),
-    //   transformResponse: (response: AllListingsResponse, meta, arg) =>
-    //     response.data.map((listing: BackendListing) => {
-    //       const { term, ...formattedListing } = listing;
-    //       return { ...formattedListing, terms: term } as Listing;
-    //     }),
-    //   async onQueryStarted(arg, { dispatch, queryFulfilled }) {
-    //     const { data }: { data: Listing[] } = await queryFulfilled;
-    //     const assets = data.map((listing: Listing) => listing.asset);
-    //     dispatch(updateListings(listingAryToListings(data)));
-    //     dispatch(updateAssets(assetAryToAssets(assets)));
-    //   },
-    //   // providesTags: (result, error, queryParams) => [
-    //   //   { type: "Asset Listings", queryParams },
-    //   // ],
-    // }),
-    getAssets: builder.query<Asset[], BackendAssetQueryParam>({
+    // Assets
+    getAssets: builder.query<Asset[], Partial<BackendAssetQueryParams>>({
       query: (queryParams) => ({
         url: `asset/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: AllAssetsResponse, meta, arg) => response.data,
       async onQueryStarted(arg, { dispatch, queryFulfilled }) {
         const { data }: { data: Asset[] } = await queryFulfilled;
         dispatch(updateAssets(assetAryToAssets(data)));
       },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Asset" as const, id })), "Asset"]
+          : ["Asset"],
     }),
     getAsset: builder.query<Asset, string | undefined>({
       query: (id) => ({
@@ -257,6 +244,7 @@ export const backendApi = createApi({
         const { data }: { data: Asset } = await queryFulfilled;
         dispatch(updateAsset(data));
       },
+      providesTags: ["Asset"],
     }),
     deleteAsset: builder.mutation<Asset, Partial<Asset> & Pick<Asset, "id">>({
       query: ({ id, ...asset }) => {
@@ -265,7 +253,32 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: (result, error, arg) => [{ type: "Asset", id: arg.id }],
+    }),
+    // Listings
+    getListings: builder.query<Listing[], Partial<ListingQueryParam>>({
+      query: (queryParams) => ({
+        url: `asset-listing/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: AllListingsResponse, meta, arg) =>
+        response.data.map((listing: Listing) => {
+          const { term, ...formattedListing } = listing;
+          return { ...formattedListing, term: term } as Listing;
+        }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Listing[] } = await queryFulfilled;
+        const assets = data.map((listing: Listing) => listing.asset);
+        dispatch(updateListings(listingAryToListings(data)));
+        dispatch(updateAssets(assetAryToAssets(assets)));
+      },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
+          : ["Listing"],
     }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
       query: (body) => {
@@ -275,7 +288,7 @@ export const backendApi = createApi({
           body,
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Listing", "Asset", "Terms"],
     }),
     deleteListing: builder.mutation<Listing, Partial<Listing> & Pick<Listing, "id">>({
       query: ({ id, ...listing }) => {
@@ -284,33 +297,70 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Listing", "Asset", "Terms"],
+    }),
+    // Terms
+    getTerms: builder.query<Terms[], Partial<BackendStandardQuery>>({
+      query: (queryParams) => ({
+        url: `term/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Terms[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Terms" as const, id })), "Terms"]
+          : ["Terms"],
     }),
     updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
       query: ({ id, ...patch }) => ({
         url: `term/${id}`,
         method: "PUT",
-        body: patch,
+        body: { ...patch, id },
       }),
+      transformResponse: (response: Terms, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
     }),
-    getLoans: builder.query<Loan[], BackendAssetQueryParam>({
+    deleteTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
+      query: ({ id, ...terms }) => {
+        return {
+          url: `term/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Listing", "Terms", "Offer"],
+    }),
+    // Loans
+    getLoans: builder.query<Loan[], Partial<BackendLoanQueryParams>>({
       query: (queryParams) => ({
         url: `loan/all`,
-        params: queryParams,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
       }),
       transformResponse: (response: { count: number; data: Loan[] }, meta, arg) =>
         response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Loan" as const, id })), "Loan"]
+          : ["Loan"],
     }),
     createLoan: builder.mutation<Loan, Loan>({
-      query: ({ id, borrower, lender, assetListing, term }) => {
+      query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
+        const { collection, ...asset } = dropHelperDates({ ...assetListing.asset }); // backend doesn't like collection
         const loanRequest = {
+          ...loan,
           assetListing: {
-            ...termsToTerm(dropHelperDates({ ...assetListing })),
-            asset: dropHelperDates({ ...assetListing.asset }),
-            term: dropHelperDates({ ...assetListing.terms }),
+            ...dropHelperDates({ ...assetListing }),
+            asset: dropHelperDates({ ...asset }),
+            term: dropHelperDates({ ...assetListing.term }),
           },
           borrower: dropHelperDates({ ...borrower }),
-          lender: dropHelperDates({ ...borrower }),
+          lender: dropHelperDates({ ...lender }),
           term: dropHelperDates({ ...term }),
         };
         return {
@@ -319,6 +369,16 @@ export const backendApi = createApi({
           body: loanRequest,
         };
       },
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
+    }),
+    updateLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `loan/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Loan, meta, arg) => response,
+      invalidatesTags: ["Listing", "Offer", "Loan", "Asset"],
     }),
     deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
       query: ({ id, ...loan }) => {
@@ -327,20 +387,71 @@ export const backendApi = createApi({
           method: "DELETE",
         };
       },
-      // invalidatesTags: [{ type: "Asset Listings", id: "MINE" }],
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
+    }),
+    // Offers
+    getOffers: builder.query<Offer[], Partial<BackendOfferQueryParams>>({
+      query: (queryParams) => ({
+        url: `offer/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Offer[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Offer" as const, id })), "Offer"]
+          : ["Offer"],
+    }),
+    createOffer: builder.mutation<Offer, Partial<Offer>>({
+      query: (body) => {
+        return {
+          url: `offer`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Offer"],
+    }),
+    updateOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `offer/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Offer, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
+    deleteOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...offer }) => {
+        return {
+          url: `offer/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Asset", "Listing", "Terms", "Offer"],
     }),
   }),
 });
+
 export const {
   useGetAssetQuery,
   useGetAssetsQuery,
   useDeleteAssetMutation,
-  // useGetListingQuery,
   useGetListingsQuery,
   useDeleteListingMutation,
   useGetLoansQuery,
   useCreateLoanMutation,
+  useUpdateLoanMutation,
   useDeleteLoanMutation,
   useCreateListingMutation,
+  useGetTermsQuery,
   useUpdateTermsMutation,
+  useDeleteTermsMutation,
+  useGetOffersQuery,
+  useCreateOfferMutation,
+  useUpdateOfferMutation,
+  useDeleteOfferMutation,
 } = backendApi;

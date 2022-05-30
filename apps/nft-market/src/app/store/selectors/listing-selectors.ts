@@ -10,11 +10,12 @@ import { Listings } from "../reducers/listing-slice";
 
 const selectListings = (state: RootState) => state.listings.listings;
 
-const selectListingAsset = (state: RootState, asset: Asset) => asset;
+const selectListingAsset = (state: RootState, asset: Asset | null) => asset;
 export const selectListingFromAsset = createSelector(
   selectListings,
   selectListingAsset,
   (listings, asset) => {
+    if (asset === null) return {} as Listing;
     const key = Object.keys(listings).find((key: string) => {
       const rtn =
         listings[key].asset.assetContractAddress === asset.assetContractAddress &&
@@ -34,22 +35,16 @@ const selectListingAddress = (
   state: RootState,
   addressParams: StandardAssetLookupParams
 ) => addressParams;
-export const selectListingByAddress = createSelector(
+export const selectListingsByAddress = createSelector(
   selectListings,
   selectListingAddress,
-  (listings, addressParams) => {
-    const key = Object.keys(listings).find((key: string) => {
-      const rtn =
-        listings[key].asset.assetContractAddress === addressParams.contractAddress &&
-        listings[key].asset.tokenId === addressParams.tokenId;
-      return rtn;
-    });
-
-    if (key) {
-      return listings[key];
-    } else {
-      return undefined;
-    }
+  (listings: Listings, addressParams: StandardAssetLookupParams): Listing[] => {
+    const matches: [string, Listing][] = Object.entries(listings).filter(
+      ([listingId, listing]) =>
+        listing.asset.assetContractAddress === addressParams.contractAddress &&
+        listing.asset.tokenId === addressParams.tokenId
+    );
+    return matches.map(([listingId, listing]) => listing);
   }
 );
 

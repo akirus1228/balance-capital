@@ -27,8 +27,6 @@ export interface ListingState {
   readonly createListingStatus: BackendLoadingStatus;
 }
 
-const cacheTime = 300 * 1000; // 5 minutes
-
 /*
 createListing: loads all listings
 params:
@@ -39,23 +37,19 @@ returns: void
 */
 export const createListing = createAsyncThunk(
   "listings/createListing",
-  async (
-    { asset, terms }: ListingAsyncThunk,
-    { getState, rejectWithValue, dispatch }
-  ) => {
-    console.log("backend-slice: createListing");
+  async ({ asset, term }: ListingAsyncThunk, { getState, rejectWithValue, dispatch }) => {
     const thisState: any = getState();
     if (thisState.backend.authSignature) {
       const listing = await BackendApi.createListing(
         thisState.backend.authSignature,
         asset,
-        terms
+        term
       );
       if (!listing) {
         rejectWithValue("Failed to create listing");
       }
       if (typeof listing !== "boolean") {
-        dispatch(updateAsset({ ...listing.asset, owner: { address: asset.wallet } }));
+        dispatch(updateAsset({ ...listing.asset, owner: thisState.backend.user }));
       }
       return listing;
     } else {

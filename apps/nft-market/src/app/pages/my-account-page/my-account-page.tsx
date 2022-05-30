@@ -1,9 +1,11 @@
 import style from "./my-account-page.module.scss";
 import MyAccountActiveLoansTable from "./my-account-active-loans-table";
-import { Box, Typography } from "@mui/material";
-// import MyAccountDetailsTable from "../../../../../usdb/src/app/pages/my-account/my-account-details-table";
-// import { shorten } from "../../../../../usdb/src/app/pages/my-account/my-account";
+import { Box, Container, Typography } from "@mui/material";
 import { useWeb3Context } from "@fantohm/shared-web3";
+import { useGetLoansQuery } from "../../api/backend-api";
+import { LoanStatus } from "../../types/backend-types";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -11,25 +13,63 @@ export function shorten(str: string) {
 }
 
 export const MyAccountPage = (): JSX.Element => {
-  const { provider, address, chainId } = useWeb3Context();
+  const { address } = useWeb3Context();
+  const { authSignature } = useSelector((state: RootState) => state.backend);
+  const { data: activeBorrowerLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Active,
+      borrowerAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: activeLenderLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Active,
+      lenderAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: historicalBorrowerLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Complete,
+      borrowerAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
+  const { data: historicalLenderLoans } = useGetLoansQuery(
+    {
+      take: 50,
+      skip: 0,
+      status: LoanStatus.Complete,
+      lenderAddress: address,
+    },
+    { skip: !address || !authSignature }
+  );
 
-  const listings = [];
   return (
-    <div>
-      <Box>
-        <Typography variant="subtitle1">
-          My Account <span style={{ color: "#858E93" }}>{shorten(address)}</span>
-        </Typography>
+    <Container>
+      <Box className={style["myAccountContainer"]}>
+        <Box>
+          <Typography variant="subtitle1">
+            My Account <span style={{ color: "#858E93" }}>{shorten(address)}</span>
+          </Typography>
+        </Box>
+        <h2>Active loans as borrower({activeBorrowerLoans?.length})</h2>
+        <MyAccountActiveLoansTable loans={activeBorrowerLoans} />
+        <h2>Active loans as lender({activeLenderLoans?.length})</h2>
+        <MyAccountActiveLoansTable loans={activeLenderLoans} />
+        <h2>Previous loans as borrower({historicalBorrowerLoans?.length})</h2>
+        <MyAccountActiveLoansTable loans={historicalBorrowerLoans} />
+        <h2>Previous loans as lender({historicalLenderLoans?.length})</h2>
+        <MyAccountActiveLoansTable loans={historicalLenderLoans} />
       </Box>
-      <h2>Active loans as borrower({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Active loans as lender({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Previous loans as borrower({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-      <h2>Previous loans as lender({listings.length})</h2>
-      <MyAccountActiveLoansTable listings={[]} />
-    </div>
+    </Container>
   );
 };
 

@@ -1,4 +1,4 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery, retry } from "@reduxjs/toolkit/query/react";
 import { isDev } from "@fantohm/shared-web3";
 import { OpenseaAssetQueryParam } from "../store/reducers/interfaces";
 import { updateAssetsFromOpensea } from "../store/reducers/asset-slice";
@@ -126,23 +126,32 @@ const openseaConfig = (): OpenseaConfig => {
     apiKey: isDev()
       ? "5bec8ae0372044cab1bef0d866c98618"
       : "6f2462b6e7174e9bbe807169db342ec4",
-    apiEndpoint: isDev()
-      ? "https://testnets-api.opensea.io/api/v1"
-      : "https://api.opensea.io/api/v1/assets",
+    apiEndpoint: "https://testnets-api.opensea.io/api/v1",
   };
+
+  // apiEndpoint: isDev()
+  // ? "https://testnets-api.opensea.io/api/v1"
+  // : "https://api.opensea.io/api/v1",
 
   return openSeaConfig;
 };
 
-export const openseaApi = createApi({
-  reducerPath: "openseaApi",
-  baseQuery: fetchBaseQuery({
+const staggeredBaseQuery = retry(
+  fetchBaseQuery({
     baseUrl: openseaConfig().apiEndpoint,
     prepareHeaders: (headers) => {
       headers.set("X-API-KEY", openseaConfig().apiKey);
       return headers;
     },
   }),
+  {
+    maxRetries: 5,
+  }
+);
+
+export const openseaApi = createApi({
+  reducerPath: "openseaApi",
+  baseQuery: staggeredBaseQuery,
   endpoints: (builder) => ({
     getOpenseaAssets: builder.query<OpenseaAsset[], OpenseaAssetQueryParam>({
       query: (queryParams) => ({

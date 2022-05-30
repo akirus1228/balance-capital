@@ -4,7 +4,8 @@ import {
   IBaseAsyncThunk,
   IInteractiveAsyncThunk,
 } from "@fantohm/shared-web3";
-import { Asset, Loan, Terms } from "../../types/backend-types";
+import { BigNumber } from "ethers";
+import { Asset, BackendAssetQueryParams, Loan, Terms } from "../../types/backend-types";
 
 // nft-marketplace slice
 export interface SignerAsyncThunk
@@ -16,7 +17,7 @@ export interface AssetAsyncThunk {
 }
 
 export interface TermsAsyncThunk {
-  readonly terms: Terms;
+  readonly term: Terms;
 }
 
 export interface ListingAsyncThunk extends AssetAsyncThunk, TermsAsyncThunk {}
@@ -25,6 +26,19 @@ export interface LoanAsyncThunk extends IBaseAsyncThunk {
   readonly loan: Loan;
   networkId: number;
   provider: JsonRpcProvider;
+}
+
+export interface LoanDetailsAsyncThunk extends IBaseAsyncThunk {
+  readonly loanId: number;
+  readonly networkId: number;
+  readonly provider: JsonRpcProvider;
+}
+
+export interface RepayLoanAsyncThunk extends IBaseAsyncThunk {
+  readonly loanId: number;
+  readonly amountDue: BigNumber;
+  readonly networkId: number;
+  readonly provider: JsonRpcProvider;
 }
 
 export interface AssetLocAsyncThunk extends IBaseAsyncThunk, IInteractiveAsyncThunk {
@@ -54,17 +68,8 @@ export interface ListingQueryAsyncThunk {
   queryParams?: ListingQueryParam;
 }
 
-export type BackendAssetQueryParam = {
-  skip: number;
-  take: number;
-  status?: string;
-  openseaIds?: string[];
-  contractAddress?: string;
-  mediaType?: string;
-};
-
 export interface BackendAssetQueryAsyncThunk {
-  queryParams?: BackendAssetQueryParam;
+  queryParams?: BackendAssetQueryParams;
 }
 
 export type OpenseaAssetQueryParam = {

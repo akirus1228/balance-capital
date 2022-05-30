@@ -1,9 +1,8 @@
 // request types
-export interface CreateListingRequest {
+export type CreateListingRequest = {
   asset: Asset | string;
-  term: Terms | string; //convert terms to term for api
   status: ListingStatus;
-}
+} & IncludesTerms;
 
 // response types
 export type LoginResponse = User;
@@ -18,15 +17,14 @@ export type CreateAssetResponse = {
 };
 
 export type AllListingsResponse = {
-  data: BackendListing[];
+  data: Listing[];
   count: number;
 };
 
 export type CreateListingResponse = {
   asset: Asset;
   status: ListingStatus;
-  term: Terms;
-};
+} & IncludesTerms;
 
 // data models
 export enum AssetStatus {
@@ -78,17 +76,13 @@ export type Terms = {
 } & StandardBackendObject;
 
 export enum ListingStatus {
-  Pending = "Pending",
+  Pending = "PENDING",
   Listed = "LISTED",
   Completed = "COMPLETED",
-  Cancelled = "Cancelled",
+  Cancelled = "CANCELLED",
 }
 
 export type IncludesTerms = {
-  terms: Terms;
-};
-
-export type IncludesTerm = {
   term: Terms;
 };
 
@@ -100,17 +94,9 @@ export type Listing = {
 } & StandardBackendObject &
   IncludesTerms;
 
-export type BackendListing = {
-  id?: string;
-  asset: Asset;
-  term: Terms;
-  status: ListingStatus;
-  cacheExpire?: number;
-} & StandardBackendObject;
-
 export type Chain = "eth" | "sol";
 
-export type Asset = {
+export type BackendAsset = {
   status: AssetStatus;
   cacheExpire?: number;
   openseaLoaded?: number;
@@ -136,6 +122,44 @@ export type Asset = {
   chain: Chain;
   wallet: string;
 } & StandardBackendObject;
+
+export type Asset = BackendAsset & {
+  collection: Collection;
+};
+
+export type Collection = {
+  banner_image_url?: string;
+  chat_url?: string;
+  created_date: string;
+  default_to_fiat: boolean;
+  description?: string;
+  dev_buyer_fee_basis_points: number;
+  dev_seller_fee_basis_points: number;
+  discord_url?: string;
+  display_data: { card_display_style: string; images: string[] };
+  external_url?: string;
+  featured: boolean;
+  featured_image_url?: string;
+  hidden: boolean;
+  image_url?: string;
+  instagram_username?: string;
+  is_nsfw: boolean;
+  is_subject_to_whitelist: boolean;
+  large_image_url?: string;
+  medium_username?: string;
+  name: string;
+  only_proxied_transfers: boolean;
+  opensea_buyer_fee_basis_points: number;
+  opensea_seller_fee_basis_points: number;
+  payout_address?: string;
+  require_email: boolean;
+  safelist_request_status?: string;
+  short_description?: string;
+  slug: string;
+  telegram_url?: string;
+  twitter_username?: string;
+  wiki_url?: string;
+};
 
 export type Nullable<T> = T | null;
 
@@ -187,24 +211,75 @@ export enum BackendLoadingStatus {
   failed = "failed",
 }
 
+export enum LoanStatus {
+  Active = "ACTIVE",
+  Default = "DEFAULT",
+  Complete = "COMPLETE",
+}
+
 export type Loan = {
   id?: string;
   lender: Person;
   borrower: Person;
   assetListing: Listing;
   term: Terms;
+  status: LoanStatus;
+  contractLoanId?: number;
 } & StandardBackendObject;
 
-type Updatable = {
+export type Updatable = {
   updatedAt?: string;
 };
 
-type Deleteable = {
+export type Deleteable = {
   deletedAt?: string;
 };
 
-type Creatable = {
+export type Creatable = {
   createdAt?: string;
 };
 
 export type StandardBackendObject = Updatable & Creatable & Deleteable;
+
+export enum OfferStatus {
+  Accepted = "ACCEPTED",
+  Cancelled = "CANCELLED",
+  Complete = "COMPLETE",
+  Expired = "EXPIRED",
+  Ready = "READY",
+}
+
+export type Offer = {
+  id?: string;
+  lender: User;
+  assetListing: Listing;
+  status: OfferStatus;
+} & StandardBackendObject &
+  IncludesTerms;
+
+export type BackendStandardQuery = {
+  skip: number;
+  take: number;
+};
+
+export type BackendAssetQueryParams = {
+  status?: string;
+  openseaIds?: string[];
+  contractAddress?: string;
+  mediaType?: string;
+} & BackendStandardQuery;
+
+export type BackendLoanQueryParams = {
+  assetId?: string;
+  assetListingId?: string;
+  lenderAddress?: string;
+  borrowerAddress?: string;
+  status?: LoanStatus;
+} & BackendStandardQuery;
+
+export type BackendOfferQueryParams = {
+  assetId: string;
+  assetListingId: string;
+  lenderAddress: string;
+  borrowerAddress: string;
+} & BackendStandardQuery;

@@ -1,14 +1,29 @@
 {
-  "extends": ["plugin:@nrwl/nx/react", "../../.eslintrc.json"],
-  "ignorePatterns": ["!**/*"],
+  "extends": [
+    "plugin:@nrwl/nx/react",
+    "../../.eslintrc.json"
+  ],
+  "ignorePatterns": [
+    "!**/*"
+  ],
   "overrides": [
     {
-      "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
+      "files": [
+        "*.ts",
+        "*.tsx",
+        "*.js",
+        "*.jsx"
+      ],
       "rules": {
         "node/no-unsupported-features/es-syntax": [
           "error",
-          { "ignores": ["modules"] }
-        ]
+          {
+            "ignores": [
+              "modules"
+            ]
+          }
+        ],
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

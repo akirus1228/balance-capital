@@ -17,32 +17,34 @@ export interface BorrowerListingDetailsProps {
 export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
-  console.log("BorrowerListingDetails render");
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
   const listing: Listing = useSelector((state: RootState) =>
     selectListingFromAsset(state, props.asset)
   );
 
-  useGetListingsQuery({
-    skip: 0,
-    take: 50,
-    openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
-  });
+  useGetListingsQuery(
+    {
+      skip: 0,
+      take: 50,
+      openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
+    },
+    { skip: !authSignature || !user.address }
+  );
 
   // calculate repayment totals
   const { repaymentTotal } = useListingTermDetails(listing);
 
-  // update terms
+  // update term
   const [dialogOpen, setDialogOpen] = useState(false);
   const onClickButton = () => {
     setDialogOpen(true);
   };
 
   const onListDialogClose = (accepted: boolean) => {
-    console.log(accepted);
     setDialogOpen(false);
   };
 
-  if (typeof listing.terms === "undefined") {
+  if (typeof listing.term === "undefined") {
     return <h3>Loading...</h3>;
   }
 
@@ -63,7 +65,7 @@ export const BorrowerListingDetails = (
           <Box className="flex fc">
             <Typography className={style["label"]}>Principal</Typography>
             <Typography className={`${style["data"]}`}>
-              {listing.terms.amount.toLocaleString("en-US", {
+              {listing.term.amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
@@ -71,13 +73,13 @@ export const BorrowerListingDetails = (
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>APY</Typography>
-            <Typography className={`${style["data"]}`}>{listing.terms.apr}%</Typography>
+            <Typography className={`${style["data"]}`}>{listing.term.apr}%</Typography>
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until offer expires</Typography>
             <Box className="flex fr w100">
               <Typography className={`${style["data"]}`}>
-                {listing.terms.expirationAt}
+                {listing.term.expirationAt}
               </Typography>
             </Box>
           </Box>

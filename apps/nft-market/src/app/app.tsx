@@ -4,7 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { Backdrop, Box, Button, CssBaseline, Fade, Paper } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
-import { useWeb3Context, defaultNetworkId } from "@fantohm/shared-web3";
+import {
+  useWeb3Context,
+  defaultNetworkId,
+  loadPlatformFee,
+  isDev,
+  NetworkIds,
+} from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
 import { HomePage } from "./pages/home/home-page";
@@ -14,15 +20,20 @@ import { LendPage } from "./pages/lend-page/lend-page";
 import { MyAccountPage } from "./pages/my-account-page/my-account-page";
 import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
-import { authorizeAccount } from "./store/reducers/backend-slice";
+import { authorizeAccount, logout } from "./store/reducers/backend-slice";
 import Typography from "@mui/material/Typography";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
-import TestHelper from "./pages/test-helper/test-helper";
+import { TestHelper } from "./pages/test-helper/test-helper";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
   const themeType = useSelector((state: RootState) => state.theme.mode);
+  const { user, authorizedAccount, accountStatus } = useSelector(
+    (state: RootState) => state.backend
+  );
+  const { platformFee } = useSelector((state: RootState) => state.wallet);
+
   const backend = useSelector((state: RootState) => state.backend);
   const [promptTerms, setPromptTerms] = useState<boolean>(
     true
@@ -30,12 +41,31 @@ export const App = (): JSX.Element => {
   );
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [theme, setTheme] = useState(NftLight);
-  const { address, chainId, connected, hasCachedProvider, connect, provider } =
-    useWeb3Context();
+  const {
+    address,
+    chainId,
+    connected,
+    hasCachedProvider,
+    connect,
+    provider,
+    switchEthereumChain,
+  } = useWeb3Context();
 
   useEffect(() => {
     setTheme(themeType === "light" ? NftLight : NftDark);
   }, [themeType]);
+
+  // if the wallet address doesn't equal the logged in user, log out
+  useEffect(() => {
+    if (
+      address &&
+      user &&
+      user.address &&
+      address.toLowerCase() !== user.address.toLowerCase()
+    ) {
+      dispatch(logout());
+    }
+  }, [address, user]);
 
   // check for cached wallet connection
   useEffect(() => {
@@ -58,12 +88,36 @@ export const App = (): JSX.Element => {
 
   // when a user connects their wallet login to the backend api
   useEffect(() => {
-    if (provider && connected && address !== backend.authorizedAccount) {
+    if (
+      provider &&
+      connected &&
+      address &&
+      (!authorizedAccount || address.toLowerCase() !== authorizedAccount.toLowerCase()) &&
+      accountStatus !== "pending" &&
+      typeof user.address == "undefined"
+    ) {
       dispatch(
         authorizeAccount({ networkId: chainId || defaultNetworkId, address, provider })
       );
     }
-  }, [address, connected, backend.authorizedAccount]);
+  }, [provider, address, connected, authorizedAccount, accountStatus, user]);
+
+  // when a user connects their wallet login to the backend api
+  useEffect(() => {
+    if (provider && connected && address) {
+      const expectedChain = isDev() ? NetworkIds.Rinkeby : NetworkIds.Ethereum;
+      if (switchEthereumChain && chainId !== expectedChain) {
+        switchEthereumChain(expectedChain);
+      }
+    }
+  }, [provider, address, connected]);
+
+  // when a user connects their wallet login to the backend api
+  useEffect(() => {
+    if (provider && connected) {
+      dispatch(loadPlatformFee({ networkId: chainId || defaultNetworkId, address }));
+    }
+  }, [address, connected, authorizedAccount]);
 
   const handleAgree = () => {
     setPromptTerms(false);

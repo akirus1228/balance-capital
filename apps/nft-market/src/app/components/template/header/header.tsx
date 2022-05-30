@@ -3,17 +3,17 @@ import { Link } from "react-router-dom";
 import {
   AppBar,
   Box,
-  Toolbar,
-  IconButton,
-  Typography,
-  Menu,
-  Container,
   Button,
-  Theme,
+  Container,
+  IconButton,
+  Menu,
   SxProps,
+  Theme,
+  Toolbar,
+  Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useWeb3Context, enabledNetworkIds } from "@fantohm/shared-web3";
+import { enabledNetworkIds, useWeb3Context } from "@fantohm/shared-web3";
 import MenuLink from "./menu-link";
 import styles from "./header.module.scss";
 import UserMenu from "./user-menu";
@@ -52,13 +52,8 @@ export const Header = (): JSX.Element => {
   };
 
   return (
-    <AppBar
-      position="static"
-      color="transparent"
-      elevation={0}
-      sx={{ margin: { md: "2em" }, width: "auto" }}
-    >
-      <Container maxWidth={false} sx={{ maxWidth: "1550px" }}>
+    <AppBar position="static" color="transparent" elevation={0}>
+      <Container maxWidth="xl" sx={{ pt: { xs: "1rem", md: "2.5rem" } }}>
         <Toolbar disableGutters>
           <Typography
             noWrap
@@ -68,7 +63,7 @@ export const Header = (): JSX.Element => {
               display: { xs: "none", md: "flex" },
               alignItems: "center",
               fontSize: "28px",
-              minWidth: "71px",
+              minWidth: "70px",
             }}
           >
             <Link to="/">Logo</Link>
@@ -140,7 +135,7 @@ export const Header = (): JSX.Element => {
               {pages.map((page: Page, index: number) => {
                 return (
                   <Typography
-                    key={`pagebtn-${index}`}
+                    key={`btn-${page.title}-${index}`}
                     textAlign="center"
                     style={{ opacity: page?.params?.comingSoon ? 0.2 : 1 }}
                   >
