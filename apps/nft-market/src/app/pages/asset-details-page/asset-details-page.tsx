@@ -100,7 +100,7 @@ export const AssetDetailsPage = (): JSX.Element => {
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
         listing={activeListing}
-        sx={{ mt: "5em" }}
+        sx={{ mt: "5em", mb: "3em" }}
       />
       {!activeListing && !asset && <h1>Loading...</h1>}
       {!authSignature &&
