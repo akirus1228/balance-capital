@@ -282,6 +282,7 @@ export type BackendOfferQueryParams = {
   assetListingId: string;
   lenderAddress: string;
   borrowerAddress: string;
+  status: OfferStatus;
 } & BackendStandardQuery;
 
 export type PlatformWalletInfo = {

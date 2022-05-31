@@ -10,6 +10,8 @@ import style from "./offers-list.module.scss";
 /* eslint-disable-next-line */
 export interface OffersListProps {
   queryParams?: Partial<BackendOfferQueryParams>;
+  offers?: Offer[];
+  fields?: [];
 }
 
 export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
