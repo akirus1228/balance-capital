@@ -1,5 +1,15 @@
 import { prettifySeconds } from "@fantohm/shared-web3";
-import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Container,
+  Grid,
+  Paper,
+  Skeleton,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { useWalletAsset } from "../../hooks/use-wallet-asset";
@@ -15,12 +25,14 @@ export interface AssetDetailsProps {
   contractAddress: string;
   tokenId: string;
   listing?: Listing;
+  sx?: SxProps<Theme>;
 }
 
 export const AssetDetails = ({
   contractAddress,
   tokenId,
   listing,
+  sx,
   ...props
 }: AssetDetailsProps): JSX.Element => {
   const { authSignature } = useSelector((state: RootState) => state.backend);
@@ -37,8 +49,8 @@ export const AssetDetails = ({
   );
 
   return (
-    <Container>
-      <HeaderBlurryImage url={asset?.imageUrl} />
+    <Container sx={sx}>
+      <HeaderBlurryImage url={asset?.imageUrl} height={"355px"} />
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>

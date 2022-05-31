@@ -233,9 +233,13 @@ const globalTheme: ThemeOptions = {
           borderRadius: "36px",
           padding: "1em 3em",
           fontSize: "1em",
+          boxShadow: "2px 15px 12px #7E9AA926",
           "&.offer": {
             padding: "0.5em 2em",
             background: nftLightColors.containedPrimaryBtn,
+          },
+          "&.slim": {
+            padding: "0.25em 2em",
           },
         },
       },
@@ -358,6 +362,10 @@ const USDBLightBase: ThemeOptions = {
             color: nftLightColors.color,
             background: nftLightColors.iconButtonBg,
           },
+          "&.lowContrast": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
         },
       },
     },
@@ -466,6 +474,10 @@ const USDBDarkBase: ThemeOptions = {
           "&.closeButton": {
             color: nftDarkColors.color,
             background: nftDarkColors.iconButtonBg,
+          },
+          "&.lowContrast": {
+            backgroundColor: nftDarkColors.invertedColor,
+            color: nftDarkColors.color,
           },
         },
       },

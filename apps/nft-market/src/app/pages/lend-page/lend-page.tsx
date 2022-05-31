@@ -42,7 +42,11 @@ export const LendPage = (): JSX.Element => {
             <LenderAssetFilter />
           </Grid>
           <Grid item xs={12} md={10}>
-            {isLoading && <CircularProgress />}
+            {isLoading && (
+              <Box className="flex fr fj-c">
+                <CircularProgress />
+              </Box>
+            )}
             <AssetList assets={assets} type="lend" />
           </Grid>
         </Grid>

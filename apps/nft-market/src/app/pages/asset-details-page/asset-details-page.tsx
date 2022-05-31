@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -12,10 +12,18 @@ import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borr
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
 import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-details";
 import OffersList from "../../components/offers-list/offers-list";
+import OwnerInfo from "../../components/owner-info/owner-info";
+import PreviousLoans from "../../components/previous-loans/previous-loans";
 import { RootState } from "../../store";
 import { selectAssetByAddress } from "../../store/selectors/asset-selectors";
 import { selectListingsByAddress } from "../../store/selectors/listing-selectors";
-import { AssetStatus, Listing, ListingStatus, Loan } from "../../types/backend-types";
+import {
+  AssetStatus,
+  Listing,
+  ListingStatus,
+  Loan,
+  LoanStatus,
+} from "../../types/backend-types";
 // import style from "./lender-asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
@@ -59,7 +67,7 @@ export const AssetDetailsPage = (): JSX.Element => {
   const { data: loans, isLoading: isLoansLoading } = useGetLoansQuery(
     {
       skip: 0,
-      take: 1,
+      take: 40,
       assetId: asset?.id || "",
     },
     { skip: !authSignature }
@@ -74,6 +82,11 @@ export const AssetDetailsPage = (): JSX.Element => {
     return listings.find((listing: Listing) => listing.status === ListingStatus.Listed);
   }, [listings]);
 
+  const activeLoan = useMemo(() => {
+    if (!loans) return {} as Loan;
+    return loans.find((loan: Loan) => loan.status === LoanStatus.Active);
+  }, [loans]);
+
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return (
       <Box className="flex fr fj-c">
@@ -87,6 +100,7 @@ export const AssetDetailsPage = (): JSX.Element => {
         contractAddress={asset.assetContractAddress}
         tokenId={asset.tokenId}
         listing={activeListing}
+        sx={{ mt: "5em" }}
       />
       {!activeListing && !asset && <h1>Loading...</h1>}
       {!authSignature &&
@@ -100,19 +114,17 @@ export const AssetDetailsPage = (): JSX.Element => {
         authSignature &&
         !isOwner &&
         activeListing &&
+        activeListing.asset &&
         activeListing.asset?.status === AssetStatus.Listed && (
           <LenderListingTerms listing={activeListing} sx={{ mt: "3em" }} />
         )}
       {asset &&
         !isOwner &&
-        activeListing &&
-        activeListing.asset?.status === AssetStatus.Locked &&
+        activeLoan &&
+        activeLoan.assetListing &&
+        activeLoan.assetListing.asset?.status === AssetStatus.Locked &&
         authSignature && (
-          <LenderLoanDetails
-            asset={asset}
-            loan={loans ? loans[0] : ({} as Loan)}
-            sx={{ mt: "3em" }}
-          />
+          <LenderLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />
         )}
       {isOwner && [AssetStatus.Ready, AssetStatus.New].includes(asset?.status) && (
         <BorrowerCreateListing asset={asset} sx={{ mt: "3em" }} />
@@ -120,14 +132,20 @@ export const AssetDetailsPage = (): JSX.Element => {
       {isOwner && asset?.status === AssetStatus.Listed && (
         <BorrowerListingDetails asset={asset} sx={{ mt: "3em" }} />
       )}
-      {isOwner && asset?.status === AssetStatus.Locked && (
-        <BorrowerLoanDetails
-          asset={asset}
-          loan={loans ? loans[0] : ({} as Loan)}
-          sx={{ mt: "3em" }}
-        />
+      {isOwner && asset?.status === AssetStatus.Locked && activeLoan && (
+        <BorrowerLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />
       )}
-      {isOwner && asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
+      {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
+      <Container maxWidth="xl" sx={{ mt: "5em" }}>
+        <Grid container columnSpacing={3}>
+          <Grid item xs={12} md={5}>
+            <OwnerInfo owner={asset.owner} />
+          </Grid>
+          <Grid item xs={12} md={7}>
+            <PreviousLoans asset={asset} />
+          </Grid>
+        </Grid>
+      </Container>
     </>
   );
 };

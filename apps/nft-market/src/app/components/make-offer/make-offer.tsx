@@ -23,7 +23,7 @@ export const MakeOffer = (props: MakeOfferProps): JSX.Element => {
         <h1 style={{ margin: "0 0 0.5em 0" }}>Make Offer</h1>
       </Box>
       <Box
-        className={`flex fr fj-e ${style["header"]}`}
+        className={`flex fr fj-fe ${style["header"]}`}
         sx={{ position: "absolute", right: "16px" }}
       >
         <IconButton onClick={handleClose}>
@@ -35,6 +35,7 @@ export const MakeOffer = (props: MakeOfferProps): JSX.Element => {
         sx={{ borderTop: "1px solid #aaaaaa", paddingTop: "1em" }}
       >
         <TermsForm
+          key={`make-offer-${props.listing.id}`}
           asset={props.listing.asset}
           listing={props.listing}
           onClose={onClose}

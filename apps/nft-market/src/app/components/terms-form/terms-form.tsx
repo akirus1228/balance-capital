@@ -12,11 +12,9 @@ import {
 import {
   Box,
   Button,
-  Icon,
   MenuItem,
   Select,
   SelectChangeEvent,
-  SvgIcon,
   TextField,
   Typography,
 } from "@mui/material";
@@ -38,6 +36,7 @@ import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
 import { useCreateOfferMutation, useUpdateTermsMutation } from "../../api/backend-api";
 import { USDBToken } from "@fantohm/shared/images";
+import { ethers } from "ethers";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -161,7 +160,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     if (props.asset.status === AssetStatus.New) {
       asset = { ...props.asset, owner: user };
     } else {
-      asset = props.asset;
+      asset = { ...props.asset, status: AssetStatus.Listed };
     }
     const expirationAt = new Date();
     expirationAt.setDate(expirationAt.getDate() + 1);
@@ -320,7 +319,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           provider,
           walletAddress: address,
           assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-          amount: amount * (1 + platformFee),
+          amount: ethers.utils.parseEther((amount * (1 + platformFee)).toString()),
         })
       );
     }
@@ -427,7 +426,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance >= amount * (1 + platformFee) && (
+        usdbAllowance.gte(
+          ethers.utils.parseEther((amount * (1 + platformFee)).toString())
+        ) && (
           <Button variant="contained" onClick={handleMakeOffer}>
             Make Offer
           </Button>
@@ -435,7 +436,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance < amount * (1 + platformFee) && (
+        usdbAllowance.lt(
+          ethers.utils.parseEther((amount * (1 + platformFee)).toString())
+        ) && (
           <Button variant="contained" onClick={handleRequestAllowance}>
             Allow [name] to Access your USDB
           </Button>

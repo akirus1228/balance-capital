@@ -30,7 +30,7 @@ import {
   prettifySeconds,
 } from "@fantohm/shared-web3";
 import style from "./offers-list.module.scss";
-import tmpAvatar from "../../../assets/images/temp-avatar.png";
+import SimpleProfile from "../simple-profile/simple-profile";
 
 export type OfferListItemProps = {
   offer: Offer;
@@ -76,6 +76,11 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const hasPermission = useSelector((state: RootState) =>
     selectNftPermFromAsset(state, offer.assetListing.asset)
   );
+
+  // is the user the owner of the asset?
+  const isOwner = useMemo(() => {
+    return user.address.toLowerCase() === asset?.owner?.address.toLowerCase();
+  }, [asset, user]);
 
   useEffect(() => {
     if (
@@ -173,23 +178,21 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   const offerExpires = useMemo(() => {
     const offerDateTime = new Date(offer.term.expirationAt);
     const expiresInSeconds = offerDateTime.getTime() - Date.now();
-    return prettifySeconds(expiresInSeconds / 1000);
+    const prettyTime = prettifySeconds(expiresInSeconds / 1000);
+    return prettyTime !== "Instant" ? prettyTime : "Expired";
+  }, [offer.term]);
+
+  const offerCreatedSecondsAgo = useMemo(() => {
+    if (!offer.term.createdAt) return 0;
+    const offerDateTime = new Date(offer.term.createdAt);
+    const createdAgo = Date.now() - offerDateTime.getTime();
+    return prettifySeconds(createdAgo / 1000);
   }, [offer.term]);
 
   return (
     <PaperTableRow className={style["row"]}>
       <PaperTableCell>
-        <Box className="flex fr ai-c">
-          <Avatar src={offer.lender.profileImageUrl || tmpAvatar} />
-          <Box className="flex fc" sx={{ ml: "1em" }}>
-            <span className={style["ownerName"]}>
-              {offer.lender.name || addressEllipsis(offer.lender.address)}
-            </span>
-            <span className={style["ownerAddress"]}>
-              {addressEllipsis(offer.lender.address)}
-            </span>
-          </Box>
-        </Box>
+        <SimpleProfile user={offer.lender} />
       </PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentTotal, 2)}</PaperTableCell>
       <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>
@@ -197,26 +200,40 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
       <PaperTableCell>{offer.term.duration} days</PaperTableCell>
       <PaperTableCell>{offerExpires}</PaperTableCell>
       <PaperTableCell>
-        {!hasPermission && !isPending && offer.status === OfferStatus.Ready && (
-          <Button variant="contained" className="offer" onClick={handleRequestPermission}>
+        {isOwner && !hasPermission && !isPending && offer.status === OfferStatus.Ready && (
+          <Button
+            variant="contained"
+            className="offer slim"
+            onClick={handleRequestPermission}
+          >
             Accept
           </Button>
         )}
-        {hasPermission && !isPending && offer.status === OfferStatus.Ready && (
-          <Button variant="contained" className="offer" onClick={handleAcceptOffer}>
+        {isOwner && hasPermission && !isPending && offer.status === OfferStatus.Ready && (
+          <Button variant="contained" className="offer slim" onClick={handleAcceptOffer}>
             Accept
           </Button>
         )}
         {isPending && (
-          <Button variant="contained" className="offer">
+          <Button variant="contained" className="offer slim">
             Pending...
           </Button>
         )}
-        {offer.status !== OfferStatus.Ready && (
-          <Button variant="contained" className="offer">
-            {offer.status}
-          </Button>
+        {!isOwner && (
+          <span style={{ marginRight: "2em" }}>{offerCreatedSecondsAgo} ago</span>
         )}
+        {offer.status !== OfferStatus.Ready ||
+          (!isOwner && (
+            <Button
+              variant="contained"
+              className="offer slim"
+              disabled={[OfferStatus.Expired, OfferStatus.Cancelled].includes(
+                offer.status
+              )}
+            >
+              {offer.status}
+            </Button>
+          ))}
       </PaperTableCell>
     </PaperTableRow>
   );

@@ -1,4 +1,4 @@
-import { isDev, NetworkIds, useWeb3Context } from "@fantohm/shared-web3";
+import { isDev, NetworkIds, prettifySeconds, useWeb3Context } from "@fantohm/shared-web3";
 import {
   Box,
   Button,
@@ -33,14 +33,13 @@ type AppDispatch = typeof store.dispatch;
 
 export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
   const dispatch: AppDispatch = useDispatch();
-  const { provider, chainId } = useWeb3Context();
+  const { provider } = useWeb3Context();
   const [isPending, setIsPending] = useState(false);
   const [loanDetails, setLoanDetails] = useState<LoanDetails>({} as LoanDetails);
   // select logged in user
   const { user } = useSelector((state: RootState) => state.backend);
-  const { forecloseLoanStatus } = useSelector((state: RootState) => state.loans);
 
-  const [updateLoan, { isLoading: isLoanUpdating }] = useUpdateLoanMutation();
+  const [updateLoan] = useUpdateLoanMutation();
 
   useEffect(() => {
     console.log("Getloandetails");
@@ -92,7 +91,11 @@ export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
   }, [loan, provider]);
 
   if (!loan || !loan.term || !loanDetails.amountDue) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   return (
     <Container sx={sx}>
@@ -123,12 +126,14 @@ export function LenderLoanDetails({ loan, asset, sx }: LenderLoanDetailsProps) {
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until loan expires</Typography>
             <Box className="flex fr w100">
-              <Typography className={`${style["data"]}`}>55/60 days</Typography>
+              <Typography className={`${style["data"]}`}>
+                {prettifySeconds(loanDetails.endTime - Date.now() / 1000)}
+              </Typography>
               <LinearProgress variant="determinate" value={10} />
             </Box>
           </Box>
           <Box className="flex fc">
-            {loanDetails.endTime < Date.now() && !isPending && (
+            {loanDetails.endTime < Date.now() / 1000 && !isPending && (
               <Button variant="contained" onClick={handleForecloseLoan}>
                 Foreclose Loan
               </Button>

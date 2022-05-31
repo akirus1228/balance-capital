@@ -6,6 +6,7 @@
     "shared-fetch-nft": "libs/shared/fetch-nft",
     "shared-helpers": "libs/shared/helpers",
     "shared-images": "libs/shared/images",
+    "shared-ui-charts": "libs/shared/ui-charts",
     "shared-ui-themes": "libs/shared/ui-themes",
     "shared-web3": "libs/shared/web3",
     "usdb": "apps/usdb",

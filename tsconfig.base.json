@@ -23,6 +23,7 @@
       "@fantohm/shared/fetch-nft": ["libs/shared/fetch-nft/src/index.ts"],
       "@fantohm/shared/images": ["libs/shared/images/src/index.ts"],
       "@fantohm/shared/opensea": ["libs/shared/opensea/src/index.ts"],
+      "@fantohm/shared/ui-charts": ["libs/shared/ui-charts/src/index.ts"],
       "@fantohm/shared/ui-components": ["libs/shared/ui-components/src/index.ts"],
       "@fantohm/shared/ui-helpers": ["libs/shared/ui-helpers/src/index.ts"]
     }
