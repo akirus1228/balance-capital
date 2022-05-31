@@ -108,7 +108,7 @@ export const PaperTableCell = styled(TableCell)(({ theme }) => ({
   position: "relative",
   padding: "2em 0",
   fontSize: "20px",
-  ":first-child": {
+  ":first-of-type": {
     borderTopLeftRadius: "24px",
     borderBottomLeftRadius: "24px",
     borderWidth: "0",

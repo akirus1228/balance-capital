@@ -71,7 +71,7 @@ export type Terms = {
   amount: number;
   apr: number;
   duration: number;
-  expirationAt: Date;
+  expirationAt: string;
   signature: string;
 } & StandardBackendObject;
 
@@ -113,7 +113,7 @@ export type BackendAsset = {
   videoUrl: Nullable<string>;
   threeDUrl: Nullable<string>;
   isOwned: boolean;
-  owner?: Owner;
+  owner: Owner;
   dateCreated: Nullable<string>;
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;

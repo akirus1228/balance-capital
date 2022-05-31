@@ -64,7 +64,12 @@ export const AccountProfile = ({ user }: AccountProfileProps): JSX.Element => {
           >
             <img src={raribleIcon} alt="opensea icon" className={style["iconWrapper"]} />
           </a>
-          <Button className="lowContrast slim" variant="contained" sx={{ ml: "7px" }}>
+          <Button
+            className="lowContrast slim"
+            variant="contained"
+            sx={{ ml: "7px" }}
+            href={`https://etherscan.io/address/${user.address}`}
+          >
             <Icon component={OpenInNewIcon} /> View on Etherscan
           </Button>
           <Button className="slim lowContrast" variant="contained" sx={{ ml: "7px" }}>

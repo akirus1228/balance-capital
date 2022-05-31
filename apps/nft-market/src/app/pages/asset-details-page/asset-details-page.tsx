@@ -3,7 +3,11 @@ import { Box, CircularProgress, Container, Grid } from "@mui/material";
 import { useMemo } from "react";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import { useGetListingsQuery, useGetLoansQuery } from "../../api/backend-api";
+import {
+  useGetListingsQuery,
+  useGetLoansQuery,
+  useGetOffersQuery,
+} from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
 import { AssetDetails } from "../../components/asset-details/asset-details";
 import { BorrowerCreateListing } from "../../components/borrower-create-listing/borrower-create-listing";
@@ -11,7 +15,7 @@ import { BorrowerListingDetails } from "../../components/borrower-listing-detail
 import { BorrowerLoanDetails } from "../../components/borrower-loan-details/borrower-loan-details";
 import { LenderListingTerms } from "../../components/lender-listing-terms/lender-listing-terms";
 import LenderLoanDetails from "../../components/lender-loan-details/lender-loan-details";
-import OffersList from "../../components/offers-list/offers-list";
+import OffersList, { OffersListFields } from "../../components/offers-list/offers-list";
 import OwnerInfo from "../../components/owner-info/owner-info";
 import PreviousLoans from "../../components/previous-loans/previous-loans";
 import { RootState } from "../../store";
@@ -24,7 +28,7 @@ import {
   Loan,
   LoanStatus,
 } from "../../types/backend-types";
-// import style from "./lender-asset-details-page.module.scss";
+//import style from "./asset-details-page.module.scss";
 
 export const AssetDetailsPage = (): JSX.Element => {
   const params = useParams();
@@ -73,6 +77,13 @@ export const AssetDetailsPage = (): JSX.Element => {
     { skip: !authSignature }
   );
 
+  const { data: offers, isLoading: isOffersLoading } = useGetOffersQuery(
+    { assetId: asset?.id || "" },
+    {
+      skip: !authSignature,
+    }
+  );
+
   // is the user the owner of the asset?
   const isOwner = useMemo(() => {
     return address.toLowerCase() === asset?.owner?.address.toLowerCase();
@@ -86,6 +97,15 @@ export const AssetDetailsPage = (): JSX.Element => {
     if (!loans) return {} as Loan;
     return loans.find((loan: Loan) => loan.status === LoanStatus.Active);
   }, [loans]);
+
+  const offersFields = [
+    OffersListFields.LENDER_PROFILE,
+    OffersListFields.REPAYMENT_TOTAL,
+    OffersListFields.REPAYMENT_AMOUNT,
+    OffersListFields.APR,
+    OffersListFields.DURATION,
+    OffersListFields.EXPIRATION,
+  ];
 
   if (isListingLoading || isAssetLoading || !asset || isLoansLoading) {
     return (
@@ -135,7 +155,14 @@ export const AssetDetailsPage = (): JSX.Element => {
       {isOwner && asset?.status === AssetStatus.Locked && activeLoan && (
         <BorrowerLoanDetails asset={asset} loan={activeLoan} sx={{ mt: "3em" }} />
       )}
-      {asset.id && <OffersList queryParams={{ assetId: asset.id || "" }} />}
+      {asset.id && (
+        <OffersList
+          offers={offers}
+          isLoading={isOffersLoading}
+          fields={offersFields}
+          title="Offers receved"
+        />
+      )}
       <Container maxWidth="xl" sx={{ mt: "5em" }}>
         <Grid container columnSpacing={3}>
           <Grid item xs={12} md={5}>

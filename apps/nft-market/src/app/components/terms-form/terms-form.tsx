@@ -168,7 +168,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       amount,
       apr,
       duration,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
     const termSignature = await signTerms(
@@ -201,7 +201,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       amount,
       apr,
       duration: termTypes[durationType] * duration,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
     const termSignature = await signTerms(
@@ -269,14 +269,14 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const handleMakeOffer = useCallback(async () => {
     if (!props.listing || !provider || !props.asset.owner) return;
     const expirationAt = new Date();
-    expirationAt.setDate(expirationAt.getDate() + 1);
+    expirationAt.setDate(expirationAt.getDate() + 7);
     const { id, ...listingTerm } = props.listing.term;
     const preSigTerm: Terms = {
       ...listingTerm,
       amount: amount,
       duration: termTypes[durationType] * duration,
       apr: apr,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
 

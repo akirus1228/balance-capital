@@ -1,6 +1,8 @@
-import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
-import { Avatar, Box, Button, Typography } from "@mui/material";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
+import { Avatar, Button } from "@mui/material";
 import { PaperTableCell, PaperTableRow } from "@fantohm/shared-ui-themes";
+import { addressEllipsis, formatCurrency } from "@fantohm/shared-helpers";
 import { useTermDetails } from "../../hooks/use-term-details";
 import {
   AssetStatus,
@@ -10,16 +12,10 @@ import {
   Offer,
   OfferStatus,
 } from "../../types/backend-types";
-import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-  useCreateLoanMutation,
-  useGetAssetsQuery,
-  useUpdateOfferMutation,
-} from "../../api/backend-api";
+import { useCreateLoanMutation, useUpdateOfferMutation } from "../../api/backend-api";
 import { useDispatch, useSelector } from "react-redux";
 import store, { RootState } from "../../store";
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
-import { selectAssetById } from "../../store/selectors/asset-selectors";
 import { contractCreateLoan } from "../../store/reducers/loan-slice";
 import {
   isDev,
@@ -31,18 +27,21 @@ import {
 } from "@fantohm/shared-web3";
 import style from "./offers-list.module.scss";
 import SimpleProfile from "../simple-profile/simple-profile";
+import { OffersListFields } from "./offers-list";
+import ArrowUpRight from "../../../assets/icons/arrow-right-up.svg";
 
 export type OfferListItemProps = {
   offer: Offer;
+  fields?: OffersListFields[];
 };
 
 type AppDispatch = typeof store.dispatch;
 
-export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
+export const OfferListItem = ({ offer, fields }: OfferListItemProps): JSX.Element => {
   const dispatch: AppDispatch = useDispatch();
   const [isPending, setIsPending] = useState(false);
   const [isRequestingPerms, setIsRequestingPerms] = useState(false);
-  const { user, authSignature } = useSelector((state: RootState) => state.backend);
+  const { user } = useSelector((state: RootState) => state.backend);
   const { loanCreationStatus } = useSelector((state: RootState) => state.loans);
   const { address: walletAddress, provider } = useWeb3Context();
   const { repaymentTotal, repaymentAmount } = useTermDetails(offer.term);
@@ -58,19 +57,7 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
   // nft permission status updates from state
   const { requestPermStatus } = useSelector((state: RootState) => state.wallet);
 
-  const asset = useSelector((state: RootState) =>
-    selectAssetById(state, offer.assetListing.asset.id || "")
-  );
-
-  // getAssets backend api call
-  useGetAssetsQuery(
-    {
-      openseaIds: [asset.openseaId || ""],
-    },
-    {
-      skip: !asset || !!asset.id || !authSignature,
-    }
-  );
+  const asset = useMemo(() => offer.assetListing.asset, [offer]);
 
   // select perm status for this asset from state
   const hasPermission = useSelector((state: RootState) =>
@@ -189,26 +176,95 @@ export const OfferListItem = ({ offer }: OfferListItemProps): JSX.Element => {
     return prettifySeconds(createdAgo / 1000);
   }, [offer.term]);
 
+  const getFieldData = (field: OffersListFields): JSX.Element | string => {
+    switch (field) {
+      case OffersListFields.LENDER_PROFILE:
+        return <SimpleProfile user={offer.lender} />;
+      case OffersListFields.LENDER_ADDRESS:
+        return (
+          <a href={`https://etherscan.io/address/${offer.lender.address}`}>
+            {offer.lender.address.toLowerCase() === user.address.toLowerCase() ? (
+              "You"
+            ) : (
+              <>
+                {addressEllipsis(offer.lender.address, 3)}{" "}
+                <img
+                  src={ArrowUpRight}
+                  alt="arrow pointing up and to the right"
+                  style={{ height: "16px", width: "16px" }}
+                />
+              </>
+            )}
+          </a>
+        );
+      case OffersListFields.BORROWER_ADDRESS:
+        return (
+          <a
+            href={`https://etherscan.io/address/${offer.assetListing.asset?.owner.address}`}
+          >
+            {offer.assetListing.asset?.owner.address.toLowerCase() ===
+            user.address.toLowerCase() ? (
+              "You"
+            ) : (
+              <>
+                {addressEllipsis(offer.assetListing.asset?.owner.address, 3)}{" "}
+                <img
+                  src={ArrowUpRight}
+                  alt="arrow pointing up and to the right"
+                  style={{ height: "16px", width: "16px" }}
+                />
+              </>
+            )}
+          </a>
+        );
+      case OffersListFields.OWNER_PROFILE:
+        return <SimpleProfile user={offer.lender} />;
+      case OffersListFields.REPAYMENT_TOTAL:
+        return formatCurrency(repaymentTotal, 2);
+      case OffersListFields.REPAYMENT_AMOUNT:
+        return formatCurrency(repaymentAmount, 2);
+      case OffersListFields.APR:
+        return `${offer.term.apr}%`;
+      case OffersListFields.DURATION:
+        return `${offer.term.duration} days`;
+      case OffersListFields.EXPIRATION:
+        return offerExpires;
+      case OffersListFields.ASSET:
+        return <Avatar src={offer.assetListing.asset.imageUrl || ""} />;
+      case OffersListFields.NAME:
+        return (
+          <Link
+            to={`/asset/${offer.assetListing.asset.assetContractAddress}/${offer.assetListing.asset.tokenId}`}
+          >
+            {offer.assetListing.asset.name || ""}
+          </Link>
+        );
+      default:
+        return "?";
+    }
+  };
+
   return (
     <PaperTableRow className={style["row"]}>
+      {fields?.map((field: OffersListFields, index: number) => (
+        <PaperTableCell key={`offer-list-row-${index}`}>
+          {getFieldData(field)}
+        </PaperTableCell>
+      ))}
       <PaperTableCell>
-        <SimpleProfile user={offer.lender} />
-      </PaperTableCell>
-      <PaperTableCell>{formatCurrency(repaymentTotal, 2)}</PaperTableCell>
-      <PaperTableCell>{formatCurrency(repaymentAmount, 2)}</PaperTableCell>
-      <PaperTableCell>{offer.term.apr}%</PaperTableCell>
-      <PaperTableCell>{offer.term.duration} days</PaperTableCell>
-      <PaperTableCell>{offerExpires}</PaperTableCell>
-      <PaperTableCell>
-        {isOwner && !hasPermission && !isPending && offer.status === OfferStatus.Ready && (
-          <Button
-            variant="contained"
-            className="offer slim"
-            onClick={handleRequestPermission}
-          >
-            Accept
-          </Button>
-        )}
+        {isOwner &&
+          !hasPermission &&
+          !isPending &&
+          offer.status === OfferStatus.Ready &&
+          Date.parse(offer.term.expirationAt) > Date.now() && (
+            <Button
+              variant="contained"
+              className="offer slim"
+              onClick={handleRequestPermission}
+            >
+              Accept
+            </Button>
+          )}
         {isOwner && hasPermission && !isPending && offer.status === OfferStatus.Ready && (
           <Button variant="contained" className="offer slim" onClick={handleAcceptOffer}>
             Accept

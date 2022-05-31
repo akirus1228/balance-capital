@@ -1,18 +1,15 @@
-import style from "./my-account-page.module.scss";
-import MyAccountActiveLoansTable from "./my-account-active-loans-table";
-import { Box, Container, Tab, Tabs, Typography } from "@mui/material";
-import { useWeb3Context } from "@fantohm/shared-web3";
-import { useGetLoansQuery } from "../../api/backend-api";
-import { LoanStatus } from "../../types/backend-types";
+//import style from "./my-account-page.module.scss";
+import { Box, Container, Tab, Tabs } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { AccountProfile } from "./account-profile/account-profile";
-import { ReactNode, SyntheticEvent, useState } from "react";
+import { ReactNode, SyntheticEvent, useMemo, useState } from "react";
 import MyAccountLoans from "./my-account-loans/my-account-loans";
 import MyAccountDetails from "./my-account-details/my-account-details";
 import MyAccountOffers from "./my-account-offers/my-account-offers";
 import MyAccountAssets from "./my-account-assets/my-account-assets";
 import MyAccountActivity from "./my-account-activity/my-account-activity";
+import { useLocation, useNavigate } from "react-router-dom";
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -51,14 +48,23 @@ function TabPanel(props: TabPanelProps) {
 export const MyAccountPage = (): JSX.Element => {
   const { user } = useSelector((state: RootState) => state.backend);
   const [activeTab, setActiveTab] = useState(0);
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  useMemo(() => {
+    setActiveTab(+location.hash.substring(1));
+  }, [location]);
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
-    setActiveTab(newValue);
+    navigate(`/my-account#${newValue.toString()}`);
+    //setActiveTab(newValue);
   };
 
   return (
-    <Container>
-      <AccountProfile user={user} />
+    <Box>
+      <Container>
+        <AccountProfile user={user} />
+      </Container>
       <Box sx={{ borderBottom: 2, borderColor: "divider" }}>
         <Tabs value={activeTab} onChange={handleTabChange}>
           <Tab label="Details" {...a11yProps(0)} />
@@ -83,7 +89,7 @@ export const MyAccountPage = (): JSX.Element => {
       <TabPanel value={activeTab} index={4}>
         <MyAccountActivity />
       </TabPanel>
-    </Container>
+    </Box>
   );
 };
 
