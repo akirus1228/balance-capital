@@ -8,6 +8,11 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { AccountProfile } from "./account-profile/account-profile";
 import { ReactNode, SyntheticEvent, useState } from "react";
+import MyAccountLoans from "./my-account-loans/my-account-loans";
+import MyAccountDetails from "./my-account-details/my-account-details";
+import MyAccountOffers from "./my-account-offers/my-account-offers";
+import MyAccountAssets from "./my-account-assets/my-account-assets";
+import MyAccountActivity from "./my-account-activity/my-account-activity";
 
 export function shorten(str: string) {
   if (str.length < 10) return str;
@@ -48,45 +53,7 @@ function TabPanel(props: TabPanelProps) {
 }
 
 export const MyAccountPage = (): JSX.Element => {
-  const { address } = useWeb3Context();
-  const { authSignature, user } = useSelector((state: RootState) => state.backend);
-  const { data: activeBorrowerLoans } = useGetLoansQuery(
-    {
-      take: 50,
-      skip: 0,
-      status: LoanStatus.Active,
-      borrowerAddress: address,
-    },
-    { skip: !address || !authSignature }
-  );
-  const { data: activeLenderLoans } = useGetLoansQuery(
-    {
-      take: 50,
-      skip: 0,
-      status: LoanStatus.Active,
-      lenderAddress: address,
-    },
-    { skip: !address || !authSignature }
-  );
-  const { data: historicalBorrowerLoans } = useGetLoansQuery(
-    {
-      take: 50,
-      skip: 0,
-      status: LoanStatus.Complete,
-      borrowerAddress: address,
-    },
-    { skip: !address || !authSignature }
-  );
-  const { data: historicalLenderLoans } = useGetLoansQuery(
-    {
-      take: 50,
-      skip: 0,
-      status: LoanStatus.Complete,
-      lenderAddress: address,
-    },
-    { skip: !address || !authSignature }
-  );
-
+  const { user } = useSelector((state: RootState) => state.backend);
   const [activeTab, setActiveTab] = useState(0);
 
   const handleTabChange = (event: SyntheticEvent, newValue: number) => {
@@ -106,28 +73,19 @@ export const MyAccountPage = (): JSX.Element => {
         </Tabs>
       </Box>
       <TabPanel value={activeTab} index={0}>
-        Details
+        <MyAccountDetails />
       </TabPanel>
       <TabPanel value={activeTab} index={1}>
-        <Box className={style["myAccountContainer"]}>
-          <h2>Active loans as borrower({activeBorrowerLoans?.length})</h2>
-          <MyAccountActiveLoansTable loans={activeBorrowerLoans} />
-          <h2>Active loans as lender({activeLenderLoans?.length})</h2>
-          <MyAccountActiveLoansTable loans={activeLenderLoans} />
-          <h2>Previous loans as borrower({historicalBorrowerLoans?.length})</h2>
-          <MyAccountActiveLoansTable loans={historicalBorrowerLoans} />
-          <h2>Previous loans as lender({historicalLenderLoans?.length})</h2>
-          <MyAccountActiveLoansTable loans={historicalLenderLoans} />
-        </Box>
+        <MyAccountLoans />
       </TabPanel>
       <TabPanel value={activeTab} index={2}>
-        Offers
+        <MyAccountOffers />
       </TabPanel>
       <TabPanel value={activeTab} index={3}>
-        Assets
+        <MyAccountAssets />
       </TabPanel>
       <TabPanel value={activeTab} index={4}>
-        Activity
+        <MyAccountActivity />
       </TabPanel>
     </Container>
   );
