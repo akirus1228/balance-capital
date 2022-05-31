@@ -5,7 +5,7 @@
         margin-bottom:0;
     }
     .type {
-         
+
     }
     .typeContainer {
         padding:  0.75em 2em;
@@ -62,6 +62,12 @@
         height:4em !important;
     }
 }
+.paperContainerSm {
+      @media (min-width:600px) {
+      position: relative;
+     padding: 2.5em 1.5em 1.5em 1.5em !important;
+  }
+}
 @media (max-width:900px) {
     .walletField, .amountField {
         flex: 0 0 50%;
@@ -111,5 +117,7 @@
     div {max-width:100%;}
     }
     .paperContainer {position:relative; padding:2.5em 1.5em 1.5em 1.5em !important;}
-    .closeDeposit {position:absolute;top:1.5em;right:1.5em;}
+
+  .closeDeposit {position:absolute;top:1.5em;right:1.5em;}
 }
+

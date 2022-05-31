@@ -111,9 +111,9 @@ export const App = (): JSX.Element => {
         <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
           <Fade in={true} mountOnEnter unmountOnExit>
             <Backdrop open={true} className={` ${style["backdropElement"]}`}>
-              <Paper className={` ${style["paperContainer"]}`}>
+              <Paper className={` ${style["paperContainerSm"]}`}>
                 <Box
-                  sx={{ display: "block", justifyContent: "flex-end" }}
+                  sx={{ display: "flex", justifyContent: "flex-end" }}
                   className={style["closeDeposit"]}
                 >
                   <Typography>
