@@ -66,7 +66,7 @@ export const MyAccountPage = (): JSX.Element => {
         <AccountProfile user={user} />
       </Container>
       <Box sx={{ borderBottom: 2, borderColor: "divider" }}>
-        <Tabs value={activeTab} onChange={handleTabChange}>
+        <Tabs value={activeTab} onChange={handleTabChange} centered>
           <Tab label="Details" {...a11yProps(0)} />
           <Tab label="Loans" {...a11yProps(1)} />
           <Tab label="Offers" {...a11yProps(2)} />

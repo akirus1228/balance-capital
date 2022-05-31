@@ -1,5 +1,5 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
-import { Box } from "@mui/material";
+import { Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../../api/backend-api";
 import { RootState } from "../../../store";
@@ -52,7 +52,7 @@ export function MyAccountLoans(props: MyAccountLoansProps) {
   );
 
   return (
-    <Box className={style["myAccountContainer"]}>
+    <Container className={style["myAccountContainer"]} maxWidth="xl">
       <h2>Active loans as borrower({activeBorrowerLoans?.length})</h2>
       <MyAccountActiveLoansTable loans={activeBorrowerLoans} />
       <h2>Active loans as lender({activeLenderLoans?.length})</h2>
@@ -61,7 +61,7 @@ export function MyAccountLoans(props: MyAccountLoansProps) {
       <MyAccountActiveLoansTable loans={historicalBorrowerLoans} />
       <h2>Previous loans as lender({historicalLenderLoans?.length})</h2>
       <MyAccountActiveLoansTable loans={historicalLenderLoans} />
-    </Box>
+    </Container>
   );
 }
 

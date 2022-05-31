@@ -1,3 +1,4 @@
+import { Container } from "@mui/material";
 import { useSelector } from "react-redux";
 import OwnerInfo from "../../../components/owner-info/owner-info";
 import { RootState } from "../../../store";
@@ -9,7 +10,11 @@ export interface MyAccountDetailsProps {}
 export function MyAccountDetails(props: MyAccountDetailsProps) {
   const { user } = useSelector((state: RootState) => state.backend);
 
-  return <OwnerInfo owner={user} />;
+  return (
+    <Container maxWidth="lg">
+      <OwnerInfo owner={user} />
+    </Container>
+  );
 }
 
 export default MyAccountDetails;
