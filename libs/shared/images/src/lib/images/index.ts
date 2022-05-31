@@ -8,6 +8,7 @@ import WalletIcon from "./USDB_stablecoin_wallet_icon.png";
 import MintIcon from "./USDB_Mint_Icon.png";
 import xFhmIcon from "./USDB_xFHM_Icon.png";
 import BridgeIcon from "./USDB_Bridge_Icon.png";
+
 export {
   NFTsIcon,
   TradFiIcon,
