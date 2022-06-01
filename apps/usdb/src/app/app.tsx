@@ -33,6 +33,7 @@ import BalanceAboutPage from "./pages/balance-about-page/balance-about-page";
 import { HomeHeader } from "./components/template/header/home-header";
 import HomePage from "./pages/home/home-page";
 import FhmPage from "./pages/fhm/fhm-page";
+import BlogPage from "./pages/blog/blog-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -119,6 +120,7 @@ export const App = (): JSX.Element => {
           <Route path="/fhm" element={<FhmPage />} />
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/about" element={<BalanceAboutPage />} />
+          <Route path="/blog" element={<BlogPage />} />
           <Route
             path="*"
             element={

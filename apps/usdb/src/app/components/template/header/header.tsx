@@ -28,7 +28,7 @@ import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
-import { BalanceLogo } from "@fantohm/shared/images";
+import { BalanceLogo, BalanceLogoDark } from "@fantohm/shared/images";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
 import { headerPages, Page } from "../../../constants/nav";
@@ -157,7 +157,11 @@ export const Header = (): JSX.Element => {
             }}
           >
             <Link to="/">
-              <img src={BalanceLogo} alt="USDB logo" width="60%" />
+              <img
+                src={themeType === "light" ? BalanceLogo : BalanceLogoDark}
+                alt="USDB logo"
+                width="50%"
+              />
             </Link>
           </Typography>
 
