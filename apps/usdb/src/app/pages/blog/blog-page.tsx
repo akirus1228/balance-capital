@@ -14,11 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import style from "./blog-page.module.scss";
-import {
-  BalanceDefine2,
-  BalanceHeroImage,
-  BalanceEmailBanner,
-} from "@fantohm/shared/images";
+import { BalanceEmailBanner, BlogBanner } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { error, info } from "@fantohm/shared-web3";
@@ -94,83 +90,86 @@ export const BlogPage = (): JSX.Element => {
           flexDirection: "column",
           alignItems: "center",
           paddingTop: { xs: "52px", md: "112px" },
+          width: "100%",
         }}
         className={style["hero"]}
       >
         <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
           <Grid
             item
+            className="email-div"
             md={12}
             order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ height: "40em" }}
+            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
           >
             <Paper
+              className="email-box"
               style={{
-                background: `url(${BalanceHeroImage})`,
                 width: "100%",
-                height: "100%",
-                borderTopLeftRadius: "80px",
-                borderTopRightRadius: "80px",
-                borderBottomLeftRadius: "0px",
-                borderBottomRightRadius: "0px",
+                borderRadius: "40px",
+                background: `url(${BlogBanner})`,
+                backgroundSize: "cover",
               }}
             >
               <Grid
                 container
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%" }}
                 columnSpacing={2}
                 rowSpacing={{ xs: 4, md: 0 }}
               >
                 <Grid
                   item
-                  md={6}
+                  md={12}
                   order={{ lg: 1 }}
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "start",
+                    justifyContent: "center",
                     alignItems: "center",
                     paddingTop: "30px",
+                    textAlign: "center",
                   }}
                 >
-                  <Box style={{ marginLeft: "5em" }}>
-                    <Typography style={{ fontSize: "36px", color: "#000000" }}>
-                      Infrastructure for decentralized finance
-                    </Typography>
-                    <Typography style={{ marginTop: "20px", color: "#000000" }}>
-                      We are leveraging our decentralized business experience to help
-                      build a more sustainable, inclusive crypto investment economy. See
-                      how we're delivering on our commitments alongside our stakeholders
-                      and partners
-                    </Typography>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href="/#get-started"
+                  <Box style={{ textAlign: "center" }}>
+                    <Typography
                       sx={{
-                        px: "3",
-                        display: { xs: "none", md: "flex", width: "30%" },
+                        fontSize: { xs: "24px", md: "36px" },
+                        fontWeight: "500",
+                        color: "#000000",
                       }}
-                      className={style["link"]}
-                      style={{ marginTop: "20px" }}
                     >
-                      Get started
-                    </Button>
+                      The Balance Blog
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
 
-          <Grid item md={3} order={{ lg: 1 }} style={{ width: "100%" }}>
+          <Grid
+            item
+            md={3}
+            order={{ lg: 1 }}
+            style={{ width: "100%" }}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
             <h2 className={style["daiAPR"]}>Filters</h2>
           </Grid>
-          <Grid item md={9} order={{ lg: 1 }} style={{ width: "100%" }}>
+          <Grid
+            item
+            md={9}
+            order={{ lg: 1 }}
+            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+          >
             <h2 className={style["daiAPR"]}>Blog posts</h2>
           </Grid>
-          <Grid item md={3} order={{ lg: 1 }} style={{ width: "100%" }}>
+          <Grid
+            item
+            md={3}
+            order={{ lg: 1 }}
+            style={{ width: "100%" }}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
             <FormControl>
               <RadioGroup
                 aria-labelledby="demo-radio-buttons-group-label"
@@ -195,16 +194,17 @@ export const BlogPage = (): JSX.Element => {
               </RadioGroup>
             </FormControl>
           </Grid>
-          <Grid item md={9} order={{ lg: 1 }} style={{ width: "100%" }}>
-            <Grid
-              container
-              style={{ width: "100%", height: "100%" }}
-              columnSpacing={2}
-              rowSpacing={{ xs: 4, md: 0 }}
-            >
+          <Grid
+            item
+            md={9}
+            order={{ lg: 1 }}
+            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+          >
+            <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
               <Grid
                 item
                 className="email-div"
+                xs={12}
                 md={4}
                 order={{ lg: 1 }}
                 style={{ width: "100%" }}

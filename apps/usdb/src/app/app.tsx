@@ -34,6 +34,7 @@ import { HomeHeader } from "./components/template/header/home-header";
 import HomePage from "./pages/home/home-page";
 import FhmPage from "./pages/fhm/fhm-page";
 import BlogPage from "./pages/blog/blog-page";
+import BlogPostPage from "./components/blog-page/blog-post-page";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -85,7 +86,6 @@ export const App = (): JSX.Element => {
     switch (location.pathname) {
       case "/trad-fi":
       case "/staking":
-      case "/about":
         document.body.classList.add("heroBackground");
         break;
       default:
@@ -93,6 +93,7 @@ export const App = (): JSX.Element => {
     }
   }, [location]);
 
+  const name = "test";
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -101,7 +102,8 @@ export const App = (): JSX.Element => {
         <Messages />
         {location.pathname === "/" ||
         location.pathname === "/about" ||
-        location.pathname === "/fhm" ? (
+        location.pathname === "/fhm" ||
+        location.pathname.includes("/blog") ? (
           <HomeHeader />
         ) : (
           <Header />
@@ -121,6 +123,8 @@ export const App = (): JSX.Element => {
           <Route path="/my-account" element={<MyAccount />} />
           <Route path="/about" element={<BalanceAboutPage />} />
           <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:name" element={<BlogPostPage />} />
+
           <Route
             path="*"
             element={

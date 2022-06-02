@@ -8,16 +8,23 @@
   top: -36px;
 }
 
+.heroContainer {
+  margin-left: 10%;
+  margin-right: 10%;
+}
+
 .titleWrapper {
   background-color: #000;
   border-radius: 2em;
   color: #fff;
 
-  font-size: 13px;
-  @media (max-width: 900px) {
-    font-size: 12px;
+  font-size:13px;
+  @media (max-width:900px) {
+    font-size:12px;
   }
-  @media (max-width: 600px) {
-    font-size: 10px;
+  @media (max-width:600px) {
+    font-size:10px;
   }
+
+
 }

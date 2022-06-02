@@ -5,8 +5,6 @@ import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
 import style from "./blog-post.module.scss";
 import { BalanceLogoDark, BalanceTwitter } from "@fantohm/shared/images";
-import { withDeps } from "@nrwl/workspace/src/core/project-graph";
-import css from "../../pages/trad-fi/deposit-choice/deposit-choice.module.scss";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps {
@@ -43,7 +41,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
       >
         <Grid
           container
-          style={{ width: "100%", height: "100%" }}
+          sx={{ width: { xs: "100%", md: "100%" }, height: "100%" }}
           columnSpacing={2}
           rowSpacing={{ xs: 4, md: 0 }}
           direction="row"
@@ -57,7 +55,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
           >
             <img src={BalanceLogoDark} alt="DAI token" className={style["daiIcon"]} />
             <Box
-              className={css["titleWrapper"]}
+              className={style["titleWrapper"]}
               style={{
                 height: "30px",
                 justifyContent: "center",
@@ -69,6 +67,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
                 style={{
                   width: "100%",
                   height: "100%",
+                  paddingTop: "5px",
                   fontSize: "12px",
                   justifyContent: "center",
                   alignItems: "center",
@@ -91,9 +90,9 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={12}
             order={{ lg: 1 }}
-            style={{ height: "10%", overflow: "hidden" }}
+            style={{ height: "10%", overflow: "hidden", width: "100%" }}
           >
-            <h1>{props.blogTitle || "title"}</h1>
+            <h1 style={{ fontSize: "16px" }}>{props.blogTitle || "title"}</h1>
           </Grid>
           <Grid
             item
@@ -109,7 +108,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={6}
             order={{ lg: 1 }}
-            style={{ height: "100%", overflow: "hidden" }}
+            sx={{ height: "100%", overflow: "hidden", marginLeft: { xs: "30px" } }}
           >
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
               {props.blogTitle || "title"}
