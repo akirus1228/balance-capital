@@ -5,18 +5,18 @@ import {
   Box,
   CircularProgress,
   IconButton,
-  ListItemText,
   Menu,
   MenuItem,
   Paper,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 import { MouseEvent, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetUserNotificationsQuery } from "../../../api/backend-api";
 import { RootState } from "../../../store";
 import { NotificationStatus } from "../../../types/backend-types";
 import arrowUpRight from "../../../../assets/icons/arrow-right-up.svg";
-import { Link } from "react-router-dom";
+import profilePlaceholder from "../../../../assets/images/profile-placeholder.svg";
 
 export const NotificationMenu = (): JSX.Element => {
   // menu controls
@@ -74,8 +74,9 @@ export const NotificationMenu = (): JSX.Element => {
         PaperProps={{
           style: {
             maxHeight: "60vh",
-            padding: "2em",
+            padding: "1em 2em",
             margin: "0",
+            borderRadius: "24px",
           },
         }}
         anchorOrigin={{
@@ -102,7 +103,10 @@ export const NotificationMenu = (): JSX.Element => {
           <MenuItem key={`not-men-${i}`} sx={{ maxWidth: "400px" }}>
             <Paper className="w100">
               <Box className="flex fr">
-                <Avatar />
+                <Avatar
+                  sx={{ mr: "1em" }}
+                  src={user.profileImageUrl || profilePlaceholder}
+                />
                 <span>{notification.message}</span>
               </Box>
             </Paper>
