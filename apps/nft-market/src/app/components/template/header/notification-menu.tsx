@@ -31,7 +31,7 @@ export const NotificationMenu = (): JSX.Element => {
   // user data
   const { user } = useSelector((state: RootState) => state.backend);
   const { data: notifications, isLoading } = useGetUserNotificationsQuery(
-    { userAddress: user.address, status: NotificationStatus.Unread, skip: 0, take: 5 },
+    { userAddress: user.address, status: NotificationStatus.Unread, skip: 0, take: 4 },
     { skip: !user || !user.address }
   );
 
@@ -65,7 +65,6 @@ export const NotificationMenu = (): JSX.Element => {
         MenuListProps={{
           "aria-labelledby": "user-menu-button",
           sx: {
-            width: 230,
             "& .MuiMenuItem-root": {
               whiteSpace: "normal",
             },
@@ -73,9 +72,8 @@ export const NotificationMenu = (): JSX.Element => {
         }}
         PaperProps={{
           style: {
-            maxHeight: "60vh",
-            padding: "1em 2em",
-            margin: "0",
+            padding: "0em 1.5em 0.5em 1.5em",
+            margin: "1em 0 0 0",
             borderRadius: "24px",
           },
         }}
@@ -88,7 +86,7 @@ export const NotificationMenu = (): JSX.Element => {
           horizontal: "right",
         }}
       >
-        <Box className="flex fr fj-sb">
+        <Box className="flex fr fj-sb" sx={{ mt: "1em" }}>
           <span>Notifications</span>
           <Link to={"/my-account#4"} style={{ color: "#8991A2" }} onClick={handleClose}>
             view all{" "}
@@ -101,8 +99,8 @@ export const NotificationMenu = (): JSX.Element => {
         </Box>
         {notifications?.map((notification, i: number) => (
           <MenuItem key={`not-men-${i}`} sx={{ maxWidth: "400px" }}>
-            <Paper className="w100">
-              <Box className="flex fr">
+            <Paper className="w100" sx={{ height: "5em", padding: "1em" }}>
+              <Box className="flex fr ai-c w100">
                 <Avatar
                   sx={{ mr: "1em" }}
                   src={user.profileImageUrl || profilePlaceholder}
@@ -112,6 +110,9 @@ export const NotificationMenu = (): JSX.Element => {
             </Paper>
           </MenuItem>
         ))}
+        <Box className="flex fr fj-c" sx={{ mt: "1em" }}>
+          <span style={{ color: "#8991A2" }}>End of recent activity</span>
+        </Box>
       </Menu>
     </>
   );

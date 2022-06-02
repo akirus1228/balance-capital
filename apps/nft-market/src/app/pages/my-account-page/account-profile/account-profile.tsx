@@ -29,8 +29,8 @@ export const AccountProfile = ({ user }: AccountProfileProps): JSX.Element => {
 
   return (
     <Box sx={{ mb: "5em" }}>
-      <Box className="flex fr fj-sb ai-c">
-        <Box className="flex fr fj-sb ai-c">
+      <Box className="flex fr fj-sb ai-c fw">
+        <Box className="flex fr fj-sb ai-c fw">
           <Box className={`${style["profileImageContainer"]} flex fr ai-c`}>
             <img
               src={profileImagePlaceholder}
