@@ -173,6 +173,14 @@ export enum NotificationStatus {
   Unread = "UNREAD",
 }
 
+export enum NotificationContext {
+  Account = "ACCOUNT",
+  Asset = "ASSET",
+  Offer = "OFFER",
+  Loan = "LOAN",
+  Other = "OTHER",
+}
+
 export enum Importance {
   High = "HIGH",
   Medium = "MEDIUM",
@@ -186,10 +194,11 @@ export type AllNotificationsResponse = {
 
 export type Notification = {
   id?: string;
-  user: LoginResponse;
-  importance: Importance;
+  user: User;
+  importance?: Importance;
   message: string;
-  status: NotificationStatus;
+  status?: NotificationStatus;
+  context: NotificationContext;
 } & StandardBackendObject;
 
 export type ApiResponse = {
@@ -283,6 +292,12 @@ export type BackendOfferQueryParams = {
   lenderAddress: string;
   borrowerAddress: string;
   status: OfferStatus;
+} & BackendStandardQuery;
+
+export type BackendNotificationQueryParams = {
+  status?: NotificationStatus;
+  context?: NotificationContext;
+  userAddress?: string;
 } & BackendStandardQuery;
 
 export type PlatformWalletInfo = {

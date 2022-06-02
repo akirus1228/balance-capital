@@ -26,6 +26,7 @@ import {
   BackendOfferQueryParams,
   BackendStandardQuery,
   PlatformWalletInfo,
+  BackendNotificationQueryParams,
 } from "../types/backend-types";
 import { ListingQueryParam } from "../store/reducers/interfaces";
 import { RootState } from "../store";
@@ -129,67 +130,6 @@ const createListingResponseToListing = (
 ): Listing => {
   const { term, ...listing } = createListingResponse;
   return { ...listing, term: term };
-};
-
-export const getNotifications = (
-  address: string,
-  signature: string
-): Promise<AllNotificationsResponse> => {
-  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/all`;
-
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllNotificationsResponse>) => {
-      return resp.data;
-    });
-};
-
-export const deleteNotification = async (
-  address: string,
-  signature: string,
-  id: string | undefined
-): Promise<ApiResponse | null> => {
-  if (typeof id !== "string") return null;
-  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${id}`;
-
-  return await axios
-    .delete(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<ApiResponse>) => {
-      return resp.data;
-    });
-};
-
-export const markAsRead = async (
-  address: string,
-  signature: string,
-  notification: Notification | undefined
-): Promise<ApiResponse | null> => {
-  if (!notification || typeof notification.id !== "string") return null;
-  const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${notification.id}`;
-
-  const putParams: EditNotificationRequest = {
-    id: notification.id,
-    importance: notification.importance,
-    message: notification.message,
-    status: NotificationStatus.Read,
-  };
-  return await axios
-    .put(url, putParams, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<ApiResponse>) => {
-      return resp.data;
-    });
 };
 
 const standardQueryParams: BackendStandardQuery = {
@@ -435,6 +375,40 @@ export const backendApi = createApi({
       },
       invalidatesTags: ["Asset", "Listing", "Terms", "Offer"],
     }),
+    // User Notifications
+    getUserNotifications: builder.query<
+      Notification[],
+      Partial<BackendNotificationQueryParams>
+    >({
+      query: (queryParams) => ({
+        url: `user-notification/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Notification[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({ type: "Notification" as const, id })),
+              "Notification",
+            ]
+          : ["Notification"],
+    }),
+    updateUserNotification: builder.mutation<
+      Notification,
+      Partial<Notification> & Pick<Notification, "id">
+    >({
+      query: ({ id, ...patch }) => ({
+        url: `notification/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Notification, meta, arg) => response,
+      invalidatesTags: ["Notification"],
+    }),
     // Wallet
     getWallet: builder.query<PlatformWalletInfo, string | undefined>({
       query: (walletAddress) => ({
@@ -464,4 +438,5 @@ export const {
   useUpdateOfferMutation,
   useDeleteOfferMutation,
   useGetWalletQuery,
+  useGetUserNotificationsQuery,
 } = backendApi;

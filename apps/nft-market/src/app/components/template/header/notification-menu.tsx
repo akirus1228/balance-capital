@@ -1,6 +1,18 @@
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { Avatar, Badge, IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
+import {
+  Avatar,
+  Badge,
+  Box,
+  CircularProgress,
+  IconButton,
+  ListItemText,
+  Menu,
+  MenuItem,
+} from "@mui/material";
 import { MouseEvent, useState } from "react";
+import { useSelector } from "react-redux";
+import { useGetUserNotificationsQuery } from "../../../api/backend-api";
+import { RootState } from "../../../store";
 import {
   Importance,
   Notification,
@@ -17,24 +29,19 @@ export const NotificationMenu = (): JSX.Element => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  // user data
+  const { user } = useSelector((state: RootState) => state.backend);
+  const { data: notifications, isLoading } = useGetUserNotificationsQuery(
+    { userAddress: user.address, status: NotificationStatus.Unread },
+    { skip: !user || !user.address }
+  );
 
-  const notification: Notification = {
-    user: {
-      address: "",
-      createdAt: "",
-      description: "",
-      email: "",
-      id: "",
-      name: "",
-      profileImageUrl: "",
-      updatedAt: "",
-    },
-    importance: Importance.High,
-    message: "Your loan for CyptoPunk #1234 is due in 24 hours",
-    status: NotificationStatus.Unread,
-  };
-  const notifications: Notification[] = [notification, notification];
-
+  if (isLoading)
+    return (
+      <Box className="flex fr fj-c ai-c">
+        <CircularProgress />
+      </Box>
+    );
   return (
     <>
       <IconButton
@@ -62,8 +69,8 @@ export const NotificationMenu = (): JSX.Element => {
         sx={{ display: "flex", flexDirection: "column" }}
       >
         <p>Notifications</p>
-        <a href={"/notifications"}>view all</a>
-        {notifications.map((bond, i: number) => (
+        <a href={"/my-account#4"}>view all</a>
+        {notifications?.map((notification, i: number) => (
           <MenuItem key={`not-men-${i}`}>
             <Avatar />
             <ListItemText primary={notification.message} />
