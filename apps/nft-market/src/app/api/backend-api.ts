@@ -132,6 +132,11 @@ const createListingResponseToListing = (
   return { ...listing, term: term };
 };
 
+const notificationDateOldestFirst = (a: Notification, b: Notification): number => {
+  if (!a.createdAt || !b.createdAt) return 0;
+  return Date.parse(b.createdAt) - Date.parse(a.createdAt);
+};
+
 const standardQueryParams: BackendStandardQuery = {
   skip: 0,
   take: 50,
@@ -388,7 +393,7 @@ export const backendApi = createApi({
         },
       }),
       transformResponse: (response: { count: number; data: Notification[] }, meta, arg) =>
-        response.data,
+        response.data.sort(notificationDateOldestFirst),
       providesTags: (result, error, queryParams) =>
         result
           ? [
@@ -402,7 +407,7 @@ export const backendApi = createApi({
       Partial<Notification> & Pick<Notification, "id">
     >({
       query: ({ id, ...patch }) => ({
-        url: `notification/${id}`,
+        url: `user-notification/${id}`,
         method: "PUT",
         body: { ...patch, id },
       }),
@@ -439,4 +444,5 @@ export const {
   useDeleteOfferMutation,
   useGetWalletQuery,
   useGetUserNotificationsQuery,
+  useUpdateUserNotificationMutation,
 } = backendApi;
