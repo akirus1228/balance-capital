@@ -47,9 +47,10 @@ const appSlice = createSlice({
     },
     clearAlert: (state, action: PayloadAction<number>) => {
       state.alerts = [
-        ...state.alerts.filter(
-          (alert: AlertMsg) => alert.startSeconds !== action.payload
-        ),
+        ...state.alerts.map((alert: AlertMsg) => {
+          if (alert.startSeconds !== action.payload) return alert;
+          return { ...alert, open: false };
+        }),
       ];
     },
   },

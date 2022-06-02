@@ -9,3 +9,13 @@
     border-radius: 50%;
     border: 5px solid white;
 }
+
+@media (max-width: 600px) {
+    .profileImageContainer {
+        height: 225px;
+        width: 225px
+    }
+}
+@media (max-width: 360px) {
+
+}
