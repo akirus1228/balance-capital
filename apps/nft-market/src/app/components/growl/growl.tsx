@@ -1,11 +1,11 @@
 import { Alert, AlertTitle, LinearProgress, Snackbar } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { AlertMsg, clearAlert } from "../../store/reducers/app-slice";
 import "./alerts.module.scss";
 
-export type AlertColor = "success" | "info" | "warning" | "error";
+export type GrowlColor = "success" | "info" | "warning" | "error";
 
 export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
   const [progress, setProgress] = useState(100);
@@ -29,7 +29,7 @@ export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
   return <LinearProgress variant="determinate" value={progress} />;
 };
 
-export const Alerts = (): JSX.Element => {
+export const Growl = (): JSX.Element => {
   const { alerts } = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
 
@@ -48,7 +48,7 @@ export const Alerts = (): JSX.Element => {
           <Alert
             variant="filled"
             icon={false}
-            severity={alert.severity as AlertColor}
+            severity={alert.severity as GrowlColor}
             onClose={() => handleClose(alert)}
             style={{ wordBreak: "break-word", borderRadius: "10px" }}
           >
@@ -62,4 +62,4 @@ export const Alerts = (): JSX.Element => {
   );
 };
 
-export default Alerts;
+export default Growl;

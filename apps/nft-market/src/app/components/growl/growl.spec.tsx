@@ -1,10 +1,10 @@
 import { render } from "@testing-library/react";
 
-import Alerts from "./alerts";
+import Growl from "./growl";
 
-describe("Alerts", () => {
+describe("Growl", () => {
   it("should render successfully", () => {
-    const { baseElement } = render(<Alerts />);
+    const { baseElement } = render(<Growl />);
     expect(baseElement).toBeTruthy();
   });
 });

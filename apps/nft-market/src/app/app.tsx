@@ -22,7 +22,7 @@ import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount, logout } from "./store/reducers/backend-slice";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
 import { TestHelper } from "./pages/test-helper/test-helper";
-import Alerts from "./components/alerts/alerts";
+import Growl from "./components/growl/growl";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -118,7 +118,7 @@ export const App = (): JSX.Element => {
       <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
         {/* <Messages /> */}
         <Header />
-        <Alerts />
+        <Growl />
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
