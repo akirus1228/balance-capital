@@ -135,6 +135,10 @@ export const LenderAssetFilter = ({
           min={0}
           max={10000}
         />
+        <Box className="flex fj-sb">
+          <span style={{ fontSize: "10px" }}>{priceRange[0]} USDB</span>
+          <span style={{ fontSize: "10px" }}>{priceRange[1]} USDB</span>
+        </Box>
       </Box>
       <Box className="flex fc">
         <span>Apr range</span>
@@ -149,6 +153,10 @@ export const LenderAssetFilter = ({
           max={400}
         />
       </Box>
+      <Box className="flex fj-sb">
+        <span style={{ fontSize: "10px" }}>{aprRange[0]}%</span>
+        <span style={{ fontSize: "10px" }}>{aprRange[1]}%</span>
+      </Box>
       <Box className="flex fc">
         <span>Duration</span>
         <Slider
@@ -161,6 +169,10 @@ export const LenderAssetFilter = ({
           min={0}
           max={365}
         />
+      </Box>
+      <Box className="flex fj-sb">
+        <span style={{ fontSize: "10px" }}>{durationRange[0]} days</span>
+        <span style={{ fontSize: "10px" }}>{durationRange[1]} days</span>
       </Box>
       <List component="nav" subheader={<ListSubheader>Collections</ListSubheader>}>
         <ListItemButton>
