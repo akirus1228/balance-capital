@@ -1,5 +1,5 @@
 import { Alert, AlertTitle, LinearProgress, Snackbar } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { AlertMsg, clearAlert } from "../../store/reducers/app-slice";
@@ -7,34 +7,27 @@ import "./alerts.module.scss";
 
 export type AlertColor = "success" | "info" | "warning" | "error";
 
-interface LinearProps {
-  alert: AlertMsg;
-}
-
-export const Linear = (props: LinearProps): JSX.Element => {
+export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
   const [progress, setProgress] = useState(100);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    let isSubscribed = true;
-    const timer = setInterval(() => {
-      if (isSubscribed) {
-        setProgress((oldProgress) => {
-          if (oldProgress === 0) {
-            clearInterval(timer);
-            dispatch(clearAlert(props.alert.startSeconds));
-            return 0;
-          }
-          return oldProgress - 5;
-        });
+    console.log("Starting linear effect");
+    const newTimer = setInterval(() => {
+      const secondsSinceStart = Date.now() - alert.startSeconds;
+      const percentComplete = (secondsSinceStart / alert.duration) * 100;
+      const newProgress = 100 - percentComplete;
+      console.log(`newProgress ${newProgress}`);
+      setProgress(newProgress);
+      if (newProgress <= 0) {
+        console.log(`clear interval ${newTimer}`);
+        window.clearInterval(newTimer);
+        dispatch(clearAlert(alert.startSeconds));
       }
+      console.log(newProgress);
     }, 333);
-
-    return () => {
-      isSubscribed = false;
-      clearInterval(timer);
-    };
-  }, [dispatch, props?.alert]);
+    console.log(`newTimer ${newTimer}`);
+  }, []);
 
   return <LinearProgress variant="determinate" value={progress} />;
 };

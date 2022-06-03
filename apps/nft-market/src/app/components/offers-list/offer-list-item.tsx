@@ -66,6 +66,7 @@ export const OfferListItem = ({ offer, fields }: OfferListItemProps): JSX.Elemen
 
   // is the user the owner of the asset?
   const isOwner = useMemo(() => {
+    if (!user.address || !asset.owner?.address) return false;
     return user.address.toLowerCase() === asset?.owner?.address.toLowerCase();
   }, [asset, user]);
 
