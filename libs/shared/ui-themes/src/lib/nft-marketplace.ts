@@ -203,6 +203,15 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          "&.MuiSlider-colorPrimary": {
+            color: "#374FFF",
+          },
+        },
+      },
+    },
     MuiBackdrop: {
       styleOverrides: {
         root: {

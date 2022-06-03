@@ -60,7 +60,7 @@ export function LenderAsset(props: LenderAssetProps) {
             left: "20px",
             zIndex: 10,
           }}
-          label={capitalizeFirstLetter(asset.status.toLowerCase()) || "Unlisted"}
+          label={capitalizeFirstLetter(asset?.status.toLowerCase()) || "Unlisted"}
           className={chipColor}
         />
       </Box>
