@@ -24,14 +24,17 @@ import { Header, Footer } from "./components/template";
 import { ScrollToTop } from "./components/scroll-to-top/scroll-to-top";
 import { Messages } from "./components/messages/messages";
 import { XfhmLqdrPage } from "./pages/xfhm-lqdr/xfhm-lqdr";
-import { HomePage } from "./pages/home/home-page";
+import { BalanceHomePage } from "./pages/home/balance-home-page";
 import { TradFiDeposit } from "./pages/trad-fi/deposit/deposit";
 import { TradFi } from "./pages/trad-fi/trad-fi";
 import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 import { loadAppDetails, setTheme } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
-import AboutPage from "./pages/about-page/about-page";
+import BalanceAboutPage from "./pages/balance-about-page/balance-about-page";
+import { HomeHeader } from "./components/template/header/home-header";
+import HomePage from "./pages/home/home-page";
+import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
 
@@ -88,10 +91,8 @@ export const App = (): JSX.Element => {
   useEffect(() => {
     //console.log(location.pathname);
     switch (location.pathname) {
-      case "/":
       case "/trad-fi":
       case "/staking":
-      case "/about":
         document.body.classList.add("heroBackground");
         break;
       default:
@@ -162,10 +163,18 @@ export const App = (): JSX.Element => {
         <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
           <ScrollToTop />
           <Messages />
-          <Header />
-
+          {location.pathname === "/" ||
+          location.pathname === "/about" ||
+          location.pathname === "/fhm" ||
+          location.pathname.includes("/blog") ? (
+            <HomeHeader />
+          ) : (
+            <Header />
+          )}
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<BalanceHomePage />} />
+            <Route path="/usdb" element={<HomePage />} />
+            <Route path="/usdb-about" element={<BalanceAboutPage />} />
             <Route path="/staking" element={<StakingChoicePage />} />
             <Route path="/staking-v1" element={<StakingV1Page />} />
             <Route path="/trad-fi" element={<TradFi />}>
@@ -173,8 +182,9 @@ export const App = (): JSX.Element => {
             </Route>
             <Route path="/xfhm" element={<XfhmLqdrPage />} />
             <Route path="/mint" element={<Mint />} />
+            <Route path="/fhm" element={<FhmPage />} />
             <Route path="/my-account" element={<MyAccount />} />
-            <Route path="/about" element={<AboutPage />} />
+            <Route path="/about" element={<BalanceAboutPage />} />
             <Route
               path="*"
               element={
