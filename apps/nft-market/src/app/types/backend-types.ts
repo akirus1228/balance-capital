@@ -173,3 +173,9 @@ export type EditNotificationRequest = {
   message: string;
   status: NotificationStatus;
 };
+
+export type BlogPostDTO = {
+  blogTitle?: string;
+  blogAsset?: string;
+  content?: string;
+};

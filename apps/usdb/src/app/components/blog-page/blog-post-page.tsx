@@ -185,42 +185,42 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             }}
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
-              <Grid
-                item
-                className="email-div"
-                xs={12}
-                md={3}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
-              <Grid
-                item
-                className="email-div"
-                xs={12}
-                md={3}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
-              <Grid
-                item
-                className="email-div"
-                xs={12}
-                md={3}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
+              {/*<Grid*/}
+              {/*  item*/}
+              {/*  className="email-div"*/}
+              {/*  xs={12}*/}
+              {/*  md={3}*/}
+              {/*  order={{ lg: 1 }}*/}
+              {/*  style={{ width: "100%" }}*/}
+              {/*>*/}
+              {/*  <BlogPost>*/}
+              {/*    <h2 className={style["daiAPR"]}>Blog posts</h2>*/}
+              {/*  </BlogPost>*/}
+              {/*</Grid>*/}
+              {/*<Grid*/}
+              {/*  item*/}
+              {/*  className="email-div"*/}
+              {/*  xs={12}*/}
+              {/*  md={3}*/}
+              {/*  order={{ lg: 1 }}*/}
+              {/*  style={{ width: "100%" }}*/}
+              {/*>*/}
+              {/*  <BlogPost>*/}
+              {/*    <h2 className={style["daiAPR"]}>Blog posts</h2>*/}
+              {/*  </BlogPost>*/}
+              {/*</Grid>*/}
+              {/*<Grid*/}
+              {/*  item*/}
+              {/*  className="email-div"*/}
+              {/*  xs={12}*/}
+              {/*  md={3}*/}
+              {/*  order={{ lg: 1 }}*/}
+              {/*  style={{ width: "100%" }}*/}
+              {/*>*/}
+              {/*  <BlogPost>*/}
+              {/*    <h2 className={style["daiAPR"]}>Blog posts</h2>*/}
+              {/*  </BlogPost>*/}
+              {/*</Grid>*/}
             </Grid>
           </Grid>
         </Box>

@@ -11,6 +11,8 @@ import {
   Paper,
   Radio,
   RadioGroup,
+  SxProps,
+  Theme,
   Typography,
 } from "@mui/material";
 import style from "./blog-page.module.scss";
@@ -18,15 +20,19 @@ import { BalanceEmailBanner, BlogBanner } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { error, info } from "@fantohm/shared-web3";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import BlogPost from "../../components/blog-page/blog-post";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const contentful = require("contentful");
 
 export const BlogPage = (): JSX.Element => {
   const [email, setEmail] = useState("");
-
+  const blogPosts = useSelector((state: RootState) => state.backend.blogPosts);
+  console.log(blogPosts);
   const themeType = useSelector((state: RootState) => state.app.theme);
   const dispatch = useDispatch();
-
   async function createContact() {
     const options = {
       method: "POST",
@@ -201,51 +207,19 @@ export const BlogPage = (): JSX.Element => {
             sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
-              <Grid
-                item
-                className="email-div"
-                xs={12}
-                md={4}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
-              <Grid
-                item
-                className="email-div"
-                md={4}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
-              <Grid
-                item
-                className="email-div"
-                md={4}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
-              <Grid
-                item
-                className="email-div"
-                md={4}
-                order={{ lg: 1 }}
-                style={{ width: "100%" }}
-              >
-                <BlogPost>
-                  <h2 className={style["daiAPR"]}>Blog posts</h2>
-                </BlogPost>
-              </Grid>
+              {blogPosts.map((post: BlogPostDTO) => (
+                <Grid
+                  item
+                  className="email-div"
+                  md={4}
+                  order={{ lg: 1 }}
+                  style={{ width: "100%" }}
+                >
+                  <BlogPost post={post}>
+                    <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
+                  </BlogPost>
+                </Grid>
+              ))}
             </Grid>
           </Grid>
           <Grid

@@ -35,6 +35,9 @@ import HomePage from "./pages/home/home-page";
 import FhmPage from "./pages/fhm/fhm-page";
 import BlogPage from "./pages/blog/blog-page";
 import BlogPostPage from "./components/blog-page/blog-post-page";
+import { loadBlogPosts } from "./store/reducers/backend-slice";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const contentful = require("contentful");
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -44,12 +47,12 @@ export const App = (): JSX.Element => {
   const { address, chainId, connected } = useWeb3Context();
   const { bonds, allBonds } = useBonds(chainId || defaultNetworkId);
   const { investments } = useInvestments();
-
   useEffect(() => {
     setTheme(themeType === "light" ? USDBLight : USDBDark);
   }, [themeType]);
 
   useEffect(() => {
+    dispatch(loadBlogPosts());
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
     if (!connected || !chainId) return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
@@ -93,7 +96,6 @@ export const App = (): JSX.Element => {
     }
   }, [location]);
 
-  const name = "test";
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />

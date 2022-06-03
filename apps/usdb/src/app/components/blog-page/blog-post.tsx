@@ -5,6 +5,8 @@ import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
 import style from "./blog-post.module.scss";
 import { BalanceLogoDark, BalanceTwitter } from "@fantohm/shared/images";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps {
@@ -14,15 +16,11 @@ export interface BlogPostProps {
   setTheme?: "light" | "dark";
   tokenImage?: string;
   sx?: SxProps<Theme>;
-  imageLink?: string;
-  blogTitle?: string;
-  product?: string;
-  date?: string;
+  post: BlogPostDTO;
 }
 
 export const BlogPost = (props: BlogPostProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
-
   const theme = useCallback(() => {
     if (props.invertTheme) {
       return themeType === "light" ? USDBDark : USDBLight;
@@ -92,7 +90,9 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             order={{ lg: 1 }}
             style={{ height: "10%", overflow: "hidden", width: "100%" }}
           >
-            <h1 style={{ fontSize: "16px" }}>{props.blogTitle || "title"}</h1>
+            <h1 style={{ fontSize: "16px" }}>
+              {props.post ? props.post.blogTitle : "title"}
+            </h1>
           </Grid>
           <Grid
             item
@@ -111,10 +111,10 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             sx={{ height: "100%", overflow: "hidden", marginLeft: { xs: "30px" } }}
           >
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-              {props.blogTitle || "title"}
+              {props.post ? props.post.blogTitle : "title"}
             </h2>
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-              {props.blogTitle || "date"}
+              {props.post ? props.post.blogTitle : "title"}
             </h2>
           </Grid>
         </Grid>

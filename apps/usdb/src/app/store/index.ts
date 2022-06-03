@@ -2,6 +2,7 @@ import { configureStore, createSelector } from "@reduxjs/toolkit";
 import { web3Reducers } from "@fantohm/shared-web3";
 import { appReducer } from "./reducers/app-slice";
 import { saveState } from "./localstorage";
+import { backendReducer } from "./reducers/backend-slice";
 
 // reducers are named automatically based on the name field in the slice
 // exported in slice files by default as nameOfSlice.reducer
@@ -10,6 +11,7 @@ const store = configureStore({
   reducer: {
     ...web3Reducers,
     app: appReducer,
+    backend: backendReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ serializableCheck: false }),
