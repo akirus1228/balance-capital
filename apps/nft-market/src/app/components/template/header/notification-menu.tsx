@@ -17,6 +17,7 @@ import { RootState } from "../../../store";
 import { NotificationStatus } from "../../../types/backend-types";
 import arrowUpRight from "../../../../assets/icons/arrow-right-up.svg";
 import profilePlaceholder from "../../../../assets/images/profile-placeholder.svg";
+import NotificationMessage from "../../notification-message/notification-message";
 
 export const NotificationMenu = (): JSX.Element => {
   // menu controls
@@ -101,11 +102,7 @@ export const NotificationMenu = (): JSX.Element => {
           <MenuItem key={`not-men-${i}`} sx={{ maxWidth: "400px" }}>
             <Paper className="w100" sx={{ height: "5em", padding: "1em" }}>
               <Box className="flex fr ai-c w100">
-                <Avatar
-                  sx={{ mr: "1em" }}
-                  src={user.profileImageUrl || profilePlaceholder}
-                />
-                <span>{notification.message}</span>
+                <NotificationMessage notification={notification} short={true} />
               </Box>
             </Paper>
           </MenuItem>

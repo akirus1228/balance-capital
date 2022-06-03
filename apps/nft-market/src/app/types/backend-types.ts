@@ -174,11 +174,11 @@ export enum NotificationStatus {
 }
 
 export enum NotificationContext {
-  Account = "ACCOUNT",
-  Asset = "ASSET",
-  Offer = "OFFER",
-  Loan = "LOAN",
-  Other = "OTHER",
+  NewLoan = "NEW_LOAN",
+  Repayment = "REPAYMENT",
+  Liquidation = "LIQUIDATION",
+  NewOffer = "NEW_OFFER",
+  OfferAccepted = "OFFER_ACCEPTED",
 }
 
 export enum Importance {
@@ -192,12 +192,18 @@ export type AllNotificationsResponse = {
   count: number;
 };
 
+export enum UserType {
+  Lender = "LENDER",
+  Borrower = "BORROWER",
+}
+
 export type Notification = {
   id?: string;
   user: User;
   importance?: Importance;
-  message: string;
+  contextId: string;
   status?: NotificationStatus;
+  userType?: UserType;
   context: NotificationContext;
 } & StandardBackendObject;
 

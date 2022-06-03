@@ -37,7 +37,7 @@ import {
   listingToCreateListingRequest,
 } from "../helpers/data-translations";
 import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
-import { updateListings } from "../store/reducers/listing-slice";
+import { updateListing, updateListings } from "../store/reducers/listing-slice";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -227,6 +227,18 @@ export const backendApi = createApi({
           ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
           : ["Listing"],
     }),
+    getListing: builder.query<Listing, string | undefined>({
+      query: (id) => ({
+        url: `asset-listing/${id}`,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Listing } = await queryFulfilled;
+        dispatch(updateListing(data));
+      },
+      providesTags: (result, error, queryParams) => [
+        { type: "Listing" as const, id: result?.id || "" },
+      ],
+    }),
     createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
       query: (body) => {
         return {
@@ -296,6 +308,14 @@ export const backendApi = createApi({
           ? [...result.map(({ id }) => ({ type: "Loan" as const, id })), "Loan"]
           : ["Loan"],
     }),
+    getLoan: builder.query<Loan, string | undefined>({
+      query: (id) => ({
+        url: `loan/${id}`,
+      }),
+      providesTags: (result, error, queryParams) => [
+        { type: "Loan" as const, id: result?.id || "" },
+      ],
+    }),
     createLoan: builder.mutation<Loan, Loan>({
       query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
         const { collection, ...asset } = dropHelperDates({ ...assetListing.asset }); // backend doesn't like collection
@@ -351,6 +371,14 @@ export const backendApi = createApi({
         result
           ? [...result.map(({ id }) => ({ type: "Offer" as const, id })), "Offer"]
           : ["Offer"],
+    }),
+    getOffer: builder.query<Offer, string | undefined>({
+      query: (id) => ({
+        url: `offer/${id}`,
+      }),
+      providesTags: (result, error, queryParams) => [
+        { type: "Offer" as const, id: result?.id || "" },
+      ],
     }),
     createOffer: builder.mutation<Offer, Partial<Offer>>({
       query: (body) => {
@@ -429,8 +457,10 @@ export const {
   useGetAssetsQuery,
   useDeleteAssetMutation,
   useGetListingsQuery,
+  useGetListingQuery,
   useDeleteListingMutation,
   useGetLoansQuery,
+  useGetLoanQuery,
   useCreateLoanMutation,
   useUpdateLoanMutation,
   useDeleteLoanMutation,
@@ -439,6 +469,7 @@ export const {
   useUpdateTermsMutation,
   useDeleteTermsMutation,
   useGetOffersQuery,
+  useGetOfferQuery,
   useCreateOfferMutation,
   useUpdateOfferMutation,
   useDeleteOfferMutation,
