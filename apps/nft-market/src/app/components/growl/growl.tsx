@@ -2,27 +2,30 @@ import { Alert, AlertTitle, LinearProgress, Snackbar } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { AlertMsg, clearAlert } from "../../store/reducers/app-slice";
-import "./alerts.module.scss";
+import { GrowlNotification, clearAlert } from "../../store/reducers/app-slice";
+import "./growl.module.scss";
 
 export type GrowlColor = "success" | "info" | "warning" | "error";
 
-export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
+export const Linear = ({
+  growlNotification,
+}: {
+  growlNotification: GrowlNotification;
+}): JSX.Element => {
   const [progress, setProgress] = useState(100);
   const dispatch = useDispatch();
 
   useEffect(() => {
     console.log("Starting linear effect");
     const newTimer = setInterval(() => {
-      const secondsSinceStart = Date.now() - alert.startSeconds;
-      const percentComplete = (secondsSinceStart / alert.duration) * 100;
+      const secondsSinceStart = Date.now() - growlNotification.startSeconds;
+      const percentComplete = (secondsSinceStart / growlNotification.duration) * 100;
       const newProgress = 100 - percentComplete;
       setProgress(newProgress);
       if (newProgress <= 0) {
         window.clearInterval(newTimer);
-        dispatch(clearAlert(alert.startSeconds));
+        dispatch(clearAlert(growlNotification.startSeconds));
       }
-      console.log(newProgress);
     }, 333);
   }, []);
 
@@ -30,31 +33,31 @@ export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
 };
 
 export const Growl = (): JSX.Element => {
-  const { alerts } = useSelector((state: RootState) => state.app);
+  const { growlNotifications } = useSelector((state: RootState) => state.app);
   const dispatch = useDispatch();
 
-  const handleClose = (alert: AlertMsg) => {
-    dispatch(clearAlert(alert.startSeconds));
+  const handleClose = (growlNotification: GrowlNotification) => {
+    dispatch(clearAlert(growlNotification.startSeconds));
   };
 
   return (
     <>
-      {alerts.map((alert: AlertMsg, index: number) => (
+      {growlNotifications.map((growlNotification: GrowlNotification, index: number) => (
         <Snackbar
-          open={alert.open}
+          open={growlNotification.open}
           key={`alert-${index}`}
           anchorOrigin={{ vertical: "top", horizontal: "center" }}
         >
           <Alert
             variant="filled"
             icon={false}
-            severity={alert.severity as GrowlColor}
-            onClose={() => handleClose(alert)}
+            severity={growlNotification.severity as GrowlColor}
+            onClose={() => handleClose(growlNotification)}
             style={{ wordBreak: "break-word", borderRadius: "10px" }}
           >
-            <AlertTitle>{alert.title}</AlertTitle>
-            {alert.message}
-            <Linear alert={alert} />
+            <AlertTitle>{growlNotification.title}</AlertTitle>
+            {growlNotification.message}
+            <Linear growlNotification={growlNotification} />
           </Alert>
         </Snackbar>
       ))}

@@ -5,10 +5,10 @@ import { RootState } from "..";
 interface AppData {
   readonly loading: boolean;
   readonly checkedConnection: boolean;
-  readonly alerts: AlertMsg[];
+  readonly growlNotifications: GrowlNotification[];
 }
 
-export type AlertMsg = {
+export type GrowlNotification = {
   title?: string;
   message: string;
   duration: number;
@@ -22,7 +22,7 @@ const initialState: AppData = {
   ...previousState,
   loading: true,
   checkedConnection: false,
-  alerts: [],
+  growlNotifications: [],
 };
 
 const appSlice = createSlice({
@@ -35,19 +35,19 @@ const appSlice = createSlice({
     setCheckedConnection: (state, action: PayloadAction<boolean>) => {
       state.checkedConnection = action.payload;
     },
-    addAlert: (state, action: PayloadAction<Partial<AlertMsg>>) => {
+    addAlert: (state, action: PayloadAction<Partial<GrowlNotification>>) => {
       const alert = {
         duration: action.payload.duration || 10000,
         message: action.payload.message || "",
         severity: action.payload.severity || "success",
         startSeconds: Date.now(),
         open: true,
-      } as AlertMsg;
-      state.alerts = [...state.alerts, alert];
+      } as GrowlNotification;
+      state.growlNotifications = [...state.growlNotifications, alert];
     },
     clearAlert: (state, action: PayloadAction<number>) => {
-      state.alerts = [
-        ...state.alerts.map((alert: AlertMsg) => {
+      state.growlNotifications = [
+        ...state.growlNotifications.map((alert: GrowlNotification) => {
           if (alert.startSeconds !== action.payload) return alert;
           return { ...alert, open: false };
         }),
