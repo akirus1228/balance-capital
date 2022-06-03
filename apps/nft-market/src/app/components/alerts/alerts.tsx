@@ -17,16 +17,13 @@ export const Linear = ({ alert }: { alert: AlertMsg }): JSX.Element => {
       const secondsSinceStart = Date.now() - alert.startSeconds;
       const percentComplete = (secondsSinceStart / alert.duration) * 100;
       const newProgress = 100 - percentComplete;
-      console.log(`newProgress ${newProgress}`);
       setProgress(newProgress);
       if (newProgress <= 0) {
-        console.log(`clear interval ${newTimer}`);
         window.clearInterval(newTimer);
         dispatch(clearAlert(alert.startSeconds));
       }
       console.log(newProgress);
     }, 333);
-    console.log(`newTimer ${newTimer}`);
   }, []);
 
   return <LinearProgress variant="determinate" value={progress} />;
