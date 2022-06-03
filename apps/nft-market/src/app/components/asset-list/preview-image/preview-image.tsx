@@ -1,4 +1,5 @@
-import { Box } from "@mui/material";
+import { Box, Zoom } from "@mui/material";
+import { MouseEvent, MouseEventHandler, useState } from "react";
 import { Link } from "react-router-dom";
 import style from "./preview-image.module.scss";
 
