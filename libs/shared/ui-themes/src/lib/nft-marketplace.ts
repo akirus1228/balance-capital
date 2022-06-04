@@ -266,6 +266,12 @@ const globalTheme: ThemeOptions = {
           padding: "0.5em 2em",
           textTransform: "none",
           height: "fit-content",
+          "&.Mui-selected": {
+            "&.highContrast": {
+              backgroundColor: "#000",
+              color: "#FFF",
+            },
+          },
         },
       },
     },

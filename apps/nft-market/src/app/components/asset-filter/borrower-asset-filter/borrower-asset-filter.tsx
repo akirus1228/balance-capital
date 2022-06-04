@@ -18,7 +18,7 @@ export interface BorrowerAssetFilterProps {}
 
 export const BorrowerAssetFilter = (props: BorrowerAssetFilterProps): JSX.Element => {
   return (
-    <Box sx={{ maxWidth: "250px", mr: "auto" }}>
+    <Box sx={{ maxWidth: "250px", ml: "auto" }}>
       <Select
         labelId="asset-sort-by"
         label="Sort by"

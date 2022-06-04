@@ -109,11 +109,11 @@ export const LenderAssetFilter = ({
   );
 
   return (
-    <Box sx={{ maxWidth: "250px", mr: "auto" }}>
+    <Box sx={{ maxWidth: "250px", ml: "auto" }}>
       <Select
         labelId="asset-sort-by"
         label="Sort by"
-        defaultValue="Unlisted"
+        defaultValue="Recent"
         id="asset-sort-select"
         sx={{ width: "100%" }}
         onChange={handleSortChange}

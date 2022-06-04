@@ -43,10 +43,10 @@ export const BorrowPage = (): JSX.Element => {
       </Box>
       <Box sx={{ mt: "3em" }}>
         <Grid container maxWidth="xl" columnSpacing={5}>
-          <Grid item xs={0} md={2}>
+          <Grid item xs={0} md={3}>
             <BorrowerAssetFilter />
           </Grid>
-          <Grid item xs={12} md={10}>
+          <Grid item xs={12} md={9}>
             {(assetsLoading || isAssetLoading) && (
               <Box className="flex fr fj-c">
                 <CircularProgress />
