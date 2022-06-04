@@ -1,0 +1,63 @@
+.iconGridItem {
+  margin-bottom: 25px;
+}
+
+@media (max-width:1200px) {
+
+  .productGrid {
+    width: 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:150px !important;
+    margin-bottom:50px !important;
+  }
+}
+
+@media (max-width:600px) {
+
+  .productGrid {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top:50px !important;
+    margin-bottom:50px !important;
+  }
+
+}
+
+.partnerIcon {
+  max-width: 60%;
+  max-height: 100%;
+  @media (max-width: 200px) {
+    width: 70px;
+    height: auto;
+  }
+}
+
+.auditIcon {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  @media (max-width: 200px) {
+    width: 70px;
+    height: auto;
+  }
+}
+
+.partnerTitle {
+  text-align: center;
+  font-size: 40px;
+  font-weight: 400;
+}
+
+.auditTitle {
+  width: 60%;
+  margin-left: 20%;
+  @media (max-width: 600px) {
+    width: 100%;
+    margin-left: 0 !important;
+  }
+}

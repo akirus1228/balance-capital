@@ -172,9 +172,7 @@ export const App = (): JSX.Element => {
             <Header />
           )}
           <Routes>
-            <Route path="/" element={<BalanceHomePage />} />
-            <Route path="/usdb" element={<HomePage />} />
-            <Route path="/usdb-about" element={<BalanceAboutPage />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/staking" element={<StakingChoicePage />} />
             <Route path="/staking-v1" element={<StakingV1Page />} />
             <Route path="/trad-fi" element={<TradFi />}>
@@ -184,7 +182,6 @@ export const App = (): JSX.Element => {
             <Route path="/mint" element={<Mint />} />
             <Route path="/fhm" element={<FhmPage />} />
             <Route path="/my-account" element={<MyAccount />} />
-            <Route path="/about" element={<BalanceAboutPage />} />
             <Route
               path="*"
               element={

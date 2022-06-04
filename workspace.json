@@ -2,6 +2,7 @@
   "version": 2,
   "projects": {
     "nft-market": "apps/nft-market",
+    "balance": "apps/balance",
     "nft-market-e2e": "apps/nft-market-e2e",
     "shared-fetch-nft": "libs/shared/fetch-nft",
     "shared-helpers": "libs/shared/helpers",
