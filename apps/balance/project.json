@@ -1,6 +1,6 @@
 {
-  "root": "apps/usdb",
-  "sourceRoot": "apps/usdb/src",
+  "root": "apps/balance",
+  "sourceRoot": "apps/balance/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -9,35 +9,35 @@
       "defaultConfiguration": "production",
       "options": {
         "compiler": "babel",
-        "outputPath": "dist/apps/usdb",
-        "index": "apps/usdb/src/index.html",
+        "outputPath": "dist/apps/balance",
+        "index": "apps/balance/src/index.html",
         "baseHref": "/",
-        "main": "apps/usdb/src/main.tsx",
-        "polyfills": "apps/usdb/src/polyfills.ts",
-        "tsConfig": "apps/usdb/tsconfig.app.json",
+        "main": "apps/balance/src/main.tsx",
+        "polyfills": "apps/balance/src/polyfills.ts",
+        "tsConfig": "apps/balance/tsconfig.app.json",
         "assets": [
-          "apps/usdb/src/assets",
-          "apps/usdb/src/android-chrome-192x192.png",
-          "apps/usdb/src/android-chrome-256x256.png",
-          "apps/usdb/src/apple-touch-icon.png",
-          "apps/usdb/src/browserconfig.xml",
-          "apps/usdb/src/favicon.ico",
-          "apps/usdb/src/favicon-16x16.png",
-          "apps/usdb/src/favicon-32x32.png",
-          "apps/usdb/src/mstile-150x150.png",
-          "apps/usdb/src/safari-pinned-tab.svg",
-          "apps/usdb/src/site.webmanifest"
+          "apps/balance/src/assets",
+          "apps/balance/src/android-chrome-192x192.png",
+          "apps/balance/src/android-chrome-256x256.png",
+          "apps/balance/src/apple-touch-icon.png",
+          "apps/balance/src/browserconfig.xml",
+          "apps/balance/src/favicon.ico",
+          "apps/balance/src/favicon-16x16.png",
+          "apps/balance/src/favicon-32x32.png",
+          "apps/balance/src/mstile-150x150.png",
+          "apps/balance/src/safari-pinned-tab.svg",
+          "apps/balance/src/site.webmanifest"
         ],
-        "styles": ["apps/usdb/src/styles.scss"],
+        "styles": ["apps/balance/src/styles.scss"],
         "scripts": [],
-        "webpackConfig": "apps/usdb/webpack.config.js"
+        "webpackConfig": "apps/balance/webpack.config.js"
       },
       "configurations": {
         "production": {
           "fileReplacements": [
             {
-              "replace": "apps/usdb/src/environments/environment.ts",
-              "with": "apps/usdb/src/environments/environment.prod.ts"
+              "replace": "apps/balance/src/environments/environment.ts",
+              "with": "apps/balance/src/environments/environment.prod.ts"
             }
           ],
           "optimization": true,
@@ -52,12 +52,12 @@
     "serve": {
       "executor": "@nrwl/web:dev-server",
       "options": {
-        "buildTarget": "usdb:build:development",
+        "buildTarget": "balance:build:development",
         "hmr": true
       },
       "configurations": {
         "production": {
-          "buildTarget": "usdb:build:production",
+          "buildTarget": "balance:build:production",
           "hmr": false
         }
       }
@@ -66,14 +66,14 @@
       "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/usdb/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["apps/balance/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
-      "outputs": ["coverage/apps/usdb"],
+      "outputs": ["coverage/apps/balance"],
       "options": {
-        "jestConfig": "apps/usdb/jest.config.js",
+        "jestConfig": "apps/balance/jest.config.js",
         "passWithNoTests": true
       }
     }

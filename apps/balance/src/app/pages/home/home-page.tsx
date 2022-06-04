@@ -1,8 +1,8 @@
 import { Box, Container, Grid, Icon } from "@mui/material";
 import style from "./home-page.module.scss";
 import IconGrid from "./icon-grid/icon-grid";
-import USDBLogoLight from "../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../assets/images/USDB-logo-dark.svg";
+import USDBLogoLight from "../../../assets/images/USDB-logo.png";
+import USDBLogoDark from "../../../assets/images/USDB-logo-dark.png";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import { useSelector } from "react-redux";
 import { RootState } from "../../store";

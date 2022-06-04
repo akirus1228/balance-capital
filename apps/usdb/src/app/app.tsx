@@ -163,14 +163,7 @@ export const App = (): JSX.Element => {
         <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
           <ScrollToTop />
           <Messages />
-          {location.pathname === "/" ||
-          location.pathname === "/about" ||
-          location.pathname === "/fhm" ||
-          location.pathname.includes("/blog") ? (
-            <HomeHeader />
-          ) : (
-            <Header />
-          )}
+          <Header />
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/staking" element={<StakingChoicePage />} />
@@ -180,7 +173,6 @@ export const App = (): JSX.Element => {
             </Route>
             <Route path="/xfhm" element={<XfhmLqdrPage />} />
             <Route path="/mint" element={<Mint />} />
-            <Route path="/fhm" element={<FhmPage />} />
             <Route path="/my-account" element={<MyAccount />} />
             <Route
               path="*"
