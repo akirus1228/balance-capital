@@ -10,7 +10,7 @@ import HeaderBlurryImage from "../../components/header-blurry-image/header-blurr
 import { RootState } from "../../store";
 import { OpenseaAssetQueryParam } from "../../store/reducers/interfaces";
 import { selectMyAssets } from "../../store/selectors/asset-selectors";
-import { BackendAssetQueryParams } from "../../types/backend-types";
+import { Asset, BackendAssetQueryParams } from "../../types/backend-types";
 import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
