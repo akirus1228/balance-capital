@@ -73,7 +73,7 @@ export const HomePage = (): JSX.Element => {
                 USDB provides a wide range of financial tools and services to individuals
                 and institutions
               </h3>
-              <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">
+              <a href="/usdb" className={style["heroLink"]} rel="noreferrer">
                 Learn more
                 <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />
               </a>

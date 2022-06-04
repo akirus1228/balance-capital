@@ -22,6 +22,7 @@ export function BalanceIconLink({
   const handleOnClick = useCallback(() => {
     const isHttpLink = link?.startsWith("http");
     if (isHttpLink) window.open(link, "_blank");
+    else if (link && link?.includes(".pdf")) navigate(link);
     else if (link) navigate(link);
   }, [navigate, link]);
   const setOpacity = link ? {} : { opacity: "0.4" };

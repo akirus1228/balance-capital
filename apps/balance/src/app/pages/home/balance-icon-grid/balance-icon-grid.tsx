@@ -1,6 +1,7 @@
 import { Box, Grid, Typography } from "@mui/material";
 import BalanceIconLink from "../../../components/balance-icon-link/balance-icon-link";
 import style from "./balance-icon-grid.module.scss";
+
 import {
   WalletIcon,
   TradFiIcon,
@@ -33,7 +34,7 @@ export const BalanceIconGrid = (): JSX.Element => {
           <BalanceIconLink
             title="USDB Stablecoin"
             icon={TradFiIcon}
-            link="/trad-fi"
+            link="/usdb"
             text="USDB is an ideal tool of decentralised commerce"
           />
         </Grid>
@@ -41,7 +42,7 @@ export const BalanceIconGrid = (): JSX.Element => {
           <BalanceIconLink
             title="FHM"
             icon={USDBFHMIcon}
-            link="https://fantohm.com/"
+            link="/fhm"
             text="The FHM protocol is ideal as a value-capturing reserve"
           />
         </Grid>
@@ -49,7 +50,7 @@ export const BalanceIconGrid = (): JSX.Element => {
           <BalanceIconLink
             title="Liquidity Solutions"
             icon={LiquidityIcon}
-            link="https://beets.fi/#/pool/0x20dc8f03ece2bca3e262314f6ede7b32939331d70002000000000000000001f0"
+            link="../../../../assets/USDB_Liquidity_Solution.pdf"
             text="Our business-to-business solution for on-chain liquidity"
           />
           {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
