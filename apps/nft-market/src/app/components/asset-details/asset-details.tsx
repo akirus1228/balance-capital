@@ -54,15 +54,7 @@ export const AssetDetails = ({
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>
-            <Box
-              className={style["imgContainer"]}
-              sx={{
-                borderRadius: "30px",
-                overflow: "hidden",
-                height: "50vh",
-                width: "50vh",
-              }}
-            >
+            <Box className={style["imgContainer"]}>
               <img src={asset.imageUrl} alt={asset.name || "unknown"} />
             </Box>
           </Grid>

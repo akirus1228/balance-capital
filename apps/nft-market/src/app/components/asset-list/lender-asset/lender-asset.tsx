@@ -6,7 +6,7 @@ import PreviewImage from "../preview-image/preview-image";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import { capitalizeFirstLetter } from "@fantohm/shared-helpers";
-import { Asset, AssetStatus } from "../../../types/backend-types";
+import { AssetStatus } from "../../../types/backend-types";
 import { RootState } from "../../../store";
 import { selectListingFromAsset } from "../../../store/selectors/listing-selectors";
 import { useSelector } from "react-redux";
@@ -37,7 +37,7 @@ export function LenderAsset(props: LenderAssetProps) {
     }
   }, [asset]);
 
-  if (asset === null) {
+  if (asset === null || !asset) {
     return <h3>Loading...</h3>;
   }
 
@@ -60,7 +60,7 @@ export function LenderAsset(props: LenderAssetProps) {
             left: "20px",
             zIndex: 10,
           }}
-          label={capitalizeFirstLetter(asset.status.toLowerCase()) || "Unlisted"}
+          label={capitalizeFirstLetter(asset?.status.toLowerCase()) || "Unlisted"}
           className={chipColor}
         />
       </Box>

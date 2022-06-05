@@ -1,5 +1,6 @@
 import { useWeb3Context } from "@fantohm/shared-web3";
 import { Box, CircularProgress, Container, Grid } from "@mui/material";
+import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useGetListingsQuery } from "../../api/backend-api";
 import { OpenseaAsset, useGetOpenseaAssetsQuery } from "../../api/opensea";
@@ -7,29 +8,49 @@ import BorrowerAssetFilter from "../../components/asset-filter/borrower-asset-fi
 import AssetList from "../../components/asset-list/asset-list";
 import HeaderBlurryImage from "../../components/header-blurry-image/header-blurry-image";
 import { RootState } from "../../store";
+import { OpenseaAssetQueryParam } from "../../store/reducers/interfaces";
 import { selectMyAssets } from "../../store/selectors/asset-selectors";
+import { Asset, BackendAssetQueryParams } from "../../types/backend-types";
 import style from "./borrow-page.module.scss";
 
 export const BorrowPage = (): JSX.Element => {
   const { address } = useWeb3Context();
+  const [displayAssets, setDisplayAssets] = useState<Asset[]>();
+  const [osQuery, setOsQuery] = useState<OpenseaAssetQueryParam>({
+    limit: 50,
+  });
+  const [beQuery, setBeQuery] = useState<BackendAssetQueryParams>({
+    skip: 0,
+    take: 50,
+  });
   const myAssets = useSelector((state: RootState) => selectMyAssets(state, address));
   const { authSignature } = useSelector((state: RootState) => state.backend);
 
   // load assets from opensea api
-  const { data: assets, isLoading: assetsLoading } = useGetOpenseaAssetsQuery(
-    { owner: address, limit: 50 },
-    { skip: !address }
-  );
+  const { data: assets, isLoading: assetsLoading } = useGetOpenseaAssetsQuery(osQuery, {
+    skip: !address,
+  });
 
   // using the opensea assets, crosscheck with backend api for correlated data
-  const { isLoading: isAssetLoading } = useGetListingsQuery(
-    {
+  const { isLoading: isAssetLoading } = useGetListingsQuery(beQuery, {
+    skip: !assets || !authSignature,
+  });
+
+  useEffect(() => {
+    const newQuery = {
+      ...beQuery,
       openseaIds: assets?.map((asset: OpenseaAsset) => asset.id.toString()),
-      skip: 0,
-      take: 50,
-    },
-    { skip: !assets || !authSignature }
-  );
+    };
+    setBeQuery(newQuery);
+  }, [assets]);
+
+  useEffect(() => {
+    const updatedQuery = {
+      ...osQuery,
+      owner: address,
+    };
+    setOsQuery(updatedQuery);
+  }, [address]);
 
   return (
     <Container className={style["borrowPageContainer"]} maxWidth={`xl`}>
@@ -43,10 +64,10 @@ export const BorrowPage = (): JSX.Element => {
       </Box>
       <Box sx={{ mt: "3em" }}>
         <Grid container maxWidth="xl" columnSpacing={5}>
-          <Grid item xs={0} md={2}>
-            <BorrowerAssetFilter />
+          <Grid item xs={0} md={3}>
+            <BorrowerAssetFilter query={beQuery} setQuery={setBeQuery} />
           </Grid>
-          <Grid item xs={12} md={10}>
+          <Grid item xs={12} md={9}>
             {(assetsLoading || isAssetLoading) && (
               <Box className="flex fr fj-c">
                 <CircularProgress />

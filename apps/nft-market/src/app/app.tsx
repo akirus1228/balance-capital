@@ -18,12 +18,12 @@ import { RootState } from "./store";
 import { BorrowPage } from "./pages/borrow-page/borrow-page";
 import { LendPage } from "./pages/lend-page/lend-page";
 import { MyAccountPage } from "./pages/my-account-page/my-account-page";
-import { NotificationsPage } from "./pages/notifications/notifications-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount, logout } from "./store/reducers/backend-slice";
 import Typography from "@mui/material/Typography";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
 import { TestHelper } from "./pages/test-helper/test-helper";
+import Growl from "./components/growl/growl";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -178,35 +178,25 @@ export const App = (): JSX.Element => {
         </Box>
       ) : (
         <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
-          {/* <Messages /> */}
           <Header />
+          <Growl />
           <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/borrow" element={<BorrowPage />} />
-            {/*<Route*/}
-            {/*  path="/borrow/:contractAddress/:tokenId"*/}
-            {/*  element={<BorrowerAssetDetailsPage />}*/}
-            {/*/>*/}
-            <Route path="/notifications" element={<NotificationsPage />} />
-            <Route path="/lend" element={<LendPage />} />
-            <Route path="/my-account" element={<MyAccountPage />} />
-            <Route path="/" element={<HomePage />} />
-            <Route path="/borrow" element={<BorrowPage />} />
-            <Route
-              path="/asset/:contractAddress/:tokenId"
-              element={<AssetDetailsPage />}
-            />
-            <Route path="/th" element={<TestHelper />} />
-            <Route
-              path="*"
-              element={
-                <main style={{ padding: "1rem" }}>
-                  <h1>404</h1>
-                  <p>There's nothing here!</p>
-                </main>
-              }
-            />
-          </Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/borrow" element={<BorrowPage />} />
+          <Route path="/lend" element={<LendPage />} />
+          <Route path="/asset/:contractAddress/:tokenId" element={<AssetDetailsPage />} />
+          <Route path="/my-account" element={<MyAccountPage />} />
+          <Route path="/th" element={<TestHelper />} />
+          <Route
+            path="*"
+            element={
+              <main style={{ padding: "1rem" }}>
+                <h1>404</h1>
+                <p>There's nothing here!</p>
+              </main>
+            }
+          />
+        </Routes>
           <Footer />
         </Box>
       )}
