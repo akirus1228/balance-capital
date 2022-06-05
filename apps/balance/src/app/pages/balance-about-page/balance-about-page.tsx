@@ -85,7 +85,7 @@ export const BalanceAboutPage = (): JSX.Element => {
             <Grid item xs={10} md={12}>
               <h1 className={style["text"]}>
                 The Balance Ecosystem is an open-source economy of conjoined banking and
-                commerce initiatives formed in March of 2022.The Balance Ecosystem is an
+                commerce initiatives formed in March of 2022. The Balance Ecosystem is an
                 open-source economy of conjoined banking and commerce initiatives formed
                 in March of 2022 with the unveiling of investment opportunities derived
                 solely from the technical application, maintenance, and consumer use of
@@ -122,7 +122,7 @@ export const BalanceAboutPage = (): JSX.Element => {
       <BalanceAboutTile
         icon={AboutUSDB}
         title="USDB Stablecoin"
-        text="The Balance ecosystem / organization is formed to carry out the purpose of its name– to balance FHM & USDB against one another in a way that feeds value into the continued use case of both assets. FHM, as a value capturing mechanism, feeds the minting of USDB through a proof of burn mechanism similar to UST on Luna."
+        text="USDB is the Swiss Army Knife of stable coins, combining the benefits of algorithmic supply backing, protocol owned liquidity, traditional banking, and decentralized finance. There are 5 strategies to be employed in maintaining its peg. Over this next epoch of adoption, as USDB gains more use cases, each of these strategies will be deployed or refined as necessary."
         link="https://www.usdbalance.com/"
         docsLink="https://fantohm.gitbook.io/documentation/usdb/introduction"
       />
@@ -137,7 +137,7 @@ export const BalanceAboutPage = (): JSX.Element => {
       <BalanceAboutTile
         icon={AboutBridge}
         title="DEX & Bridge"
-        text="USDB and FHM are expanding beyond the EVM realm with the first bridge to Terra being completed in the near future. We have successfully bridged both ways and are now awaiting the completion of audits to confirm our capability in this regard."
+        text="Bridge & swap thousands of assets across multiple chains with the lowest fees. Through a partnership with Rango Exchange, transactions are intuitively routed through several aggregators to ensure you always get the cheapest fees."
         link="https://app.fantohm.com/#/dex"
       />
       <BalanceAboutTile

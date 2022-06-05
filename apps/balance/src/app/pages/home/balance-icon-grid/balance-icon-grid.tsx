@@ -57,33 +57,21 @@ export const BalanceIconGrid = (): JSX.Element => {
         </Grid>
       </Grid>
       <Grid item md={3} sm={12}>
-        <BalanceIconLink
-          title="NFT Lending"
-          icon={NFTLendingIcon}
-          text="Need brief one-line summary here to describe item"
-        />
+        <BalanceIconLink title="NFT Lending" icon={NFTLendingIcon} text="" />
         {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
       <Grid item md={3} sm={12}>
-        <BalanceIconLink
-          title="Financial NFTs"
-          icon={FinancialNftsIcon}
-          text="Need brief one-line summary here to describe item"
-        />
+        <BalanceIconLink title="Financial NFTs" icon={FinancialNftsIcon} text="" />
       </Grid>
       <Grid item md={3} sm={12}>
-        <BalanceIconLink
-          title="USDB Bank"
-          icon={BankIcon}
-          text="Need brief one-line summary here to describe item"
-        />
+        <BalanceIconLink title="USDB Bank" icon={BankIcon} text="" />
       </Grid>
       <Grid item md={3} sm={12}>
         <BalanceIconLink
           title="Dex & Bridge"
           icon={BridgeIcon}
           link="https://app.fantohm.com/#/dex"
-          text="Need brief one-line summary here to describe item"
+          text="Bridge & swap thousands of assets across multiple chains with the lowest fees."
         />
       </Grid>
     </Grid>

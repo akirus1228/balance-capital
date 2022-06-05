@@ -50,25 +50,35 @@ export const AuditGrid = (): JSX.Element => {
           </Typography>{" "}
         </Grid>
         <Grid item md={3} sm={3}>
-          <img
-            src={theme === USDBLight ? TechrateIcon : TechrateIconDark}
-            alt="USDB logo"
-            className={style["auditIcon"]}
-          />
+          <a
+            href={
+              "https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/Fantohm%20USD%20Full%20Smart%20Contract%20Security%20Audit.pdf"
+            }
+          >
+            <img
+              src={theme === USDBLight ? TechrateIcon : TechrateIconDark}
+              alt="USDB logo"
+              className={style["auditIcon"]}
+            />
+          </a>
         </Grid>
         <Grid item md={3} sm={3}>
-          <img
-            src={theme === USDBLight ? HackenIcon : HackenIconDark}
-            alt="USDB logo"
-            className={style["auditIcon"]}
-          />
+          <a href="https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/FantOHM-66_staking-Hacken-Feb_2022.pdf">
+            <img
+              src={theme === USDBLight ? HackenIcon : HackenIconDark}
+              alt="USDB logo"
+              className={style["auditIcon"]}
+            />
+          </a>
         </Grid>
         <Grid item md={3} sm={3}>
-          <img
-            src={theme === USDBLight ? SpadetechIcon : SpadetechIconDark}
-            alt="USDB logo"
-            className={style["auditIcon"]}
-          />
+          <a href="https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/FantOHM_DAO_Spadetech.io_Audit_Nov_2021.pdf">
+            <img
+              src={theme === USDBLight ? SpadetechIcon : SpadetechIconDark}
+              alt="USDB logo"
+              className={style["auditIcon"]}
+            />
+          </a>
         </Grid>
       </Grid>
     </Box>

@@ -30,7 +30,6 @@ export const headerPages: Page[] = [
 ];
 
 export const balanceheaderPages: Page[] = [
-  { title: "About", href: "/about", params: { comingSoon: false } },
   { title: "FHM", href: "/fhm", params: { comingSoon: false } },
   { title: "USDB", href: "/usdb-about", params: { comingSoon: false } },
   { title: "Liqd NFTs", href: "https://www.liqdnft.com/", params: { comingSoon: false } },
@@ -58,7 +57,6 @@ export const footerItems: FooterItem[] = [
   {
     label: "Useful Links",
     pages: [
-      { title: "My Account", href: "/my-account" },
       { title: "Documentation", href: "https://fantohm.gitbook.io/documentation" },
       {
         title: "Audits",
