@@ -1,15 +1,15 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Box, CssBaseline } from "@mui/material";
+import { Backdrop, Box, Button, CssBaseline, Fade, Paper } from "@mui/material";
 import { ThemeProvider } from "@mui/material/styles";
 import { NftLight, NftDark } from "@fantohm/shared-ui-themes";
 import {
   useWeb3Context,
   defaultNetworkId,
-  loadPlatformFee,
   isDev,
   NetworkIds,
+  loadPlatformFee,
 } from "@fantohm/shared-web3";
 import { Header, Footer } from "./components/template";
 // import { Messages } from "./components/messages/messages";
@@ -20,6 +20,7 @@ import { LendPage } from "./pages/lend-page/lend-page";
 import { MyAccountPage } from "./pages/my-account-page/my-account-page";
 import { setCheckedConnection } from "./store/reducers/app-slice";
 import { authorizeAccount, logout } from "./store/reducers/backend-slice";
+import Typography from "@mui/material/Typography";
 import { AssetDetailsPage } from "./pages/asset-details-page/asset-details-page";
 import { TestHelper } from "./pages/test-helper/test-helper";
 import Growl from "./components/growl/growl";
@@ -31,8 +32,12 @@ export const App = (): JSX.Element => {
   const { user, authorizedAccount, accountStatus } = useSelector(
     (state: RootState) => state.backend
   );
-  const { platformFee } = useSelector((state: RootState) => state.wallet);
-
+  const backend = useSelector((state: RootState) => state.backend);
+  const [promptTerms, setPromptTerms] = useState<boolean>(
+    true
+    //TODO localStorage.getItem("termsAgreedUsdb") !== "true"
+  );
+  const [isChecked, setIsChecked] = useState<boolean>(false);
   const [theme, setTheme] = useState(NftLight);
   const {
     address,
@@ -112,14 +117,70 @@ export const App = (): JSX.Element => {
     }
   }, [address, connected, authorizedAccount]);
 
+  const handleAgree = () => {
+    setPromptTerms(false);
+    localStorage.setItem("termsAgreedUsdb", "true");
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
-        {/* <Messages /> */}
-        <Header />
-        <Growl />
-        <Routes>
+      {promptTerms ? (
+        <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
+          <Fade in={true} mountOnEnter unmountOnExit>
+            <Backdrop open={true} className={` ${"backdropElement"}`}>
+              <Paper className={` ${"paperContainer"}`}>
+                <Box
+                  sx={{ display: "block", justifyContent: "flex-end" }}
+                  className={"closeDeposit"}
+                >
+                  <Typography>
+                    Accept the Terms of Service and Privacy Policy.{" "}
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      justifyContent: "flex-end",
+                      marginTop: "20px",
+                    }}
+                    className={"closeDeposit"}
+                  >
+                    <input
+                      type="checkbox"
+                      defaultChecked={isChecked}
+                      onChange={() => setIsChecked(!isChecked)}
+                    />
+                    <Typography>
+                      I agree that I have read, understood and accepted all of the{" "}
+                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                        Terms
+                      </a>{" "}
+                      and{" "}
+                      <a href="./../assets/Privacy_Policy.pdf" target="_blank">
+                        Privacy Policy
+                      </a>{" "}
+                      .
+                    </Typography>
+                  </Box>
+                </Box>
+                <Button
+                  style={{ marginTop: "20px" }}
+                  variant="contained"
+                  color="primary"
+                  disabled={!isChecked}
+                  onClick={handleAgree}
+                >
+                  Agree
+                </Button>
+              </Paper>
+            </Backdrop>
+          </Fade>
+        </Box>
+      ) : (
+        <Box paddingTop={5} paddingBottom={12} sx={{ height: "100vh" }}>
+          <Header />
+          <Growl />
+          <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/borrow" element={<BorrowPage />} />
           <Route path="/lend" element={<LendPage />} />
@@ -136,8 +197,9 @@ export const App = (): JSX.Element => {
             }
           />
         </Routes>
-        <Footer />
-      </Box>
+          <Footer />
+        </Box>
+      )}
     </ThemeProvider>
   );
 };

@@ -29,6 +29,14 @@ export const headerPages: Page[] = [
   },
 ];
 
+export const balanceheaderPages: Page[] = [
+  { title: "About", href: "/about", params: { comingSoon: false } },
+  { title: "USDB", href: "/usdb", params: { comingSoon: false } },
+  { title: "FHM", href: "https://fantohm.com/", params: { comingSoon: false } },
+  { title: "Dex", href: "https://app.fantohm.com/#/dex", params: { comingSoon: false } },
+  { title: "NFT Marketplace", href: "", params: { comingSoon: true } },
+];
+
 export const footerItems: FooterItem[] = [
   {
     label: "Products",
@@ -52,7 +60,7 @@ export const footerItems: FooterItem[] = [
         title: "Audits",
         href: "https://github.com/fantohm-dev/fantohm-contracts/tree/main/audit",
       },
-      { title: "FantOHM", href: "https://fantohm.com" },
+      { title: "FantOHM", href: "https://app.fantohm.com/" },
     ],
   },
   {

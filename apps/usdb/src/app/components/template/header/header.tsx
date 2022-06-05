@@ -28,8 +28,7 @@ import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
-import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
+import { BalanceLogo } from "@fantohm/shared/images";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
 import { headerPages, Page } from "../../../constants/nav";
@@ -71,7 +70,7 @@ export const Header = (): JSX.Element => {
       await disconnect();
     } else {
       try {
-        await connect(true);
+        connect();
       } catch (e) {
         console.log("Connection metamask error", e);
       }
@@ -158,10 +157,7 @@ export const Header = (): JSX.Element => {
             }}
           >
             <Link to="/">
-              <img
-                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
-                alt="USDB logo"
-              />
+              <img src={BalanceLogo} alt="USDB logo" width="60%" />
             </Link>
           </Typography>
 
@@ -274,7 +270,7 @@ export const Header = (): JSX.Element => {
           >
             <Link to="/">
               <img
-                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
+                src={BalanceLogo}
                 alt="USDB logo"
                 className={`${styles["usdbLogo"]}`}
               />

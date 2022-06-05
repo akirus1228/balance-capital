@@ -5,8 +5,11 @@ import { Logo } from "../../logo/logo";
 import MenuLink from "../header/menu-link";
 import { FooterItem, footerItems, Page } from "../../../constants/nav";
 import style from "./footer.module.scss";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 export const Footer = (): JSX.Element => {
+  const themeType = useSelector((state: RootState) => state.app.theme);
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
       <Container maxWidth="xl" sx={{ my: { xs: "30px", sm: "100px" } }}>
@@ -14,7 +17,7 @@ export const Footer = (): JSX.Element => {
           <Grid container spacing={2} sx={{ px: { xs: "40px", md: "0" } }}>
             <Grid item xs={12} md={5}>
               <Box sx={{ display: "flex", flexDirection: "column" }}>
-                <Box width="220px" mb="30px">
+                <Box width="300px" mb="30px">
                   <Link to="/">
                     <Logo />
                   </Link>
@@ -24,7 +27,9 @@ export const Footer = (): JSX.Element => {
                     className="font-weight-bold"
                     style={{ marginTop: "15px" }}
                   >
-                    USDB is a next generation algorithmic stable coin
+                    Our organization includes financial engineers and developers with top
+                    level mastery within the fields of risk management and software
+                    engineering.
                   </Typography>
                 </Box>
               </Box>

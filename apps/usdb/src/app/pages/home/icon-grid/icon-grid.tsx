@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import IconLink from "../../../components/icon-link/icon-link";
 import style from "./icon-grid.module.scss";
 import {
   WalletIcon,
@@ -9,6 +8,7 @@ import {
   xFhmIcon,
   MintIcon,
 } from "@fantohm/shared/images";
+import IconLink from "../../../components/icon-link/icon-link";
 
 export const IconGrid = (): JSX.Element => {
   return (
