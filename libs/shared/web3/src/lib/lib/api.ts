@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const BACKED_NFT_API_URL = "http://159.223.198.253";
+export const BACKED_NFT_API_URL = "https://liqdnft.usdbalance.com";
 
 export const getNftImageUri = async (tokenId: number): Promise<string> => {
   const url = `${BACKED_NFT_API_URL}/image/${tokenId}`;
