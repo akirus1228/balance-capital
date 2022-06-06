@@ -85,11 +85,9 @@ export const BalanceAboutPage = (): JSX.Element => {
             <Grid item xs={10} md={12}>
               <h1 className={style["text"]}>
                 The Balance Ecosystem is an open-source economy of conjoined banking and
-                commerce initiatives formed in March of 2022. The Balance Ecosystem is an
-                open-source economy of conjoined banking and commerce initiatives formed
-                in March of 2022 with the unveiling of investment opportunities derived
-                solely from the technical application, maintenance, and consumer use of
-                USDB.
+                commerce initiatives formed in March of 2022 with the unveiling of
+                investment opportunities derived solely from the technical application,
+                maintenance, and consumer use of USDB.
               </h1>
             </Grid>
             <Grid item xs={10} md={12}>
