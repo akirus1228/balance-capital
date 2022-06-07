@@ -30,6 +30,9 @@ import { HomeHeader } from "./components/template/header/home-header";
 import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
+import BlogPage from "./pages/blog/blog-page";
+import BlogPostPage from "./components/blog-page/blog-post-page";
+import { loadBlogPosts } from "./store/reducers/backend-slice";
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -51,19 +54,8 @@ export const App = (): JSX.Element => {
 
   useEffect(() => {
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
-    if (!connected || !chainId) return;
-    dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
-    bonds.map((bond) => {
-      dispatch(
-        calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
-      );
-    });
-    dispatch(calcGlobalBondDetails({ allBonds }));
-    investments.map((investment) => {
-      dispatch(calcInvestmentDetails({ investment }));
-      dispatch(fetchTokenPrice({ investment }));
-    });
-  }, [chainId, address, dispatch, connected]);
+    dispatch(loadAppDetails());
+  }, []);
 
   // Load account details
   useEffect(() => {
@@ -105,6 +97,9 @@ export const App = (): JSX.Element => {
           <Route path="/usdb-about" element={<BalanceAboutPage />} />
           <Route path="/fhm" element={<FhmPage />} />
           <Route path="/about" element={<BalanceAboutPage />} />
+          <Route path="/blog" element={<BlogPage />} />
+          <Route path="/blog/:id" element={<BlogPostPage />} />
+
           <Route
             path="*"
             element={

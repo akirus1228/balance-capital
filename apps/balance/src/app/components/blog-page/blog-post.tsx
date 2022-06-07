@@ -4,7 +4,11 @@ import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
 import style from "./blog-post.module.scss";
-import { BalanceLogoDark, BalanceTwitter } from "@fantohm/shared/images";
+import {
+  BalanceHeroImage,
+  BalanceLogoDark,
+  BalanceTwitter,
+} from "@fantohm/shared/images";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 
@@ -31,11 +35,16 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
     }
   }, [themeType, props.invertTheme, props.setTheme]);
 
+  function openPost() {
+    window.open("/blog/" + props.post.id, "_self");
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <Paper
         sx={{ marginTop: "47px", ...props.sx }}
         className={`daiCard ${style["cardWrapper"]} ${props.className} flexCenterCol`}
+        onClick={openPost}
       >
         <Grid
           container
@@ -47,11 +56,15 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
           <Grid
             item
             className="email-div"
-            md={8}
+            md={12}
             order={{ lg: 1 }}
-            style={{ height: "100%", overflow: "hidden" }}
+            style={{ width: "100%", overflow: "hidden" }}
           >
-            <img src={BalanceLogoDark} alt="DAI token" className={style["daiIcon"]} />
+            <img
+              src={props.post && props.post.image ? props.post.image : BalanceHeroImage}
+              alt="DAI token"
+              className={style["daiIcon"]}
+            />
             <Box
               className={style["titleWrapper"]}
               style={{
@@ -90,31 +103,31 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             order={{ lg: 1 }}
             style={{ height: "10%", overflow: "hidden", width: "100%" }}
           >
-            <h1 style={{ fontSize: "16px" }}>
+            <h1 style={{ fontSize: "16px", height: "32px", maxLines: "2" }}>
               {props.post ? props.post.blogTitle : "title"}
             </h1>
           </Grid>
           <Grid
             item
             className="email-div"
-            md={3}
+            md={2}
             order={{ lg: 1 }}
-            style={{ width: "30px", justifyContent: "center" }}
+            sx={{ width: "40px", justifyContent: "center", marginTop: { xs: "10px" } }}
           >
-            <img src={BalanceTwitter} style={{ width: "60px" }} />
+            <img src={BalanceTwitter} style={{ width: "40px" }} />
           </Grid>
           <Grid
             item
             className="email-div"
-            md={6}
+            md={8}
             order={{ lg: 1 }}
             sx={{ height: "100%", overflow: "hidden", marginLeft: { xs: "30px" } }}
           >
+            <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>The Balance Blog</h2>
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-              {props.post ? props.post.blogTitle : "title"}
-            </h2>
-            <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-              {props.post ? props.post.blogTitle : "title"}
+              {props.post && props.post.date
+                ? new Date(props.post.date.slice(0, 10)).toDateString()
+                : ""}
             </h2>
           </Grid>
         </Grid>

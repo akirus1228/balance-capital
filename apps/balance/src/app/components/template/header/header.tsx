@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
-import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import { setTheme } from "../../../store/reducers/app-slice";
 import USDBLogoLight from "../../../../assets/images/USDB-logo.png";
 import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.png";
 import styles from "./header.module.scss";
@@ -87,24 +87,6 @@ export const Header = (): JSX.Element => {
       setConnectButtonText("Connect Wallet");
     }
   }, [connected, address, dispatch]);
-
-  useEffect(() => {
-    // if there's a cached provider, try and connect
-    if (hasCachedProvider && hasCachedProvider() && !connected) {
-      try {
-        connect();
-      } catch (e) {
-        console.log("Connection metamask error", e);
-      }
-    }
-    // if there's a cached provider and it has connected, connection check is good.
-    if (hasCachedProvider && hasCachedProvider && connected)
-      dispatch(setCheckedConnection(true));
-
-    // if there's not a cached provider and we're not connected, connection check is good
-    if (hasCachedProvider && !hasCachedProvider() && !connected)
-      dispatch(setCheckedConnection(true));
-  }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
     const type = themeType === "light" ? "dark" : "light";

@@ -57,7 +57,6 @@ export const App = (): JSX.Element => {
   }, [themeType]);
 
   useEffect(() => {
-    dispatch(loadBlogPosts());
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
     if (!connected || !chainId) return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));

@@ -294,7 +294,10 @@ export type PlatformWalletInfo = {
 };
 
 export type BlogPostDTO = {
-  blogTitle?: string;
+  id?: string;
+  date: string;
+  blogTitle: string;
   blogAsset?: string;
-  content?: string;
+  content: string;
+  image?: string;
 };

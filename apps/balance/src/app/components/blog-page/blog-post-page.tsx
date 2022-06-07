@@ -7,7 +7,7 @@ import {
   Theme,
   ThemeProvider,
 } from "@mui/material";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
@@ -19,11 +19,14 @@ import {
 } from "@fantohm/shared/images";
 import { withDeps } from "@nrwl/workspace/src/core/project-graph";
 import css from "../../pages/trad-fi/deposit-choice/deposit-choice.module.scss";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import BlogPost from "./blog-post";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
+import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 
 /* eslint-disable-next-line */
-export interface BlogPostProps {
+export interface BlogPostProps  {
   className?: string;
   invertTheme?: boolean;
   setTheme?: "light" | "dark";
@@ -38,7 +41,11 @@ export interface BlogPostProps {
 export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const { name } = useParams();
+  const [post, setPost] = useState<BlogPostDTO | undefined>();
 
+  const blogPosts = useSelector((state: RootState) => state.app.blogPosts);
+  const location = useLocation();
+  const id = location.pathname.substring(location.pathname.indexOf("blog/") + 5);
   const theme = useCallback(() => {
     if (props.invertTheme) {
       return themeType === "light" ? USDBDark : USDBLight;
@@ -48,6 +55,15 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
       return themeType === "light" ? USDBLight : USDBDark;
     }
   }, [themeType, props.invertTheme, props.setTheme]);
+
+  useEffect(() => {
+    console.log(blogPosts);
+
+    if (blogPosts && blogPosts.blogPosts) {
+      setPost(blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id));
+      console.log(post);
+    }
+  }, [blogPosts]);
 
   return (
     <ThemeProvider theme={theme}>
@@ -101,11 +117,17 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               className={style["iconsElement"]}
               style={{ textAlign: "center", maxWidth: "100%" }}
             >
-              <h1>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</h1>
+              <h1>
+                {" "}
+                {blogPosts && blogPosts.blogPosts
+                  ? blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
+                      .blogTitle
+                  : ""}
+              </h1>
             </Grid>
             <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
               <img
-                src={BalanceHeroImage}
+                src={post && post.image ? post.image : BalanceHeroImage}
                 style={{
                   maxWidth: "100%",
                   borderRadius: "2em",
@@ -129,40 +151,22 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               style={{ height: "100%", overflow: "hidden", textAlign: "start" }}
             >
               <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-                {props.blogTitle || "title"}
+                {blogPosts && blogPosts.blogPosts
+                  ? blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
+                      .blogTitle
+                  : ""}
               </h2>
               <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-                {props.blogTitle || "date"}
+                {post && post.date ? new Date(post.date.slice(0, 10)).toDateString() : ""}
               </h2>
             </Grid>
             <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
-              <h2 style={{ fontSize: "13px", marginLeft: "10px" }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              </h2>
-            </Grid>
-            <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
-              <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus egestas
-                enim sed sem suscipit malesuada. Aenean sed nunc et erat ornare lobortis.
-                Sed odio dolor, ultrices sit amet consectetur ac, suscipit sit amet
-                tellus. Mauris sapien nulla, imperdiet quis augue ut, consectetur
-                porttitor nisl. Vivamus ut faucibus diam, eget porta mi. Donec quis
-                tincidunt metus, ut ultrices nulla. Aenean porta mi non nisl tincidunt
-                condimentum. Sed eget sodales nisi, id elementum nisl. Proin hendrerit
-                aliquet arcu, sit amet sollicitudin dui iaculis ut. Ut dapibus
-                pellentesque arcu, non gravida turpis. Curabitur a varius urna. Vestibulum
-                at erat vitae purus sollicitudin molestie vel in massa. Sed facilisis
-                pulvinar egestas. Nunc dolor ipsum, lobortis eu urna a, placerat mattis
-                odio. Sed scelerisque viverra orci quis finibus. Sed dapibus orci non
-                cursus facilisis. Fusce eu nibh sapien. Sed a dolor nisi. Nam vitae magna
-                hendrerit erat sollicitudin laoreet. Proin purus orci, tincidunt non leo
-                ut, sodales condimentum eros. Pellentesque ut sodales odio. Donec
-                efficitur, augue eu posuere finibus, elit diam lacinia leo, id tempus quam
-                lacus eu ex. Nam non velit vel augue pellentesque euismod eu ac erat.
-                Aenean commodo, est id elementum interdum, quam mi dapibus ligula, et
-                aliquet mi justo ac risus. Nullam quis augue id justo volutpat porta ut at
-                orci. In sit amet lectus ut velit rutrum posuere nec feugiat tortor.
-              </h2>
+              {blogPosts && blogPosts.blogPosts
+                ? documentToReactComponents(
+                    blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
+                      .content
+                  )
+                : ""}
             </Grid>
           </Grid>
           <Grid

@@ -15,11 +15,13 @@ export const loadBlogPosts = createAsyncThunk("app/loadBlogPosts", async () => {
   });
 
   await client.getEntries().then(function (entries: { items: any[] }) {
-    entries.items.forEach(function (entry) {
+    for (const entry of entries.items) {
       if (entry) {
         client.getEntry(entry.sys.id).then(function (entry: any) {
           if (entry) {
             posts.push({
+              id: entry.fields.id,
+              date: "",
               blogTitle: entry.fields.blogTitle,
               blogAsset: entry.fields.blogAsset,
               content: entry.fields.content,
@@ -27,9 +29,8 @@ export const loadBlogPosts = createAsyncThunk("app/loadBlogPosts", async () => {
           }
         });
       }
-    });
+    }
   });
-  console.log(posts);
 
   return {
     blogPosts: posts,
