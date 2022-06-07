@@ -1,102 +1,38 @@
-import { Box, Button, Container, Typography } from "@mui/material";
-import style from "./home-page.module.scss";
-import BgImg from "../../../assets/images/temp-homepage-bg.png";
-import { Link } from "react-router-dom";
+import { Box, Grid } from "@mui/material";
+
+import Jumbotron from "./jumbotron";
+import Borrowers from "./borrowers";
+import Lenders from "./lenders";
+import VerifiedCollections from "./verified-collections";
+import BackedLoan from "./backed-loan";
 
 export const HomePage = (): JSX.Element => {
   return (
-    <Container
-      maxWidth="lg"
-      className={style["heroContainer"]}
+    <Box
       sx={{
-        display: "flex",
-        flexDirection: "row",
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
+        width: "100%",
+        mt: { xs: "-80px", md: "-145px" },
       }}
     >
-      <Box
+      <Grid
+        container
         sx={{
-          marginLeft: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          pr: 4,
-        }}
-      >
-        <Box>
-          <h1>Unlock the liquidity you need with the NFTs you already own</h1>
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            mb: "8em",
-          }}
-        >
-          <Link to="/borrow">
-            <Button variant="contained" sx={{ mr: "10px" }}>
-              Borrow
-            </Button>
-          </Link>
-          <Link to="/lend">
-            <Button variant="outlined">Lend</Button>
-          </Link>
-        </Box>
-        <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "center" }}>
-          <Box
-            sx={{
-              borderTop: "1px solid #f2f3f3",
-              borderRight: "1px solid #f2f3f3",
-              padding: "50px",
-            }}
-          >
-            <Typography>
-              Borrow against the value of your NFTs without selling them.
-            </Typography>
-          </Box>
-          <Box sx={{ borderTop: "1px solid #f2f3f3", padding: "50px" }}>
-            <Typography>
-              Lend with USDB and earn a passive yield, on your own terms.
-            </Typography>
-          </Box>
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          marginRight: "auto",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          background: "#f2f3f3",
-          pl: "50px",
-          position: "relative",
-          top: "-176px",
+          display: { xs: "none", md: "flex" },
+          width: "100%",
+          height: "100%",
           zIndex: "-1",
+          position: "absolute",
         }}
       >
-        <img
-          src={BgImg}
-          style={{ marginTop: "250px" }}
-          alt="Coloful rectangles with rounded corners stacked"
-        />
-        <Box
-          sx={{
-            position: "fixed",
-            zIndex: "-2",
-            height: "100vh",
-            top: "-176",
-            right: "0",
-            width: "50vw",
-            background: "#f2f3f3",
-          }}
-        >
-          &nbsp;
-        </Box>
-      </Box>
-    </Container>
+        <Grid item xs={12} md={6}></Grid>
+        <Grid item xs={12} md={6} sx={{ background: "#F5F5F5" }}></Grid>
+      </Grid>
+      <Jumbotron />
+      <Borrowers />
+      <Lenders />
+      <VerifiedCollections />
+      <BackedLoan />
+    </Box>
   );
 };
 

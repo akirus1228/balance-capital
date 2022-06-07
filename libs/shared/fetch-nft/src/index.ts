@@ -2,7 +2,7 @@ import "cross-fetch/polyfill";
 
 import { OpenSeaClient, OpenSeaClientProps } from "./eth";
 import { SolanaClient, SolanaClientProps } from "./sol";
-import { Collectible, CollectibleState } from "./utils/types";
+import { CollectibleState } from "./utils/types";
 
 export type FetchNFTClientProps = {
   openSeaConfig?: OpenSeaClientProps;
@@ -47,4 +47,5 @@ export class FetchNFTClient {
   };
 }
 
-export { Collectible, CollectibleState };
+export * from "./utils/types";
+export * from "./eth/helpers";

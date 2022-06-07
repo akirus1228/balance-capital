@@ -3,6 +3,7 @@ import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
+import { BigNumber } from "ethers";
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -162,3 +163,19 @@ export type AssetLocAsyncThunk = {
   assetAddress: string;
   tokenId: string;
 };
+
+export type AssetAddressAsyncThunk = {
+  assetAddress: string;
+};
+
+export type InteractiveErc20AsyncThunk = AssetAddressAsyncThunk &
+  IBaseAsyncThunk &
+  IInteractiveAsyncThunk;
+
+export type InteractiveWalletErc20AsyncThunk = {
+  walletAddress: string;
+} & InteractiveErc20AsyncThunk;
+
+export type Erc20AllowanceAsyncThunk = {
+  amount: BigNumber;
+} & InteractiveWalletErc20AsyncThunk;

@@ -1,5 +1,6 @@
 // external libs
 import axios, { AxiosResponse } from "axios";
+import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { JsonRpcProvider } from "@ethersproject/providers";
 
 // internal libs
@@ -7,20 +8,35 @@ import {
   AllAssetsResponse,
   AllListingsResponse,
   Asset,
-  AssetStatus,
-  BackendListing,
   CreateAssetResponse,
   CreateListingRequest,
   AllNotificationsResponse,
   ApiResponse,
   EditNotificationRequest,
   Listing,
-  ListingStatus,
   LoginResponse,
   Terms,
   Notification,
   NotificationStatus,
+  CreateListingResponse,
+  Loan,
+  Offer,
+  BackendAssetQueryParams,
+  BackendLoanQueryParams,
+  BackendOfferQueryParams,
+  BackendStandardQuery,
+  PlatformWalletInfo,
 } from "../types/backend-types";
+import { ListingQueryParam } from "../store/reducers/interfaces";
+import { RootState } from "../store";
+import {
+  assetAryToAssets,
+  dropHelperDates,
+  listingAryToListings,
+  listingToCreateListingRequest,
+} from "../helpers/data-translations";
+import { updateAsset, updateAssets } from "../store/reducers/asset-slice";
+import { updateListings } from "../store/reducers/listing-slice";
 
 export const WEB3_SIGN_MESSAGE =
   "This application uses this cryptographic signature, verifying that you are the owner of this address.";
@@ -31,60 +47,11 @@ export const NFT_MARKETPLACE_API_URL =
 export const doLogin = (address: string): Promise<LoginResponse> => {
   const url = `${NFT_MARKETPLACE_API_URL}/auth/login`;
   return axios.post(url, { address }).then((resp: AxiosResponse<LoginResponse>) => {
-    console.log(resp);
     return resp.data;
   });
 };
 
-export const getAsset = (assetId: string, signature: string): Promise<Asset> => {
-  // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/${assetId}`;
-  // console.log(url);
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      console.log("");
-      console.log(resp);
-      return resp.data.data[0];
-    })
-    .catch((err) => {
-      // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
-      return {} as Asset;
-    });
-};
-
-export const getAssetFromOpenseaId = (
-  openseaIds: string[],
-  signature: string
-): Promise<Asset[]> => {
-  // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset/all?openseaIds=${openseaIds.join(",")}`;
-  // console.log(url);
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllAssetsResponse>) => {
-      return resp.data.data;
-    })
-    .catch((err) => {
-      // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
-      return [{}] as Asset[];
-    });
-};
-
 export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/asset`;
   return axios
     .post(url, asset, {
@@ -93,44 +60,23 @@ export const postAsset = (asset: Asset, signature: string): Promise<Asset> => {
       },
     })
     .then((resp: AxiosResponse<CreateAssetResponse>) => {
-      console.log("");
-      console.log(resp);
       return resp.data.asset;
     })
     .catch((err) => {
       // most likely a 400 (not in our database)
-      console.log("Error found");
-      console.log(err);
+
       return {} as Asset;
     });
 };
 
-export const getListings = (address: string, signature: string): Promise<Listing[]> => {
-  // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all`;
-  // console.log(url);
-  return axios
-    .get(url, {
-      headers: {
-        Authorization: `Bearer ${signature}`,
-      },
-    })
-    .then((resp: AxiosResponse<AllListingsResponse>) => {
-      // console.log(resp);
-      return resp.data.data.map((listing: BackendListing) => {
-        const { term, ...formattedListing } = listing;
-        return { ...formattedListing, terms: term } as Listing;
-      });
-    });
-};
-
-export const getListingFromOpenseaId = (
-  openseaId: string,
+export const getListingByOpenseaIds = (
+  openseaIds: string[],
   signature: string
 ): Promise<Listing> => {
-  // console.log(address);
-  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaId}`;
-  // console.log(url);
+  const url = `${NFT_MARKETPLACE_API_URL}/asset-listing/all?openseaId=${openseaIds.join(
+    ","
+  )}`;
+
   return axios
     .get(url, {
       headers: {
@@ -138,19 +84,18 @@ export const getListingFromOpenseaId = (
       },
     })
     .then((resp: AxiosResponse<AllListingsResponse>) => {
-      // console.log(resp);
       const { term, ...listing } = resp.data.data[0];
-      return { ...listing, terms: term };
+      return { ...listing, term: term };
     });
 };
 
 export const createListing = (
   signature: string,
   asset: Asset,
-  terms: Terms
-): Promise<Listing[] | boolean> => {
+  term: Terms
+): Promise<Listing | boolean> => {
   const url = `${NFT_MARKETPLACE_API_URL}/asset-listing`;
-  const listingParams = listingToCreateListingRequest(asset, terms);
+  const listingParams = listingToCreateListingRequest(asset, term);
   // post
   return axios
     .post(url, listingParams, {
@@ -158,12 +103,10 @@ export const createListing = (
         Authorization: `Bearer ${signature}`,
       },
     })
-    .then((resp: AxiosResponse<any>) => {
-      console.log(resp);
-      return resp.data;
+    .then((resp: AxiosResponse<CreateListingResponse>) => {
+      return createListingResponseToListing(resp.data);
     })
-    .catch((err: any) => {
-      console.log(err);
+    .catch((err: AxiosResponse) => {
       return false;
     });
 };
@@ -171,51 +114,29 @@ export const createListing = (
 export const handleSignMessage = (
   address: string,
   provider: JsonRpcProvider
-): Promise<string> | void => {
+): Promise<string> | string => {
   try {
     const signer = provider.getSigner(address);
     return signer.signMessage(WEB3_SIGN_MESSAGE);
   } catch (err) {
+    return "";
     console.warn(err);
   }
 };
 
-const listingToCreateListingRequest = (
-  asset: Asset,
-  terms: Terms
-): CreateListingRequest => {
-  // convert terms to term
-  const tempListing: CreateListingRequest = {
-    asset: asset,
-    term: terms,
-    status: ListingStatus.Listed,
-  };
-  // if the asset isn't in the database we need to pass the asset without the ID
-  // if the asset is in the database we need to pass just the ID
-  if (
-    typeof tempListing.asset !== "string" &&
-    tempListing.asset.status === AssetStatus.New
-  ) {
-    delete tempListing.asset.id;
-    tempListing.asset.status = AssetStatus.Listed;
-  } else if (
-    typeof tempListing.asset !== "string" &&
-    tempListing.asset.status !== AssetStatus.New &&
-    tempListing.asset.id
-  ) {
-    tempListing.asset = tempListing.asset.id;
-  }
-
-  return tempListing;
+const createListingResponseToListing = (
+  createListingResponse: CreateListingResponse
+): Listing => {
+  const { term, ...listing } = createListingResponse;
+  return { ...listing, term: term };
 };
 
 export const getNotifications = (
   address: string,
   signature: string
 ): Promise<AllNotificationsResponse> => {
-  // console.log(address);
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/all`;
-  // console.log(url);
+
   return axios
     .get(url, {
       headers: {
@@ -223,7 +144,6 @@ export const getNotifications = (
       },
     })
     .then((resp: AxiosResponse<AllNotificationsResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };
@@ -233,10 +153,9 @@ export const deleteNotification = async (
   signature: string,
   id: string | undefined
 ): Promise<ApiResponse | null> => {
-  // console.log(address);
   if (typeof id !== "string") return null;
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${id}`;
-  // console.log(url);
+
   return await axios
     .delete(url, {
       headers: {
@@ -244,7 +163,6 @@ export const deleteNotification = async (
       },
     })
     .then((resp: AxiosResponse<ApiResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };
@@ -254,10 +172,9 @@ export const markAsRead = async (
   signature: string,
   notification: Notification | undefined
 ): Promise<ApiResponse | null> => {
-  // console.log(address);
   if (!notification || typeof notification.id !== "string") return null;
   const url = `${NFT_MARKETPLACE_API_URL}/user-notification/${notification.id}`;
-  // console.log(url);
+
   const putParams: EditNotificationRequest = {
     id: notification.id,
     importance: notification.importance,
@@ -271,7 +188,280 @@ export const markAsRead = async (
       },
     })
     .then((resp: AxiosResponse<ApiResponse>) => {
-      // console.log(resp);
       return resp.data;
     });
 };
+
+const standardQueryParams: BackendStandardQuery = {
+  skip: 0,
+  take: 50,
+};
+
+export const backendApi = createApi({
+  reducerPath: "backendApi",
+  tagTypes: [
+    "Asset",
+    "Listing",
+    "Loan",
+    "Notification",
+    "Offer",
+    "Order",
+    "PlatformWalletInfo",
+    "Terms",
+    "User",
+  ],
+  baseQuery: fetchBaseQuery({
+    baseUrl: NFT_MARKETPLACE_API_URL,
+    prepareHeaders: (headers, { getState }) => {
+      const signature = (getState() as RootState).backend.authSignature;
+      headers.set("authorization", `Bearer ${signature}`);
+      return headers;
+    },
+  }),
+  endpoints: (builder) => ({
+    // Assets
+    getAssets: builder.query<Asset[], Partial<BackendAssetQueryParams>>({
+      query: (queryParams) => ({
+        url: `asset/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: AllAssetsResponse, meta, arg) => response.data,
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Asset[] } = await queryFulfilled;
+        dispatch(updateAssets(assetAryToAssets(data)));
+      },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Asset" as const, id })), "Asset"]
+          : ["Asset"],
+    }),
+    getAsset: builder.query<Asset, string | undefined>({
+      query: (id) => ({
+        url: `asset/${id}`,
+      }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Asset } = await queryFulfilled;
+        dispatch(updateAsset(data));
+      },
+      providesTags: ["Asset"],
+    }),
+    deleteAsset: builder.mutation<Asset, Partial<Asset> & Pick<Asset, "id">>({
+      query: ({ id, ...asset }) => {
+        return {
+          url: `asset/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: (result, error, arg) => [{ type: "Asset", id: arg.id }],
+    }),
+    // Listings
+    getListings: builder.query<Listing[], Partial<ListingQueryParam>>({
+      query: (queryParams) => ({
+        url: `asset-listing/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: AllListingsResponse, meta, arg) =>
+        response.data.map((listing: Listing) => {
+          const { term, ...formattedListing } = listing;
+          return { ...formattedListing, term: term } as Listing;
+        }),
+      async onQueryStarted(arg, { dispatch, queryFulfilled }) {
+        const { data }: { data: Listing[] } = await queryFulfilled;
+        const assets = data.map((listing: Listing) => listing.asset);
+        dispatch(updateListings(listingAryToListings(data)));
+        dispatch(updateAssets(assetAryToAssets(assets)));
+      },
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Listing" as const, id })), "Listing"]
+          : ["Listing"],
+    }),
+    createListing: builder.mutation<CreateListingRequest, Partial<CreateListingRequest>>({
+      query: (body) => {
+        return {
+          url: `asset-listing`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Listing", "Asset", "Terms"],
+    }),
+    deleteListing: builder.mutation<Listing, Partial<Listing> & Pick<Listing, "id">>({
+      query: ({ id, ...listing }) => {
+        return {
+          url: `asset-listing/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Listing", "Asset", "Terms"],
+    }),
+    // Terms
+    getTerms: builder.query<Terms[], Partial<BackendStandardQuery>>({
+      query: (queryParams) => ({
+        url: `term/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Terms[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Terms" as const, id })), "Terms"]
+          : ["Terms"],
+    }),
+    updateTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `term/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Terms, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
+    deleteTerms: builder.mutation<Terms, Partial<Terms> & Pick<Terms, "id">>({
+      query: ({ id, ...terms }) => {
+        return {
+          url: `term/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Listing", "Terms", "Offer"],
+    }),
+    // Loans
+    getLoans: builder.query<Loan[], Partial<BackendLoanQueryParams>>({
+      query: (queryParams) => ({
+        url: `loan/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Loan[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Loan" as const, id })), "Loan"]
+          : ["Loan"],
+    }),
+    createLoan: builder.mutation<Loan, Loan>({
+      query: ({ id, borrower, lender, assetListing, term, ...loan }) => {
+        const { collection, ...asset } = dropHelperDates({ ...assetListing.asset }); // backend doesn't like collection
+        const loanRequest = {
+          ...loan,
+          assetListing: {
+            ...dropHelperDates({ ...assetListing }),
+            asset: dropHelperDates({ ...asset }),
+            term: dropHelperDates({ ...assetListing.term }),
+          },
+          borrower: dropHelperDates({ ...borrower }),
+          lender: dropHelperDates({ ...lender }),
+          term: dropHelperDates({ ...term }),
+        };
+        return {
+          url: `loan`,
+          method: "POST",
+          body: loanRequest,
+        };
+      },
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
+    }),
+    updateLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `loan/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Loan, meta, arg) => response,
+      invalidatesTags: ["Listing", "Offer", "Loan", "Asset"],
+    }),
+    deleteLoan: builder.mutation<Loan, Partial<Loan> & Pick<Loan, "id">>({
+      query: ({ id, ...loan }) => {
+        return {
+          url: `loan/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Loan", "Asset", "Listing", "Terms"],
+    }),
+    // Offers
+    getOffers: builder.query<Offer[], Partial<BackendOfferQueryParams>>({
+      query: (queryParams) => ({
+        url: `offer/all`,
+        params: {
+          ...standardQueryParams,
+          ...queryParams,
+        },
+      }),
+      transformResponse: (response: { count: number; data: Offer[] }, meta, arg) =>
+        response.data,
+      providesTags: (result, error, queryParams) =>
+        result
+          ? [...result.map(({ id }) => ({ type: "Offer" as const, id })), "Offer"]
+          : ["Offer"],
+    }),
+    createOffer: builder.mutation<Offer, Partial<Offer>>({
+      query: (body) => {
+        return {
+          url: `offer`,
+          method: "POST",
+          body,
+        };
+      },
+      invalidatesTags: ["Offer"],
+    }),
+    updateOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...patch }) => ({
+        url: `offer/${id}`,
+        method: "PUT",
+        body: { ...patch, id },
+      }),
+      transformResponse: (response: Offer, meta, arg) => response,
+      invalidatesTags: ["Terms", "Listing", "Offer"],
+    }),
+    deleteOffer: builder.mutation<Offer, Partial<Offer> & Pick<Offer, "id">>({
+      query: ({ id, ...offer }) => {
+        return {
+          url: `offer/${id}`,
+          method: "DELETE",
+        };
+      },
+      invalidatesTags: ["Asset", "Listing", "Terms", "Offer"],
+    }),
+    // Wallet
+    getWallet: builder.query<PlatformWalletInfo, string | undefined>({
+      query: (walletAddress) => ({
+        url: `wallet/${walletAddress}`,
+      }),
+      providesTags: ["PlatformWalletInfo"],
+    }),
+  }),
+});
+
+export const {
+  useGetAssetQuery,
+  useGetAssetsQuery,
+  useDeleteAssetMutation,
+  useGetListingsQuery,
+  useDeleteListingMutation,
+  useGetLoansQuery,
+  useCreateLoanMutation,
+  useUpdateLoanMutation,
+  useDeleteLoanMutation,
+  useCreateListingMutation,
+  useGetTermsQuery,
+  useUpdateTermsMutation,
+  useDeleteTermsMutation,
+  useGetOffersQuery,
+  useCreateOfferMutation,
+  useUpdateOfferMutation,
+  useDeleteOfferMutation,
+  useGetWalletQuery,
+} = backendApi;

@@ -1,4 +1,4 @@
-import { Toolbar, Container, Typography } from "@mui/material";
+import { Box, Container, Toolbar, Typography } from "@mui/material";
 import { Link } from "react-router-dom";
 import { FooterBar } from "@fantohm/shared-ui-themes";
 
@@ -23,7 +23,7 @@ export const Footer = (): JSX.Element => {
     },
     {
       title: "Terms",
-      href: "/terms",
+      href: "/term",
     },
     {
       title: "Privacy",
@@ -32,23 +32,35 @@ export const Footer = (): JSX.Element => {
   ];
 
   return (
-    <FooterBar elevation={0} position="sticky" style={{ marginTop: "auto" }}>
+    <FooterBar elevation={0} position="sticky" style={{ marginTop: "auto", zIndex: "0" }}>
       <Container maxWidth="xl" sx={{ my: "2em" }}>
-        <Toolbar sx={{ display: "flex", flexDirection: "row" }}>
-          {footerItems.map((footerItem: Page, index: number) => {
-            return (
-              <Link
-                to={footerItem.href}
-                style={{ marginRight: "2em" }}
-                key={`footerlink-${index}`}
-              >
-                {footerItem.title}
-              </Link>
-            );
-          })}
-          <Typography textAlign="center" sx={{ marginLeft: "auto" }}>
-            Copyright &copy; 2022. All rights reserved.
-          </Typography>
+        <Toolbar
+          sx={{
+            display: "flex",
+            justifyContent: { xs: "center", md: "space-between" },
+            flexDirection: { xs: "column", md: "row" },
+          }}
+        >
+          <Box
+            sx={{
+              display: "flex",
+              width: { xs: "100%", md: "500px" },
+              justifyContent: "space-between",
+            }}
+          >
+            {footerItems.map((footerItem: Page, index: number) => {
+              return (
+                <Link to={footerItem.href} key={`footer-link-${index}`}>
+                  {footerItem.title}
+                </Link>
+              );
+            })}
+          </Box>
+          <Box sx={{ mt: { xs: "20px", md: "0" } }}>
+            <Typography textAlign="center" variant="body2" color="white">
+              Copyright &copy; 2022. All rights reserved.
+            </Typography>
+          </Box>
         </Toolbar>
       </Container>
     </FooterBar>

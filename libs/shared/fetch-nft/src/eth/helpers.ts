@@ -213,6 +213,7 @@ export const assetToCollectible = async (
     threeDUrl,
     gifUrl,
     isOwned: true,
+    owner: { address: asset.owner?.address || "" },
     dateCreated: null,
     dateLastTransferred: null,
     externalLink: asset.external_link,
@@ -220,6 +221,7 @@ export const assetToCollectible = async (
     assetContractAddress: asset.asset_contract?.address ?? null,
     chain: "eth",
     wallet: asset.wallet,
+    collection: asset.collection,
   };
 };
 

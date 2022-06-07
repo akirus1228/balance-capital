@@ -16,7 +16,6 @@ export const BorrowerCreateListing = (props: BorrowerCreateListingProps): JSX.El
   };
 
   const onListDialogClose = (accepted: boolean) => {
-    console.log(accepted);
     setDialogOpen(false);
   };
 

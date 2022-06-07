@@ -1,7 +1,12 @@
 import { Box, Button, Container, Paper, SxProps, Theme, Typography } from "@mui/material";
-import { useEffect, useState } from "react";
-import { useListing } from "../../hooks/useListing";
+import { useCallback, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useListingTermDetails } from "../../hooks/use-listing-terms";
+import { RootState } from "../../store";
+import { selectListingFromAsset } from "../../store/selectors/listing-selectors";
 import { Asset, Listing } from "../../types/backend-types";
+import { useGetListingsQuery } from "../../api/backend-api";
+import UpdateTerms from "../update-terms/update-terms";
 import style from "./borrower-listing-details.module.scss";
 
 export interface BorrowerListingDetailsProps {
@@ -12,30 +17,41 @@ export interface BorrowerListingDetailsProps {
 export const BorrowerListingDetails = (
   props: BorrowerListingDetailsProps
 ): JSX.Element => {
-  const listing: Listing | null = useListing(
-    props.asset.assetContractAddress,
-    props.asset.tokenId
+  const { user, authSignature } = useSelector((state: RootState) => state.backend);
+  const listing: Listing = useSelector((state: RootState) =>
+    selectListingFromAsset(state, props.asset)
   );
-  const [repaymentAmount, setRepaymentAmount] = useState(0);
-  const [repaymentTotal, setRepaymentTotal] = useState(0);
+
+  useGetListingsQuery(
+    {
+      skip: 0,
+      take: 50,
+      openseaIds: props.asset.openseaId ? [props.asset?.openseaId] : [],
+    },
+    { skip: !authSignature || !user.address }
+  );
 
   // calculate repayment totals
-  useEffect(() => {
-    if (listing?.terms.amount && listing?.terms.apr && listing?.terms.duration) {
-      const wholePercent = (listing.terms.duration / 365) * listing.terms.apr;
-      const realPercent = wholePercent / 100;
-      const _repaymentAmount = listing.terms.amount * realPercent;
-      setRepaymentAmount(_repaymentAmount);
-      setRepaymentTotal(_repaymentAmount + listing.terms.amount);
-    }
-  }, [listing?.terms.amount, listing?.terms.apr, listing?.terms.duration]);
+  const { repaymentTotal } = useListingTermDetails(listing);
 
-  if (!listing) {
+  // update term
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const onClickButton = useCallback(() => {
+    console.log("Open dialog");
+    setDialogOpen(true);
+  }, []);
+
+  const onListDialogClose = (accepted: boolean) => {
+    setDialogOpen(false);
+  };
+
+  if (typeof listing.term === "undefined") {
     return <h3>Loading...</h3>;
   }
 
   return (
     <Container sx={props.sx}>
+      <UpdateTerms onClose={onListDialogClose} open={dialogOpen} listing={listing} />
       <Paper>
         <Box className="flex fr fj-sa fw">
           <Box className="flex fc">
@@ -50,7 +66,7 @@ export const BorrowerListingDetails = (
           <Box className="flex fc">
             <Typography className={style["label"]}>Principal</Typography>
             <Typography className={`${style["data"]}`}>
-              {listing.terms.amount.toLocaleString("en-US", {
+              {listing.term.amount.toLocaleString("en-US", {
                 style: "currency",
                 currency: "USD",
               })}
@@ -58,18 +74,20 @@ export const BorrowerListingDetails = (
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>APY</Typography>
-            <Typography className={`${style["data"]}`}>{listing.terms.apr}%</Typography>
+            <Typography className={`${style["data"]}`}>{listing.term.apr}%</Typography>
           </Box>
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until offer expires</Typography>
             <Box className="flex fr w100">
               <Typography className={`${style["data"]}`}>
-                {listing.terms.expirationAt}
+                {listing.term.expirationAt}
               </Typography>
             </Box>
           </Box>
           <Box className="flex fc">
-            <Button variant="contained">Repay loan</Button>
+            <Button variant="contained" onClick={onClickButton}>
+              Update Terms
+            </Button>
           </Box>
         </Box>
       </Paper>

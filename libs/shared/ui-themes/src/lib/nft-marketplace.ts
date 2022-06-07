@@ -1,5 +1,14 @@
 import { createTheme } from "@mui/material/styles";
-import { AppBar, styled, Switch, ThemeOptions } from "@mui/material";
+import {
+  AppBar,
+  styled,
+  Switch,
+  Table,
+  TableCell,
+  TableHead,
+  TableRow,
+  ThemeOptions,
+} from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
@@ -27,6 +36,7 @@ const nftLightColors = {
   errorColor: "#CC335C",
   errorBackground: "#CC335C40",
   backgroundColor: "#fdfefe",
+  containedPrimaryBtn: "#374FFF",
   paperBg: "#FFF",
   gray: "#696C80",
   iconButtonBg: "#181A1C0F",
@@ -39,6 +49,7 @@ const nftDarkColors = {
   errorColor: "#CC335C",
   errorBackground: "#CC335C40",
   backgroundColor: "#000",
+  containedPrimaryBtn: "#374FFF",
   paperBg: "#0E0F10",
   gray: "#929BA0",
   iconButtonBg: "#181A1CD4",
@@ -70,6 +81,47 @@ export const FooterBar = styled(AppBar)(({ theme }) => ({
   },
 }));
 
+export const PaperTable = styled(Table)(({ theme }) => ({
+  borderCollapse: "separate",
+  borderSpacing: "1em",
+}));
+
+export const PaperTableHead = styled(TableHead)(({ theme }) => ({
+  borderBottom: "none",
+}));
+
+export const PaperTableRow = styled(TableRow)(({ theme }) => ({
+  background: "transparent",
+  backgroundColor: "transparent",
+  borderRadius: "24px",
+  boxShadow: "2px 12px 33px #7E9AA926",
+  border: "none",
+  borderBottom: "none",
+  position: "relative",
+}));
+
+export const PaperTableCell = styled(TableCell)(({ theme }) => ({
+  border: "none",
+  borderBottom: "none",
+  background: "transparent",
+  backgroundColor: "transparent",
+  position: "relative",
+  padding: "2em 0",
+  fontSize: "20px",
+  ":first-child": {
+    borderTopLeftRadius: "24px",
+    borderBottomLeftRadius: "24px",
+    borderWidth: "0",
+    paddingLeft: "2em",
+  },
+  ":list-child": {
+    borderTopRightRadius: "24px",
+    borderBottomRightRadius: "24px",
+    borderWidth: "0",
+    paddingRight: "2em",
+  },
+}));
+
 // global theme options that apply to both light and dark
 const globalTheme: ThemeOptions = {
   palette: {
@@ -92,19 +144,43 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          borderRadius: "25%",
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          boxShadow: "2px 30px 34px #7E9AA926",
+          "&.blue": {
+            backgroundColor: "#374fff",
+            color: "#FFF",
+          },
+          "&.grey": {
+            backgroundColor: "#AAAAAAb0",
+            color: "#000",
+          },
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
-          borderRadius: "53px",
-          padding: "2.5em",
+          borderRadius: "24px",
+          boxShadow: "2px 30px 34px #7E9AA926",
+          padding: "1.5em",
           "&.MuiAppBar-root": {
             padding: "0",
+            boxShadow: "none",
           },
           "&.MuiMenu-paper": {
             marginTop: "1em",
             borderRadius: "10px",
             padding: "0.5em",
-            boxShadow: "2px 12px 33px rgb(0 0 0 / 20%)",
+            boxShadow: "2px 12px 33px #7E9AA926",
           },
           "&.MuiAccordion-root, &.MuiAccordion-root:last-of-type": {
             padding: "1.75em 0 1em 0",
@@ -114,6 +190,17 @@ const globalTheme: ThemeOptions = {
       },
       defaultProps: {
         elevation: 0,
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        standard: {
+          "&.borderless": {
+            "::before,::after": {
+              bottomBorder: "none",
+            },
+          },
+        },
       },
     },
     MuiBackdrop: {
@@ -146,6 +233,14 @@ const globalTheme: ThemeOptions = {
           borderRadius: "36px",
           padding: "1em 3em",
           fontSize: "1em",
+          boxShadow: "2px 15px 12px #7E9AA926",
+          "&.offer": {
+            padding: "0.5em 2em",
+            background: nftLightColors.containedPrimaryBtn,
+          },
+          "&.slim": {
+            padding: "0.25em 2em",
+          },
         },
       },
       defaultProps: {
@@ -267,6 +362,24 @@ const USDBLightBase: ThemeOptions = {
             color: nftLightColors.color,
             background: nftLightColors.iconButtonBg,
           },
+          "&.lowContrast": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
         },
       },
     },
@@ -361,6 +474,24 @@ const USDBDarkBase: ThemeOptions = {
           "&.closeButton": {
             color: nftDarkColors.color,
             background: nftDarkColors.iconButtonBg,
+          },
+          "&.lowContrast": {
+            backgroundColor: nftDarkColors.invertedColor,
+            color: nftDarkColors.color,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
           },
         },
       },

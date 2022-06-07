@@ -2,7 +2,7 @@ import { Box, Button, Dialog, IconButton, Typography } from "@mui/material";
 import CancelOutlinedIcon from "@mui/icons-material/CancelOutlined";
 import style from "./list-as-collateral.module.scss";
 import { useState } from "react";
-import { TermsForm } from "./terms-form/terms-form";
+import { TermsForm } from "../../terms-form/terms-form";
 import { Asset } from "../../../types/backend-types";
 
 export interface ListAsCollateralProps {
@@ -11,7 +11,7 @@ export interface ListAsCollateralProps {
   onClose: (value: boolean) => void;
 }
 
-enum DialogState {
+export enum DialogState {
   DISCLAIMER,
   TERMS,
 }
@@ -40,7 +40,7 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
           NFT.
         </Typography>
         <Typography>
-          You can repay a loan at any time within the agreed terms, but you must still pay
+          You can repay a loan at any time within the agreed term, but you must still pay
           the full interest amount.
         </Typography>
         <Typography>
@@ -63,14 +63,29 @@ export const ListAsCollateral = (props: ListAsCollateralProps): JSX.Element => {
 
   return (
     <Dialog onClose={handleClose} open={open} sx={{ padding: "1.5em" }}>
-      <Box className={`flex fr fj-e ${style["header"]}`}>
+      <Box className="flex fr fj-c">
+        <h1 style={{ margin: "0 0 0.5em 0" }}>List as collateral</h1>
+      </Box>
+      <Box
+        className={`flex fr fj-fe ${style["header"]}`}
+        sx={{ position: "absolute", right: "16px" }}
+      >
         <IconButton onClick={handleClose}>
           <CancelOutlinedIcon />
         </IconButton>
       </Box>
-      <Box className={`flex fc ${style["body"]}`}>
+      <Box
+        className={`flex fc ${style["body"]}`}
+        sx={{ borderTop: "1px solid #aaaaaa", paddingTop: "1em" }}
+      >
         {dialogState === DialogState.DISCLAIMER && <DisclaimerComponent />}
-        {dialogState === DialogState.TERMS && <TermsForm asset={props.asset} />}
+        {dialogState === DialogState.TERMS && (
+          <TermsForm
+            asset={props.asset}
+            onClose={onClose}
+            key={`list-terms-${props.asset.openseaId}`}
+          />
+        )}
       </Box>
     </Dialog>
   );
