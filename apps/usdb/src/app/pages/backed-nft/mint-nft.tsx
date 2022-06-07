@@ -27,9 +27,10 @@ import {
   txnButtonText,
   useBonds,
   useWeb3Context,
-  getNftList,
   getNftTokenUri,
   getNftImageUri,
+  addresses,
+  NetworkIds,
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -43,7 +44,15 @@ export interface NftMetadata {
 }
 
 export const MintNftPage = (): JSX.Element => {
-  const { provider, address, chainId, connect, disconnect, connected } = useWeb3Context();
+  const {
+    provider,
+    address,
+    chainId,
+    connect,
+    disconnect,
+    connected,
+    switchEthereumChain,
+  } = useWeb3Context();
   const { bonds } = useBonds(chainId || defaultNetworkId);
 
   const usdbBalance = useSelector((state: RootState) => {
@@ -60,6 +69,11 @@ export const MintNftPage = (): JSX.Element => {
   const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
   const [nftImageUri, setNftImageUri] = useState<null | string>(null);
   const navigate = useNavigate();
+
+  const isValidNftAddress = useMemo(() => {
+    const networkId = chainId ?? defaultNetworkId;
+    return !!addresses[networkId]["USDB_NFT_ADDRESS"];
+  }, []);
 
   useEffect(() => {
     setTokenBalance(usdbBalance);
@@ -138,9 +152,13 @@ export const MintNftPage = (): JSX.Element => {
     connect(false);
   };
 
+  const switchNetwork = () => {
+    if (!switchEthereumChain) return;
+    switchEthereumChain(NetworkIds.Rinkeby);
+  }
+
   const onInvest = async () => {
     if (!nftMetadata) return;
-    const slippage = 0;
     await dispatch(
       investUsdbNftBond({
         value: String(amount),
@@ -298,53 +316,64 @@ export const MintNftPage = (): JSX.Element => {
             <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
             <span>If needed</span>
           </Box>
-          {!connected ? (
-            <Button
-              variant="contained"
-              color={stdButtonColor}
-              className="paperButton cardActionButton"
-              onClick={onConnect}
-            >
-              Connect Wallet
-            </Button>
-          ) : hasAllowance() ? (
-            <Button
-              variant="contained"
-              color={stdButtonColor}
-              className="paperButton cardActionButton"
-              disabled={
-                isPendingTxn(pendingTransactions, "invest_" + usdbNftBondData.name) ||
-                isOverBalance ||
-                amount === "" ||
-                amount === "0" ||
-                Number(tokenBalance) === 0
-              }
-              onClick={onInvest}
-            >
-              {isOverBalance
-                ? "Insufficient Balance"
-                : txnButtonText(
-                    pendingTransactions,
-                    "invest_" + usdbNftBondData.name,
-                    "Invest"
-                  )}
-            </Button>
+          {isValidNftAddress ? (
+            !connected ? (
+              <Button
+                variant="contained"
+                color={stdButtonColor}
+                className="paperButton cardActionButton"
+                onClick={onConnect}
+              >
+                Connect Wallet
+              </Button>
+            ) : hasAllowance() ? (
+              <Button
+                variant="contained"
+                color={stdButtonColor}
+                className="paperButton cardActionButton"
+                disabled={
+                  isPendingTxn(pendingTransactions, "invest_" + usdbNftBondData.name) ||
+                  isOverBalance ||
+                  amount === "" ||
+                  amount === "0" ||
+                  Number(tokenBalance) === 0
+                }
+                onClick={onInvest}
+              >
+                {isOverBalance
+                  ? "Insufficient Balance"
+                  : txnButtonText(
+                      pendingTransactions,
+                      "invest_" + usdbNftBondData.name,
+                      "Invest"
+                    )}
+              </Button>
+            ) : (
+              <Button
+                variant="contained"
+                color="primary"
+                className="paperButton cardActionButton"
+                disabled={isPendingTxn(
+                  pendingTransactions,
+                  "approve_" + usdbNftBondData.name
+                )}
+                onClick={onSeekApproval}
+              >
+                {txnButtonText(
+                  pendingTransactions,
+                  "approve_" + usdbNftBondData.name,
+                  "Approve"
+                )}
+              </Button>
+            )
           ) : (
             <Button
               variant="contained"
               color="primary"
               className="paperButton cardActionButton"
-              disabled={isPendingTxn(
-                pendingTransactions,
-                "approve_" + usdbNftBondData.name
-              )}
-              onClick={onSeekApproval}
+              onClick={switchNetwork}
             >
-              {txnButtonText(
-                pendingTransactions,
-                "approve_" + usdbNftBondData.name,
-                "Approve"
-              )}
+              Switch Network
             </Button>
           )}
         </DaiCard>
