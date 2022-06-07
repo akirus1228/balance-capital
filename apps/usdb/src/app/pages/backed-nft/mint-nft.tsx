@@ -271,7 +271,7 @@ export const MintNftPage = (): JSX.Element => {
               </Box>
             </Box>
           </Box>
-          <Box className={style["amountField"]}>
+          <Box className={style["amountField"]} mb="20px">
             <OutlinedInput
               id="amount-input-lqdr"
               type="number"
@@ -303,7 +303,7 @@ export const MintNftPage = (): JSX.Element => {
               }
             />
           </Box>
-          <Box
+          {/* <Box
             className={`${style["infoBox"]}`}
             sx={{
               display: "flex",
@@ -315,7 +315,7 @@ export const MintNftPage = (): JSX.Element => {
           >
             <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
             <span>If needed</span>
-          </Box>
+          </Box> */}
           {isValidNftAddress ? (
             !connected ? (
               <Button
