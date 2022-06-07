@@ -33,6 +33,7 @@ import {
 } from "@fantohm/shared-web3";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
+import { useNavigate } from "react-router-dom";
 
 export interface NftMetadata {
   tokenId: number;
@@ -58,7 +59,7 @@ export const MintNftPage = (): JSX.Element => {
   const dispatch = useDispatch();
   const [nftMetadata, setNftMetadata] = useState<null | NftMetadata>(null);
   const [nftImageUri, setNftImageUri] = useState<null | string>(null);
-  const [nftIds, setNftIds] = useState<Array<number>>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setTokenBalance(usdbBalance);
@@ -76,17 +77,6 @@ export const MintNftPage = (): JSX.Element => {
           setNftMetadata(metadata);
           const nftImageUri = await getNftImageUri(metadata.tokenId);
           setNftImageUri(nftImageUri);
-        },
-      })
-    );
-
-    if (!connected || !address) return;
-    dispatch(
-      getNftList({
-        address,
-        networkId: chainId ?? defaultNetworkId,
-        callback: (list: Array<number>) => {
-          setNftIds(list);
         },
       })
     );
@@ -158,218 +148,207 @@ export const MintNftPage = (): JSX.Element => {
         networkId: chainId || defaultNetworkId,
         provider,
         address,
-        tokenId: nftMetadata.tokenId
+        tokenId: nftMetadata.tokenId,
+        navigate,
       } as IInvestUsdbNftBondAsyncThunk)
     );
   };
 
   return (
-    <>
-      <Box className={style["__section"]}>
-        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
-          <DaiCard
-            tokenImage={USDBToken}
-            setTheme="light"
-            sx={{ minWidth: { xs: "300px", sm: "587px" } }}
-            className={style["cardElement"]}
-          >
-            <h1>Mint NFT</h1>
-            <Box className="w100">
-              <hr
-                style={{
-                  border: "none",
-                  borderTop: "2px solid rgba(105,108,128,0.07)",
-                }}
-              />
-            </Box>
+    <Box className={style["__section"]}>
+      <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
+        <DaiCard
+          tokenImage={USDBToken}
+          setTheme="light"
+          sx={{ minWidth: { xs: "300px", sm: "587px" } }}
+          className={style["cardElement"]}
+        >
+          <h1>Mint NFT</h1>
+          <Box className="w100">
+            <hr
+              style={{
+                border: "none",
+                borderTop: "2px solid rgba(105,108,128,0.07)",
+              }}
+            />
+          </Box>
 
-            <Box className="w100" flex={1}>
-              <Grid container spacing={0} flex={1}>
-                <Grid item xs={12} md={5} flex={1}>
-                  <Box className={style["nftImageBox"]}>
-                    {/* <label>NFT Image here</label> */}
-                    {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
-                  </Box>
-                </Grid>
-                <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
-                  Vesting Period
-                  <Box className={`flexCenterRow w100`} sx={{ mb: "2em", mt: "1em" }}>
-                    <Box
-                      className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 180 ? style["active"] : ""
-                      }`}
-                      onClick={() => updateVestingPeriod(180)}
-                      flex={1}
-                    >
-                      <span>180 days</span>
-                    </Box>
-                    <Box
-                      className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 360 ? style["active"] : ""
-                      }`}
-                      onClick={() => updateVestingPeriod(360)}
-                      flex={1}
-                    >
-                      <span>360 days</span>
-                    </Box>
-                    <Box
-                      className={`${style["smokeyToggle"]} ${
-                        vestingPeriod === 720 ? style["active"] : ""
-                      }`}
-                      onClick={() => updateVestingPeriod(720)}
-                      flex={1}
-                    >
-                      <span>720 days</span>
-                    </Box>
-                  </Box>
-                  <Box className={style["vestingDescription"]}>
-                    <span style={{ flex: 1 }}>ROI</span>
-                    <span>{valueRoi} %</span>
-                  </Box>
-                  <Box className={style["vestingDescription"]}>
-                    <span style={{ flex: 1 }}>APY</span>
-                    <span>{valueApy} %</span>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Box>
-
-            <Box className="flexCenterRow w100" mt="20px">
-              <Box
-                className={`flexCenterRow ${style["currencySelector"]}`}
-                sx={{ width: "245px" }}
-              >
-                <img
-                  src={USDBToken}
-                  style={{ height: "31px", marginRight: "1em" }}
-                  alt="USDB Token Symbol"
-                />
-                <Box
-                  sx={{
-                    display: "flex",
-                    width: "100%",
-                  }}
-                >
-                  <span className={style["name"]}>
-                    Asset
-                    <br />
-                    <b>USDB balance</b>
-                  </span>
-                  <span className={style["amount"]}>
-                    Balance
-                    <br />
-                    {tokenBalance === "null" ? <Skeleton /> : <b>{usdbBalance}</b>}
-                  </span>
+          <Box className="w100" flex={1}>
+            <Grid container spacing={0} flex={1}>
+              <Grid item xs={12} md={5} flex={1}>
+                <Box className={style["nftImageBox"]}>
+                  {/* <label>NFT Image here</label> */}
+                  {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
                 </Box>
+              </Grid>
+              <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
+                Vesting Period
+                <Box className={`flexCenterRow w100`} sx={{ mb: "2em", mt: "1em" }}>
+                  <Box
+                    className={`${style["smokeyToggle"]} ${
+                      vestingPeriod === 180 ? style["active"] : ""
+                    }`}
+                    onClick={() => updateVestingPeriod(180)}
+                    flex={1}
+                  >
+                    <span>180 days</span>
+                  </Box>
+                  <Box
+                    className={`${style["smokeyToggle"]} ${
+                      vestingPeriod === 360 ? style["active"] : ""
+                    }`}
+                    onClick={() => updateVestingPeriod(360)}
+                    flex={1}
+                  >
+                    <span>360 days</span>
+                  </Box>
+                  <Box
+                    className={`${style["smokeyToggle"]} ${
+                      vestingPeriod === 720 ? style["active"] : ""
+                    }`}
+                    onClick={() => updateVestingPeriod(720)}
+                    flex={1}
+                  >
+                    <span>720 days</span>
+                  </Box>
+                </Box>
+                <Box className={style["vestingDescription"]}>
+                  <span style={{ flex: 1 }}>ROI</span>
+                  <span>{valueRoi} %</span>
+                </Box>
+                <Box className={style["vestingDescription"]}>
+                  <span style={{ flex: 1 }}>APY</span>
+                  <span>{valueApy} %</span>
+                </Box>
+              </Grid>
+            </Grid>
+          </Box>
+
+          <Box className="flexCenterRow w100" mt="20px">
+            <Box
+              className={`flexCenterRow ${style["currencySelector"]}`}
+              sx={{ width: "245px" }}
+            >
+              <img
+                src={USDBToken}
+                style={{ height: "31px", marginRight: "1em" }}
+                alt="USDB Token Symbol"
+              />
+              <Box
+                sx={{
+                  display: "flex",
+                  width: "100%",
+                }}
+              >
+                <span className={style["name"]}>
+                  Asset
+                  <br />
+                  <b>USDB balance</b>
+                </span>
+                <span className={style["amount"]}>
+                  Balance
+                  <br />
+                  {tokenBalance === "null" ? <Skeleton /> : <b>{usdbBalance}</b>}
+                </span>
               </Box>
             </Box>
-            <Box className={style["amountField"]}>
-              <OutlinedInput
-                id="amount-input-lqdr"
-                type="number"
-                placeholder="Enter an amount"
-                className={`stake-input ${style["styledInput"]}`}
-                value={amount}
-                onChange={(e) => {
-                  if (Number(e.target.value) < 0 || e.target.value === "-") return;
-                  setAmount(e.target.value);
-                }}
-                inputProps={{
-                  classes: {
-                    notchedOutline: {
-                      border: "none",
-                    },
-                  },
-                }}
-                startAdornment={
-                  <InputAdornment position="end" className={style["maxButton"]}>
-                    <Button
-                      className={style["no-padding"]}
-                      variant="text"
-                      onClick={setMax}
-                      color="inherit"
-                    >
-                      Max
-                    </Button>
-                  </InputAdornment>
-                }
-              />
-            </Box>
-            <Box
-              className={`${style["infoBox"]}`}
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "flex-start",
-                mt: "1.5em",
-                mb: "1.5em",
+          </Box>
+          <Box className={style["amountField"]}>
+            <OutlinedInput
+              id="amount-input-lqdr"
+              type="number"
+              placeholder="Enter an amount"
+              className={`stake-input ${style["styledInput"]}`}
+              value={amount}
+              onChange={(e) => {
+                if (Number(e.target.value) < 0 || e.target.value === "-") return;
+                setAmount(e.target.value);
               }}
+              inputProps={{
+                classes: {
+                  notchedOutline: {
+                    border: "none",
+                  },
+                },
+              }}
+              startAdornment={
+                <InputAdornment position="end" className={style["maxButton"]}>
+                  <Button
+                    className={style["no-padding"]}
+                    variant="text"
+                    onClick={setMax}
+                    color="inherit"
+                  >
+                    Max
+                  </Button>
+                </InputAdornment>
+              }
+            />
+          </Box>
+          <Box
+            className={`${style["infoBox"]}`}
+            sx={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "flex-start",
+              mt: "1.5em",
+              mb: "1.5em",
+            }}
+          >
+            <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
+            <span>If needed</span>
+          </Box>
+          {!connected ? (
+            <Button
+              variant="contained"
+              color={stdButtonColor}
+              className="paperButton cardActionButton"
+              onClick={onConnect}
             >
-              <Icon component={InfoOutlinedIcon} sx={{ mr: "0.5em" }} />
-              <span>If needed</span>
-            </Box>
-            {!connected ? (
-              <Button
-                variant="contained"
-                color={stdButtonColor}
-                className="paperButton cardActionButton"
-                onClick={onConnect}
-              >
-                Connect Wallet
-              </Button>
-            ) : hasAllowance() ? (
-              <Button
-                variant="contained"
-                color={stdButtonColor}
-                className="paperButton cardActionButton"
-                disabled={
-                  isPendingTxn(pendingTransactions, "invest_" + usdbNftBondData.name) ||
-                  isOverBalance ||
-                  amount === "" ||
-                  amount === "0" ||
-                  Number(tokenBalance) === 0
-                }
-                onClick={onInvest}
-              >
-                {isOverBalance
-                  ? "Insufficient Balance"
-                  : txnButtonText(
-                      pendingTransactions,
-                      "invest_" + usdbNftBondData.name,
-                      "Invest"
-                    )}
-              </Button>
-            ) : (
-              <Button
-                variant="contained"
-                color="primary"
-                className="paperButton cardActionButton"
-                disabled={isPendingTxn(
-                  pendingTransactions,
-                  "approve_" + usdbNftBondData.name
-                )}
-                onClick={onSeekApproval}
-              >
-                {txnButtonText(
-                  pendingTransactions,
-                  "approve_" + usdbNftBondData.name,
-                  "Approve"
-                )}
-              </Button>
-            )}
-          </DaiCard>
-        </Box>
+              Connect Wallet
+            </Button>
+          ) : hasAllowance() ? (
+            <Button
+              variant="contained"
+              color={stdButtonColor}
+              className="paperButton cardActionButton"
+              disabled={
+                isPendingTxn(pendingTransactions, "invest_" + usdbNftBondData.name) ||
+                isOverBalance ||
+                amount === "" ||
+                amount === "0" ||
+                Number(tokenBalance) === 0
+              }
+              onClick={onInvest}
+            >
+              {isOverBalance
+                ? "Insufficient Balance"
+                : txnButtonText(
+                    pendingTransactions,
+                    "invest_" + usdbNftBondData.name,
+                    "Invest"
+                  )}
+            </Button>
+          ) : (
+            <Button
+              variant="contained"
+              color="primary"
+              className="paperButton cardActionButton"
+              disabled={isPendingTxn(
+                pendingTransactions,
+                "approve_" + usdbNftBondData.name
+              )}
+              onClick={onSeekApproval}
+            >
+              {txnButtonText(
+                pendingTransactions,
+                "approve_" + usdbNftBondData.name,
+                "Approve"
+              )}
+            </Button>
+          )}
+        </DaiCard>
       </Box>
-      <Box className="w100" flex={1}>
-        {nftIds.map((id: number) => (
-          <Grid container flex={1} key={`${id}`}>
-            <Grid item xs={12} md={3}></Grid>
-            <Grid item xs={12} md={6}>
-              <NftItem nftId={id} />
-            </Grid>
-          </Grid>
-        ))}
-      </Box>
-    </>
+    </Box>
   );
 };

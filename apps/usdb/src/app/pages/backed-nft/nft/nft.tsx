@@ -124,12 +124,12 @@ export const NftItem = (props: INftItemParams): JSX.Element => {
 
   return (
     <Grid container spacing={0} flex={1} sx={{ mb: "2em" }}>
-      <Grid item xs={12} md={5} flex={1}>
+      <Grid item xs={12} md={6} flex={1}>
         <Box className={style["nftItemImageBox"]}>
           {nftImageUri ? <img src={nftImageUri} /> : <Skeleton />}
         </Box>
       </Grid>
-      <Grid item xs={12} md={7} flex={1} sx={{ padding: "1em" }}>
+      <Grid item xs={12} md={6} flex={1} sx={{ padding: "1em" }}>
         {nftDetails.secondsToVest > 0 ? (
           <>
             <Box className={style["vestingDescription"]}>

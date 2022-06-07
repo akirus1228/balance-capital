@@ -243,15 +243,15 @@ export const calcBondDetails = createAsyncThunk(
         purchased,
         { valuation, bondQuote },
       ]) => [
-        fhmMarketPrice?.marketPrice || 0,
-        terms,
-        maxBondPrice / Math.pow(10, 9),
-        debtRatio / Math.pow(10, 9),
-        bondPrice / Math.pow(10, bond.decimals),
-        purchased,
-        valuation,
-        bondQuote,
-      ]
+          fhmMarketPrice?.marketPrice || 0,
+          terms,
+          maxBondPrice / Math.pow(10, 9),
+          debtRatio / Math.pow(10, 9),
+          bondPrice / Math.pow(10, bond.decimals),
+          purchased,
+          valuation,
+          bondQuote,
+        ]
     );
 
     const paymentTokenMarketPrice =
@@ -870,7 +870,15 @@ export const cancelBond = createAsyncThunk(
 export const investUsdbNftBond = createAsyncThunk(
   "bonding/investUsdbNftBond",
   async (
-    { tokenId, value, address, bond, networkId, provider }: IInvestUsdbNftBondAsyncThunk,
+    {
+      tokenId,
+      value,
+      address,
+      bond,
+      networkId,
+      provider,
+      navigate,
+    }: IInvestUsdbNftBondAsyncThunk,
     { dispatch }
   ) => {
     if (!provider) {
@@ -916,9 +924,6 @@ export const investUsdbNftBond = createAsyncThunk(
       uaData.txHash = investTx.hash;
 
       dispatch(getBalances({ address, networkId }));
-      setTimeout(() => {
-        if (tokenId) mintBackedNft(tokenId);
-      }, 5000);
     } catch (e: any) {
       console.log(e);
       uaData.approved = false;
@@ -940,6 +945,11 @@ export const investUsdbNftBond = createAsyncThunk(
         segmentUA(uaData);
         dispatch(clearPendingTxn(investTx.hash));
         dispatch(info("Invest completed."));
+
+        setTimeout(async () => {
+          if (tokenId) await mintBackedNft(tokenId);
+          setTimeout(() => navigate("/my-account#nft-investments"), 2000);
+        }, 5000);
       }
     }
   }
