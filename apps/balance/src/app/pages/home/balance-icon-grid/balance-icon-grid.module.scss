@@ -1,0 +1,38 @@
+.iconGridItem {
+    margin-bottom: 25px;
+}
+@media (max-width: 600px) {
+
+.productBox{
+    width: 80%;
+  }
+  .productGrid {
+    width: 80%;
+    margin-left: 10%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom:50px !important;
+  }
+}
+
+@media (max-width:1200px) {
+
+    .productGrid {
+      width: 100%;
+      margin-left: 10%;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+        margin-bottom:50px !important;
+    }
+}
+
+@media (max-width:600px) {
+  .productGrid {
+    width: 80%;
+    margin-left: 10%;
+  }
+}

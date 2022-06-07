@@ -24,17 +24,17 @@ import AnalyticsIcon from "@mui/icons-material/Analytics";
 import WbSunnyOutlinedIcon from "@mui/icons-material/WbSunnyOutlined";
 import { MouseEvent, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
 import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
-import USDBLogoLight from "../../../../assets/images/USDB-logo.svg";
-import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.svg";
-import styles from "./header.module.scss";
+import { BalanceLogo, BalanceLogoDark } from "@fantohm/shared/images";
+import styles from "./home-header.module.scss";
 import { NetworkMenu } from "./network-menu";
-import { headerPages, Page } from "../../../constants/nav";
+import { balanceheaderPages, Page } from "../../../constants/nav";
+import style from "../../../pages/home/balance-home-page.module.scss";
 
-export const Header = (): JSX.Element => {
+export const HomeHeader = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =
     useWeb3Context();
   const dispatch = useDispatch();
@@ -49,15 +49,7 @@ export const Header = (): JSX.Element => {
 
   const themeType = useSelector((state: RootState) => state.app.theme);
   const { bonds } = useBonds(chainId ?? defaultNetworkId);
-  const accountBonds = useSelector((state: RootState) => {
-    return state.account.bonds;
-  });
-  const allBondsLoaded = useSelector((state: RootState) => {
-    return state.account.allBondsLoaded;
-  });
-  const accountLoading = useSelector((state: RootState) => {
-    return state.account.loading;
-  });
+
   const handleOpenNavMenu = (event: MouseEvent<HTMLElement>) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -65,46 +57,6 @@ export const Header = (): JSX.Element => {
   const handleCloseNavMenu = () => {
     setAnchorElNav(null);
   };
-
-  const handleConnect = useCallback(async () => {
-    if (connected) {
-      await disconnect();
-    } else {
-      try {
-        await connect();
-      } catch (e) {
-        console.log("Connection metamask error", e);
-      }
-    }
-  }, [connected, disconnect, connect]);
-
-  useEffect(() => {
-    dispatch(setWalletConnected(connected));
-    dispatch(getBalances({ address: address, networkId: chainId || defaultNetworkId }));
-    if (connected) {
-      setConnectButtonText("Disconnect");
-    } else {
-      setConnectButtonText("Connect Wallet");
-    }
-  }, [connected, address, dispatch]);
-
-  useEffect(() => {
-    // if there's a cached provider, try and connect
-    if (hasCachedProvider && hasCachedProvider() && !connected) {
-      try {
-        connect();
-      } catch (e) {
-        console.log("Connection metamask error", e);
-      }
-    }
-    // if there's a cached provider and it has connected, connection check is good.
-    if (hasCachedProvider && hasCachedProvider && connected)
-      dispatch(setCheckedConnection(true));
-
-    // if there's not a cached provider and we're not connected, connection check is good
-    if (hasCachedProvider && !hasCachedProvider() && !connected)
-      dispatch(setCheckedConnection(true));
-  }, [connected, hasCachedProvider, connect]);
 
   const toggleTheme = useCallback(() => {
     const type = themeType === "light" ? "dark" : "light";
@@ -121,28 +73,29 @@ export const Header = (): JSX.Element => {
     setAnchorElProductsMenu(null);
   };
 
+  const { pathname, hash, key } = useLocation();
+
   useEffect(() => {
-    // FIXME hack
-    // if (Object.keys(accountBonds).length < allBonds.length) {
-    //   return;
-    // }
-    if (allBondsLoaded) {
-      const balances = bonds.reduce((prevBalance, bond) => {
-        const bondName = bond.name;
-        const accountBond = accountBonds[bondName];
-        if (accountBond) {
-          const userBonds = accountBond.userBonds;
-          return (
-            prevBalance +
-            userBonds.reduce((balance, bond) => balance + Number(bond.amount), 0)
-          );
-        }
-        return prevBalance;
-      }, 0);
-      setTotalBalances(balances);
-      setAccountBondsLoading(false);
+    console.log(hash);
+    if (hash === "#docs") {
+      window.open("https://fantohm.gitbook.io/documentation/", "_blank");
     }
-  }, [address, allBondsLoaded, accountLoading]);
+
+    // if not a hash link, scroll to top
+    if (hash === "") {
+      window.scrollTo(0, 0);
+    }
+    // else scroll to id
+    else {
+      setTimeout(() => {
+        const id = hash.replace("#", "");
+        const element = document.getElementById(id);
+        if (element) {
+          element.scrollIntoView();
+        }
+      }, 0);
+    }
+  }, [pathname, hash, key]); // do this on route change
 
   return (
     <AppBar position="static" color="transparent" elevation={0} style={{ margin: 0 }}>
@@ -159,8 +112,9 @@ export const Header = (): JSX.Element => {
           >
             <Link to="/">
               <img
-                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
+                src={themeType === "light" ? BalanceLogo : BalanceLogoDark}
                 alt="USDB logo"
+                width="40%"
               />
             </Link>
           </Typography>
@@ -195,7 +149,7 @@ export const Header = (): JSX.Element => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {headerPages.map((page: Page) => (
+              {balanceheaderPages.map((page: Page) => (
                 <MenuLink
                   // href={page.href ? page.href : '#'}
                   href={page?.params?.comingSoon ? "#" : page.href}
@@ -210,62 +164,6 @@ export const Header = (): JSX.Element => {
                   </Typography>
                 </MenuLink>
               ))}
-
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileConnect"]}`}
-              >
-                <Typography textAlign="center">
-                  <Button onClick={handleConnect}>{connectButtonText}</Button>
-                </Typography>
-              </MenuItem>
-              <MenuItem
-                sx={{ display: "flex", justifyContent: "start", padding: "0" }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobileTheme"]}`}
-              >
-                <Typography textAlign="center">
-                  <Button onClick={toggleTheme}>
-                    <SvgIcon component={WbSunnyOutlinedIcon} fontSize="medium" />
-                  </Button>
-                </Typography>
-              </MenuItem>
-
-              <MenuItem
-                sx={{
-                  display: "flex",
-                  justifyContent: "start",
-                  paddingLeft: "20px",
-                }}
-                onClick={handleCloseNavMenu}
-                className={`${styles["mobilePortfolio"]}`}
-              >
-                <Typography textAlign="center">
-                  <Link to="/my-account">
-                    <Button className="portfolio">
-                      <Box display="flex" alignItems="center" mr="10px">
-                        <SvgIcon component={AnalyticsIcon} fontSize="large" />
-                      </Box>
-                      <Box
-                        display="flex"
-                        alignItems="center"
-                        mt="2px"
-                        className={`${styles["portfolioText"]}`}
-                      >
-                        My Portfolio:&nbsp;
-                      </Box>
-                      {!accountBondsLoading ? (
-                        <Box display="flex" alignItems="center" mt="2px">
-                          ${trim(totalBalances, 2)}
-                        </Box>
-                      ) : (
-                        <Skeleton width="100px" />
-                      )}
-                    </Button>
-                  </Link>
-                </Typography>
-              </MenuItem>
             </Menu>
           </Box>
           <Typography
@@ -274,7 +172,7 @@ export const Header = (): JSX.Element => {
           >
             <Link to="/">
               <img
-                src={themeType === "light" ? USDBLogoLight : USDBLogoDark}
+                src={BalanceLogo}
                 alt="USDB logo"
                 className={`${styles["usdbLogo"]}`}
               />
@@ -284,18 +182,21 @@ export const Header = (): JSX.Element => {
             sx={{
               flexGrow: 1,
               display: { xs: "none", md: "flex" },
-              justifyContent: "flex-start",
+              justifyContent: "end",
               alignItems: "center",
               flexDirection: "row",
             }}
           >
             <Box>
-              <Button
-                className={`menuButton ${styles["productsButton"]}`}
+              <Link
+                to={pathname}
+                className={
+                  themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+                }
                 onClick={(e) => setAnchorElProductsMenu(e.currentTarget)}
               >
                 Products
-              </Button>
+              </Link>
               <Menu
                 id="products-menu"
                 anchorEl={anchorElProductsMenu}
@@ -305,7 +206,7 @@ export const Header = (): JSX.Element => {
                   "aria-labelledby": "products-button",
                 }}
               >
-                {headerPages.map((page: any) => {
+                {balanceheaderPages.map((page: any) => {
                   return (
                     <MenuLink
                       // href={page.href ? page.href : '#'}
@@ -324,51 +225,51 @@ export const Header = (): JSX.Element => {
                 })}
               </Menu>
             </Box>
-          </Box>
-
-          <Box mr="1em">
-            <NetworkMenu />
-          </Box>
-          {connected && (
-            <Tooltip title={`My Portfolio: $${totalBalances}`}>
-              <Link to="/my-account">
-                <Button
-                  className="portfolio"
-                  sx={{ display: { xs: "none", md: "flex" } }}
-                >
-                  <Box display="flex" alignItems="center" mr="10px">
-                    <SvgIcon component={AnalyticsIcon} fontSize="large" />
-                  </Box>
-                  <Box
-                    display="flex"
-                    alignItems="center"
-                    mt="2px"
-                    sx={{ display: { xs: "none", lg: "flex" } }}
-                  >
-                    My Portfolio:&nbsp;
-                  </Box>
-                  {!accountBondsLoading ? (
-                    <Box display="flex" alignItems="center" mt="2px">
-                      ${trim(totalBalances, 2)}
-                    </Box>
-                  ) : (
-                    <Skeleton width="100px" />
-                  )}
-                </Button>
-              </Link>
-            </Tooltip>
-          )}
-
-          <Tooltip title="Connect Wallet">
-            <Button
-              onClick={handleConnect}
-              sx={{ px: "3em", display: { xs: "none", md: "flex" } }}
-              color="primary"
-              className="menuButton"
+            <Link
+              to="/about"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
             >
-              {connectButtonText}
+              About
+            </Link>
+            <Link
+              to={{ pathname: "/#docs" }}
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
+              Docs
+            </Link>
+            <Link
+              to="/#audit"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
+              Audits
+            </Link>
+            <Button
+              variant="contained"
+              color="primary"
+              href="/#get-started"
+              sx={{
+                px: "3em",
+                display: {
+                  xs: "none",
+                  md: "flex",
+                  width: "100%",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "clip",
+                },
+              }}
+              className={style["link"]}
+              style={{ display: "flex" }}
+            >
+              Get started
             </Button>
-          </Tooltip>
+          </Box>
           <Tooltip title="Toggle Light/Dark Mode">
             <Button
               onClick={toggleTheme}
