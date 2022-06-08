@@ -106,13 +106,14 @@ export const BalanceHomePage = (): JSX.Element => {
           >
             <Paper
               style={{
-                background: `url(${BalanceHeroImage})`,
+                backgroundImage: `url(${BalanceHeroImage})`,
                 width: "100%",
                 height: "100%",
                 borderTopLeftRadius: "80px",
                 borderTopRightRadius: "80px",
                 borderBottomLeftRadius: "0px",
                 borderBottomRightRadius: "0px",
+                backgroundPosition:"center center",
               }}
             >
               <Grid
@@ -123,7 +124,9 @@ export const BalanceHomePage = (): JSX.Element => {
               >
                 <Grid
                   item
-                  md={6}
+                  sm={12}
+                  md={9}
+                  lg={6}
                   order={{ lg: 1 }}
                   sx={{
                     display: "flex",
@@ -132,9 +135,12 @@ export const BalanceHomePage = (): JSX.Element => {
                     alignItems: "center",
                     paddingTop: "30px",
                   }}
+                  className={style["heroRight"]}
                 >
-                  <Box style={{ marginLeft: "5em" }}>
-                    <Typography style={{ fontSize: "36px", color: "#000000" }}>
+                  <Box sx={{ 
+                    marginLeft: {sm: "1em", md: "3em", lg: "5em"}, 
+                    }}>
+                    <Typography className={style["heroTitle"]}>
                       Infrastructure for decentralized finance
                     </Typography>
                     <Typography style={{ marginTop: "20px", color: "#000000" }}>
@@ -210,12 +216,15 @@ export const BalanceHomePage = (): JSX.Element => {
             style={{ width: "100%" }}
           >
             <Paper
-              className="email-box"
               style={{
                 width: "100%",
                 borderRadius: "80px",
-                background: `url(${BalanceEmailBanner})`,
+                backgroundImage: `url(${BalanceHeroImage})`,
+                backgroundSize: "100% auto",
+                backgroundPosition: "center right",
+                backgroundRepeat: "no-repeat",
               }}
+              className={style["email-box"]}
             >
               <Grid
                 container
@@ -223,10 +232,9 @@ export const BalanceHomePage = (): JSX.Element => {
                 columnSpacing={2}
                 rowSpacing={{ sm: 0, md: 4 }}
               >
-                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]} />
-                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+                <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
                   <Typography
-                    style={{ marginLeft: "40px", fontSize: "20px", color: "#000000" }}
+                    style={{ fontSize: "20px", color: "#000000" }}
                   >
                     Receive email updates
                   </Typography>
@@ -245,10 +253,10 @@ export const BalanceHomePage = (): JSX.Element => {
                   >
                     <Grid
                       item
+                      sm={12}
                       md={6}
                       order={{ lg: 1 }}
                       className={style["iconsElement"]}
-                      style={{ marginLeft: "40px" }}
                     >
                       <OutlinedInput
                         className={`${style["styledInput"]}`}
@@ -260,7 +268,7 @@ export const BalanceHomePage = (): JSX.Element => {
                         }}
                       />
                     </Grid>
-                    <Grid item md={3} order={{ lg: 1 }} className={style["iconsElement"]}>
+                    <Grid item sm={12} md={3} order={{ lg: 1 }} className={style["iconsElement"]}>
                       <Button
                         variant="contained"
                         color="primary"
@@ -272,7 +280,7 @@ export const BalanceHomePage = (): JSX.Element => {
                       </Button>
                     </Grid>
                   </Grid>
-                  <Typography style={{ marginLeft: "40px", color: "#000000" }}>
+                  <Typography style={{ color: "#000000" }}>
                     No spam. Never shared. Opt out at any time.
                   </Typography>
                 </Grid>

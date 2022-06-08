@@ -56,7 +56,8 @@ export function BalanceAboutTile({
     >
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -88,11 +89,11 @@ export function BalanceAboutTile({
           }}
           className={style["iconLinkContainer"]}
         >
-          <Grid item xs={10} md={12}>
+          <Grid item xs={12} md={12}>
             <h1 className={style["title"]}>{title}</h1>
           </Grid>
 
-          <Grid item xs={10} md={12}>
+          <Grid item xs={12} md={12}>
             <h1 className={style["text"]}>{text}</h1>
           </Grid>
           <Grid
@@ -100,7 +101,7 @@ export function BalanceAboutTile({
             xs={12}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
+              flexDirection: { xs: "row", md: "row" },
               justifyContent: "center",
               alignItems: "center",
               paddingTop: "30px",
