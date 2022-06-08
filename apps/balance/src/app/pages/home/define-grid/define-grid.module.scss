@@ -82,3 +82,11 @@
   color: #000000;
   border: 1px solid #000000;
 }
+
+
+
+body[class=darkTheme] {
+.defineImg {
+  img {filter:invert(1) grayscale(1) brightness(2);}
+}
+}

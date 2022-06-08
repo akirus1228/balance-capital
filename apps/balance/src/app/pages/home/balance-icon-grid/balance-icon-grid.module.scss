@@ -98,4 +98,14 @@ h1[class*=link_title] {
       margin-bottom:50px !important;
   }
 }
+body[class=darkTheme] {
+  .productCard > div { 
+    background:rgba(0,0,0,0.5);
+    -moz-box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+  -webkit-box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
 
+ img {filter:invert(1) grayscale(1);}
+
+  }
+}

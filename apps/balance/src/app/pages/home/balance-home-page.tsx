@@ -115,6 +115,7 @@ export const BalanceHomePage = (): JSX.Element => {
                 borderBottomRightRadius: "0px",
                 backgroundPosition:"center center",
               }}
+              className={style["heroElem"]}
             >
               <Grid
                 container
@@ -224,7 +225,7 @@ export const BalanceHomePage = (): JSX.Element => {
                 backgroundPosition: "center right",
                 backgroundRepeat: "no-repeat",
               }}
-              className={style["email-box"]}
+              className={style["emailBox"]}
             >
               <Grid
                 container
@@ -241,20 +242,18 @@ export const BalanceHomePage = (): JSX.Element => {
                   <Grid
                     container
                     style={{ width: "100%", height: "100%" }}
-                    columnSpacing={2}
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "start",
                       alignItems: "start",
-                      paddingTop: "30px",
+                      paddingTop: "10px",
                     }}
-                    rowSpacing={{ xs: 4, md: 0 }}
                   >
                     <Grid
                       item
                       sm={12}
-                      md={6}
+                      md={8}
                       order={{ lg: 1 }}
                       className={style["iconsElement"]}
                     >
@@ -268,7 +267,7 @@ export const BalanceHomePage = (): JSX.Element => {
                         }}
                       />
                     </Grid>
-                    <Grid item sm={12} md={3} order={{ lg: 1 }} className={style["iconsElement"]}>
+                    <Grid item sm={12} md={4} order={{ lg: 1 }} className={style["iconsElement"]}>
                       <Button
                         variant="contained"
                         color="primary"
