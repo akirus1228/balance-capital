@@ -29,10 +29,11 @@ export const AuditGrid = (): JSX.Element => {
         container
         rowSpacing={6}
         style={{
-          width: "60%",
+          width: "80%",
           alignItems: "center",
           justifyContent: "center",
-          marginLeft: "20%",
+          marginLeft: "10%",
+          marginBottom: "50px",
         }}
         className={style["productGrid"]}
       >
@@ -49,7 +50,7 @@ export const AuditGrid = (): JSX.Element => {
             Empowered & Audited As Necessary
           </Typography>{" "}
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4}>
           <a
             href={
               "https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/Fantohm%20USD%20Full%20Smart%20Contract%20Security%20Audit.pdf"
@@ -62,7 +63,7 @@ export const AuditGrid = (): JSX.Element => {
             />
           </a>
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4}>
           <a href="https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/FantOHM-66_staking-Hacken-Feb_2022.pdf">
             <img
               src={theme === USDBLight ? HackenIcon : HackenIconDark}
@@ -71,7 +72,7 @@ export const AuditGrid = (): JSX.Element => {
             />
           </a>
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4}>
           <a href="https://github.com/fantohm-dev/fantohm-contracts/blob/main/audit/FantOHM_DAO_Spadetech.io_Audit_Nov_2021.pdf">
             <img
               src={theme === USDBLight ? SpadetechIcon : SpadetechIconDark}
