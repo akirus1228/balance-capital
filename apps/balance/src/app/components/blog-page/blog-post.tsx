@@ -85,17 +85,11 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
                   textAlign: "center",
                 }}
               >
-                Product
+                {props.post && props.post.blogCategory ? props.post.blogCategory : ""}
               </h3>
             </Box>
           </Grid>
-          <Grid
-            item
-            className="email-div"
-            md={4}
-            order={{ lg: 1 }}
-            style={{ height: "100%", overflow: "hidden" }}
-          />
+
           <Grid
             item
             className="email-div"

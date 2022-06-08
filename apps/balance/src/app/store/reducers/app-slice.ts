@@ -19,25 +19,31 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
     accessToken: "hIyu_c-gNoP0E__ihOjls2XzVE4Tu5ZPV1YlNq-vaSc",
   });
 
-  const apiResult = await client.getEntries();
+  const apiResult = await client.getEntries({ content_type: "blogPage" });
 
   for (const entry of apiResult.items) {
     if (entry) {
       const entryResult = await client.getEntry(entry.sys.id);
       if (entryResult) {
         let imageUrl = "";
+        let category = "";
         try {
           imageUrl = entryResult.fields.blogAsset.fields.file.url;
         } catch (e) {
           imageUrl = "";
         }
-
+        try {
+          category = entryResult.fields.blogCategory.fields.title;
+        } catch (e) {
+          category = "";
+        }
         posts.push({
           id: entryResult.sys.id,
           date: entryResult.sys.createdAt,
           blogTitle: entryResult.fields.blogTitle,
           blogAsset: entryResult.fields.blogAsset,
           content: entryResult.fields.content,
+          blogCategory: category,
           image: imageUrl,
         });
       }

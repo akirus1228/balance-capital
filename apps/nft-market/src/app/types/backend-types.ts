@@ -298,6 +298,7 @@ export type BlogPostDTO = {
   date: string;
   blogTitle: string;
   blogAsset?: string;
+  blogCategory?: string;
   content: string;
   image?: string;
 };

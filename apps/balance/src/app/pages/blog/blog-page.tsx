@@ -76,6 +76,8 @@ export const BlogPage = (): JSX.Element => {
     return;
   };
 
+  console.log(blogPosts)
+
   return (
     <Container
       maxWidth="xl"
