@@ -113,14 +113,14 @@ export const DefineGrid = (): JSX.Element => {
   return (
     <Grid
       container
-      rowSpacing={6}
+      rowSpacing={1}
       className={style["productGrid"]}
       style={{ marginTop: "50px" }}
     >
       <Grid
         item
         xs={12}
-        md={6}
+        md={5}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -135,7 +135,6 @@ export const DefineGrid = (): JSX.Element => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "start",
-            paddingTop: { xs: "32px", md: "62px" },
           }}
           className={style["hero"]}
         >
@@ -157,6 +156,7 @@ export const DefineGrid = (): JSX.Element => {
       <Grid
         item
         xs={4}
+        md={7}
         sx={{
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -170,7 +170,7 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        md={4}
+        md={7}
         sx={{
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -184,7 +184,7 @@ export const DefineGrid = (): JSX.Element => {
       <Grid
         item
         xs={12}
-        md={6}
+        md={5}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -199,7 +199,6 @@ export const DefineGrid = (): JSX.Element => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "start",
-            paddingTop: { xs: "32px", md: "62px" },
           }}
           className={style["hero"]}
         >

@@ -2,16 +2,45 @@
   margin-bottom: 25px;
 }
 
-@media (max-width:1200px) {
+.investmentElem {
+
+  line-height:30px;
+
+  h1 {margin:0 !important;}
+  h1[class*=_title] {
+    font-weight:400;
+    font-size:32px;
+    line-height:40px;
+    margin:0;
+    width:100%;
+    margin-bottom:25px !important;
+  }
+  button {margin-left:0 !important;
+  box-shadow: none;
+  margin-top:25px !important;
+  }
+
+  img {margin-left:-50px;height:auto !important;width:150px !important;margin-bottom:-30px;}
+  div[class*=_iconLinkContainer] {
+    padding:0 30px 30px 30px;
+  }
+
+}
+
+
 
   .productGrid {
     display: block;
     align-items: center;
     justify-content: center;
-    margin-top:150px !important;
-    margin-bottom:50px !important;
-  }
-
+    @media (max-width:1200px) {
+      margin-top:150px !important;
+      margin-bottom:50px !important;
+    }
+    @media (max-width:900px) {
+      margin-top:30px !important;
+      margin-bottom:50px !important;
+    }
 }
 
 .iconLinkContainer {
@@ -21,7 +50,6 @@
   align-items: start;
   @media (max-width:600px) {
     width: 100%;
-    text-align: center;
   }
 
   .iconImage {

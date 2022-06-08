@@ -29,10 +29,11 @@ export const AuditGrid = (): JSX.Element => {
         container
         rowSpacing={6}
         style={{
-          width: "60%",
+          width: "80%",
           alignItems: "center",
           justifyContent: "center",
-          marginLeft: "20%",
+          marginLeft: "10%",
+          marginBottom: "50px",
         }}
         className={style["productGrid"]}
       >
@@ -49,21 +50,21 @@ export const AuditGrid = (): JSX.Element => {
             Empowered & Audited As Necessary
           </Typography>{" "}
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4} className={style["auditElem"]}>
           <img
             src={theme === USDBLight ? TechrateIcon : TechrateIconDark}
             alt="USDB logo"
             className={style["auditIcon"]}
           />
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4} className={style["auditElem"]}>
           <img
             src={theme === USDBLight ? HackenIcon : HackenIconDark}
             alt="USDB logo"
             className={style["auditIcon"]}
           />
         </Grid>
-        <Grid item md={3} sm={3}>
+        <Grid item md={4} sm={4} className={style["auditElem"]}>
           <img
             src={theme === USDBLight ? SpadetechIcon : SpadetechIconDark}
             alt="USDB logo"

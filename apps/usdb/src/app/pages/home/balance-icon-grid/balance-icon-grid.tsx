@@ -26,10 +26,10 @@ export const BalanceIconGrid = (): JSX.Element => {
           textAlign: "center",
         }}
       >
-        <Grid item md={12} sm={6}>
+        <Grid item md={12} sm={12}>
           <Typography style={{ fontSize: "36px" }}>Our products</Typography>
         </Grid>
-        <Grid item md={3} sm={12}>
+        <Grid item lg={3} md={4} sm={12} className={style["productCard"]}>
           <BalanceIconLink
             title="USDB Stablecoin"
             icon={TradFiIcon}
@@ -37,7 +37,7 @@ export const BalanceIconGrid = (): JSX.Element => {
             text="USDB is an ideal tool of decentralised commerce"
           />
         </Grid>
-        <Grid item md={3} sm={12}>
+        <Grid item lg={3} md={4} sm={12} className={style["productCard"]}>
           <BalanceIconLink
             title="FHM"
             icon={USDBFHMIcon}
@@ -45,7 +45,7 @@ export const BalanceIconGrid = (): JSX.Element => {
             text="The FHM protocol is ideal as a value-capturing reserve"
           />
         </Grid>
-        <Grid item md={3} sm={12}>
+        <Grid item lg={3} md={4} sm={12} className={style["productCard"]}>
           <BalanceIconLink
             title="Liquidity Solutions"
             icon={LiquidityIcon}
@@ -55,7 +55,7 @@ export const BalanceIconGrid = (): JSX.Element => {
           {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
         </Grid>
       </Grid>
-      <Grid item md={3} sm={12}>
+      <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
           title="NFT Lending"
           icon={NFTLendingIcon}
@@ -63,21 +63,21 @@ export const BalanceIconGrid = (): JSX.Element => {
         />
         {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
-      <Grid item md={3} sm={12}>
+      <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
           title="Financial NFTs"
           icon={FinancialNftsIcon}
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
-      <Grid item md={3} sm={12}>
+      <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
           title="USDB Bank"
           icon={BankIcon}
           text="Need brief one-line summary here to describe item"
         />
       </Grid>
-      <Grid item md={3} sm={12}>
+      <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
           title="Dex & Bridge"
           icon={BridgeIcon}
