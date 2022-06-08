@@ -59,7 +59,8 @@ export const BalanceIconGrid = (): JSX.Element => {
         <BalanceIconLink
           title="NFT Lending"
           icon={NFTLendingIcon}
-          text=""
+          link="https://liqdnft.com"
+          text="Unlock the value of your NFTs without selling them."
         />
         {/*<BalanceIconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
@@ -67,14 +68,14 @@ export const BalanceIconGrid = (): JSX.Element => {
         <BalanceIconLink
           title="Financial NFTs"
           icon={FinancialNftsIcon}
-          text=""
+          text="Coming soon"
         />
       </Grid>
       <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
           title="USDB Bank"
           icon={BankIcon}
-          text=""
+          text="Coming soon"
         />
       </Grid>
       <Grid item md={3} sm={6} className={style["productCard"]}>

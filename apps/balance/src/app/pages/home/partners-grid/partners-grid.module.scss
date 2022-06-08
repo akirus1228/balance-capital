@@ -140,7 +140,7 @@
 
   .auditElem {
     text-align:center;
-    img {
+    a {
     align-items: center;
     box-sizing: border-box;
     -moz-box-shadow: inset 0 0 30px rgba(255,255,255,1);
@@ -148,7 +148,7 @@
     box-shadow: inset 0 0 30px rgba(255,255,255,1);
     border-radius:25px;
     display:flex;
-    width:calc(100% - 20px)
+    margin:10px;
     }
   
   }
@@ -169,4 +169,25 @@
     width: 100%;
     margin-left: 0 !important;
   }
+}
+body[class=darkTheme] {
+  .auditElem {
+    img {
+      width: calc(100% + 4px);
+      margin-left:-2px;
+      margin-bottom:-2px;
+    }
+    a {
+    overflow:hidden;
+    }
+  
+  }
+  .partnerElem {
+    a {
+    -moz-box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    -webkit-box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
+    
+  }
+}
 }

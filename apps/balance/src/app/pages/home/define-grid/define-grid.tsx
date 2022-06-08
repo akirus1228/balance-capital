@@ -164,6 +164,7 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
+        className={style["defineImg"]}
       >
         <img src={BalanceDefine2} style={{ width: "100%" }} />
       </Grid>
@@ -178,6 +179,7 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
+        className={style["defineImg"]}
       >
         <img src={BalanceDefine1} style={{ width: "100%" }} />
       </Grid>
@@ -246,7 +248,7 @@ export const DefineGrid = (): JSX.Element => {
           </Grid>
           <Grid item xs={12}>
             <h1 className={style["text"]}>
-              Are you part of a financial institutions or a DeFi protocol? Get in touch to
+              Are you part of a financial institution or a DeFi protocol? Get in touch to
               discuss how Balance and your organisation can work together.
             </h1>
           </Grid>
