@@ -33,7 +33,7 @@ export const BalanceIconGrid = (): JSX.Element => {
           <BalanceIconLink
             title="USDB Stablecoin"
             icon={TradFiIcon}
-            link="/usdb"
+            link="/about#usdb"
             text="USDB is an ideal tool of decentralised commerce"
           />
         </Grid>

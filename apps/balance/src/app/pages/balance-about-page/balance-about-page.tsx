@@ -119,6 +119,7 @@ export const BalanceAboutPage = (): JSX.Element => {
       </Grid>
       <BalanceAboutTile
         icon={AboutUSDB}
+        itemid="usdb"
         title="USDB Stablecoin"
         text="USDB is the Swiss Army Knife of stable coins, combining the benefits of algorithmic supply backing, protocol owned liquidity, traditional banking, and decentralized finance. There are 5 strategies to be employed in maintaining its peg. Over this next epoch of adoption, as USDB gains more use cases, each of these strategies will be deployed or refined as necessary."
         link="https://www.usdbalance.com/"
@@ -126,6 +127,7 @@ export const BalanceAboutPage = (): JSX.Element => {
       />
       <BalanceAboutTile
         icon={AboutFHM}
+        itemid="fhm"
         title="FHM Protocol"
         text="FHM is a Reserve & Rewards Protocol inspired by the Protocol Owned Liquidity software developments of OHM. FHM features compounding, single disbursement bonds as the safest possible bonding mechanism to ensure the longevity of exchange liquidity in relation to neighbouring protocols with similar principles."
         link="https://fantohm.com/"
@@ -134,12 +136,14 @@ export const BalanceAboutPage = (): JSX.Element => {
       />
       <BalanceAboutTile
         icon={AboutBridge}
+        itemid="bridge"
         title="DEX & Bridge"
         text="Bridge & swap thousands of assets across multiple chains with the lowest fees. Through a partnership with Rango Exchange, transactions are intuitively routed through several aggregators to ensure you always get the cheapest fees."
         link="https://app.fantohm.com/#/dex"
       />
       <BalanceAboutTile
         icon={AboutLiquidity}
+        itemid="liquidity"
         title="Liquidity Solution"
         text="We understand that managing token liquidity is tough. We’ve built the perfect solution to help projects maximise the liquidity they can unlock. Making sure deep liquidity is available for your ecosystem. Helping you achieve your long-term mission and short-term needs."
         link="https://beets.fi/#/pool/0xd5e946b5619fff054c40d38c976f1d06c1e2fa820002000000000000000003ac"
@@ -147,17 +151,20 @@ export const BalanceAboutPage = (): JSX.Element => {
       />
       <BalanceAboutTile
         icon={AboutUSDBBank}
+        itemid="usdbbank"
         title="USDB Bank"
         text="We are building a lending and borrowing structure that will fall under our USDBank which you may have already seen teased in the usdbalance.com site ui."
       />
       <BalanceAboutTile
         icon={AboutNFTMarketplace}
+        itemid="marketplace"
         title="NFT Marketplace"
         text="Liqd is an non-fungible token (NFT) marketplace built to enable the lending and borrowing of blue chip NFTs. The platform enables individuals who hold blue chip NFT assets to unlock liquidity by borrowing against the value of their asset(s).
         In turn, Liqd unlocks a peer-to-peer lending opportunity for crypto holding individuals to lend capital for a set interest rate, backed by the value of the underlying NFT asset."
       />
       <BalanceAboutTile
         icon={AboutFinancialNFT}
+        itemid="financialnft"
         title="Financial NFTs"
         text="We are building a financial NFTs that will act as a receipt for a new game-changing financial product."
       />

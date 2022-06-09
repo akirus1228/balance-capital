@@ -31,7 +31,7 @@ export const headerPages: Page[] = [
 
 export const balanceheaderPages: Page[] = [
   { title: "FHM", href: "/fhm", params: { comingSoon: false } },
-  { title: "USDB", href: "/usdb-about", params: { comingSoon: false } },
+  { title: "USDB", href: "/about#usdb", params: { comingSoon: false } },
   { title: "Liqd NFTs", href: "https://www.liqdnft.com/", params: { comingSoon: false } },
   { title: "Dex", href: "https://app.fantohm.com/#/dex", params: { comingSoon: false } },
 ];
@@ -41,7 +41,7 @@ export const footerItems: FooterItem[] = [
     label: "Products",
     pages: [
       { title: "FHM", href: "/fhm", params: { comingSoon: false } },
-      { title: "USDB", href: "/usdb-about", params: { comingSoon: false } },
+      { title: "USDB", href: "/about#usdb", params: { comingSoon: false } },
       {
         title: "Liqd NFTs",
         href: "https://www.liqdnft.com/",
