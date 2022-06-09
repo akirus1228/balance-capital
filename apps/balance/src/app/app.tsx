@@ -111,7 +111,7 @@ export const App = (): JSX.Element => {
         <HomeHeader />
         <Routes>
           <Route path="/" element={<BalanceHomePage />} />
-          <Route path="/usdb-about" element={<BalanceAboutPage />} />
+          <Route path="/about#usdb" element={<BalanceAboutPage />} />
           <Route path="/fhm" element={<FhmPage />} />
           <Route path="/about" element={<BalanceAboutPage />} />
           <Route

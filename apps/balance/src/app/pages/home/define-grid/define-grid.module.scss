@@ -58,13 +58,15 @@
 .styledInput {
   border-radius: 30px !important;
   height: 60px;
-  font-size: small;
+  font-size: 11px !important;
   width:90% !important;
   max-width:100%;
   margin-left: 1em;
   padding-left:1.5em !important;
   padding-right:1em;
   margin-top:20px;
+
+
   @media (max-width:600px) {
     width:90%;
     align-self: center;
@@ -82,7 +84,6 @@
   color: #000000;
   border: 1px solid #000000;
 }
-
 
 
 body[class=darkTheme] {

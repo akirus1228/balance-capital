@@ -9,6 +9,7 @@ import { RootState } from "../../store";
 /* eslint-disable-next-line */
 export interface IconLinkProps {
   icon: string | typeof import("*.png");
+  itemid?: string | undefined;
   title: string;
   text: string;
   link?: string | undefined;
@@ -18,6 +19,7 @@ export interface IconLinkProps {
 
 export function BalanceAboutTile({
   icon,
+  itemid = undefined,
   title,
   link = undefined,
   text = "",
@@ -141,6 +143,12 @@ export function BalanceAboutTile({
               >
                 Enter App
               </Button>
+            )}
+            {itemid === undefined ? (
+              <a id={itemid}></a>
+                
+            ) : (
+              <a id={itemid}></a>
             )}
             {docsLink !== undefined ? (
               <Button
