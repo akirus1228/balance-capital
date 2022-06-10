@@ -47,8 +47,7 @@ export const App = (): JSX.Element => {
   const { bonds, allBonds } = useBonds(chainId || defaultNetworkId);
   const { investments } = useInvestments();
   const [promptTerms, setPromptTerms] = useState<boolean>(
-    false
-    //TODO localStorage.getItem("termsAgreed") !== "true"
+    localStorage.getItem("termsAgreed") !== "true"
   );
   const [isChecked, setIsChecked] = useState<boolean>(false);
 

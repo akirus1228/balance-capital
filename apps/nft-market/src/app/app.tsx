@@ -34,8 +34,7 @@ export const App = (): JSX.Element => {
   );
   const backend = useSelector((state: RootState) => state.backend);
   const [promptTerms, setPromptTerms] = useState<boolean>(
-    true
-    //TODO localStorage.getItem("termsAgreedUsdb") !== "true"
+    localStorage.getItem("termsAgreedUsdb") !== "true"
   );
   const [isChecked, setIsChecked] = useState<boolean>(false);
   const [theme, setTheme] = useState(NftLight);
@@ -152,7 +151,11 @@ export const App = (): JSX.Element => {
                     />
                     <Typography>
                       I agree that I have read, understood and accepted all of the{" "}
-                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                      <a
+                        href={"./../assets/Terms_and_Conditions.pdf"}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Terms
                       </a>{" "}
                       and{" "}
@@ -181,22 +184,25 @@ export const App = (): JSX.Element => {
           <Header />
           <Growl />
           <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/borrow" element={<BorrowPage />} />
-          <Route path="/lend" element={<LendPage />} />
-          <Route path="/asset/:contractAddress/:tokenId" element={<AssetDetailsPage />} />
-          <Route path="/my-account" element={<MyAccountPage />} />
-          <Route path="/th" element={<TestHelper />} />
-          <Route
-            path="*"
-            element={
-              <main style={{ padding: "1rem" }}>
-                <h1>404</h1>
-                <p>There's nothing here!</p>
-              </main>
-            }
-          />
-        </Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/borrow" element={<BorrowPage />} />
+            <Route path="/lend" element={<LendPage />} />
+            <Route
+              path="/asset/:contractAddress/:tokenId"
+              element={<AssetDetailsPage />}
+            />
+            <Route path="/my-account" element={<MyAccountPage />} />
+            <Route path="/th" element={<TestHelper />} />
+            <Route
+              path="*"
+              element={
+                <main style={{ padding: "1rem" }}>
+                  <h1>404</h1>
+                  <p>There's nothing here!</p>
+                </main>
+              }
+            />
+          </Routes>
           <Footer />
         </Box>
       )}
