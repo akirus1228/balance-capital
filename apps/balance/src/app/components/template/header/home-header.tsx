@@ -249,6 +249,14 @@ export const HomeHeader = (): JSX.Element => {
             >
               Audits
             </Link>
+            <Link
+              to="/blog"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
+              Blog
+            </Link>
             <Button
               variant="contained"
               color="primary"
