@@ -24,12 +24,15 @@ import { useEffect, useState } from "react";
 import BlogPost from "../../components/blog-page/blog-post";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
+import { NftDark, NftLight } from "@fantohm/shared-ui-themes";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const contentful = require("contentful");
 
 export const BlogPage = (): JSX.Element => {
   const [email, setEmail] = useState("");
-  const blogPosts = useSelector((state: RootState) => state.app.blogPosts);
+  const [sortValue, setSortValue] = useState("all");
+  const allBlogPosts = useSelector((state: RootState) => state.app.blogPosts);
+  const [blogPosts, setBlogPosts] = useState<BlogPostDTO[]>();
   const themeType = useSelector((state: RootState) => state.app.theme);
   const dispatch = useDispatch();
   async function createContact() {
@@ -74,6 +77,23 @@ export const BlogPage = (): JSX.Element => {
     setEmail("");
     dispatch(info("Success!"));
     return;
+  };
+
+  useEffect(() => {
+    if (allBlogPosts && allBlogPosts.blogPosts) {
+      if (sortValue === "all") setBlogPosts(allBlogPosts.blogPosts);
+      else
+        setBlogPosts(
+          allBlogPosts.blogPosts.filter(
+            (posts: { blogCategory: string }) =>
+              posts.blogCategory.toLowerCase() === sortValue.toLowerCase()
+          )
+        );
+    }
+  }, [allBlogPosts, sortValue]);
+
+  const handleChange = (value: string) => {
+    setSortValue(value);
   };
 
   return (
@@ -180,6 +200,10 @@ export const BlogPage = (): JSX.Element => {
                 aria-labelledby="demo-radio-buttons-group-label"
                 defaultValue="all"
                 name="radio-buttons-group"
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                  console.log(e.target.value); // will be called this time
+                }}
               >
                 <FormControlLabel value="all" control={<Radio />} label="All" />
                 <FormControlLabel
@@ -207,8 +231,7 @@ export const BlogPage = (): JSX.Element => {
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
               {blogPosts &&
-                blogPosts.blogPosts &&
-                blogPosts.blogPosts.map((post: BlogPostDTO) => (
+                blogPosts.map((post: BlogPostDTO) => (
                   <Grid
                     item
                     className="email-div"
