@@ -182,6 +182,30 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             item
             md={12}
             order={{ lg: 1 }}
+            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+          >
+            <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
+              {blogPosts &&
+                blogPosts.blogPosts &&
+                blogPosts.blogPosts.slice(0, 3).map((post: BlogPostDTO) => (
+                  <Grid
+                    item
+                    className="email-div"
+                    md={4}
+                    order={{ lg: 1 }}
+                    style={{ width: "100%" }}
+                  >
+                    <BlogPost post={post}>
+                      <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
+                    </BlogPost>
+                  </Grid>
+                ))}
+            </Grid>
+          </Grid>
+          <Grid
+            item
+            md={12}
+            order={{ lg: 1 }}
             sx={{
               width: { xs: "80%", md: "100%" },
               marginLeft: { xs: "10%", md: "12.5%" },
