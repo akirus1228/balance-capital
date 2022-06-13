@@ -185,7 +185,7 @@ export const PartnersGrid = (): JSX.Element => {
             </a>
           </Grid>
           <Grid item md={3} xs={6} className={style["partnerElem"]}>
-            <a href="https://thedefiant.io/">
+            <a href="https://creaticles.com/">
               <img
                 src={theme === USDBLight ? CIcon : CIconDark}
                 alt="USDB logo"

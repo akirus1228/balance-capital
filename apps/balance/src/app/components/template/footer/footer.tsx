@@ -81,7 +81,7 @@ export const Footer = (): JSX.Element => {
         }}
       >
         <Typography color="white" textAlign="center">
-          &copy; 2022 USD Balance
+          &copy; 2022 Balance
         </Typography>
         <Box sx={{ display: "flex" }}>
           <Box
