@@ -37,6 +37,10 @@
 }
 
 .usdbLogo {
+  img {
+  height:60px !important;
+  width:auto;
+  }
   @media (max-width: 600px) {
     height: 60px;
     width: auto;

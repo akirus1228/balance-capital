@@ -257,8 +257,8 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        md={3}
-        sm={12}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -267,6 +267,7 @@ export const DefineGrid = (): JSX.Element => {
           paddingTop: "30px",
         }}
         id="partner-form"
+        className={`${style["partnerForm"]}`}
       >
         <OutlinedInput
           className={`${style["styledInput"]}`}
@@ -292,19 +293,7 @@ export const DefineGrid = (): JSX.Element => {
             setWebsiteUrl(e.target.value);
           }}
         />
-      </Grid>
-      <Grid
-        item
-        md={3}
-        sm={12}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "start",
-          alignItems: "start",
-          paddingTop: "30px",
-        }}
-      >
+      
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your email address? *"

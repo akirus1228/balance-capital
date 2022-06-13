@@ -114,7 +114,7 @@ export const HomeHeader = (): JSX.Element => {
               <img
                 src={themeType === "light" ? BalanceLogo : BalanceLogoDark}
                 alt="USDB logo"
-                width="40%"
+                width="35%"
               />
             </Link>
           </Typography>

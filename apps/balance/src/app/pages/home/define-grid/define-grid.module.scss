@@ -37,8 +37,8 @@
     margin-bottom: 5px;
     margin-left: 50px;
 
-    @media (max-width: 200px) {
-      font-size: 16px;
+    @media (max-width: 900px) {
+      margin-left:30px;
     }
   }
 
@@ -50,31 +50,41 @@
     margin-left: 50px;
     margin-right: 50px;
 
-    @media (max-width: 150px) {
-      font-size: 12px;
+    @media (max-width: 900px) {
+      margin-left:30px;
     }
   }
 
+  .partnerForm {
+    display:flex;
+    flex-flow:wrap;
+    flex-direction: row !important;
+
+ 
 .styledInput {
   border-radius: 30px !important;
   height: 60px;
   font-size: 11px !important;
-  width:90% !important;
-  max-width:100%;
-  margin-left: 1em;
   padding-left:1.5em !important;
   padding-right:1em;
   margin-top:20px;
+flex:0 0 calc(50% - 20px);
+max-width: calc(50% - 20px);
+margin:10px;
 
-
-  @media (max-width:600px) {
-    width:90%;
-    align-self: center;
-    margin-left: 1em;
+  @media (max-width:1200px) {
+    flex:0 0 100%;
+max-width: 100%;
+margin:10px 0;
 
   }
+  
 }
-
+@media (max-width:900px) {
+  padding:0 30px;
+  margin-top:50px;
+}
+}
 .link {
   font-size: 14px;
   margin-top: 10px;
