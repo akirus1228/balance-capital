@@ -32,7 +32,6 @@ import { RootState } from "./store";
 import { loadAppDetails, setTheme } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
 import { MintNftPage } from "./pages/backed-nft/mint-nft";
-import AboutPage from "./pages/about-page/about-page";
 import Amps from "./pages/amps/amps";
 import BalanceAboutPage from "./pages/balance-about-page/balance-about-page";
 import { HomeHeader } from "./components/template/header/home-header";
@@ -182,7 +181,6 @@ export const App = (): JSX.Element => {
             <Route path="/backed-nft" element={<MintNftPage />} />
             <Route path="/amps" element={<Amps />} />
             <Route path="/my-account" element={<MyAccount />} />
-            <Route path="/about" element={<AboutPage />} />
             <Route
               path="*"
               element={
