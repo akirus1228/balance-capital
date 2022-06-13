@@ -20,10 +20,10 @@ import {
 import { withDeps } from "@nrwl/workspace/src/core/project-graph";
 import css from "../../pages/trad-fi/deposit-choice/deposit-choice.module.scss";
 import { useLocation, useParams } from "react-router-dom";
-import BlogPost from "./blog-post";
 // eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
+import BlogPost from "../../components/blog-page/blog-post";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps  {
