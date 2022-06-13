@@ -1,24 +1,38 @@
 import { prettifySeconds } from "@fantohm/shared-web3";
-import { Box, Chip, Container, Grid, Paper, Skeleton, Typography } from "@mui/material";
+import {
+  Box,
+  Chip,
+  Container,
+  Grid,
+  Paper,
+  Skeleton,
+  SxProps,
+  Theme,
+  Typography,
+} from "@mui/material";
 import { useSelector } from "react-redux";
 import { useGetLoansQuery } from "../../api/backend-api";
 import { useWalletAsset } from "../../hooks/use-wallet-asset";
 import { RootState } from "../../store";
 import { Listing, LoanStatus } from "../../types/backend-types";
 import AssetOwnerTag from "../asset-owner-tag/asset-owner-tag";
+import HeaderBlurryImage from "../header-blurry-image/header-blurry-image";
 import style from "./asset-details.module.scss";
+import QuickStatus from "./quick-status/quick-status";
 import StatusInfo from "./status-info/status-info";
 
 export interface AssetDetailsProps {
   contractAddress: string;
   tokenId: string;
   listing?: Listing;
+  sx?: SxProps<Theme>;
 }
 
 export const AssetDetails = ({
   contractAddress,
   tokenId,
   listing,
+  sx,
   ...props
 }: AssetDetailsProps): JSX.Element => {
   const { authSignature } = useSelector((state: RootState) => state.backend);
@@ -35,19 +49,12 @@ export const AssetDetails = ({
   );
 
   return (
-    <Container>
+    <Container sx={sx}>
+      <HeaderBlurryImage url={asset?.imageUrl} height={"355px"} />
       {asset && asset.imageUrl ? (
         <Grid container columnSpacing={5}>
           <Grid item xs={12} md={6}>
-            <Box
-              className={style["imgContainer"]}
-              sx={{
-                borderRadius: "30px",
-                overflow: "hidden",
-                height: "50vh",
-                width: "50vh",
-              }}
-            >
+            <Box className={style["imgContainer"]}>
               <img src={asset.imageUrl} alt={asset.name || "unknown"} />
             </Box>
           </Grid>
@@ -65,9 +72,9 @@ export const AssetDetails = ({
                 pb: "3em",
               }}
             >
-              <Chip label={asset.status || "Unlisted"} />
+              <Chip label={asset.status || "Unlisted"} className="dark" />
               <Typography sx={{ mx: "10px" }}>.</Typography>
-              <Chip label={asset.mediaType || "Art"} />
+              <Chip label={asset.mediaType || "Art"} className="light" />
             </Box>
             <Box sx={{ display: "flex", flexDirection: "row", mb: "3em" }}>
               <Box
@@ -96,14 +103,9 @@ export const AssetDetails = ({
                       alignItems: "center",
                     }}
                   >
-                    <AssetOwnerTag asset={asset} sx={{ mb: "3em" }} />
+                    <AssetOwnerTag asset={asset} />
                   </Box>
-                  <Box>
-                    <Typography className={style["label"]}>Listed</Typography>
-                    <Typography className={style["name"]}>
-                      {listing?.createdAt} hours ago
-                    </Typography>
-                  </Box>
+                  <QuickStatus listing={listing} />
                 </Paper>
               </Box>
             </Box>

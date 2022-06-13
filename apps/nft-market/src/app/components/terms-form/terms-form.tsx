@@ -1,6 +1,7 @@
 import {
   addresses,
   checkNftPermission,
+  formatCurrency,
   isDev,
   NetworkIds,
   requestErc20Allowance,
@@ -11,7 +12,6 @@ import {
 import {
   Box,
   Button,
-  Icon,
   MenuItem,
   Select,
   SelectChangeEvent,
@@ -35,6 +35,9 @@ import { createListing, updateListing } from "../../store/reducers/listing-slice
 import { selectNftPermFromAsset } from "../../store/selectors/wallet-selectors";
 import { signTerms } from "../../helpers/signatures";
 import { useCreateOfferMutation, useUpdateTermsMutation } from "../../api/backend-api";
+import { USDBToken } from "@fantohm/shared/images";
+import { ethers } from "ethers";
+import { addAlert } from "../../store/reducers/app-slice";
 
 export interface TermsFormProps {
   asset: Asset;
@@ -158,7 +161,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     if (props.asset.status === AssetStatus.New) {
       asset = { ...props.asset, owner: user };
     } else {
-      asset = props.asset;
+      asset = { ...props.asset, status: AssetStatus.Listed };
     }
     const expirationAt = new Date();
     expirationAt.setDate(expirationAt.getDate() + 1);
@@ -166,7 +169,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       amount,
       apr,
       duration,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
     const termSignature = await signTerms(
@@ -179,6 +182,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     );
     term.signature = termSignature;
     dispatch(createListing({ term, asset }));
+    dispatch(addAlert({ message: "Listing created" }));
     return;
   };
 
@@ -199,7 +203,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       amount,
       apr,
       duration: termTypes[durationType] * duration,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
     const termSignature = await signTerms(
@@ -212,6 +216,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
     );
     term.signature = termSignature;
     updateTerms(term);
+    dispatch(addAlert({ message: "Terms have been updated." }));
     return;
   };
 
@@ -267,14 +272,14 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
   const handleMakeOffer = useCallback(async () => {
     if (!props.listing || !provider || !props.asset.owner) return;
     const expirationAt = new Date();
-    expirationAt.setDate(expirationAt.getDate() + 1);
+    expirationAt.setDate(expirationAt.getDate() + 7);
     const { id, ...listingTerm } = props.listing.term;
     const preSigTerm: Terms = {
       ...listingTerm,
       amount: amount,
       duration: termTypes[durationType] * duration,
       apr: apr,
-      expirationAt,
+      expirationAt: expirationAt.toJSON(),
       signature: "",
     };
 
@@ -299,6 +304,7 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       status: OfferStatus.Ready,
     };
     createOffer(offer);
+    dispatch(addAlert({ message: "Offer sent" }));
   }, [props.listing, provider, props.asset, amount, duration, apr]);
 
   useEffect(() => {
@@ -317,53 +323,92 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
           provider,
           walletAddress: address,
           assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-          amount: amount * (1 + platformFee),
+          amount: ethers.utils.parseEther((amount * (1 + platformFee)).toString()),
         })
       );
     }
   }, [chainId, address, amount, provider]);
 
   return (
-    <Box className="flex fc">
+    <Box className="flex fc" sx={{ padding: "1em" }}>
       <Box className="flex fc">
-        <Typography>How much would you like to borrow?</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Box className={`flex fr ${style["leftSide"]}`}>
-            <Icon>USDB</Icon>
+        <Typography sx={{ color: "#aaaaaa", mb: "0.5em" }}>
+          How much would you like to borrow?
+        </Typography>
+        <Box className={`flex fr ai-c ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>
+            <img
+              style={{ height: "28px", width: "28px" }}
+              src={USDBToken}
+              alt="USDB Token Icon"
+            />
             USDB
           </Box>
           <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField type="number" value={amount} onChange={handleAmountChange} />
-            <Typography>{amount}</Typography>
+            <TextField
+              type="number"
+              value={amount}
+              onChange={handleAmountChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
+            <Typography sx={{ color: "#aaaaaa" }}>{formatCurrency(amount, 2)}</Typography>
           </Box>
         </Box>
       </Box>
-      <Box className="flex fc">
-        <Typography>Set loan duration</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Select
-            value={durationType}
-            className={`flex fr ${style["leftSide"]}`}
-            onChange={handleDurationTypeChange}
-          >
-            <MenuItem value="days">Days</MenuItem>
-            <MenuItem value="weeks">Weeks</MenuItem>
-            <MenuItem value="months">Months</MenuItem>
-          </Select>
-          <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField value={duration} type="number" onChange={handleDurationChange} />
+      <Box className="flex fc" sx={{ my: "1em" }}>
+        <Typography sx={{ color: "#aaaaaa", mb: "0.5em" }}>Set loan duration</Typography>
+        <Box className={`flex fr ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>
+            <Select
+              value={durationType}
+              onChange={handleDurationTypeChange}
+              variant="standard"
+              sx={{ background: "transparent" }}
+              className="borderless"
+            >
+              <MenuItem value="days">Days</MenuItem>
+              <MenuItem value="weeks">Weeks</MenuItem>
+              <MenuItem value="months">Months</MenuItem>
+            </Select>
+          </Box>
+          <Box className={`flex fr fj-fs ${style["rightSide"]}`}>
+            <TextField
+              value={duration}
+              type="number"
+              onChange={handleDurationChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
           </Box>
         </Box>
       </Box>
-      <Box className="flex fc">
-        <Typography>Set repayment APR</Typography>
-        <Box className={`flex fr fj-sb ${style["valueContainer"]}`}>
-          <Select value="apr" className={`flex fr ${style["leftSide"]}`}>
-            <MenuItem value="apr">APR</MenuItem>
-          </Select>
+      <Box className="flex fc" sx={{ mt: "1em", mb: "2em" }}>
+        <Box className="flex fj-sb" sx={{ color: "#aaaaaa", mb: "0.5em" }}>
+          <Typography>Set repayment APR</Typography>
+          <Typography sx={{ fontSize: "smaller", color: "#000" }}>
+            Repayment Amount:
+          </Typography>
+        </Box>
+        <Box className={`flex fr ${style["valueContainer"]}`}>
+          <Box className={`flex fr ai-c ${style["leftSide"]}`}>APR</Box>
           <Box className={`flex fr ${style["rightSide"]}`}>
-            <TextField value={apr} type="number" onChange={handleAprChange} />
-            <Typography>{repaymentAmount}</Typography>
+            <TextField
+              value={apr}
+              type="number"
+              onChange={handleAprChange}
+              variant="standard"
+              InputProps={{
+                disableUnderline: true,
+              }}
+            />
+            <Typography sx={{ color: "#aaaaaa" }}>
+              {formatCurrency(repaymentAmount, 2)}
+            </Typography>
           </Box>
         </Box>
       </Box>
@@ -385,7 +430,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance >= amount * (1 + platformFee) && (
+        usdbAllowance.gte(
+          ethers.utils.parseEther((amount * (1 + platformFee)).toString())
+        ) && (
           <Button variant="contained" onClick={handleMakeOffer}>
             Make Offer
           </Button>
@@ -393,7 +440,9 @@ export const TermsForm = (props: TermsFormProps): JSX.Element => {
       {!isOwner &&
         !pending &&
         props.listing &&
-        usdbAllowance < amount * (1 + platformFee) && (
+        usdbAllowance.lt(
+          ethers.utils.parseEther((amount * (1 + platformFee)).toString())
+        ) && (
           <Button variant="contained" onClick={handleRequestAllowance}>
             Allow [name] to Access your USDB
           </Button>

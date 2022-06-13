@@ -1,4 +1,5 @@
 import { createSelector } from "@reduxjs/toolkit";
+import { BigNumber, ethers } from "ethers";
 import { useStore } from "react-redux";
 import { WalletState } from "./wallet-slice";
 
@@ -19,6 +20,6 @@ const selectErc20Allowance = (
 export const selectErc20AllowanceByAddress = createSelector(
   selectErc20Allowances,
   selectErc20Allowance,
-  (erc20Allowance, { walletAddress, erc20TokenAddress }): number =>
-    erc20Allowance[`${walletAddress}:::${erc20TokenAddress}`] || 0
+  (erc20Allowance, { walletAddress, erc20TokenAddress }): BigNumber =>
+    erc20Allowance[`${walletAddress}:::${erc20TokenAddress}`] || BigNumber.from(0)
 );

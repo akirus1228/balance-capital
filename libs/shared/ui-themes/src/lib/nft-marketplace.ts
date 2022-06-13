@@ -107,7 +107,8 @@ export const PaperTableCell = styled(TableCell)(({ theme }) => ({
   backgroundColor: "transparent",
   position: "relative",
   padding: "2em 0",
-  ":first-child": {
+  fontSize: "20px",
+  ":first-of-type": {
     borderTopLeftRadius: "24px",
     borderBottomLeftRadius: "24px",
     borderWidth: "0",
@@ -150,6 +151,21 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          boxShadow: "2px 30px 34px #7E9AA926",
+          "&.blue": {
+            backgroundColor: "#374fff",
+            color: "#FFF",
+          },
+          "&.grey": {
+            backgroundColor: "#AAAAAAb0",
+            color: "#000",
+          },
+        },
+      },
+    },
     MuiPaper: {
       styleOverrides: {
         root: {
@@ -174,6 +190,26 @@ const globalTheme: ThemeOptions = {
       },
       defaultProps: {
         elevation: 0,
+      },
+    },
+    MuiSelect: {
+      styleOverrides: {
+        standard: {
+          "&.borderless": {
+            "::before,::after": {
+              bottomBorder: "none",
+            },
+          },
+        },
+      },
+    },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          "&.MuiSlider-colorPrimary": {
+            color: "#374FFF",
+          },
+        },
       },
     },
     MuiBackdrop: {
@@ -206,9 +242,13 @@ const globalTheme: ThemeOptions = {
           borderRadius: "36px",
           padding: "1em 3em",
           fontSize: "1em",
+          boxShadow: "2px 15px 12px #7E9AA926",
           "&.offer": {
             padding: "0.5em 2em",
             background: nftLightColors.containedPrimaryBtn,
+          },
+          "&.slim": {
+            padding: "0.25em 2em",
           },
         },
       },
@@ -226,6 +266,12 @@ const globalTheme: ThemeOptions = {
           padding: "0.5em 2em",
           textTransform: "none",
           height: "fit-content",
+          "&.Mui-selected": {
+            "&.highContrast": {
+              backgroundColor: "#000",
+              color: "#FFF",
+            },
+          },
         },
       },
     },
@@ -331,6 +377,24 @@ const USDBLightBase: ThemeOptions = {
             color: nftLightColors.color,
             background: nftLightColors.iconButtonBg,
           },
+          "&.lowContrast": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
         },
       },
     },
@@ -425,6 +489,24 @@ const USDBDarkBase: ThemeOptions = {
           "&.closeButton": {
             color: nftDarkColors.color,
             background: nftDarkColors.iconButtonBg,
+          },
+          "&.lowContrast": {
+            backgroundColor: nftDarkColors.invertedColor,
+            color: nftDarkColors.color,
+          },
+        },
+      },
+    },
+    MuiChip: {
+      styleOverrides: {
+        root: {
+          "&.dark": {
+            backgroundColor: nftLightColors.invertedColor,
+            color: nftLightColors.color,
+          },
+          "&.light": {
+            backgroundColor: nftLightColors.color,
+            color: nftLightColors.invertedColor,
           },
         },
       },

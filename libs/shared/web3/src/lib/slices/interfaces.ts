@@ -3,6 +3,7 @@ import { NetworkId } from "../networks";
 import { Investment } from "../lib/investment";
 import { Bond } from "../lib/bond";
 import { AssetToken } from "../helpers/asset-tokens";
+import { BigNumber } from "ethers";
 
 export interface IJsonRPCError {
   readonly message: string;
@@ -232,5 +233,6 @@ export type InteractiveWalletErc20AsyncThunk = {
 } & InteractiveErc20AsyncThunk;
 
 export type Erc20AllowanceAsyncThunk = {
-  amount: number;
+  amount: BigNumber;
 } & InteractiveWalletErc20AsyncThunk;
+

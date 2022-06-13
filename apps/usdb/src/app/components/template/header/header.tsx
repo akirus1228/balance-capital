@@ -71,7 +71,7 @@ export const Header = (): JSX.Element => {
       await disconnect();
     } else {
       try {
-        await connect(true);
+        await connect();
       } catch (e) {
         console.log("Connection metamask error", e);
       }

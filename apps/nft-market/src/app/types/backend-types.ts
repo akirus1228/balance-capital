@@ -71,7 +71,7 @@ export type Terms = {
   amount: number;
   apr: number;
   duration: number;
-  expirationAt: Date;
+  expirationAt: string;
   signature: string;
 } & StandardBackendObject;
 
@@ -113,7 +113,7 @@ export type BackendAsset = {
   videoUrl: Nullable<string>;
   threeDUrl: Nullable<string>;
   isOwned: boolean;
-  owner?: Owner;
+  owner: Owner;
   dateCreated: Nullable<string>;
   dateLastTransferred: Nullable<string>;
   externalLink: Nullable<string>;
@@ -173,6 +173,14 @@ export enum NotificationStatus {
   Unread = "UNREAD",
 }
 
+export enum NotificationContext {
+  NewLoan = "NEW_LOAN",
+  Repayment = "REPAYMENT",
+  Liquidation = "LIQUIDATION",
+  NewOffer = "NEW_OFFER",
+  OfferAccepted = "OFFER_ACCEPTED",
+}
+
 export enum Importance {
   High = "HIGH",
   Medium = "MEDIUM",
@@ -184,12 +192,19 @@ export type AllNotificationsResponse = {
   count: number;
 };
 
+export enum UserType {
+  Lender = "LENDER",
+  Borrower = "BORROWER",
+}
+
 export type Notification = {
   id?: string;
-  user: LoginResponse;
-  importance: Importance;
-  message: string;
-  status: NotificationStatus;
+  user: User;
+  importance?: Importance;
+  contextId: string;
+  status?: NotificationStatus;
+  userType?: UserType;
+  context: NotificationContext;
 } & StandardBackendObject;
 
 export type ApiResponse = {
@@ -282,4 +297,20 @@ export type BackendOfferQueryParams = {
   assetListingId: string;
   lenderAddress: string;
   borrowerAddress: string;
+  status: OfferStatus;
 } & BackendStandardQuery;
+
+export type BackendNotificationQueryParams = {
+  status?: NotificationStatus;
+  context?: NotificationContext;
+  userAddress?: string;
+} & BackendStandardQuery;
+
+export type PlatformWalletInfo = {
+  totalBorrowed: number;
+  totalLent: number;
+  loansRepaid: number;
+  loansDefaulted: number;
+  loansBorrowed: number;
+  loansGiven: number;
+};

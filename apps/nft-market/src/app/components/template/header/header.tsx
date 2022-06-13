@@ -18,6 +18,7 @@ import MenuLink from "./menu-link";
 import styles from "./header.module.scss";
 import UserMenu from "./user-menu";
 import NotificationMenu from "./notification-menu";
+import logo from "../../../../assets/images/logo.svg";
 
 type PageParams = {
   sx?: SxProps<Theme> | undefined;
@@ -66,7 +67,9 @@ export const Header = (): JSX.Element => {
               minWidth: "70px",
             }}
           >
-            <Link to="/">Logo</Link>
+            <Link to="/">
+              <img src={logo} alt="liqd logo" style={{ height: "1.5em" }} />
+            </Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -120,7 +123,9 @@ export const Header = (): JSX.Element => {
             component="div"
             sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}
           >
-            <Link to="/">Logo</Link>
+            <Link to="/">
+              <img src={logo} alt="liqd logo" style={{ height: "1.5em" }} />
+            </Link>
           </Typography>
           <Box
             sx={{

@@ -59,8 +59,12 @@ export type ListingQueryParam = {
   openseaIds?: string[];
   contractAddress?: string;
   mediaType?: string;
-  apr?: number;
-  duration?: number;
+  minApr?: number;
+  maxApr?: number;
+  minDuration?: number;
+  maxDuration?: number;
+  minPrice?: number;
+  maxPrice?: number;
   borrower?: string;
 };
 

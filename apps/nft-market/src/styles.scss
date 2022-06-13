@@ -8,7 +8,7 @@ html, body {
   }
 
   h1 {
-    font-weight: 400;
+    font-weight: 300;
   }
 
   .flex { 
@@ -27,8 +27,28 @@ html, body {
     justify-content: space-around;
   }
 
-  .flex.fj-e {
-    justify-content: end;
+  .flex.fj-fe {
+    justify-content: flex-end;
+  }
+
+  .flex.fj-fs {
+    justify-content: flex-start;
+  }
+
+  .flex.ai-b {
+    align-items: baseline;
+  }
+
+  .flex.ai-c {
+    align-items: center;
+  }
+
+  .flex.ai-s {
+    align-items: stretch;
+  }
+
+  .flex.ai-fe {
+    align-items: flex-end;
   }
 
   .flex.fr {

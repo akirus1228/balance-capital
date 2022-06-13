@@ -3,6 +3,7 @@ import {
   checkErc20Allowance,
   isDev,
   NetworkIds,
+  prettifySeconds,
   requestErc20Allowance,
   selectErc20AllowanceByAddress,
   useWeb3Context,
@@ -52,8 +53,9 @@ export const BorrowerLoanDetails = ({
   const { repayLoanStatus } = useSelector((state: RootState) => state.loans);
 
   // status of allowance check or approval
-  const { checkErc20AllowanceStatus, requestErc20AllowanceStatus, platformFee } =
-    useSelector((state: RootState) => state.wallet);
+  const { checkErc20AllowanceStatus, requestErc20AllowanceStatus } = useSelector(
+    (state: RootState) => state.wallet
+  );
 
   // select the USDB allowance provided to lending contract for this address
   const usdbAllowance = useSelector((state: RootState) =>
@@ -95,7 +97,7 @@ export const BorrowerLoanDetails = ({
 
   const handleRepayLoan = useCallback(async () => {
     if (!loan.contractLoanId || !provider) return;
-    if (usdbAllowance && usdbAllowance >= loanDetails.amountDue) {
+    if (usdbAllowance && usdbAllowance.gte(loanDetails.amountDueGwei)) {
       const repayLoanParams = {
         loanId: loan.contractLoanId,
         amountDue: loanDetails.amountDueGwei,
@@ -116,7 +118,12 @@ export const BorrowerLoanDetails = ({
     } else {
       console.warn(`insufficiant allowance: ${usdbAllowance}`);
     }
-  }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
+  }, [
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    usdbAllowance,
+    loanDetails.amountDueGwei,
+  ]);
 
   const handleRequestAllowance = useCallback(async () => {
     if (!provider) return;
@@ -126,10 +133,15 @@ export const BorrowerLoanDetails = ({
         provider,
         walletAddress: user.address,
         assetAddress: addresses[chainId || NetworkIds.Ethereum]["USDB_ADDRESS"],
-        amount: loanDetails.amountDue,
+        amount: loanDetails.amountDueGwei,
       })
     );
-  }, [checkErc20AllowanceStatus, requestErc20AllowanceStatus, usdbAllowance]);
+  }, [
+    checkErc20AllowanceStatus,
+    requestErc20AllowanceStatus,
+    usdbAllowance,
+    loanDetails.amountDueGwei,
+  ]);
 
   useEffect(() => {
     // if nothing is loading and pending is true, stop pending
@@ -162,7 +174,11 @@ export const BorrowerLoanDetails = ({
   ]);
 
   if (!loan || !loan.term || !loanDetails.amountDue) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   return (
     <Container sx={sx}>
@@ -193,21 +209,26 @@ export const BorrowerLoanDetails = ({
           <Box className="flex fc">
             <Typography className={style["label"]}>Time until loan expires</Typography>
             <Box className="flex fr w100">
-              <Typography className={`${style["data"]}`}>55/60 days</Typography>
+              <Typography className={`${style["data"]}`}>
+                {prettifySeconds(loanDetails.endTime - Date.now() / 1000)}
+              </Typography>
               <LinearProgress variant="determinate" value={10} />
             </Box>
           </Box>
           <Box className="flex fc">
-            {usdbAllowance >= loanDetails.amountDue && !isPending && (
-              <Button variant="contained" onClick={handleRepayLoan}>
-                Repay loan
-              </Button>
-            )}
-            {usdbAllowance < loanDetails.amountDue && !isPending && (
-              <Button variant="contained" onClick={handleRequestAllowance}>
-                Repay loan.
-              </Button>
-            )}
+            {!!usdbAllowance &&
+              usdbAllowance.gte(loanDetails.amountDueGwei) &&
+              !isPending && (
+                <Button variant="contained" onClick={handleRepayLoan}>
+                  Repay loan
+                </Button>
+              )}
+            {(!usdbAllowance || usdbAllowance.lt(loanDetails.amountDueGwei)) &&
+              !isPending && (
+                <Button variant="contained" onClick={handleRequestAllowance}>
+                  Repay loan.
+                </Button>
+              )}
             {isPending && <Button variant="contained">Pending...</Button>}
           </Box>
         </Box>

@@ -19,12 +19,28 @@ export const UpdateTerms = (props: UpdateTermsProps): JSX.Element => {
 
   return (
     <Dialog onClose={handleClose} open={open} sx={{ padding: "1.5em" }}>
-      <Box className={`flex fr fj-e ${style["header"]}`}>
+      <Box className="flex fr fj-c">
+        <h1 style={{ margin: "0 0 0.5em 0" }}>Update terms</h1>
+      </Box>
+      <Box
+        className={`flex fr fj-fe ${style["header"]}`}
+        sx={{ position: "absolute", right: "16px" }}
+      >
         <IconButton onClick={handleClose}>
           <CancelOutlinedIcon />
         </IconButton>
       </Box>
-      <TermsForm asset={props.listing.asset} listing={props.listing} onClose={onClose} />
+      <Box
+        className={`flex fc ${style["body"]}`}
+        sx={{ borderTop: "1px solid #aaaaaa", paddingTop: "1em" }}
+      >
+        <TermsForm
+          key={`update-terms-${props.listing.id}`}
+          asset={props.listing.asset}
+          listing={props.listing}
+          onClose={onClose}
+        />
+      </Box>
     </Dialog>
   );
 };

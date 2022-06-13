@@ -1,42 +1,58 @@
 import { PaperTable, PaperTableCell, PaperTableHead } from "@fantohm/shared-ui-themes";
-import { CircularProgress, Container, TableBody, TableRow } from "@mui/material";
-import { useSelector } from "react-redux";
-import { useGetOffersQuery } from "../../api/backend-api";
-import { RootState } from "../../store";
-import { BackendOfferQueryParams, Offer } from "../../types/backend-types";
+import { Box, CircularProgress, Container, TableBody, TableRow } from "@mui/material";
+import { Offer } from "../../types/backend-types";
 import { OfferListItem } from "./offer-list-item";
 import style from "./offers-list.module.scss";
 
-/* eslint-disable-next-line */
+export enum OffersListFields {
+  LENDER_PROFILE = "Offered by",
+  LENDER_ADDRESS = "Lender",
+  BORROWER_ADDRESS = "Borrower",
+  OWNER_PROFILE = "Owner",
+  REPAYMENT_TOTAL = "Loan value",
+  REPAYMENT_AMOUNT = "Repayment",
+  INTEREST_DUE = "Interest due",
+  APR = "APR",
+  DURATION = "Duration",
+  EXPIRATION = "Expires",
+  ASSET = "Asset",
+  NAME = "Name",
+  STATUS = "Status",
+}
 export interface OffersListProps {
-  queryParams?: Partial<BackendOfferQueryParams>;
+  offers: Offer[] | undefined;
+  fields: OffersListFields[];
+  isLoading?: boolean;
+  title?: string;
 }
 
-export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
-  const { authSignature } = useSelector((state: RootState) => state.backend);
-  const { data: offers, isLoading } = useGetOffersQuery(queryParams || {}, {
-    skip: !authSignature,
-  });
-
+export const OffersList = ({
+  offers,
+  fields,
+  isLoading,
+  title,
+}: OffersListProps): JSX.Element => {
   if (isLoading) {
-    return <CircularProgress />;
+    return (
+      <Box className="flex fr fj-c">
+        <CircularProgress />
+      </Box>
+    );
   }
   if ((!offers || offers.length < 1) && !isLoading) {
     return <></>;
   }
   return (
-    <Container sx={{ pt: "4em" }}>
-      <h2 className={style["title"]}>Offers receved</h2>
+    <Container sx={{ pt: "4em", mt: "5em" }} maxWidth="xl">
+      <h2 className={style["title"]}>
+        {title || "Offers"} ({!!offers && offers.length})
+      </h2>
       <PaperTable>
         <PaperTableHead>
           <TableRow>
-            <PaperTableCell>Offered by</PaperTableCell>
-            <PaperTableCell>Offered value</PaperTableCell>
-            <PaperTableCell>Repayment</PaperTableCell>
-            <PaperTableCell>Apr</PaperTableCell>
-            <PaperTableCell>Duration</PaperTableCell>
-            <PaperTableCell>Expires</PaperTableCell>
-            <PaperTableCell>Offer made</PaperTableCell>
+            {fields.map((field: OffersListFields, index: number) => (
+              <PaperTableCell key={`offer-table-header-${index}`}>{field}</PaperTableCell>
+            ))}
             <PaperTableCell></PaperTableCell>
           </TableRow>
         </PaperTableHead>
@@ -44,7 +60,7 @@ export const OffersList = ({ queryParams }: OffersListProps): JSX.Element => {
           {offers &&
             !isLoading &&
             offers.map((offer: Offer, index: number) => (
-              <OfferListItem key={`offer-${index}`} offer={offer} />
+              <OfferListItem key={`offer-${index}`} offer={offer} fields={fields} />
             ))}
         </TableBody>
       </PaperTable>
