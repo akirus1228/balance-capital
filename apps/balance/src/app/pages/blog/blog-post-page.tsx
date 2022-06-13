@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
-import style from "./blog-post.module.scss";
+import style from "./../../components/blog-page/blog-post.module.scss";
 import {
   BalanceHeroImage,
   BalanceLogoDark,
