@@ -155,6 +155,62 @@ export interface IWrapDetails extends IBaseAsyncThunk {
   value: string;
 }
 
+export interface SignerAsyncThunk
+  extends IBaseAddressAsyncThunk,
+    IInteractiveAsyncThunk {}
+
+export interface IInvestUsdbNftBondAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly address: string;
+  readonly value: string;
+  readonly tokenId?: number;
+  readonly navigate?: any;
+}
+
+export interface IUsdbNftListAsyncThunk extends IBaseAsyncThunk {
+  readonly address: string;
+  readonly networkId: NetworkId;
+  readonly callback: any;
+}
+export interface IUsdbNftInfoAsyncThunk extends IBaseAsyncThunk {
+  readonly id: number;
+  readonly callback: any;
+}
+
+export interface IUsdbNftRedeemAsyncThunk extends IBaseAsyncThunk {
+  readonly nftId: number;
+  readonly address: string;
+  readonly provider: JsonRpcProvider;
+}
+
+export interface IStakingBackedNftAsyncThunk extends IBaseAsyncThunk {
+  readonly nftId?: number;
+  readonly type: number;
+  readonly address: string;
+  readonly provider: JsonRpcProvider;
+  readonly callback?: any;
+  readonly bond: Bond;
+}
+
+export interface IApprovePoolAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly nftId: number;
+  readonly address: string;
+  readonly callback?: any;
+}
+
+export interface IAmpsRedeemNftAsyncThunk
+  extends IBaseBondAsyncThunk,
+    IInteractiveAsyncThunk {
+  readonly type: number;
+  readonly bond: Bond;
+  readonly method: string;
+  readonly address: string;
+  readonly callback?: any;
+}
+
 // wallet
 export type AssetLocAsyncThunk = {
   networkId: number;
@@ -179,3 +235,4 @@ export type InteractiveWalletErc20AsyncThunk = {
 export type Erc20AllowanceAsyncThunk = {
   amount: BigNumber;
 } & InteractiveWalletErc20AsyncThunk;
+

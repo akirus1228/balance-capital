@@ -8,21 +8,29 @@ import {
   wsOhmAbi as wsOHM,
   olympusStakingv2Abi as OlympusStaking,
   masterChefAbi as masterchefAbi,
+  usdbNftAbi,
+  sOhmAbi,
 } from "../abi";
 
 import { setAll, trim } from "../helpers";
 
 import { createAsyncThunk, createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
+  IApprovePoolAsyncThunk,
   IBaseAddressAsyncThunk,
+  IBaseAsyncThunk,
   ICalcAllUserBondDetailsAsyncThunk,
   ICalcUserBondDetailsAsyncThunk,
+  IUsdbNftInfoAsyncThunk,
+  IUsdbNftListAsyncThunk,
+  IUsdbNftRedeemAsyncThunk,
 } from "./interfaces";
 import { chains } from "../providers";
 import { BondAction, BondType, PaymentToken } from "../lib/bond";
 
 import { findOrLoadMarketPrice } from "./bond-slice";
 import { truncateDecimals } from "@fantohm/shared-helpers";
+import { error, info } from "./messages-slice";
 
 export const getBalances = createAsyncThunk(
   "account/getBalances",
@@ -199,6 +207,19 @@ export interface IUserBondDetails {
   userBonds: IUserBond[];
   readonly paymentToken: PaymentToken;
   readonly bondAction: BondAction;
+}
+
+export interface INftItemDetails {
+  gonsPayout: number;
+  fhmPayout: number;
+  usdbAmount: number;
+  vesting: number;
+  lastBlock: number;
+  vestingSeconds: number;
+  lastTimestamp: number;
+  pricePaid: number;
+  secondsToVest: number;
+  sFhmBalance: number;
 }
 
 export const calculateAllUserBondDetails = createAsyncThunk(
@@ -491,6 +512,190 @@ export const calculateUserBondDetails = createAsyncThunk(
   }
 );
 
+export const getUserBondApproval = createAsyncThunk(
+  "account/getUserBondApproval",
+  async (
+    { nftId, address, bond, networkId, callback }: IApprovePoolAsyncThunk,
+    { dispatch }
+  ) => {
+    if (bond.type === BondType.STAKE_NFT) {
+      const provider = await chains[networkId].provider;
+      const usdbNftContract = new ethers.Contract(
+        addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+        usdbNftAbi,
+        provider
+      );
+      const bondAddr = bond.getAddressForBond(networkId);
+      const addr = await usdbNftContract["getApproved"](nftId);
+      const allowance = addr === bondAddr ? 1 : 0;
+      callback && callback(allowance);
+    }
+  }
+);
+
+export const getNftList = createAsyncThunk(
+  "account/getNftList",
+  async ({ address, networkId, callback }: IUsdbNftListAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    let nftIds = await usdbNftContract["getTokenIds"](address);
+    nftIds = nftIds.map((id: any) => Number(id));
+    callback(nftIds);
+
+    return {
+      nfts: nftIds,
+    };
+  }
+);
+
+export const getNftInfo = createAsyncThunk(
+  "account/getNftInfo",
+  async ({ id, networkId, callback }: IUsdbNftInfoAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    const nftInfo = await usdbNftContract["_nftInfo"](id);
+
+    const latestBlockNumber = await provider.getBlockNumber();
+    const getLatestBlock = async (): Promise<ethers.providers.Block> => {
+      let block = undefined;
+      block = await provider.getBlock(latestBlockNumber);
+      if (block) {
+        return block;
+      } else {
+        //console.log("~~~~~RETRYING GETLATESTBLOCK~~~~~");
+        await new Promise((r) => setTimeout(r, 500));
+        return getLatestBlock();
+      }
+    };
+    const latestBlock = await getLatestBlock();
+
+    const nftDetails: INftItemDetails = {
+      gonsPayout: Number(nftInfo.gonsPayout),
+      fhmPayout: Number(nftInfo.fhmPayout),
+      usdbAmount: Number(ethers.utils.formatEther(nftInfo.usdbAmount)),
+      vesting: Number(nftInfo.vesting),
+      lastBlock: Number(nftInfo.lastBlock),
+      vestingSeconds: Number(nftInfo.vestingSeconds),
+      lastTimestamp: Number(nftInfo.lastTimestamp),
+      pricePaid: Number(ethers.utils.formatEther(nftInfo.pricePaid)),
+      secondsToVest: 0,
+      sFhmBalance: 0,
+    };
+
+    const latestBlockTimestamp = latestBlock.timestamp;
+    const maturationSeconds =
+      Number(nftDetails.vestingSeconds) + Number(nftDetails.lastTimestamp);
+    nftDetails.secondsToVest = maturationSeconds - latestBlockTimestamp;
+
+    const sFantohmContract = new ethers.Contract(
+      addresses[networkId]["SOHM_ADDRESS"] as string,
+      sOhmAbi,
+      provider
+    );
+    const sFhmBalance = await sFantohmContract["balanceForGons"](nftInfo.gonsPayout);
+    nftDetails.sFhmBalance = Number(ethers.utils.formatUnits(sFhmBalance, 9));
+
+    callback(nftDetails);
+
+    return {
+      nfts: {
+        [id]: nftDetails,
+      },
+    };
+
+    // let usdbBalance = 0;
+    // if (addresses[networkId]["USDB_ADDRESS"]) {
+    //   const usdbContract = new ethers.Contract(
+    //     addresses[networkId]["USDB_ADDRESS"] as string,
+    //     usdbAbi,
+    //     provider
+    //   );
+    //   usdbBalance = await usdbContract["balanceOf"](address);
+    // }
+    // return {
+    //   balances: {
+    //     dai: ethers.utils.formatUnits(daiBalance, 18),
+    //     fhm: ethers.utils.formatUnits(fhmBalance, 9),
+    //     usdb: ethers.utils.formatUnits(usdbBalance, 18),
+    //   },
+    // };
+  }
+);
+
+export const redeemNft = createAsyncThunk(
+  "account/redeemNft",
+  async (
+    { nftId, address, networkId, provider }: IUsdbNftRedeemAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!networkId) {
+      return;
+    }
+    const signer = provider.getSigner(address);
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      signer
+    );
+    try {
+      const result = await usdbNftContract["withdraw"](nftId, address);
+      dispatch(info("Redeem NFT completed."));
+    } catch (e: any) {
+      console.log(e);
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    }
+  }
+);
+
+export const getNftTokenUri = createAsyncThunk(
+  "account/getNftTokenUri",
+  async ({ id, networkId, callback }: IUsdbNftInfoAsyncThunk) => {
+    if (!networkId) {
+      return null;
+    }
+    const provider = await chains[networkId].provider;
+    const usdbNftContract = new ethers.Contract(
+      addresses[networkId]["USDB_NFT_ADDRESS"] as string,
+      usdbNftAbi,
+      provider
+    );
+    let tokenId = id;
+    if (tokenId === -1) tokenId = await usdbNftContract["totalSupply"]();
+    const base64Metadata = await usdbNftContract["tokenURI"](tokenId);
+    const json = atob(base64Metadata.substring(29));
+    const metadata = JSON.parse(json);
+    metadata.tokenId = Number(tokenId);
+    callback(metadata);
+    return {};
+  }
+);
+
 interface IAccountSlice {
   bonds: { [key: string]: IUserBondDetails };
   balances: {
@@ -500,6 +705,7 @@ interface IAccountSlice {
   };
   loading: boolean;
   allBondsLoaded: boolean;
+  nfts: { [key: number]: INftItemDetails };
 }
 
 const initialState: IAccountSlice = {
@@ -507,6 +713,7 @@ const initialState: IAccountSlice = {
   allBondsLoaded: false,
   bonds: {},
   balances: { usdb: "", dai: "", fhm: "" },
+  nfts: {},
 };
 
 const accountSlice = createSlice({
