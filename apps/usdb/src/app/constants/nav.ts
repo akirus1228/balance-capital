@@ -51,8 +51,8 @@ export const footerItems: FooterItem[] = [
         title: "Bridge",
         href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
       },
-      { title: "Backed NFT", href: "/backed-nft" },
-      { title: "Amps", href: "/amps", params: { comingSoon: true } },
+      // { title: "Backed NFT", href: "/backed-nft" },
+      // { title: "Amps", href: "/amps", params: { comingSoon: true } },
     ],
   },
   {
