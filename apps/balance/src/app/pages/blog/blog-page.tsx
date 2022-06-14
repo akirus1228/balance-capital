@@ -16,7 +16,7 @@ import {
   Typography,
 } from "@mui/material";
 import style from "./blog-page.module.scss";
-import { BalanceEmailBanner, BlogBanner } from "@fantohm/shared/images";
+import { BalanceEmailBanner, BlogBanner, BalanceHeroImage } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { error, info } from "@fantohm/shared-web3";
@@ -125,7 +125,7 @@ export const BlogPage = (): JSX.Element => {
             className="email-div"
             md={12}
             order={{ lg: 1 }}
-            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+            sx={{ width: { xs: "100%", md: "100%" }, marginLeft: { xs: "0%", md: "0%" } }}
           >
             <Paper
               className="email-box"
@@ -184,7 +184,6 @@ export const BlogPage = (): JSX.Element => {
             item
             md={9}
             order={{ lg: 1 }}
-            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
           >
             <h2 className={style["daiAPR"]}>Blog posts</h2>
           </Grid>
@@ -227,19 +226,19 @@ export const BlogPage = (): JSX.Element => {
             item
             md={9}
             order={{ lg: 1 }}
-            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+            sx={{ width: { xs: "100%", md: "100%" } }}
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
               {blogPosts &&
                 blogPosts.map((post: BlogPostDTO) => (
                   <Grid
                     item
-                    className="email-div"
+                    xs={6}
+                    sm={6}
                     md={4}
                     order={{ lg: 1 }}
-                    style={{ width: "100%" }}
                   >
-                    <BlogPost post={post}>
+                    <BlogPost post={post} className={style["blogPost"]}>
                       <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
                     </BlogPost>
                   </Grid>
@@ -254,12 +253,15 @@ export const BlogPage = (): JSX.Element => {
             style={{ width: "100%" }}
           >
             <Paper
-              className="email-box"
               style={{
                 width: "100%",
                 borderRadius: "80px",
-                background: `url(${BalanceEmailBanner})`,
+                backgroundImage: `url(${BalanceHeroImage})`,
+                backgroundSize: "100% auto",
+                backgroundPosition: "center right",
+                backgroundRepeat: "no-repeat",
               }}
+              className={style["emailBox"]}
             >
               <Grid
                 container
@@ -267,32 +269,29 @@ export const BlogPage = (): JSX.Element => {
                 columnSpacing={2}
                 rowSpacing={{ sm: 0, md: 4 }}
               >
-                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]} />
-                <Grid item md={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+                <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
                   <Typography
-                    style={{ marginLeft: "40px", fontSize: "20px", color: "#000000" }}
+                    style={{ fontSize: "20px", color: "#000000" }}
                   >
                     Receive email updates
                   </Typography>
                   <Grid
                     container
                     style={{ width: "100%", height: "100%" }}
-                    columnSpacing={2}
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "start",
                       alignItems: "start",
-                      paddingTop: "30px",
+                      paddingTop: "10px",
                     }}
-                    rowSpacing={{ xs: 4, md: 0 }}
                   >
                     <Grid
                       item
-                      md={6}
+                      sm={12}
+                      md={8}
                       order={{ lg: 1 }}
                       className={style["iconsElement"]}
-                      style={{ marginLeft: "40px" }}
                     >
                       <OutlinedInput
                         className={`${style["styledInput"]}`}
@@ -304,7 +303,7 @@ export const BlogPage = (): JSX.Element => {
                         }}
                       />
                     </Grid>
-                    <Grid item md={3} order={{ lg: 1 }} className={style["iconsElement"]}>
+                    <Grid item sm={12} md={4} order={{ lg: 1 }} className={style["iconsElement"]}>
                       <Button
                         variant="contained"
                         color="primary"
@@ -316,7 +315,7 @@ export const BlogPage = (): JSX.Element => {
                       </Button>
                     </Grid>
                   </Grid>
-                  <Typography style={{ marginLeft: "40px", color: "#000000" }}>
+                  <Typography style={{ color: "#000000" }}>
                     No spam. Never shared. Opt out at any time.
                   </Typography>
                 </Grid>

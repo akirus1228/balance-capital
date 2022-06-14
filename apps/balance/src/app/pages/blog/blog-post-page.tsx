@@ -11,7 +11,7 @@ import { useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
-import style from "./../../components/blog-page/blog-post.module.scss";
+import style from "./blog-post-page.module.scss";
 import {
   BalanceHeroImage,
   BalanceLogoDark,
@@ -105,9 +105,9 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             rowSpacing={{ xs: 4, md: 0 }}
             style={{
               width: "100%",
-              marginLeft: "20%",
-              marginRight: "20%",
-              maxWidth: "60%",
+              marginLeft: "auto",
+              marginRight: "auto",
+              maxWidth: "900px",
             }}
           >
             <Grid
@@ -125,21 +125,23 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                   : ""}
               </h1>
             </Grid>
-            <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+            <Grid item xs={12} order={{ lg: 1 }} className={style["iconsElement"]}>
               <img
                 src={post && post.image ? post.image : BalanceHeroImage}
                 style={{
+                  width: "100%",
                   maxWidth: "100%",
                   borderRadius: "2em",
                 }}
               />
             </Grid>
+            
             <Grid
               item
               className="email-div"
               md={1}
               order={{ lg: 1 }}
-              style={{ width: "30px", justifyContent: "center" }}
+              style={{ width: "60px", justifyContent: "center" }}
             >
               <img src={BalanceTwitter} style={{ width: "60px" }} />
             </Grid>
@@ -182,7 +184,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             item
             md={12}
             order={{ lg: 1 }}
-            sx={{ width: { xs: "80%", md: "100%" }, marginLeft: { xs: "10%", md: "0%" } }}
+            sx={{ width: { xs: "100%", md: "100%" }, marginLeft: { xs: "0%", md: "0%" } }}
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
               {blogPosts &&
@@ -191,11 +193,13 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                   <Grid
                     item
                     className="email-div"
+                    xs={6}
+                    sm={6}
                     md={4}
                     order={{ lg: 1 }}
                     style={{ width: "100%" }}
                   >
-                    <BlogPost post={post}>
+                    <BlogPost post={post} className={style["blogPost"]}>
                       <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
                     </BlogPost>
                   </Grid>
