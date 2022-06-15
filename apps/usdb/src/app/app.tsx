@@ -31,12 +31,15 @@ import { MyAccount } from "./pages/my-account/my-account";
 import { RootState } from "./store";
 import { loadAppDetails, setTheme } from "./store/reducers/app-slice";
 import StakingV1Page from "./pages/staking-v1/staking-v1";
+import { MintNftPage } from "./pages/backed-nft/mint-nft";
+import Amps from "./pages/amps/amps";
 import BalanceAboutPage from "./pages/balance-about-page/balance-about-page";
 import { HomeHeader } from "./components/template/header/home-header";
 import HomePage from "./pages/home/home-page";
 import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
+
 
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
@@ -47,8 +50,7 @@ export const App = (): JSX.Element => {
   const { bonds, allBonds } = useBonds(chainId || defaultNetworkId);
   const { investments } = useInvestments();
   const [promptTerms, setPromptTerms] = useState<boolean>(
-    false
-    //TODO localStorage.getItem("termsAgreed") !== "true"
+    localStorage.getItem("termsAgreed") !== "true"
   );
   const [isChecked, setIsChecked] = useState<boolean>(false);
 
@@ -93,6 +95,9 @@ export const App = (): JSX.Element => {
     switch (location.pathname) {
       case "/trad-fi":
       case "/staking":
+      case "/backed-nft":
+      case "/about":
+      case "/amps":
         document.body.classList.add("heroBackground");
         break;
       default:
@@ -173,6 +178,8 @@ export const App = (): JSX.Element => {
             </Route>
             <Route path="/xfhm" element={<XfhmLqdrPage />} />
             <Route path="/mint" element={<Mint />} />
+            <Route path="/backed-nft" element={<MintNftPage />} />
+            <Route path="/amps" element={<Amps />} />
             <Route path="/my-account" element={<MyAccount />} />
             <Route
               path="*"

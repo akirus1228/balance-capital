@@ -39,7 +39,7 @@ export const DaiCard = (props: DaiCardProps): JSX.Element => {
             <img src={props.tokenImage} alt="DAI token" className={style["daiIcon"]} />
           </div>
         </Box>
-        <Box className="flexCenterCol" sx={{ mt: "1em" }}>
+        <Box className="flexCenterCol" sx={{ mt: "1em", width: "100%" }}>
           {props.children}
         </Box>
       </Paper>

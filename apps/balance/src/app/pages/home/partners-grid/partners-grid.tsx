@@ -54,10 +54,10 @@ export const PartnersGrid = (): JSX.Element => {
         container
         rowSpacing={6}
         style={{
-          width: "60%",
+          width: "80%",
           alignItems: "center",
           justifyContent: "center",
-          marginLeft: "20%",
+          marginLeft: "10%",
         }}
         className={style["productGrid"]}
       >
@@ -73,7 +73,7 @@ export const PartnersGrid = (): JSX.Element => {
         >
           <Typography
             className={style["partnerTitle"]}
-            style={{ textAlign: "center", fontSize: "40px", fontWeight: "400" }}
+            style={{ textAlign: "center", fontSize: "40px", fontWeight: "400", marginBottom: "50px" }}
           >
             Our partners
           </Typography>
@@ -85,12 +85,11 @@ export const PartnersGrid = (): JSX.Element => {
           style={{
             height: "100%",
             justifyContent: "center",
-            marginLeft: "20%",
             alignContent: "center",
           }}
           justifyContent="center"
         >
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://spookyswap.finance/">
               <img
                 src={theme === USDBLight ? SpookySwapIcon : SpookySwapIconDark}
@@ -99,7 +98,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://debridge.finance/">
               <img
                 title="FHM"
@@ -109,7 +108,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.liquiddriver.finance/">
               <img
                 title="Liquidity Solutions"
@@ -119,7 +118,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://rango.exchange/">
               <img
                 title="NFT Lending"
@@ -129,7 +128,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://beets.fi/#/">
               <img
                 title="Financial NFTs"
@@ -139,7 +138,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://synapseprotocol.com/landing">
               <img
                 title="USDB Bank"
@@ -149,7 +148,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://incognito.org/">
               <img
                 src={theme === USDBLight ? IncognitoIcon : IncognitoIconDark}
@@ -158,7 +157,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.huobiwallet.com/en">
               <img
                 src={theme === USDBLight ? HuobiIcon : HuobiIconDark}
@@ -167,7 +166,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://cointelegraph.com/">
               <img
                 src={theme === USDBLight ? CoinTelegraphIcon : CoinTelegraphIconDark}
@@ -176,7 +175,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://thedefiant.io/">
               <img
                 src={theme === USDBLight ? DefiantIcon : DefiantIconDark}
@@ -185,8 +184,8 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
-            <a href="https://thedefiant.io/">
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
+            <a href="https://creaticles.com/">
               <img
                 src={theme === USDBLight ? CIcon : CIconDark}
                 alt="USDB logo"
@@ -194,7 +193,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.xdefi.io/">
               <img
                 src={theme === USDBLight ? UnknownIcon : UnknownIconDark}
@@ -203,7 +202,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.diadata.org/">
               <img
                 src={theme === USDBLight ? DIAIcon : DIAIconDark}
@@ -212,7 +211,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.wanchain.org/">
               <img
                 src={theme === USDBLight ? WanchainIcon : WanchainIconDark}
@@ -221,7 +220,7 @@ export const PartnersGrid = (): JSX.Element => {
               />
             </a>
           </Grid>
-          <Grid item md={3} xs={6}>
+          <Grid item md={3} xs={6} className={style["partnerElem"]}>
             <a href="https://www.warp.finance/">
               <img
                 src={theme === USDBLight ? WarpIcon : WarpIconDark}

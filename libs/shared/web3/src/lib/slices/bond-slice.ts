@@ -11,6 +11,7 @@ import {
   IBondAssetAsyncThunk,
   ICalcBondDetailsAsyncThunk,
   ICancelBondAsyncThunk,
+  IInvestUsdbNftBondAsyncThunk,
   IJsonRPCError,
   IRedeemAllBondsAsyncThunk,
   IRedeemBondAsyncThunk,
@@ -24,6 +25,7 @@ import { waitUntilBlock } from "../helpers/network-helper";
 import { calculateUserBondDetails, getBalances } from "./account-slice";
 import { BondType, PaymentToken } from "../lib/bond";
 import { addresses } from "../constants";
+import { mintBackedNft } from "../lib/api";
 /**
  * - fetches the FHM Price from CoinGecko (via getTokenPrice)
  * - falls back to fetch marketPrice from ohm-dai contract
@@ -241,15 +243,15 @@ export const calcBondDetails = createAsyncThunk(
         purchased,
         { valuation, bondQuote },
       ]) => [
-        fhmMarketPrice?.marketPrice || 0,
-        terms,
-        maxBondPrice / Math.pow(10, 9),
-        debtRatio / Math.pow(10, 9),
-        bondPrice / Math.pow(10, bond.decimals),
-        purchased,
-        valuation,
-        bondQuote,
-      ]
+          fhmMarketPrice?.marketPrice || 0,
+          terms,
+          maxBondPrice / Math.pow(10, 9),
+          debtRatio / Math.pow(10, 9),
+          bondPrice / Math.pow(10, bond.decimals),
+          purchased,
+          valuation,
+          bondQuote,
+        ]
     );
 
     const paymentTokenMarketPrice =
@@ -860,6 +862,94 @@ export const cancelBond = createAsyncThunk(
     } finally {
       if (cancelTx) {
         dispatch(clearPendingTxn(cancelTx.hash));
+      }
+    }
+  }
+);
+
+export const investUsdbNftBond = createAsyncThunk(
+  "bonding/investUsdbNftBond",
+  async (
+    {
+      tokenId,
+      value,
+      address,
+      bond,
+      networkId,
+      provider,
+      navigate,
+    }: IInvestUsdbNftBondAsyncThunk,
+    { dispatch }
+  ) => {
+    if (!provider) {
+      dispatch(error("Please connect your wallet!"));
+      return;
+    }
+    const signer = provider.getSigner();
+    const bondContract = bond.getContractForBondForWrite(networkId, signer);
+    const depositorAddress = address;
+    const valueInWei = ethers.utils.parseUnits(value.toString(), bond.decimals);
+    const slippage = 1;
+    const acceptedSlippage = slippage / 100 || 0.005; // 0.5% as default
+
+    let investTx;
+    const uaData = {
+      address: address,
+      value: value,
+      type: "Bond",
+      bondName: bond.displayName,
+      approved: true,
+      txHash: null,
+    };
+    try {
+      const calculatePremium = await bondContract["bondPrice"]();
+      const maxPremium = Math.round(calculatePremium * (1 + acceptedSlippage));
+
+      const overrides = {
+        value: ethers.utils.parseEther("0.001"),
+      };
+      investTx = await bondContract["deposit"](
+        valueInWei,
+        maxPremium,
+        depositorAddress,
+        overrides
+      );
+      dispatch(
+        fetchPendingTxns({
+          txnHash: investTx.hash,
+          text: "Invest " + bond.displayName,
+          type: "invest_" + bond.name,
+        })
+      );
+      uaData.txHash = investTx.hash;
+
+      dispatch(getBalances({ address, networkId }));
+    } catch (e: any) {
+      console.log(e);
+      uaData.approved = false;
+      if (e.error === undefined) {
+        let message;
+        if (e.message === "Internal JSON-RPC error.") {
+          message = e.data.message;
+        } else {
+          message = e.message;
+        }
+        if (typeof message === "string") {
+          dispatch(error(`Unknown error: ${message}`));
+        }
+      } else {
+        dispatch(error(`Unknown error: ${e.error.message}`));
+      }
+    } finally {
+      if (investTx) {
+        segmentUA(uaData);
+        dispatch(clearPendingTxn(investTx.hash));
+        dispatch(info("Invest completed."));
+
+        setTimeout(async () => {
+          if (tokenId) await mintBackedNft(tokenId);
+          setTimeout(() => navigate("/my-account#nft-investments"), 2000);
+        }, 5000);
       }
     }
   }

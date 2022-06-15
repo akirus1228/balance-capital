@@ -27,6 +27,8 @@ export const headerPages: Page[] = [
     href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
     params: { comingSoon: false },
   },
+  // { title: "Backed NFT", href: "/backed-nft", params: { comingSoon: false } },
+  // { title: "Amps", href: "/amps", params: { comingSoon: true } },
 ];
 
 export const balanceheaderPages: Page[] = [
@@ -49,6 +51,8 @@ export const footerItems: FooterItem[] = [
         title: "Bridge",
         href: "https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1",
       },
+      // { title: "Backed NFT", href: "/backed-nft" },
+      // { title: "Amps", href: "/amps", params: { comingSoon: true } },
     ],
   },
   {

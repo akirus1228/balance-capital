@@ -9,6 +9,7 @@ import { RootState } from "../../store";
 /* eslint-disable-next-line */
 export interface IconLinkProps {
   icon: string | typeof import("*.png");
+  itemid?: string | undefined;
   title: string;
   text: string;
   link?: string | undefined;
@@ -18,6 +19,7 @@ export interface IconLinkProps {
 
 export function BalanceAboutTile({
   icon,
+  itemid = undefined,
   title,
   link = undefined,
   text = "",
@@ -56,7 +58,8 @@ export function BalanceAboutTile({
     >
       <Grid
         item
-        xs={6}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -88,11 +91,11 @@ export function BalanceAboutTile({
           }}
           className={style["iconLinkContainer"]}
         >
-          <Grid item xs={10} md={12}>
+          <Grid item xs={12} md={12}>
             <h1 className={style["title"]}>{title}</h1>
           </Grid>
 
-          <Grid item xs={10} md={12}>
+          <Grid item xs={12} md={12}>
             <h1 className={style["text"]}>{text}</h1>
           </Grid>
           <Grid
@@ -100,7 +103,7 @@ export function BalanceAboutTile({
             xs={12}
             sx={{
               display: "flex",
-              flexDirection: { xs: "column", md: "row" },
+              flexDirection: { xs: "row", md: "row" },
               justifyContent: "center",
               alignItems: "center",
               paddingTop: "30px",
@@ -140,6 +143,12 @@ export function BalanceAboutTile({
               >
                 Enter App
               </Button>
+            )}
+            {itemid === undefined ? (
+              <a id={itemid}></a>
+                
+            ) : (
+              <a id={itemid}></a>
             )}
             {docsLink !== undefined ? (
               <Button

@@ -10,9 +10,6 @@
     "prepare": "husky install"
   },
   "private": true,
-  "engines": {
-    "node": ">=12.9.0"
-  },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.12.1",
     "@danny-jin/fetch-nft": "^0.0.2",
@@ -44,6 +41,7 @@
     "os-browserify": "^0.3.0",
     "patch-package": "^6.4.7",
     "react": "17.0.2",
+    "react-circular-progressbar": "^2.0.4",
     "react-dom": "17.0.2",
     "react-material-ui-carousel": "^3.3.3",
     "react-redux": "^7.2.6",

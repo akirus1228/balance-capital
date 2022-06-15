@@ -113,14 +113,14 @@ export const DefineGrid = (): JSX.Element => {
   return (
     <Grid
       container
-      rowSpacing={6}
+      rowSpacing={1}
       className={style["productGrid"]}
       style={{ marginTop: "50px" }}
     >
       <Grid
         item
         xs={12}
-        md={6}
+        md={5}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -135,7 +135,6 @@ export const DefineGrid = (): JSX.Element => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "start",
-            paddingTop: { xs: "32px", md: "62px" },
           }}
           className={style["hero"]}
         >
@@ -157,6 +156,7 @@ export const DefineGrid = (): JSX.Element => {
       <Grid
         item
         xs={4}
+        md={7}
         sx={{
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -164,13 +164,14 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
+        className={style["defineImg"]}
       >
         <img src={BalanceDefine2} style={{ width: "100%" }} />
       </Grid>
 
       <Grid
         item
-        md={4}
+        md={7}
         sx={{
           display: { xs: "none", md: "flex" },
           flexDirection: "column",
@@ -178,13 +179,14 @@ export const DefineGrid = (): JSX.Element => {
           alignItems: "start",
           paddingTop: "30px",
         }}
+        className={style["defineImg"]}
       >
         <img src={BalanceDefine1} style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
         xs={12}
-        md={6}
+        md={5}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -199,7 +201,6 @@ export const DefineGrid = (): JSX.Element => {
             justifyContent: "center",
             flexDirection: "column",
             alignItems: "start",
-            paddingTop: { xs: "32px", md: "62px" },
           }}
           className={style["hero"]}
         >
@@ -247,7 +248,7 @@ export const DefineGrid = (): JSX.Element => {
           </Grid>
           <Grid item xs={12}>
             <h1 className={style["text"]}>
-              Are you part of a financial institutions or a DeFi protocol? Get in touch to
+              Are you part of a financial institution or a DeFi protocol? Get in touch to
               discuss how Balance and your organisation can work together.
             </h1>
           </Grid>
@@ -256,8 +257,8 @@ export const DefineGrid = (): JSX.Element => {
 
       <Grid
         item
-        md={3}
-        sm={12}
+        xs={12}
+        md={6}
         sx={{
           display: "flex",
           flexDirection: "column",
@@ -266,6 +267,7 @@ export const DefineGrid = (): JSX.Element => {
           paddingTop: "30px",
         }}
         id="partner-form"
+        className={`${style["partnerForm"]}`}
       >
         <OutlinedInput
           className={`${style["styledInput"]}`}
@@ -291,19 +293,7 @@ export const DefineGrid = (): JSX.Element => {
             setWebsiteUrl(e.target.value);
           }}
         />
-      </Grid>
-      <Grid
-        item
-        md={3}
-        sm={12}
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "start",
-          alignItems: "start",
-          paddingTop: "30px",
-        }}
-      >
+      
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your email address? *"

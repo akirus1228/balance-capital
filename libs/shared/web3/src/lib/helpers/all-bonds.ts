@@ -7,6 +7,8 @@ import {
   lqdrUsdbPolBondDepositoryAbi,
   usdbABondDepositoryAbi,
   usdbFhmBurnBondDepositoryAbi,
+  usdbNftBondDepositoryAbi,
+  stakingBackedNFTPool,
 } from "../abi";
 
 // // TODO(zx): Further modularize by splitting up reserveAssets into vendor token definitions
@@ -226,6 +228,210 @@ export const usdbBuy = new StableBond({
   },
 });
 
+export const usdbNft180 = new StableBond({
+  apr: 0,
+  days: 180,
+  name: "usdbNft",
+  type: BondType.USDB_NFT,
+  displayName: "USDB ➜ NFT 180d",
+  bondToken: "USDB",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: usdbNftBondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x46B00259869f47809340BBba01d42F44162A8742",
+      reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
+    },
+  },
+});
+
+export const usdbNft360 = new StableBond({
+  apr: 0,
+  days: 360,
+  name: "usdbNft",
+  type: BondType.USDB_NFT,
+  displayName: "USDB ➜ NFT 360d",
+  bondToken: "USDB",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: usdbNftBondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x46B00259869f47809340BBba01d42F44162A8742",
+      reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
+    },
+  },
+});
+
+export const usdbNft720 = new StableBond({
+  apr: 0,
+  days: 720,
+  name: "usdbNft",
+  type: BondType.USDB_NFT,
+  displayName: "USDB ➜ NFT 720d",
+  bondToken: "USDB",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: usdbNftBondDepositoryAbi,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x46B00259869f47809340BBba01d42F44162A8742",
+      reserveAddress: "0xE827c1D2da22496A09055140c2454c953710751C",
+    },
+  },
+});
+
+export const stakeNftPool1 = new StableBond({
+  apr: 0,
+  days: 1,
+  name: "stakeNft",
+  type: BondType.STAKE_NFT,
+  displayName: "STAKE ➜ NFT 1",
+  bondToken: "NFT",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: stakingBackedNFTPool,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0xD5e510680710242fbdD6EE9eD680f306eE8305C7",
+      reserveAddress: "0x23fdfF8f22fCb7CC3Aee6cEab41070e973371ccc",
+    },
+  },
+});
+
+export const stakeNftPool2 = new StableBond({
+  apr: 0,
+  days: 2,
+  name: "stakeNft",
+  type: BondType.STAKE_NFT,
+  displayName: "STAKE ➜ NFT 2",
+  bondToken: "NFT",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: stakingBackedNFTPool,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0x812BF917981CFCe295965A405cdce7DA522c4a25",
+      reserveAddress: "0x23fdfF8f22fCb7CC3Aee6cEab41070e973371ccc",
+    },
+  },
+});
+
+export const stakeNftPool3 = new StableBond({
+  apr: 0,
+  days: 3,
+  name: "stakeNft",
+  type: BondType.STAKE_NFT,
+  displayName: "STAKE ➜ NFT 3",
+  bondToken: "NFT",
+  decimals: 18,
+  isAvailable: {
+    [NetworkIds.FantomOpera]: true,
+    [NetworkIds.FantomTestnet]: true,
+    [NetworkIds.Rinkeby]: true,
+  },
+  isPurchasable: true,
+  bondIconSvg: undefined,
+  bondContractABI: stakingBackedNFTPool,
+  paymentToken: PaymentToken.USDB,
+  roi: 0,
+  networkAddrs: {
+    [NetworkIds.FantomOpera]: {
+      bondAddress: "",
+      reserveAddress: "0x6Fc9383486c163fA48becdEC79d6058f984f62cA",
+    },
+    [NetworkIds.FantomTestnet]: {
+      bondAddress: "",
+      reserveAddress: "0xD40f6eDc014b42cF678D7eeF4A1310EEe229C50f",
+    },
+    [NetworkIds.Rinkeby]: {
+      bondAddress: "0xc8bb850404460725A27619029e2DCa475188D748",
+      reserveAddress: "0x23fdfF8f22fCb7CC3Aee6cEab41070e973371ccc",
+    },
+  },
+});
+
 // HOW TO ADD A NEW BOND:
 // Is it a stableCoin bond? use `new StableBond`
 // Is it an LP Bond? use `new LPBond`
@@ -240,6 +446,12 @@ export const allBonds = [
   lqdrUsdbPol,
   usdbFhmBurn,
   usdbBuy,
+  usdbNft180,
+  usdbNft360,
+  usdbNft720,
+  stakeNftPool1,
+  stakeNftPool2,
+  stakeNftPool3,
 ];
 export const allBondsMap = allBonds.reduce((prevVal, bond) => {
   return { ...prevVal, [bond.name]: bond };

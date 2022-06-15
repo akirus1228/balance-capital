@@ -1,14 +1,17 @@
-import { Box, Paper, Typography, useMediaQuery } from "@mui/material";
+import { Box, Paper, Typography, useMediaQuery, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import style from "./my-account.module.scss";
 import {
   BondType,
   cancelBond,
   claimSingleSidedBond,
+  defaultNetworkId,
+  getNftList,
   IAllBondData,
   info,
   IUserBond,
   redeemOneBond,
+  trim,
   useBonds,
   useWeb3Context,
 } from "@fantohm/shared-web3";
@@ -20,6 +23,7 @@ import Investment from "./my-account-investments";
 import AccountDetails from "./my-account-details";
 import MyAccountActiveInvestmentsCards from "./my-account-active-investments-cards";
 import { ConfirmationModal } from "./confirmation-modal";
+import { NftItem } from "../backed-nft/nft/nft";
 
 export const currencyFormat = new Intl.NumberFormat("en-US", {
   style: "currency",
@@ -39,13 +43,31 @@ export const isInvestment = (element: Investment | []): element is Investment =>
 
 export const MyAccount = (): JSX.Element => {
   const dispatch = useDispatch();
-  const { provider, address, chainId } = useWeb3Context();
+  const { provider, address, chainId, connected } = useWeb3Context();
   const { bonds } = useBonds(chainId ?? 250);
   const [openConfirmationModal, setOpenConfirmationModal] = useState<boolean>(false);
   const [cancellingBond, setCancellingBond] = useState<IAllBondData>();
   const [cancellingBondIndex, setCancellingBondIndex] = useState<number>(0);
   const [investmentsLoaded, setInvestmentsLoaded] = useState<boolean>(false);
   const isMediumScreen = useMediaQuery("(max-width: 1000px)");
+  const [nftIds, setNftIds] = useState<Array<number>>([]);
+
+  const usdbBalance = useSelector((state: RootState) => {
+    return trim(Number(state.account.balances.usdb), 2);
+  });
+
+  useEffect(() => {
+    if (!connected || !address) return;
+    dispatch(
+      getNftList({
+        address,
+        networkId: chainId ?? defaultNetworkId,
+        callback: (list: Array<number>) => {
+          setNftIds(list.reverse());
+        },
+      })
+    );
+  }, [connected, address, usdbBalance]);
 
   // is the wallet really disconnected or have we just not checked the cache?
   const hasCheckedConnection = useSelector(
@@ -294,6 +316,22 @@ export const MyAccount = (): JSX.Element => {
               </Paper>
             </Box>
           )}
+        </Box>
+
+        <Box my={4} id="nft-investments">
+          <Typography variant="subtitle1">
+            Nft Investments ({nftIds ? nftIds.length : "..."})
+          </Typography>
+          <Box className="w100" flex={1}>
+            {nftIds.map((id: number) => (
+              <Grid container flex={1} key={`${id}`}>
+                <Grid item xs={12} md={3}></Grid>
+                <Grid item xs={12} md={6}>
+                  <NftItem nftId={id} />
+                </Grid>
+              </Grid>
+            ))}
+          </Box>
         </Box>
         {/* Hide previous investments until ready on the graph */}
         {/* <Box>

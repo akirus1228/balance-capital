@@ -108,7 +108,7 @@ export const PaperTableCell = styled(TableCell)(({ theme }) => ({
   position: "relative",
   padding: "2em 0",
   fontSize: "20px",
-  ":first-child": {
+  ":first-of-type": {
     borderTopLeftRadius: "24px",
     borderBottomLeftRadius: "24px",
     borderWidth: "0",
@@ -203,6 +203,15 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiSlider: {
+      styleOverrides: {
+        root: {
+          "&.MuiSlider-colorPrimary": {
+            color: "#374FFF",
+          },
+        },
+      },
+    },
     MuiBackdrop: {
       styleOverrides: {
         root: {
@@ -257,6 +266,12 @@ const globalTheme: ThemeOptions = {
           padding: "0.5em 2em",
           textTransform: "none",
           height: "fit-content",
+          "&.Mui-selected": {
+            "&.highContrast": {
+              backgroundColor: "#000",
+              color: "#FFF",
+            },
+          },
         },
       },
     },

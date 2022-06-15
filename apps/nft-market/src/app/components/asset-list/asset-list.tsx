@@ -15,7 +15,7 @@ export const AssetList = (props: AssetListProps): JSX.Element => {
   const AssetThumb = props.type === "lend" ? LenderAsset : BorrowerAsset;
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "row", flexWrap: "wrap" }}>
+    <Box className="flex fr fw">
       {props.assets &&
         props.assets.map((asset: Asset, index: number) => (
           <AssetThumb

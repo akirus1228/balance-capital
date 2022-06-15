@@ -1,11 +1,23 @@
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import { Avatar, Badge, IconButton, ListItemText, Menu, MenuItem } from "@mui/material";
-import { MouseEvent, useState } from "react";
 import {
-  Importance,
-  Notification,
-  NotificationStatus,
-} from "../../../types/backend-types";
+  Avatar,
+  Badge,
+  Box,
+  CircularProgress,
+  IconButton,
+  Menu,
+  MenuItem,
+  Paper,
+} from "@mui/material";
+import { Link } from "react-router-dom";
+import { MouseEvent, useState } from "react";
+import { useSelector } from "react-redux";
+import { useGetUserNotificationsQuery } from "../../../api/backend-api";
+import { RootState } from "../../../store";
+import { NotificationStatus } from "../../../types/backend-types";
+import arrowUpRight from "../../../../assets/icons/arrow-right-up.svg";
+import profilePlaceholder from "../../../../assets/images/profile-placeholder.svg";
+import NotificationMessage from "../../notification-message/notification-message";
 
 export const NotificationMenu = (): JSX.Element => {
   // menu controls
@@ -17,24 +29,19 @@ export const NotificationMenu = (): JSX.Element => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+  // user data
+  const { user } = useSelector((state: RootState) => state.backend);
+  const { data: notifications, isLoading } = useGetUserNotificationsQuery(
+    { userAddress: user.address, status: NotificationStatus.Unread, skip: 0, take: 4 },
+    { skip: !user || !user.address }
+  );
 
-  const notification: Notification = {
-    user: {
-      address: "",
-      createdAt: "",
-      description: "",
-      email: "",
-      id: "",
-      name: "",
-      profileImageUrl: "",
-      updatedAt: "",
-    },
-    importance: Importance.High,
-    message: "Your loan for CyptoPunk #1234 is due in 24 hours",
-    status: NotificationStatus.Unread,
-  };
-  const notifications: Notification[] = [notification, notification];
-
+  if (isLoading)
+    return (
+      <Box className="flex fr fj-c ai-c">
+        <CircularProgress />
+      </Box>
+    );
   return (
     <>
       <IconButton
@@ -58,17 +65,51 @@ export const NotificationMenu = (): JSX.Element => {
         onClose={handleClose}
         MenuListProps={{
           "aria-labelledby": "user-menu-button",
+          sx: {
+            "& .MuiMenuItem-root": {
+              whiteSpace: "normal",
+            },
+          },
         }}
-        sx={{ display: "flex", flexDirection: "column" }}
+        PaperProps={{
+          style: {
+            padding: "0em 1.5em 0.5em 1.5em",
+            margin: "1em 0 0 0",
+            borderRadius: "24px",
+          },
+        }}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+        transformOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
       >
-        <p>Notifications</p>
-        <a href={"/notifications"}>view all</a>
-        {notifications.map((bond, i: number) => (
-          <MenuItem key={`not-men-${i}`}>
-            <Avatar />
-            <ListItemText primary={notification.message} />
+        <Box className="flex fr fj-sb" sx={{ mt: "1em" }}>
+          <span>Notifications</span>
+          <Link to={"/my-account#4"} style={{ color: "#8991A2" }} onClick={handleClose}>
+            view all{" "}
+            <img
+              src={arrowUpRight}
+              alt="arrow pointing up and to the right"
+              style={{ height: "12px", width: "12px" }}
+            />
+          </Link>
+        </Box>
+        {notifications?.map((notification, i: number) => (
+          <MenuItem key={`not-men-${i}`} sx={{ maxWidth: "400px" }}>
+            <Paper className="w100" sx={{ height: "5em", padding: "1em" }}>
+              <Box className="flex fr ai-c w100">
+                <NotificationMessage notification={notification} short={true} />
+              </Box>
+            </Paper>
           </MenuItem>
         ))}
+        <Box className="flex fr fj-c" sx={{ mt: "1em" }}>
+          <span style={{ color: "#8991A2" }}>End of recent activity</span>
+        </Box>
       </Menu>
     </>
   );

@@ -14,19 +14,15 @@ export const CircleGraph = (props: CircleGraphProps): JSX.Element => {
   const [radius, setRadius] = useState(0);
 
   useEffect(() => {
-    console.log("initial setup");
     if (!pCircle.current) return;
     if (pCircle.current.r.baseVal.value !== radius) {
-      console.log("initial setup2");
       setRadius(pCircle.current.r.baseVal.value);
       setCircumference(pCircle.current.r.baseVal.value * 2 * Math.PI);
     }
   }, [pCircle.current]);
 
   useEffect(() => {
-    console.log("set progress");
     if (!pCircle.current) return;
-    console.log("set progress 2");
     pCircle.current.style.strokeDasharray = `${circumference} ${circumference}`;
     pCircle.current.style.strokeDashoffset = `${circumference}`;
 
