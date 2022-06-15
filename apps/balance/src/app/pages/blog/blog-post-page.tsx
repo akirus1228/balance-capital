@@ -7,7 +7,7 @@ import {
   Theme,
   ThemeProvider,
 } from "@mui/material";
-import { useCallback, useEffect, useState } from "react";
+import { Key, useCallback, useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
@@ -26,7 +26,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import BlogPost from "../../components/blog-page/blog-post";
 
 /* eslint-disable-next-line */
-export interface BlogPostProps  {
+export interface BlogPostProps {
   className?: string;
   invertTheme?: boolean;
   setTheme?: "light" | "dark";
@@ -57,13 +57,18 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
   }, [themeType, props.invertTheme, props.setTheme]);
 
   useEffect(() => {
-    console.log(blogPosts);
-
     if (blogPosts && blogPosts.blogPosts) {
       setPost(blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id));
-      console.log(post);
     }
   }, [blogPosts]);
+
+  const options = {
+    renderText: (text: string) => {
+      return text.split("\n").reduce((children: any, textSegment: any, index: number) => {
+        return [...children, index > 0 && <br key={index} />, textSegment];
+      }, []);
+    },
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -135,7 +140,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                 }}
               />
             </Grid>
-            
+
             <Grid
               item
               className="email-div"
@@ -166,7 +171,8 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               {blogPosts && blogPosts.blogPosts
                 ? documentToReactComponents(
                     blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
-                      .content
+                      .content,
+                    options
                   )
                 : ""}
             </Grid>

@@ -38,7 +38,7 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
           category = "";
         }
         posts.push({
-          id: entryResult.sys.id,
+          id: entryResult.fields.slug,
           date: entryResult.sys.createdAt,
           blogTitle: entryResult.fields.blogTitle,
           blogAsset: entryResult.fields.blogAsset,
@@ -67,6 +67,7 @@ const initialState: IAppData = {
   loading: true,
   theme: "dark",
   blogPosts: undefined,
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax
   ...appState?.app,
 };
 
