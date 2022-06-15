@@ -31,7 +31,6 @@ import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
 import BlogPage from "./pages/blog/blog-page";
-import { loadBlogPosts } from "./store/reducers/backend-slice";
 import BlogPostPage from "./pages/blog/blog-post-page";
 
 export const App = (): JSX.Element => {

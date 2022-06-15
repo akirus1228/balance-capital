@@ -74,30 +74,6 @@ export const loadAppDetails = createAsyncThunk(
         0
       );
 
-    const posts: BlogPostDTO[] = [];
-    const client = contentful.createClient({
-      space: "38g4g4wmfp15",
-      accessToken: "hIyu_c-gNoP0E__ihOjls2XzVE4Tu5ZPV1YlNq-vaSc",
-    });
-
-    client.getEntries().then(function (entries: { items: any[] }) {
-      entries.items.forEach(function (entry) {
-        if (entry) {
-          client.getEntry(entry.sys.id).then(function (entry: any) {
-            if (entry) {
-              posts.push({
-                blogTitle: entry.fields.blogTitle,
-                blogAsset: entry.fields.blogAsset,
-                content: entry.fields.content,
-              });
-            }
-          });
-        }
-      });
-    });
-
-    console.log(posts);
-
     return {
       currentIndex: localNetworkDetails.currentIndex,
       currentBlock: localNetworkDetails.currentBlock,
@@ -124,7 +100,6 @@ export const loadAppDetails = createAsyncThunk(
       globalStakingCircSupply: globalStakingCircSupply,
       endBlock: localNetworkDetails.endBlock,
       epochNumber: localNetworkDetails.epochNumber,
-      blogPosts: posts,
     } as IAppData;
   }
 );
@@ -160,7 +135,6 @@ interface IAppData {
   readonly loading: boolean;
   readonly theme: string;
   readonly bondType: string | null;
-  readonly blogPosts: BlogPostDTO[];
 }
 
 // load cached application state
@@ -170,6 +144,7 @@ const initialState: IAppData = {
   loading: true,
   loadingMarketPrice: false,
   theme: "dark",
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax
   ...appState?.app,
 };
 

@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
-import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import { setTheme } from "../../../store/reducers/app-slice";
 import { BalanceLogo, BalanceLogoDark } from "@fantohm/shared/images";
 import styles from "./home-header.module.scss";
 import { NetworkMenu } from "./network-menu";
