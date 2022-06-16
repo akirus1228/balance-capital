@@ -324,3 +324,4 @@ export type BlogPostDTO = {
   content: string;
   image?: string;
 };
+

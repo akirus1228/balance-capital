@@ -12,6 +12,7 @@
   "private": true,
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^15.12.1",
+    "@contentful/rich-text-types": "^15.12.1",
     "@danny-jin/fetch-nft": "^0.0.2",
     "@emotion/react": "^11.8.2",
     "@emotion/styled": "^11.8.1",

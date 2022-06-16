@@ -7,7 +7,15 @@ import {
   Theme,
   ThemeProvider,
 } from "@mui/material";
-import { Key, useCallback, useEffect, useState } from "react";
+import {
+  Key,
+  ReactChild,
+  ReactFragment,
+  ReactPortal,
+  useCallback,
+  useEffect,
+  useState,
+} from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
@@ -24,6 +32,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import BlogPost from "../../components/blog-page/blog-post";
+import { INLINES, Block, Inline } from "@contentful/rich-text-types";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps {
@@ -37,6 +46,10 @@ export interface BlogPostProps {
   product?: string;
   date?: string;
 }
+
+export type ContentfulLink = {
+  uri?: Block | Inline;
+};
 
 export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
@@ -62,11 +75,23 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
     }
   }, [blogPosts]);
 
+  const website_url = "https://www.balance.capital/";
+
   const options = {
     renderText: (text: string) => {
       return text.split("\n").reduce((children: any, textSegment: any, index: number) => {
         return [...children, index > 0 && <br key={index} />, textSegment];
       }, []);
+    },
+    renderNode: {
+      [INLINES.ENTRY_HYPERLINK]: (
+        node: Block | Inline,
+        children: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined
+      ) => (
+        <a href={`/blog/${node.data["target"].fields.slug}`}>
+          {`${node.content[0].toString()}`}
+        </a>
+      ),
     },
   };
 
