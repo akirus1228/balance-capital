@@ -48,7 +48,7 @@ export interface BlogPostProps {
 }
 
 export type ContentfulLink = {
-  uri?: Block | Inline;
+  value?: string;
 };
 
 export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
@@ -89,7 +89,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
         children: boolean | ReactChild | ReactFragment | ReactPortal | null | undefined
       ) => (
         <a href={`/blog/${node.data["target"].fields.slug}`}>
-          {`${node.content[0].toString()}`}
+          {`${(node.content[0] as any)["value"].toString()}`}
         </a>
       ),
     },
