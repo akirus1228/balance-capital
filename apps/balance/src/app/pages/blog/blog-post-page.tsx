@@ -96,6 +96,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
         <img
           src={node.data?.target?.fields?.file?.url}
           alt={node.data?.target?.fields?.title}
+          style={{ maxWidth: "90%" }}
         />
       ),
     },
@@ -103,23 +104,14 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        maxWidth="xl"
-        className={style["heroContainer"]}
-        sx={{
-          flexDirection: "column",
-          justifyContent: "center",
-          alignContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <div style={{ width: "100%" }}>
         <Box
           className={css["titleWrapper"]}
-          style={{
+          sx={{
             height: "2em",
-            marginLeft: "45%",
-            marginRight: "45%",
-            maxWidth: "10%",
+            marginLeft: { xs: "25%", md: "45%" },
+            marginRight: { xs: "25%", md: "45%" },
+            maxWidth: { xs: "50%", md: "10%" },
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
@@ -131,7 +123,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               fontSize: "12px",
             }}
           >
-            Product
+            {post ? post.blogCategory : ""}
           </h3>
         </Box>
         <Box>
@@ -198,7 +190,13 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                 {post && post.date ? new Date(post.date.slice(0, 10)).toDateString() : ""}
               </h2>
             </Grid>
-            <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              style={{ maxWidth: "90%" }}
+              className={style["iconsElement"]}
+            >
               {blogPosts && blogPosts.blogPosts
                 ? documentToReactComponents(
                     blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
@@ -228,9 +226,15 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
           </Grid>
           <Grid
             item
+            xs={12}
             md={12}
             order={{ lg: 1 }}
-            sx={{ width: { xs: "100%", md: "100%" }, marginLeft: { xs: "0%", md: "0%" } }}
+            sx={{
+              width: { xs: "90%", md: "100%" },
+              marginLeft: { xs: "5%", md: "0%" },
+              marginRight: { xs: "5%", md: "0%" },
+              marginBottom: "20px",
+            }}
           >
             <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
               {blogPosts &&
@@ -239,8 +243,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                   <Grid
                     item
                     className="email-div"
-                    xs={6}
-                    sm={6}
+                    xs={12}
                     md={4}
                     order={{ lg: 1 }}
                     style={{ width: "100%" }}
@@ -302,7 +305,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             </Grid>
           </Grid>
         </Box>
-      </Container>
+      </div>
     </ThemeProvider>
   );
 };
