@@ -323,5 +323,6 @@ export type BlogPostDTO = {
   blogCategory?: string;
   content: string;
   image?: string;
+  seoTitle?: string;
+  seoDescription?: string;
 };
-
