@@ -84,6 +84,7 @@ export const BalanceHomePage = (): JSX.Element => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
+        overflow: "hidden",
       }}
     >
       <Box
@@ -113,7 +114,7 @@ export const BalanceHomePage = (): JSX.Element => {
                 borderTopRightRadius: "80px",
                 borderBottomLeftRadius: "0px",
                 borderBottomRightRadius: "0px",
-                backgroundPosition:"center center",
+                backgroundPosition: "center center",
               }}
               className={style["heroElem"]}
             >
@@ -138,9 +139,11 @@ export const BalanceHomePage = (): JSX.Element => {
                   }}
                   className={style["heroRight"]}
                 >
-                  <Box sx={{ 
-                    marginLeft: {sm: "1em", md: "3em", lg: "5em"}, 
-                    }}>
+                  <Box
+                    sx={{
+                      marginLeft: { sm: "1em", md: "3em", lg: "5em" },
+                    }}
+                  >
                     <Typography className={style["heroTitle"]}>
                       Infrastructure for decentralized finance
                     </Typography>
@@ -233,10 +236,14 @@ export const BalanceHomePage = (): JSX.Element => {
                 columnSpacing={2}
                 rowSpacing={{ sm: 0, md: 4 }}
               >
-                <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
-                  <Typography
-                    style={{ fontSize: "20px", color: "#000000" }}
-                  >
+                <Grid
+                  item
+                  sm={12}
+                  lg={6}
+                  order={{ lg: 1 }}
+                  className={style["iconsElement"]}
+                >
+                  <Typography style={{ fontSize: "20px", color: "#000000" }}>
                     Receive email updates
                   </Typography>
                   <Grid
@@ -267,7 +274,13 @@ export const BalanceHomePage = (): JSX.Element => {
                         }}
                       />
                     </Grid>
-                    <Grid item sm={12} md={4} order={{ lg: 1 }} className={style["iconsElement"]}>
+                    <Grid
+                      item
+                      sm={12}
+                      md={4}
+                      order={{ lg: 1 }}
+                      className={style["iconsElement"]}
+                    >
                       <Button
                         variant="contained"
                         color="primary"

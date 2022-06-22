@@ -109,9 +109,9 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
           className={css["titleWrapper"]}
           sx={{
             height: "2em",
-            marginLeft: { xs: "25%", md: "45%" },
-            marginRight: { xs: "25%", md: "45%" },
-            maxWidth: { xs: "50%", md: "10%" },
+            marginLeft: { xs: "25%", md: "40%" },
+            marginRight: { xs: "25%", md: "40%" },
+            maxWidth: { xs: "50%", md: "20%" },
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
