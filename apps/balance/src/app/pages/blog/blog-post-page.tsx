@@ -230,9 +230,9 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             md={12}
             order={{ lg: 1 }}
             sx={{
-              width: { xs: "90%", md: "100%" },
-              marginLeft: { xs: "5%", md: "0%" },
-              marginRight: { xs: "5%", md: "0%" },
+              width: { xs: "90%", md: "90%" },
+              marginLeft: { xs: "5%", md: "5%" },
+              marginRight: { xs: "5%", md: "5%" },
               marginBottom: "20px",
             }}
           >
