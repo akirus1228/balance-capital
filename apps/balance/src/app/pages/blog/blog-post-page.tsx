@@ -201,6 +201,15 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                   )
                 : ""}
             </Grid>
+            <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+              {blogPosts && blogPosts.blogPosts
+                ? documentToReactComponents(
+                    blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
+                      .getInTouch,
+                    options
+                  )
+                : ""}
+            </Grid>
           </Grid>
           <Grid
             item

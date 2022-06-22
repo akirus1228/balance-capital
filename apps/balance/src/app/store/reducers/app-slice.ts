@@ -37,7 +37,7 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
         } catch (e) {
           category = "";
         }
-        console.log(entryResult);
+        console.log(entryResult.fields.getInTouch.fields.content);
         posts.push({
           id: entryResult.fields.slug,
           date: entryResult.sys.createdAt,
@@ -48,6 +48,7 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
           image: imageUrl,
           seoTitle: entryResult.fields.seoMetadata.title,
           seoDescription: entryResult.fields.seoMetadata.description,
+          getInTouch: entryResult.fields.getInTouch.fields.content,
         });
       }
     }
