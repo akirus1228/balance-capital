@@ -32,7 +32,7 @@ import { useLocation, useParams } from "react-router-dom";
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 import { documentToReactComponents } from "@contentful/rich-text-react-renderer";
 import BlogPost from "../../components/blog-page/blog-post";
-import { INLINES, Block, Inline } from "@contentful/rich-text-types";
+import { INLINES, Block, Inline, BLOCKS } from "@contentful/rich-text-types";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps {
@@ -91,6 +91,12 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
         <a href={`/blog/${node.data["target"].fields.slug}`}>
           {`${(node.content[0] as any)["value"].toString()}`}
         </a>
+      ),
+      [BLOCKS.EMBEDDED_ASSET]: (node: any) => (
+        <img
+          src={node.data?.target?.fields?.file?.url}
+          alt={node.data?.target?.fields?.title}
+        />
       ),
     },
   };
