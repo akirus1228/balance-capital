@@ -163,6 +163,7 @@ export const BlogPage = (): JSX.Element => {
                   >
                     <Box style={{ textAlign: "center" }}>
                       <Typography
+                        variant="h1"
                         sx={{
                           fontSize: { xs: "24px", md: "36px" },
                           fontWeight: "500",

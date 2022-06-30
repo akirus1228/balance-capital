@@ -97,9 +97,9 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             order={{ lg: 1 }}
             style={{ height: "10%", overflow: "hidden", width: "100%" }}
           >
-            <h1 style={{ fontSize: "16px", height: "32px", maxLines: "2" }}>
+            <h2 style={{ fontSize: "16px", height: "32px", maxLines: "2" }}>
               {props.post ? props.post.blogTitle : "title"}
-            </h1>
+            </h2>
           </Grid>
           <Grid
             item
