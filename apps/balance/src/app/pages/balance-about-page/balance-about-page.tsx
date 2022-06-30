@@ -20,6 +20,7 @@ import {
   AboutNFTMarketplace,
 } from "@fantohm/shared/images";
 import BalanceAboutTile from "./balance-about-tile";
+import Head from "../../components/template/head";
 
 export const BalanceAboutPage = (): JSX.Element => {
   // mailchimp integration
@@ -33,6 +34,7 @@ export const BalanceAboutPage = (): JSX.Element => {
 
   return (
     <>
+      {Head("about", "")}
       <Grid
         container
         rowSpacing={6}
