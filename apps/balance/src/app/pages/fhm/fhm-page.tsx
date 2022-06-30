@@ -152,7 +152,7 @@ export const FhmPage = (): JSX.Element => {
         }}
         className={style["fhmBanner"]}
       >
-        <img src={FHMBanner} style={{ width: "100%" }} />
+        <img src={FHMBanner} alt="FHM Banner logo" style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
@@ -292,7 +292,7 @@ export const FhmPage = (): JSX.Element => {
           paddingTop: "30px",
         }}
       >
-        <img src={FHMCoin} style={{ width: "100%" }} />
+        <img src={FHMCoin} alt="FHM Coin logo" style={{ width: "100%" }} />
       </Grid>
 
       <Grid
@@ -307,7 +307,7 @@ export const FhmPage = (): JSX.Element => {
           marginLeft: "10%",
         }}
       >
-        <img src={FHMLaptop} style={{ width: "100%" }} />
+        <img src={FHMLaptop} alt="FHM Laptop logo" style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
@@ -399,7 +399,7 @@ export const FhmPage = (): JSX.Element => {
           paddingTop: "30px",
         }}
       >
-        <img src={FHMLaptop2} style={{ width: "100%" }} />
+        <img src={FHMLaptop2} alt="FHM Laptop2 logo" style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
@@ -434,108 +434,108 @@ export const FhmPage = (): JSX.Element => {
         </Grid>
       </Grid>
 
+      <Grid item xs={12} className={style["sigElems"]}>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={Pwntr0n} alt="Name symbol" style={{ width: "100px" }} />
+        </Grid>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={Kanan} alt="Name symbol" style={{ width: "120px" }} />
+        </Grid>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={Rayne} alt="Name symbol" style={{ width: "120px" }} />
+        </Grid>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={AtomicSwap} alt="Name symbol" style={{ width: "140px" }} />
+        </Grid>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={Lilbobross} alt="Name symbol" style={{ width: "150px" }} />
+        </Grid>
+        <Grid item md={4} sm={6} className={style["sig"]}>
+          <img src={Sleepy_Neko} alt="Name symbol" style={{ width: "130px" }} />
+        </Grid>
+      </Grid>
       <Grid
         item
-        xs={12}
-        className={style["sigElems"]}
+        className="email-div"
+        md={12}
+        order={{ lg: 1 }}
+        style={{ width: "100%" }}
       >
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={Pwntr0n} style={{ width: "100px" }} />
-      </Grid>
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={Kanan} style={{ width: "120px" }} />
-      </Grid>
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={Rayne} style={{ width: "120px" }} />
-      </Grid>
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={AtomicSwap} style={{ width: "140px" }} />
-      </Grid>
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={Lilbobross} style={{ width: "150px" }} />
-      </Grid>
-      <Grid item md={4} sm={6} className={style["sig"]}>
-        <img src={Sleepy_Neko} style={{ width: "130px" }} />
-      </Grid>
-      </Grid>
-      <Grid
-            item
-            className="email-div"
-            md={12}
-            order={{ lg: 1 }}
-            style={{ width: "100%" }}
+        <Paper
+          style={{
+            width: "100%",
+            borderRadius: "80px",
+            backgroundImage: `url(${BalanceHeroImage})`,
+            backgroundSize: "100% auto",
+            backgroundPosition: "center right",
+            backgroundRepeat: "no-repeat",
+          }}
+          className={style["emailBox"]}
+        >
+          <Grid
+            container
+            style={{ width: "100%", height: "100%" }}
+            columnSpacing={2}
+            rowSpacing={{ sm: 0, md: 4 }}
           >
-            <Paper
-              style={{
-                width: "100%",
-                borderRadius: "80px",
-                backgroundImage: `url(${BalanceHeroImage})`,
-                backgroundSize: "100% auto",
-                backgroundPosition: "center right",
-                backgroundRepeat: "no-repeat",
-              }}
-              className={style["emailBox"]}
-            >
+            <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+              <Typography style={{ fontSize: "20px", color: "#000000" }}>
+                Receive email updates
+              </Typography>
               <Grid
                 container
                 style={{ width: "100%", height: "100%" }}
-                columnSpacing={2}
-                rowSpacing={{ sm: 0, md: 4 }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                  paddingTop: "10px",
+                }}
               >
-                <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
-                  <Typography
-                    style={{ fontSize: "20px", color: "#000000" }}
-                  >
-                    Receive email updates
-                  </Typography>
-                  <Grid
-                    container
-                    style={{ width: "100%", height: "100%" }}
-                    sx={{
-                      display: "flex",
-                      flexDirection: "row",
-                      justifyContent: "start",
-                      alignItems: "start",
-                      paddingTop: "10px",
+                <Grid
+                  item
+                  sm={12}
+                  md={8}
+                  order={{ lg: 1 }}
+                  className={style["iconsElement"]}
+                >
+                  <OutlinedInput
+                    className={`${style["styledInput"]}`}
+                    placeholder="Enter your email address"
+                    value={email}
+                    style={{ color: "#000000", borderColor: "#000000" }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
                     }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  sm={12}
+                  md={4}
+                  order={{ lg: 1 }}
+                  className={style["iconsElement"]}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ px: "3em", display: { md: "flex" } }}
+                    className={style["link"]}
+                    onClick={onSubmitEmail}
                   >
-                    <Grid
-                      item
-                      sm={12}
-                      md={8}
-                      order={{ lg: 1 }}
-                      className={style["iconsElement"]}
-                    >
-                      <OutlinedInput
-                        className={`${style["styledInput"]}`}
-                        placeholder="Enter your email address"
-                        value={email}
-                        style={{ color: "#000000", borderColor: "#000000" }}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                        }}
-                      />
-                    </Grid>
-                    <Grid item sm={12} md={4} order={{ lg: 1 }} className={style["iconsElement"]}>
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{ px: "3em", display: { md: "flex" } }}
-                        className={style["link"]}
-                        onClick={onSubmitEmail}
-                      >
-                        Subscribe
-                      </Button>
-                    </Grid>
-                  </Grid>
-                  <Typography style={{ color: "#000000" }}>
-                    No spam. Never shared. Opt out at any time.
-                  </Typography>
+                    Subscribe
+                  </Button>
                 </Grid>
               </Grid>
-            </Paper>
+              <Typography style={{ color: "#000000" }}>
+                No spam. Never shared. Opt out at any time.
+              </Typography>
+            </Grid>
           </Grid>
-          </Grid>
+        </Paper>
+      </Grid>
+    </Grid>
   );
 };
 

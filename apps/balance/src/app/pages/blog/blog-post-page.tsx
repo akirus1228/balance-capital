@@ -156,6 +156,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
             <Grid item xs={12} order={{ lg: 1 }} className={style["iconsElement"]}>
               <img
                 src={post && post.image ? post.image : BalanceHeroImage}
+                alt={post ? post.blogTitle : "Balancer Hero Logo"}
                 style={{
                   width: "100%",
                   maxWidth: "100%",
@@ -171,7 +172,11 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               order={{ lg: 1 }}
               style={{ width: "60px", justifyContent: "center" }}
             >
-              <img src={BalanceTwitter} style={{ width: "60px" }} />
+              <img
+                src={BalanceTwitter}
+                alt="Balance Twitter logo"
+                style={{ width: "60px" }}
+              />
             </Grid>
             <Grid
               item

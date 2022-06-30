@@ -166,7 +166,7 @@ export const DefineGrid = (): JSX.Element => {
         }}
         className={style["defineImg"]}
       >
-        <img src={BalanceDefine2} style={{ width: "100%" }} />
+        <img src={BalanceDefine2} alt="BalanceDefine2 logo" style={{ width: "100%" }} />
       </Grid>
 
       <Grid
@@ -181,7 +181,7 @@ export const DefineGrid = (): JSX.Element => {
         }}
         className={style["defineImg"]}
       >
-        <img src={BalanceDefine1} style={{ width: "100%" }} />
+        <img src={BalanceDefine1} alt="Balance Define1 logo" style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
@@ -293,7 +293,7 @@ export const DefineGrid = (): JSX.Element => {
             setWebsiteUrl(e.target.value);
           }}
         />
-      
+
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your email address? *"

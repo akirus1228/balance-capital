@@ -108,7 +108,11 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             order={{ lg: 1 }}
             sx={{ width: "40px", justifyContent: "center", marginTop: { xs: "10px" } }}
           >
-            <img src={BalanceTwitter} style={{ width: "40px" }} />
+            <img
+              src={BalanceTwitter}
+              alt="Balance Twitter logo"
+              style={{ width: "40px" }}
+            />
           </Grid>
           <Grid
             item

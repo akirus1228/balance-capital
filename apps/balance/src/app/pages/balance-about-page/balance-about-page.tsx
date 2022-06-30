@@ -56,7 +56,7 @@ export const BalanceAboutPage = (): JSX.Element => {
             src={AboutBalanceEcosystem as string}
             style={{ width: "100%" }}
             className={style["image"]}
-            alt=""
+            alt="BalanceEcosystem"
           />
         </Grid>
         <Grid
@@ -114,7 +114,7 @@ export const BalanceAboutPage = (): JSX.Element => {
             paddingTop: "30px",
           }}
         >
-          <img src={AboutDivider as string} style={{ width: "100%" }} />
+          <img src={AboutDivider as string} alt="divider" style={{ width: "100%" }} />
         </Grid>
       </Grid>
       <BalanceAboutTile
