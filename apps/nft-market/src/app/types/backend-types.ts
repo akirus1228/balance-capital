@@ -314,3 +314,16 @@ export type PlatformWalletInfo = {
   loansBorrowed: number;
   loansGiven: number;
 };
+
+export type BlogPostDTO = {
+  id?: string;
+  date: string;
+  blogTitle: string;
+  blogAsset?: string;
+  blogCategory?: string;
+  content: string;
+  image?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+  getInTouch?: string;
+};

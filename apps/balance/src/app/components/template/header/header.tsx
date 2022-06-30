@@ -27,12 +27,14 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
-import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import { setTheme } from "../../../store/reducers/app-slice";
 import USDBLogoLight from "../../../../assets/images/USDB-logo.png";
 import USDBLogoDark from "../../../../assets/images/USDB-logo-dark.png";
 import styles from "./header.module.scss";
 import { NetworkMenu } from "./network-menu";
 import { headerPages, Page } from "../../../constants/nav";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { setCheckedConnection } from "../../../../../../usdb/src/app/store/reducers/app-slice";
 
 export const Header = (): JSX.Element => {
   const { connect, disconnect, connected, address, hasCachedProvider, chainId } =

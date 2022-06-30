@@ -2,34 +2,39 @@ import {
   Box,
   Button,
   Container,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
   Grid,
   Icon,
   OutlinedInput,
   Paper,
+  Radio,
+  RadioGroup,
+  SxProps,
+  Theme,
   Typography,
 } from "@mui/material";
-import style from "./balance-home-page.module.scss";
-import {
-  BalanceDefine2,
-  BalanceHeroImage,
-  BalanceEmailBanner,
-} from "@fantohm/shared/images";
+import style from "./blog-page.module.scss";
+import { BalanceEmailBanner, BlogBanner, BalanceHeroImage } from "@fantohm/shared/images";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import InvestmentOptions from "./investment-options/investment-options";
-import { DefineGrid } from "./define-grid/define-grid";
-import PartnersGrid from "./partners-grid/partners-grid";
-import AuditGrid from "./partners-grid/audit-grid";
 import { error, info } from "@fantohm/shared-web3";
-import { useState } from "react";
-import BalanceIconGrid from "./balance-icon-grid/balance-icon-grid";
+import { useEffect, useState } from "react";
+import BlogPost from "../../components/blog-page/blog-post";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
+import { NftDark, NftLight } from "@fantohm/shared-ui-themes";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const contentful = require("contentful");
 
-export const BalanceHomePage = (): JSX.Element => {
+export const BlogPage = (): JSX.Element => {
   const [email, setEmail] = useState("");
-
+  const [sortValue, setSortValue] = useState("all");
+  const allBlogPosts = useSelector((state: RootState) => state.app.blogPosts);
+  const [blogPosts, setBlogPosts] = useState<BlogPostDTO[]>();
   const themeType = useSelector((state: RootState) => state.app.theme);
   const dispatch = useDispatch();
-
   async function createContact() {
     const options = {
       method: "POST",
@@ -74,6 +79,23 @@ export const BalanceHomePage = (): JSX.Element => {
     return;
   };
 
+  useEffect(() => {
+    if (allBlogPosts && allBlogPosts.blogPosts) {
+      if (sortValue === "all") setBlogPosts(allBlogPosts.blogPosts);
+      else
+        setBlogPosts(
+          allBlogPosts.blogPosts.filter(
+            (posts: { blogCategory: string }) =>
+              posts.blogCategory.toLowerCase() === sortValue.toLowerCase()
+          )
+        );
+    }
+  }, [allBlogPosts, sortValue]);
+
+  const handleChange = (value: string) => {
+    setSortValue(value);
+  };
+
   return (
     <Container
       maxWidth="xl"
@@ -84,7 +106,6 @@ export const BalanceHomePage = (): JSX.Element => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
-        overflow: "hidden",
       }}
     >
       <Box
@@ -94,123 +115,135 @@ export const BalanceHomePage = (): JSX.Element => {
           flexDirection: "column",
           alignItems: "center",
           paddingTop: { xs: "52px", md: "112px" },
+          width: "100%",
         }}
         className={style["hero"]}
       >
         <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
           <Grid
             item
+            className="email-div"
             md={12}
             order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ height: "40em" }}
+            sx={{ width: { xs: "100%", md: "100%" }, marginLeft: { xs: "0%", md: "0%" } }}
           >
             <Paper
+              className="email-box"
               style={{
-                backgroundImage: `url(${BalanceHeroImage})`,
                 width: "100%",
-                height: "100%",
-                borderTopLeftRadius: "80px",
-                borderTopRightRadius: "80px",
-                borderBottomLeftRadius: "0px",
-                borderBottomRightRadius: "0px",
-                backgroundPosition: "center center",
+                borderRadius: "40px",
+                background: `url(${BlogBanner})`,
+                backgroundSize: "cover",
               }}
-              className={style["heroElem"]}
             >
               <Grid
                 container
-                style={{ width: "100%", height: "100%" }}
+                style={{ width: "100%" }}
                 columnSpacing={2}
                 rowSpacing={{ xs: 4, md: 0 }}
               >
                 <Grid
                   item
-                  sm={12}
-                  md={9}
-                  lg={6}
+                  md={12}
                   order={{ lg: 1 }}
                   sx={{
                     display: "flex",
                     flexDirection: "row",
-                    justifyContent: "start",
+                    justifyContent: "center",
                     alignItems: "center",
                     paddingTop: "30px",
+                    textAlign: "center",
                   }}
-                  className={style["heroRight"]}
                 >
-                  <Box
-                    sx={{
-                      marginLeft: { sm: "1em", md: "3em", lg: "5em" },
-                    }}
-                  >
-                    <Typography className={style["heroTitle"]}>
-                      Infrastructure for decentralized finance
-                    </Typography>
-                    <Typography style={{ marginTop: "20px", color: "#000000" }}>
-                      We are leveraging our decentralized business experience to help
-                      build a more sustainable, inclusive crypto investment economy. See
-                      how we're delivering on our commitments alongside our stakeholders
-                      and partners
-                    </Typography>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href="/#get-started"
+                  <Box style={{ textAlign: "center" }}>
+                    <Typography
                       sx={{
-                        px: "3",
-                        display: { xs: "none", md: "flex", width: "30%" },
+                        fontSize: { xs: "24px", md: "36px" },
+                        fontWeight: "500",
+                        color: "#000000",
                       }}
-                      className={style["link"]}
-                      style={{ marginTop: "20px" }}
                     >
-                      Get started
-                    </Button>
+                      The Balance Blog
+                    </Typography>
                   </Box>
                 </Grid>
               </Grid>
             </Paper>
           </Grid>
+
           <Grid
             item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ paddingTop: "150px" }}
-            id="get-started"
-          >
-            <BalanceIconGrid />
-          </Grid>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            id="about"
-          >
-            <InvestmentOptions />
-          </Grid>
-          <Grid
-            item
-            md={12}
+            md={3}
             order={{ lg: 1 }}
             style={{ width: "100%" }}
-            className={style["iconsElement"]}
+            sx={{ display: { xs: "none", md: "flex" } }}
           >
-            <DefineGrid />
-          </Grid>
-          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
-            <PartnersGrid />
+            <h2 className={style["daiAPR"]}>Filters</h2>
           </Grid>
           <Grid
             item
-            md={12}
+            md={9}
             order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            id="audit"
           >
-            <AuditGrid />
+            <h2 className={style["daiAPR"]}>Blog posts</h2>
+          </Grid>
+          <Grid
+            item
+            md={3}
+            order={{ lg: 1 }}
+            style={{ width: "100%" }}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <FormControl>
+              <RadioGroup
+                aria-labelledby="demo-radio-buttons-group-label"
+                defaultValue="all"
+                name="radio-buttons-group"
+                onChange={(e) => {
+                  handleChange(e.target.value);
+                  console.log(e.target.value); // will be called this time
+                }}
+              >
+                <FormControlLabel value="all" control={<Radio />} label="All" />
+                <FormControlLabel
+                  value="announcements"
+                  control={<Radio />}
+                  label="Announcements"
+                />
+                <FormControlLabel value="products" control={<Radio />} label="Products" />
+                <FormControlLabel
+                  value="partnerships"
+                  control={<Radio />}
+                  label="Partnerships"
+                />
+                <FormControlLabel value="events" control={<Radio />} label="Events" />
+                <FormControlLabel value="usdb" control={<Radio />} label="USDB" />
+                <FormControlLabel value="fhm" control={<Radio />} label="FHM" />
+              </RadioGroup>
+            </FormControl>
+          </Grid>
+          <Grid
+            item
+            md={9}
+            order={{ lg: 1 }}
+            sx={{ width: { xs: "100%", md: "100%" } }}
+          >
+            <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
+              {blogPosts &&
+                blogPosts.map((post: BlogPostDTO) => (
+                  <Grid
+                    item
+                    xs={6}
+                    sm={6}
+                    md={4}
+                    order={{ lg: 1 }}
+                  >
+                    <BlogPost post={post} className={style["blogPost"]}>
+                      <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
+                    </BlogPost>
+                  </Grid>
+                ))}
+            </Grid>
           </Grid>
           <Grid
             item
@@ -236,14 +269,10 @@ export const BalanceHomePage = (): JSX.Element => {
                 columnSpacing={2}
                 rowSpacing={{ sm: 0, md: 4 }}
               >
-                <Grid
-                  item
-                  sm={12}
-                  lg={6}
-                  order={{ lg: 1 }}
-                  className={style["iconsElement"]}
-                >
-                  <Typography style={{ fontSize: "20px", color: "#000000" }}>
+                <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+                  <Typography
+                    style={{ fontSize: "20px", color: "#000000" }}
+                  >
                     Receive email updates
                   </Typography>
                   <Grid
@@ -274,13 +303,7 @@ export const BalanceHomePage = (): JSX.Element => {
                         }}
                       />
                     </Grid>
-                    <Grid
-                      item
-                      sm={12}
-                      md={4}
-                      order={{ lg: 1 }}
-                      className={style["iconsElement"]}
-                    >
+                    <Grid item sm={12} md={4} order={{ lg: 1 }} className={style["iconsElement"]}>
                       <Button
                         variant="contained"
                         color="primary"
@@ -299,35 +322,11 @@ export const BalanceHomePage = (): JSX.Element => {
               </Grid>
             </Paper>
           </Grid>
-          <Grid item lg={12} className={style["heroTextContent"]}>
-            {/*<Box className={style["heroRight"]}>*/}
-            {/*  <Box*/}
-            {/*    sx={{*/}
-            {/*      height: { xs: "132px", md: "180px" },*/}
-            {/*      display: { xs: "none", md: "flex" },*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    <img*/}
-            {/*      src={themeType === "light" ? USDBLogoLight : USDBLogoDark}*/}
-            {/*      alt="USDB Logo"*/}
-            {/*      className={style["heroLogo"]}*/}
-            {/*    />*/}
-            {/*  </Box>*/}
-            {/*  <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>*/}
-            {/*  <h3 className={style["heroSubtitle"]}>*/}
-            {/*    USDB provides a wide range of financial tools and services to individuals*/}
-            {/*    and institutions*/}
-            {/*  </h3>*/}
-            {/*  <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">*/}
-            {/*    Learn more*/}
-            {/*    <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />*/}
-            {/*  </a>*/}
-            {/*</Box>*/}
-          </Grid>
+          <Grid item lg={12} className={style["heroTextContent"]}></Grid>
         </Grid>
       </Box>
     </Container>
   );
 };
 
-export default BalanceHomePage;
+export default BlogPage;

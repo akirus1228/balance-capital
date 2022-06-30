@@ -76,6 +76,8 @@ import Kanan from "./multisig/Kanan.png";
 import Sleepy_Neko from "./multisig/Sleepy_Neko.png";
 import Lilbobross from "./multisig/Lilbobross.png";
 import AtomicSwap from "./multisig/AtomicSwap.png";
+import BalanceTwitter from "./Balance_Twitter.png";
+import BlogBanner from "./Blog_Banner.png";
 
 export {
   NFTsIcon,
@@ -156,4 +158,6 @@ export {
   Kanan,
   Sleepy_Neko,
   Lilbobross,
+  BalanceTwitter,
+  BlogBanner,
 };

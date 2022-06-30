@@ -27,7 +27,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation } from "react-router-dom";
 import MenuLink from "./menu-link";
 import { RootState } from "../../../store";
-import { setCheckedConnection, setTheme } from "../../../store/reducers/app-slice";
+import { setTheme } from "../../../store/reducers/app-slice";
 import { BalanceLogo, BalanceLogoDark } from "@fantohm/shared/images";
 import styles from "./home-header.module.scss";
 import { NetworkMenu } from "./network-menu";
@@ -114,7 +114,7 @@ export const HomeHeader = (): JSX.Element => {
               <img
                 src={themeType === "light" ? BalanceLogo : BalanceLogoDark}
                 alt="USDB logo"
-                width="35%"
+                width="40%"
               />
             </Link>
           </Typography>
@@ -248,6 +248,14 @@ export const HomeHeader = (): JSX.Element => {
               }
             >
               Audits
+            </Link>
+            <Link
+              to="/blog"
+              className={
+                themeType === "light" ? styles["headerLink"] : styles["headerLinkDark"]
+              }
+            >
+              Blog
             </Link>
             <Button
               variant="contained"

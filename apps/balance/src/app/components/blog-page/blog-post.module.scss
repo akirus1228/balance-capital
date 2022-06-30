@@ -1,0 +1,26 @@
+.iconWrapper {
+  position: absolute;
+}
+
+.daiIcon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  height: 95px;
+  top: -36px;
+}
+
+.titleWrapper {
+  background-color: #000;
+  border-radius: 2em;
+  color: #fff;
+
+  font-size: 13px;
+  @media (max-width: 900px) {
+    font-size: 12px;
+  }
+  @media (max-width: 600px) {
+    font-size: 10px;
+  }
+}
