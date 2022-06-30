@@ -97,11 +97,11 @@ export function BalanceAboutTile({
           className={style["iconLinkContainer"]}
         >
           <Grid item xs={12} md={12}>
-            <h1 className={style["title"]}>{title}</h1>
+            <h2 className={style["title"]}>{title}</h2>
           </Grid>
 
           <Grid item xs={12} md={12}>
-            <h1 className={style["text"]}>{text}</h1>
+            <h3 className={style["text"]}>{text}</h3>
           </Grid>
           <Grid
             item

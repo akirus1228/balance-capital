@@ -1,4 +1,4 @@
-import { Box, Button, Grid, Icon, Input, Paper } from "@mui/material";
+import { Box, Button, Grid, Icon, Input, Paper, Typography } from "@mui/material";
 import { useEffect } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Headline from "../../components/headline/headline";
@@ -35,6 +35,18 @@ export const BalanceAboutPage = (): JSX.Element => {
   return (
     <>
       {Head("about", "")}
+      <Box style={{ textAlign: "center", paddingTop: "50px" }}>
+        <Typography
+          variant="h1"
+          sx={{
+            fontSize: { xs: "60px", md: "60px" },
+            fontWeight: "500",
+            color: "#ffffff",
+          }}
+        >
+          About Us
+        </Typography>
+      </Box>
       <Grid
         container
         rowSpacing={6}
@@ -81,19 +93,19 @@ export const BalanceAboutPage = (): JSX.Element => {
             className={style["iconLinkContainer"]}
           >
             <Grid item xs={10} md={12}>
-              <h1 className={style["title"]}>The Balance Ecosystem</h1>
+              <h2 className={style["title"]}>The Balance Ecosystem</h2>
             </Grid>
 
             <Grid item xs={10} md={12}>
-              <h1 className={style["text"]}>
+              <h3 className={style["text"]}>
                 The Balance Ecosystem is an open-source economy of conjoined banking and
                 commerce initiatives formed in March of 2022 with the unveiling of
                 investment opportunities derived solely from the technical application,
                 maintenance, and consumer use of USDB.
-              </h1>
+              </h3>
             </Grid>
             <Grid item xs={10} md={12}>
-              <h1 className={style["text"]}>
+              <h3 className={style["text"]}>
                 The Balance Ecosystem depends on the administration of the Balance
                 Organisation to produce and refine the collected systems of FHM & USDB’s
                 use cases until such a time as they might be further decentralised.
@@ -101,7 +113,7 @@ export const BalanceAboutPage = (): JSX.Element => {
                 Stakeholders’ DAO via governance throughout the development and
                 implementation of these systems, the Balance Ecosystem aims to produce the
                 first, ever, decentralised reserve currency.
-              </h1>
+              </h3>
             </Grid>
           </Box>
         </Grid>
