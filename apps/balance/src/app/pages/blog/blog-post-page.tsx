@@ -102,10 +102,9 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
       ),
     },
   };
-
   return (
     <>
-      {post ? Head(post.blogTitle, post.content) : Head("Blog Post", "")}
+      {post ? Head(post.seoTitle, post.seoDescription) : Head("Blog Post", "")}
       <ThemeProvider theme={theme}>
         <div style={{ width: "100%" }}>
           <Box

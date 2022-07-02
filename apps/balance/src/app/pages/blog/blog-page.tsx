@@ -96,10 +96,12 @@ export const BlogPage = (): JSX.Element => {
   const handleChange = (value: string) => {
     setSortValue(value);
   };
-
   return (
     <>
-      {Head("Blog", "")}
+      {Head(
+        "Blog",
+        "Balance ecosystem is an economy of conjoined banking and commerce initiatives. Balance blog shares blog articles on announcements, partnerships, events, USDB, FHM, and other products"
+      )}
       <Container
         maxWidth="xl"
         className={style["heroContainer"]}

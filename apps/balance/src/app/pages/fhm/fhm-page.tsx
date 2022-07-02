@@ -135,7 +135,10 @@ export const FhmPage = (): JSX.Element => {
 
   return (
     <>
-      {Head("FHM", "")}
+      {Head(
+        "FHM",
+        "FHM Protocol Token functions as a modifiable reserve asset. Committed to stakeholders and long-term interests with two layers of multi-sig protection."
+      )}
       <Grid
         container
         rowSpacing={6}

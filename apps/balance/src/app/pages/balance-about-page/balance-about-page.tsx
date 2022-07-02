@@ -34,7 +34,10 @@ export const BalanceAboutPage = (): JSX.Element => {
 
   return (
     <>
-      {Head("about", "")}
+      {Head(
+        "about",
+        "Balance ecosystem is an economy of conjoined banking and commerce initiatives. USDB stablecoin, FHM, DEX, Bridges, Liquidity Solutions, USDB Bank & Liqdnft are some key products."
+      )}
       <Box style={{ textAlign: "center", paddingTop: "50px" }}>
         <Typography
           variant="h1"
