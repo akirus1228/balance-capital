@@ -94,7 +94,12 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={12}
             order={{ lg: 1 }}
-            style={{ height: "10%", overflow: "hidden", width: "100%" }}
+            style={{
+              height: "10%",
+              overflow: "hidden",
+              width: "100%",
+              textAlign: "center",
+            }}
           >
             <h2 style={{ fontSize: "16px", height: "32px", maxLines: "2" }}>
               {props.post ? props.post.blogTitle : "title"}
