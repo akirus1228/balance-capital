@@ -146,7 +146,7 @@ export const BlogPage = (): JSX.Element => {
               >
                 <Grid
                   container
-                  style={{ width: "100%" }}
+                  style={{ width: "100%", display: "flex", justifyContent: "center" }}
                   columnSpacing={2}
                   rowSpacing={{ xs: 4, md: 0 }}
                 >

@@ -159,15 +159,17 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                     : ""}
                 </h1>
               </Grid>
-              <Grid item xs={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+              <Grid
+                item
+                xs={12}
+                order={{ lg: 1 }}
+                className={style["iconsElement"]}
+                sx={{ display: "flex", justifyContent: "center" }}
+              >
                 <img
                   src={post && post.image ? post.image : BalanceHeroImage}
                   alt={post ? post.blogTitle : "Balancer Hero Logo"}
-                  style={{
-                    width: "100%",
-                    maxWidth: "100%",
-                    borderRadius: "2em",
-                  }}
+                  className={style["imageSymbol"]}
                 />
               </Grid>
 

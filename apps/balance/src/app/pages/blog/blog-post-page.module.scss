@@ -30,6 +30,21 @@
 .iconsElement {
   padding-right: 16px;
 }
+.imageSymbol {
+  padding-right: 16px;
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  border-radius: 2em;
+  @media (max-width: 900px) {
+    width: 305px !important;
+    height: 295px !important;
+  }
+  @media (max-width: 600px) {
+    width: 255px !important;
+    height: 245px !important;
+  }
+}
 
 .blogPost {
   margin: 0 !important;
