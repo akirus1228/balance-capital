@@ -23,6 +23,8 @@ import AuditGrid from "./partners-grid/audit-grid";
 import { error, info } from "@fantohm/shared-web3";
 import { useState } from "react";
 import BalanceIconGrid from "./balance-icon-grid/balance-icon-grid";
+import Head from "../../components/template/head";
+import { Helmet } from "react-helmet";
 
 export const BalanceHomePage = (): JSX.Element => {
   const [email, setEmail] = useState("");
@@ -75,258 +77,267 @@ export const BalanceHomePage = (): JSX.Element => {
   };
 
   return (
-    <Container
-      maxWidth="xl"
-      className={style["heroContainer"]}
-      sx={{
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignContent: "center",
-        alignItems: "center",
-        overflow: "hidden",
-      }}
-    >
-      <Box
+    <>
+      <Helmet>
+        <title>Balance Capital - Infrastructure for decentralized finance</title>
+        <meta
+          name="description"
+          content="Balance.capital provides an infrastructure for decentralized finance and decentralized business experience to help build a sustainable & inclusive crypto investment economy"
+        />
+      </Helmet>
+      <Container
+        maxWidth="xl"
+        className={style["heroContainer"]}
         sx={{
           display: "flex",
-          justifyContent: "center",
           flexDirection: "column",
+          justifyContent: "center",
+          alignContent: "center",
           alignItems: "center",
-          paddingTop: { xs: "52px", md: "112px" },
+          overflow: "hidden",
         }}
-        className={style["hero"]}
       >
-        <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ height: "40em" }}
-          >
-            <Paper
-              style={{
-                backgroundImage: `url(${BalanceHeroImage})`,
-                width: "100%",
-                height: "100%",
-                borderTopLeftRadius: "80px",
-                borderTopRightRadius: "80px",
-                borderBottomLeftRadius: "0px",
-                borderBottomRightRadius: "0px",
-                backgroundPosition: "center center",
-              }}
-              className={style["heroElem"]}
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "center",
+            flexDirection: "column",
+            alignItems: "center",
+            paddingTop: { xs: "52px", md: "112px" },
+          }}
+          className={style["hero"]}
+        >
+          <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              className={style["iconsElement"]}
+              style={{ height: "40em" }}
             >
-              <Grid
-                container
-                style={{ width: "100%", height: "100%" }}
-                columnSpacing={2}
-                rowSpacing={{ xs: 4, md: 0 }}
+              <Paper
+                style={{
+                  backgroundImage: `url(${BalanceHeroImage})`,
+                  width: "100%",
+                  height: "100%",
+                  borderTopLeftRadius: "80px",
+                  borderTopRightRadius: "80px",
+                  borderBottomLeftRadius: "0px",
+                  borderBottomRightRadius: "0px",
+                  backgroundPosition: "center center",
+                }}
+                className={style["heroElem"]}
               >
                 <Grid
-                  item
-                  sm={12}
-                  md={9}
-                  lg={6}
-                  order={{ lg: 1 }}
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "start",
-                    alignItems: "center",
-                    paddingTop: "30px",
-                  }}
-                  className={style["heroRight"]}
+                  container
+                  style={{ width: "100%", height: "100%" }}
+                  columnSpacing={2}
+                  rowSpacing={{ xs: 4, md: 0 }}
                 >
-                  <Box
-                    sx={{
-                      marginLeft: { sm: "1em", md: "3em", lg: "5em" },
-                    }}
-                  >
-                    <Typography className={style["heroTitle"]}>
-                      Infrastructure for decentralized finance
-                    </Typography>
-                    <Typography style={{ marginTop: "20px", color: "#000000" }}>
-                      We are leveraging our decentralized business experience to help
-                      build a more sustainable, inclusive crypto investment economy. See
-                      how we're delivering on our commitments alongside our stakeholders
-                      and partners
-                    </Typography>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      href="/#get-started"
-                      sx={{
-                        px: "3",
-                        display: { xs: "none", md: "flex", width: "30%" },
-                      }}
-                      className={style["link"]}
-                      style={{ marginTop: "20px" }}
-                    >
-                      Get started
-                    </Button>
-                  </Box>
-                </Grid>
-              </Grid>
-            </Paper>
-          </Grid>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            style={{ paddingTop: "150px" }}
-            id="get-started"
-          >
-            <BalanceIconGrid />
-          </Grid>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            id="about"
-          >
-            <InvestmentOptions />
-          </Grid>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            style={{ width: "100%" }}
-            className={style["iconsElement"]}
-          >
-            <DefineGrid />
-          </Grid>
-          <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
-            <PartnersGrid />
-          </Grid>
-          <Grid
-            item
-            md={12}
-            order={{ lg: 1 }}
-            className={style["iconsElement"]}
-            id="audit"
-          >
-            <AuditGrid />
-          </Grid>
-          <Grid
-            item
-            className="email-div"
-            md={12}
-            order={{ lg: 1 }}
-            style={{ width: "100%" }}
-          >
-            <Paper
-              style={{
-                width: "100%",
-                borderRadius: "80px",
-                backgroundImage: `url(${BalanceHeroImage})`,
-                backgroundSize: "100% auto",
-                backgroundPosition: "center right",
-                backgroundRepeat: "no-repeat",
-              }}
-              className={style["emailBox"]}
-            >
-              <Grid
-                container
-                style={{ width: "100%", height: "100%" }}
-                columnSpacing={2}
-                rowSpacing={{ sm: 0, md: 4 }}
-              >
-                <Grid
-                  item
-                  sm={12}
-                  lg={6}
-                  order={{ lg: 1 }}
-                  className={style["iconsElement"]}
-                >
-                  <Typography style={{ fontSize: "20px", color: "#000000" }}>
-                    Receive email updates
-                  </Typography>
                   <Grid
-                    container
-                    style={{ width: "100%", height: "100%" }}
+                    item
+                    sm={12}
+                    md={9}
+                    lg={6}
+                    order={{ lg: 1 }}
                     sx={{
                       display: "flex",
                       flexDirection: "row",
                       justifyContent: "start",
-                      alignItems: "start",
-                      paddingTop: "10px",
+                      alignItems: "center",
+                      paddingTop: "30px",
                     }}
+                    className={style["heroRight"]}
                   >
-                    <Grid
-                      item
-                      sm={12}
-                      md={8}
-                      order={{ lg: 1 }}
-                      className={style["iconsElement"]}
+                    <Box
+                      sx={{
+                        marginLeft: { sm: "1em", md: "3em", lg: "5em" },
+                      }}
                     >
-                      <OutlinedInput
-                        className={`${style["styledInput"]}`}
-                        placeholder="Enter your email address"
-                        value={email}
-                        style={{ color: "#000000", borderColor: "#000000" }}
-                        onChange={(e) => {
-                          setEmail(e.target.value);
-                        }}
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      sm={12}
-                      md={4}
-                      order={{ lg: 1 }}
-                      className={style["iconsElement"]}
-                    >
+                      <Typography className={style["heroTitle"]}>
+                        Infrastructure for decentralized finance
+                      </Typography>
+                      <Typography style={{ marginTop: "20px", color: "#000000" }}>
+                        We are leveraging our decentralized business experience to help
+                        build a more sustainable, inclusive crypto investment economy. See
+                        how we're delivering on our commitments alongside our stakeholders
+                        and partners
+                      </Typography>
+
                       <Button
                         variant="contained"
                         color="primary"
-                        sx={{ px: "3em", display: { md: "flex" } }}
+                        href="/#get-started"
+                        sx={{
+                          px: "3",
+                          display: { xs: "none", md: "flex", width: "30%" },
+                        }}
                         className={style["link"]}
-                        onClick={onSubmitEmail}
+                        style={{ marginTop: "20px" }}
                       >
-                        Subscribe
+                        Get started
                       </Button>
-                    </Grid>
+                    </Box>
                   </Grid>
-                  <Typography style={{ color: "#000000" }}>
-                    No spam. Never shared. Opt out at any time.
-                  </Typography>
                 </Grid>
-              </Grid>
-            </Paper>
+              </Paper>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              className={style["iconsElement"]}
+              style={{ paddingTop: "150px" }}
+              id="get-started"
+            >
+              <BalanceIconGrid />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              className={style["iconsElement"]}
+              id="about"
+            >
+              <InvestmentOptions />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              style={{ width: "100%" }}
+              className={style["iconsElement"]}
+            >
+              <DefineGrid />
+            </Grid>
+            <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+              <PartnersGrid />
+            </Grid>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              className={style["iconsElement"]}
+              id="audit"
+            >
+              <AuditGrid />
+            </Grid>
+            <Grid
+              item
+              className="email-div"
+              md={12}
+              order={{ lg: 1 }}
+              style={{ width: "100%" }}
+            >
+              <Paper
+                style={{
+                  width: "100%",
+                  borderRadius: "80px",
+                  backgroundImage: `url(${BalanceHeroImage})`,
+                  backgroundSize: "100% auto",
+                  backgroundPosition: "center right",
+                  backgroundRepeat: "no-repeat",
+                }}
+                className={style["emailBox"]}
+              >
+                <Grid
+                  container
+                  style={{ width: "100%", height: "100%" }}
+                  columnSpacing={2}
+                  rowSpacing={{ sm: 0, md: 4 }}
+                >
+                  <Grid
+                    item
+                    sm={12}
+                    lg={6}
+                    order={{ lg: 1 }}
+                    className={style["iconsElement"]}
+                  >
+                    <Typography style={{ fontSize: "20px", color: "#000000" }}>
+                      Receive email updates
+                    </Typography>
+                    <Grid
+                      container
+                      style={{ width: "100%", height: "100%" }}
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "start",
+                        alignItems: "start",
+                        paddingTop: "10px",
+                      }}
+                    >
+                      <Grid
+                        item
+                        sm={12}
+                        md={8}
+                        order={{ lg: 1 }}
+                        className={style["iconsElement"]}
+                      >
+                        <OutlinedInput
+                          className={`${style["styledInput"]}`}
+                          placeholder="Enter your email address"
+                          value={email}
+                          style={{ color: "#000000", borderColor: "#000000" }}
+                          onChange={(e) => {
+                            setEmail(e.target.value);
+                          }}
+                        />
+                      </Grid>
+                      <Grid
+                        item
+                        sm={12}
+                        md={4}
+                        order={{ lg: 1 }}
+                        className={style["iconsElement"]}
+                      >
+                        <Button
+                          variant="contained"
+                          color="primary"
+                          sx={{ px: "3em", display: { md: "flex" } }}
+                          className={style["link"]}
+                          onClick={onSubmitEmail}
+                        >
+                          Subscribe
+                        </Button>
+                      </Grid>
+                    </Grid>
+                    <Typography style={{ color: "#000000" }}>
+                      No spam. Never shared. Opt out at any time.
+                    </Typography>
+                  </Grid>
+                </Grid>
+              </Paper>
+            </Grid>
+            <Grid item lg={12} className={style["heroTextContent"]}>
+              {/*<Box className={style["heroRight"]}>*/}
+              {/*  <Box*/}
+              {/*    sx={{*/}
+              {/*      height: { xs: "132px", md: "180px" },*/}
+              {/*      display: { xs: "none", md: "flex" },*/}
+              {/*    }}*/}
+              {/*  >*/}
+              {/*    <img*/}
+              {/*      src={themeType === "light" ? USDBLogoLight : USDBLogoDark}*/}
+              {/*      alt="USDB Logo"*/}
+              {/*      className={style["heroLogo"]}*/}
+              {/*    />*/}
+              {/*  </Box>*/}
+              {/*  <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>*/}
+              {/*  <h3 className={style["heroSubtitle"]}>*/}
+              {/*    USDB provides a wide range of financial tools and services to individuals*/}
+              {/*    and institutions*/}
+              {/*  </h3>*/}
+              {/*  <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">*/}
+              {/*    Learn more*/}
+              {/*    <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />*/}
+              {/*  </a>*/}
+              {/*</Box>*/}
+            </Grid>
           </Grid>
-          <Grid item lg={12} className={style["heroTextContent"]}>
-            {/*<Box className={style["heroRight"]}>*/}
-            {/*  <Box*/}
-            {/*    sx={{*/}
-            {/*      height: { xs: "132px", md: "180px" },*/}
-            {/*      display: { xs: "none", md: "flex" },*/}
-            {/*    }}*/}
-            {/*  >*/}
-            {/*    <img*/}
-            {/*      src={themeType === "light" ? USDBLogoLight : USDBLogoDark}*/}
-            {/*      alt="USDB Logo"*/}
-            {/*      className={style["heroLogo"]}*/}
-            {/*    />*/}
-            {/*  </Box>*/}
-            {/*  <h1 className={style["heroTitle"]}>Where traditional finance meets DeFi</h1>*/}
-            {/*  <h3 className={style["heroSubtitle"]}>*/}
-            {/*    USDB provides a wide range of financial tools and services to individuals*/}
-            {/*    and institutions*/}
-            {/*  </h3>*/}
-            {/*  <a href="/trad-fi" className={style["heroLink"]} rel="noreferrer">*/}
-            {/*    Learn more*/}
-            {/*    <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />*/}
-            {/*  </a>*/}
-            {/*</Box>*/}
-          </Grid>
-        </Grid>
-      </Box>
-    </Container>
+        </Box>
+      </Container>
+    </>
   );
 };
 
