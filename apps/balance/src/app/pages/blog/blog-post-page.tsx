@@ -110,7 +110,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
         <meta name="keywords" content={post?.seoKeywords} />
       </Helmet>
       <ThemeProvider theme={theme}>
-        <div style={{ width: "100%" }}>
+        <div style={{ width: "100%" }} className="change">
           <Box
             className={css["titleWrapper"]}
             sx={{
