@@ -34,6 +34,7 @@ import { documentToReactComponents } from "@contentful/rich-text-react-renderer"
 import BlogPost from "../../components/blog-page/blog-post";
 import { INLINES, Block, Inline, BLOCKS } from "@contentful/rich-text-types";
 import Head from "../../components/template/head";
+import { Helmet } from "react-helmet";
 
 /* eslint-disable-next-line */
 export interface BlogPostProps {
@@ -105,6 +106,9 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
   return (
     <>
       {post ? Head(post.seoTitle, post.seoDescription) : Head("Blog Post", "")}
+      <Helmet>
+        <meta name="keywords" content={post?.seoKeywords} />
+      </Helmet>
       <ThemeProvider theme={theme}>
         <div style={{ width: "100%" }}>
           <Box

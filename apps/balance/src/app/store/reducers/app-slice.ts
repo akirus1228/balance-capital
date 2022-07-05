@@ -48,6 +48,7 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
           image: imageUrl,
           seoTitle: entryResult.fields.seoMetadata.fields.seoTitle,
           seoDescription: entryResult.fields.seoMetadata.fields.description,
+          seoKeywords: entryResult.fields.seoMetadata.fields.keywords,
           getInTouch: entryResult.fields.getInTouch.fields.content,
         });
       }

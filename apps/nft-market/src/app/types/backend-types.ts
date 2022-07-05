@@ -325,5 +325,6 @@ export type BlogPostDTO = {
   image?: string;
   seoTitle?: string;
   seoDescription?: string;
+  seoKeywords?: string;
   getInTouch?: string;
 };

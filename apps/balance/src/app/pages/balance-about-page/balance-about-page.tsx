@@ -44,8 +44,8 @@ export const BalanceAboutPage = (): JSX.Element => {
           sx={{
             fontSize: { xs: "60px", md: "60px" },
             fontWeight: "500",
-            color: "#ffffff",
           }}
+          className={style["title"]}
         >
           About Us
         </Typography>
