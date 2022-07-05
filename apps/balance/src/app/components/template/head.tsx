@@ -3,7 +3,6 @@ import React from "react";
 import { Helmet } from "react-helmet";
 
 const Head = (title: string | undefined, description: string | undefined) => {
-  console.log("description", description);
   return (
     <Helmet
       title={`Balance Capital | ${title}`}

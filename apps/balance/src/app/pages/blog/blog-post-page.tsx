@@ -199,7 +199,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                 </h2>
                 <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
                   {post && post.date
-                    ? new Date(post.date.slice(0, 10)).toDateString()
+                    ? new Date(post.date.slice(0, 10)).toLocaleDateString()
                     : ""}
                 </h2>
               </Grid>

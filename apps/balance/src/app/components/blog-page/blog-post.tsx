@@ -38,7 +38,6 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
   function openPost() {
     window.open("/blog/" + props.post.id, "_self");
   }
-
   return (
     <ThemeProvider theme={theme}>
       <Paper
@@ -124,7 +123,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>The Balance Blog</h2>
             <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
               {props.post && props.post.date
-                ? new Date(props.post.date.slice(0, 10)).toDateString()
+                ? new Date(props.post.date.slice(0, 10)).toLocaleDateString()
                 : ""}
             </h2>
           </Grid>
