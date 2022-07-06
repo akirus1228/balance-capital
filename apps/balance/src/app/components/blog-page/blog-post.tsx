@@ -89,9 +89,11 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
               overflow: "hidden",
               width: "100%",
               textAlign: "center",
+              display: "flex",
+              justifyContent: "center",
             }}
           >
-            <h2 style={{ fontSize: "16px", height: "32px", maxLines: "2" }}>
+            <h2 className={style["blogTitle"]}>
               {props.post ? props.post.blogTitle : "title"}
             </h2>
           </Grid>

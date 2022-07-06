@@ -42,3 +42,12 @@
     font-size: 9px !important;
   }
 }
+.blogTitle {
+  font-size: 16px;
+  height: 32px;
+  max-lines: 2;
+  @media (max-width: 600px) {
+    font-size: 12px !important;
+    width: 210px !important;
+  }
+}
