@@ -73,17 +73,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
                 textAlign: "center",
               }}
             >
-              <h3
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  paddingTop: "5px",
-                  fontSize: "12px",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  textAlign: "center",
-                }}
-              >
+              <h3 className={style["categoryDisplay"]}>
                 {props.post && props.post.blogCategory ? props.post.blogCategory : ""}
               </h3>
             </Box>
