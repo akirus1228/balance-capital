@@ -267,7 +267,13 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
                     )
                   : ""}
               </Grid>
-              <Grid item md={12} order={{ lg: 1 }} className={style["iconsElement"]}>
+              <Grid
+                item
+                md={12}
+                order={{ lg: 1 }}
+                style={{ maxWidth: "90%" }}
+                className={style["iconsElement"]}
+              >
                 {blogPosts && blogPosts.blogPosts
                   ? documentToReactComponents(
                       blogPosts.blogPosts.find((post: BlogPostDTO) => post.id === id)
@@ -282,7 +288,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               md={12}
               order={{ lg: 1 }}
               className={style["iconsElement"]}
-              style={{ textAlign: "center", maxWidth: "100%", marginTop: "100px" }}
+              style={{ textAlign: "center", maxWidth: "90%", marginTop: "100px" }}
             >
               <h1>More from the balance blog</h1>
             </Grid>
@@ -371,7 +377,13 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
               className="email-div"
               md={12}
               order={{ lg: 1 }}
-              style={{ width: "100%", marginBottom: "100px", marginTop: "100px" }}
+              style={{ marginBottom: "100px", marginTop: "100px" }}
+              sx={{
+                width: { xs: "90%", md: "90%" },
+                marginLeft: { xs: "5%", md: "5%" },
+                marginRight: { xs: "5%", md: "5%" },
+                marginBottom: "20px",
+              }}
             >
               <Paper
                 style={{

@@ -245,7 +245,13 @@ export const BalanceAboutPage = (): JSX.Element => {
         className="email-div"
         md={12}
         order={{ lg: 1 }}
-        style={{ width: "100%", marginBottom: "100px", marginTop: "100px" }}
+        style={{ marginBottom: "100px", marginTop: "100px" }}
+        sx={{
+          width: { xs: "90%", md: "90%" },
+          marginLeft: { xs: "5%", md: "5%" },
+          marginRight: { xs: "5%", md: "5%" },
+          marginBottom: "20px",
+        }}
       >
         <Paper
           style={{
