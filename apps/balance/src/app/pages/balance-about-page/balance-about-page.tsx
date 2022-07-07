@@ -109,7 +109,7 @@ export const BalanceAboutPage = (): JSX.Element => {
         container
         rowSpacing={6}
         className={style["productGrid"]}
-        style={{ marginTop: "50px" }}
+        style={{ marginTop: "50px", paddingRight: "30px" }}
       >
         <Grid
           item

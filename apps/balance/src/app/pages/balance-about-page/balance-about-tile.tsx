@@ -87,6 +87,7 @@ export function BalanceAboutTile({
           justifyContent: "start",
           alignItems: "start",
           paddingTop: "30px",
+          paddingRight: "30px",
         }}
       >
         <Box
