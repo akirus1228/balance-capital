@@ -155,9 +155,12 @@ export const BalanceHomePage = (): JSX.Element => {
                       }}
                     >
                       <Typography className={style["heroTitle"]}>
-                        Infrastructure for decentralized finance
+                        Infrastructure for
                       </Typography>
-                      <Typography style={{ marginTop: "20px", color: "#000000" }}>
+                      <Typography className={style["heroTitle1"]}>
+                        decentralized finance
+                      </Typography>
+                      <Typography style={{ marginTop: "20px", color: "#5f5f5f" }}>
                         We are leveraging our decentralized business experience to help
                         build a more sustainable, inclusive crypto investment economy. See
                         how we're delivering on our commitments alongside our stakeholders
@@ -310,7 +313,7 @@ export const BalanceHomePage = (): JSX.Element => {
               </Paper>
             </Grid>
             <Grid item lg={12} className={style["heroTextContent"]}>
-              {/*<Box className={style["heroRight"]}>*/}
+              {/* <Box className={style["heroRight"]}>*/}
               {/*  <Box*/}
               {/*    sx={{*/}
               {/*      height: { xs: "132px", md: "180px" },*/}
@@ -332,7 +335,7 @@ export const BalanceHomePage = (): JSX.Element => {
               {/*    Learn more*/}
               {/*    <Icon component={ArrowUpwardIcon} className={style["linkArrow"]} />*/}
               {/*  </a>*/}
-              {/*</Box>*/}
+              {/*</Box> */}
             </Grid>
           </Grid>
         </Box>

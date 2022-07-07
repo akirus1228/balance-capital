@@ -1,5 +1,14 @@
-import { Box, Button, Grid, Icon, Input, Paper, Typography } from "@mui/material";
-import { useEffect } from "react";
+import {
+  Box,
+  Button,
+  Grid,
+  Icon,
+  Input,
+  OutlinedInput,
+  Paper,
+  Typography,
+} from "@mui/material";
+import { useEffect, useState } from "react";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import Headline from "../../components/headline/headline";
 import Logo from "../../components/logo/logo";
@@ -18,9 +27,12 @@ import {
   AboutUSDBBank,
   AboutBalanceEcosystem,
   AboutNFTMarketplace,
+  BalanceHeroImage,
 } from "@fantohm/shared/images";
 import BalanceAboutTile from "./balance-about-tile";
 import Head from "../../components/template/head";
+import { useDispatch } from "react-redux";
+import { error, info } from "@fantohm/shared-web3";
 
 export const BalanceAboutPage = (): JSX.Element => {
   // mailchimp integration
@@ -31,7 +43,50 @@ export const BalanceAboutPage = (): JSX.Element => {
   //   script.async = true;
   //   document.body.appendChild(script);
   // }, []);
+  const [email, setEmail] = useState("");
+  const dispatch = useDispatch();
+  async function createContact() {
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({ updateEnabled: true, email: email }),
+    };
 
+    await fetch("https://api.sendinblue.com/v3/contacts", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+  }
+  const onSubmitEmail = async () => {
+    if (!email.includes("@") && !email.includes(".")) {
+      // eslint-disable-next-line no-alert
+      return dispatch(error("Please enter a valid email!"));
+    }
+    await createContact();
+    const options = {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        "api-key":
+          "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",
+      },
+      body: JSON.stringify({ emails: [email] }),
+    };
+
+    await fetch("https://api.sendinblue.com/v3/contacts/lists/2/contacts/add", options)
+      .then((response) => response.json())
+      .then((response) => console.log(response))
+      .catch((err) => console.error(err));
+    setEmail("");
+    dispatch(info("Success!"));
+    return;
+  };
   return (
     <>
       {Head(
@@ -185,6 +240,87 @@ export const BalanceAboutPage = (): JSX.Element => {
         title="Financial NFTs"
         text="We are building a financial NFTs that will act as a receipt for a new game-changing financial product."
       />
+      <Grid
+        item
+        className="email-div"
+        md={12}
+        order={{ lg: 1 }}
+        style={{ width: "100%", marginBottom: "100px", marginTop: "100px" }}
+      >
+        <Paper
+          style={{
+            width: "100%",
+            borderRadius: "80px",
+            backgroundImage: `url(${BalanceHeroImage})`,
+            backgroundSize: "100% auto",
+            backgroundPosition: "center right",
+            backgroundRepeat: "no-repeat",
+          }}
+          className={style["emailBox"]}
+        >
+          <Grid
+            container
+            style={{ width: "100%", height: "100%" }}
+            columnSpacing={2}
+            rowSpacing={{ sm: 0, md: 4 }}
+          >
+            <Grid item sm={12} lg={6} order={{ lg: 1 }} className={style["iconsElement"]}>
+              <Typography style={{ fontSize: "20px", color: "#000000" }}>
+                Receive email updates
+              </Typography>
+              <Grid
+                container
+                style={{ width: "100%", height: "100%" }}
+                sx={{
+                  display: "flex",
+                  flexDirection: "row",
+                  justifyContent: "start",
+                  alignItems: "start",
+                  paddingTop: "10px",
+                }}
+              >
+                <Grid
+                  item
+                  sm={12}
+                  md={8}
+                  order={{ lg: 1 }}
+                  className={style["iconsElement"]}
+                >
+                  <OutlinedInput
+                    className={`${style["styledInput"]}`}
+                    placeholder="Enter your email address"
+                    value={email}
+                    style={{ color: "#000000", borderColor: "#000000" }}
+                    onChange={(e) => {
+                      setEmail(e.target.value);
+                    }}
+                  />
+                </Grid>
+                <Grid
+                  item
+                  sm={12}
+                  md={4}
+                  order={{ lg: 1 }}
+                  className={style["iconsElement"]}
+                >
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    sx={{ px: "3em", display: { md: "flex" } }}
+                    className={style["link"]}
+                    onClick={onSubmitEmail}
+                  >
+                    Subscribe
+                  </Button>
+                </Grid>
+              </Grid>
+              <Typography style={{ color: "#000000" }}>
+                No spam. Never shared. Opt out at any time.
+              </Typography>
+            </Grid>
+          </Grid>
+        </Paper>
+      </Grid>
     </>
   );
 };
