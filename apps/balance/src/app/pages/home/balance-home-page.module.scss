@@ -27,9 +27,7 @@
     font-size: 36px;
     font-weight: 400;
     margin-bottom: 0 !important;
-    width: 420px;
     color: rgba(112, 112, 112);
-
     @media (max-width: 600px) {
       font-size: 30px;
       padding: 0;
@@ -43,9 +41,7 @@
     font-size: 36px;
     font-weight: 400;
     margin-bottom: 0 !important;
-    width: 420px;
-    color: black;
-
+    color: rgb(0, 0, 0);
     @media (max-width: 600px) {
       font-size: 30px;
       padding: 0;
@@ -156,7 +152,6 @@ body[class="darkTheme"] {
     background-color: #000;
     .heroTitle {
       color: #000 !important;
-      width: 420px;
     }
     a {
       background: #000 !important;
