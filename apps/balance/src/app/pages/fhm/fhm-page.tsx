@@ -88,39 +88,60 @@ export const FhmPage = (): JSX.Element => {
   }
 
   const onSubmitEmail = async () => {
-    if (
-      email === "" ||
-      name === "" ||
-      organizationName === "" ||
-      sector === "" ||
-      product === "" ||
-      websiteUrl === ""
-    ) {
+    if (!email.includes("@") && !email.includes(".")) {
       // eslint-disable-next-line no-alert
-      return dispatch(error("Please enter a valid value for each field!"));
+      return dispatch(error("Please enter a valid email!"));
     }
-    await createContact();
-    const options = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "api-key":
-          "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",
-      },
-      body: JSON.stringify({ emails: [email] }),
+    // await createContact();
+    // const options = {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     "api-key":
+    //       "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",
+    //   },
+    //   body: JSON.stringify({ emails: [email] }),
+    // };
+
+    // await fetch("https://api.sendinblue.com/v3/contacts/lists/2/contacts/add", options)
+    //   .then((response) => response.json())
+    //   .then((response) => console.log(response))
+    //   .catch((err) => console.error(err));
+
+    const xhr = new XMLHttpRequest();
+    const url =
+      "https://api.hsforms.com/submissions/v3/integration/submit/26031699/1ef63c14-2b97-4210-ae89-0d37a540dd13";
+    const data = {
+      fields: [
+        {
+          name: "email",
+          value: email,
+        },
+      ],
     };
 
-    await fetch("https://api.sendinblue.com/v3/contacts/lists/3/contacts/add", options)
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    let final_data = JSON.stringify(data);
+    xhr.open("POST", url);
+    // Sets the value of the 'Content-Type' HTTP request headers to 'application/json'
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // xhr.onreadystatechange = function () {
+    //   if (xhr.readyState == 4 && xhr.status == 200) {
+    //     alert(xhr.responseText); // Returns a 200 response if the submission is successful.
+    //   } else if (xhr.readyState == 4 && xhr.status == 400) {
+    //     alert(xhr.responseText); // Returns a 400 error the submission is rejected.
+    //   } else if (xhr.readyState == 4 && xhr.status == 403) {
+    //     alert(xhr.responseText); // Returns a 403 error if the portal isn't allowed to post submissions.
+    //   } else if (xhr.readyState == 4 && xhr.status == 404) {
+    //     alert(xhr.responseText); //Returns a 404 error if the formGuid isn't found
+    //   }
+    // };
+
+    // Sends the request
+    xhr.send(final_data);
+
     setEmail("");
-    setSector("");
-    setOrganizationName("");
-    setName("");
-    setProduct("");
-    setWebsiteUrl("");
     dispatch(info("Success!"));
     return;
   };
