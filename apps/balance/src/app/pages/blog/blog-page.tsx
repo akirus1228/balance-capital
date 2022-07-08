@@ -268,7 +268,8 @@ export const BlogPage = (): JSX.Element => {
               item
               md={9}
               order={{ lg: 1 }}
-              sx={{ width: { xs: "100%", md: "100%" }, backgroundColor: "#FCFCFC" }}
+              sx={{ width: { xs: "100%", md: "100%" } }}
+              className = "blogPostsDiv"
             >
               <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
                 {blogPosts &&

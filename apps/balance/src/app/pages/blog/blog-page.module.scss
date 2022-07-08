@@ -237,10 +237,10 @@ background-color:#f2f2f3 !important;
 
 body[class=darkTheme] {
   .blogPost {
-    background:rgba(255,255,255,0.1);
+    background:#06080D;
 
     &:hover {
-      background:rgba(255,255,255,0.2);
+      background:#06080D;
     }
     & > div {
       
@@ -255,6 +255,9 @@ body[class=darkTheme] {
         
       }
       
+    }
+    .blogPostsDiv {
+      background: rgba(255,255,255,0.1);
     }
   }
  
