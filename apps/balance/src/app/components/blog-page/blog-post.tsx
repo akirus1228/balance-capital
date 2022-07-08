@@ -41,7 +41,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
   return (
     <ThemeProvider theme={theme}>
       <Paper
-        sx={{ marginTop: "47px", ...props.sx }}
+        sx={{ marginTop: "47px", padding: "0px", borderRadius: "25px", ...props.sx }}
         className={`daiCard ${style["cardWrapper"]} ${props.className} flexCenterCol`}
         onClick={openPost}
       >
@@ -57,7 +57,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={12}
             order={{ lg: 1 }}
-            style={{ width: "100%", overflow: "hidden" }}
+            style={{ width: "100%", overflow: "hidden", backgroundColor: "#f4f4f4" }}
           >
             <img
               src={props.post && props.post.image ? props.post.image : BalanceHeroImage}
@@ -88,9 +88,8 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
               height: "10%",
               overflow: "hidden",
               width: "100%",
-              textAlign: "center",
-              display: "flex",
-              justifyContent: "center",
+              paddingTop: "0px",
+              marginTop: "-10px",
             }}
           >
             <h2 className={style["blogTitle"]}>
@@ -102,7 +101,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={2}
             order={{ lg: 1 }}
-            sx={{ width: "40px", justifyContent: "center", marginTop: { xs: "10px" } }}
+            sx={{ justifyContent: "center", marginTop: { xs: "8px" } }}
           >
             <img
               src={BalanceTwitter}
@@ -115,10 +114,17 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={8}
             order={{ lg: 1 }}
-            sx={{ height: "100%", overflow: "hidden", marginLeft: { xs: "30px" } }}
+            sx={{
+              height: "100%",
+              overflow: "hidden",
+              marginLeft: { xs: "5px" },
+              paddingLeft: "0px !important",
+            }}
           >
-            <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>The Balance Blog</h2>
-            <h2 style={{ fontSize: "12px", marginLeft: "10px" }}>
+            <h2 style={{ fontSize: "12px", marginLeft: "10px", marginBottom: "0px" }}>
+              The Balance Blog
+            </h2>
+            <h2 style={{ fontSize: "12px", marginLeft: "10px", marginTop: "0px" }}>
               {props.post && props.post.date
                 ? new Date(props.post.date.slice(0, 10)).toDateString().slice(4)
                 : ""}

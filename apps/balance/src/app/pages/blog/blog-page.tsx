@@ -268,12 +268,12 @@ export const BlogPage = (): JSX.Element => {
               item
               md={9}
               order={{ lg: 1 }}
-              sx={{ width: { xs: "100%", md: "100%" } }}
+              sx={{ width: { xs: "100%", md: "100%" }, backgroundColor: "#FCFCFC" }}
             >
               <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
                 {blogPosts &&
                   blogPosts.map((post: BlogPostDTO) => (
-                    <Grid item xs={6} sm={6} md={4} order={{ lg: 1 }}>
+                    <Grid item xs={12} sm={12} md={4} order={{ lg: 1 }}>
                       <BlogPost post={post} className={style["blogPost"]}>
                         <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
                       </BlogPost>

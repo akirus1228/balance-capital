@@ -22,6 +22,11 @@
 
   }
 }
+@media (min-width: 768px) {
+  .heroContainer {
+    width: 90% !important;
+  }
+}
 
 .iconLinkContainer {
   display: flex;
@@ -149,10 +154,10 @@ background-color:#f2f2f3 !important;
     cursor:pointer;
 
 @media (max-width:1200px) {
-  padding:15px !important;
+  // padding:15px !important;
 }
 @media (max-width:600px) {
-  padding:10px 5px !important;
+  // padding:10px 5px !important;
 }
 
     &:hover {
@@ -183,12 +188,17 @@ background-color:#f2f2f3 !important;
         }
 
         div {
+
           position:absolute;
-          bottom:-50px;
-          left:30px;
+          bottom:-10px;
+          left:15px;
           right:30px;
+          width: 150px;
           text-align:center;
           h3 {margin:0;padding:0;}
+          @media (max-width: 600px) {
+            width: 100px;
+          }
         }
       }
       h1 {
@@ -198,10 +208,10 @@ background-color:#f2f2f3 !important;
       }
       h2 {
         @media (max-width:600px) {
-          font-size:11px !important;
+          font-size:12px !important;
         }
         @media (max-width:420px) {
-          font-size:9px !important;
+          font-size:11px !important;
         }
       }
       div:last-child {

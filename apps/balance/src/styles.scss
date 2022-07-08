@@ -12,6 +12,9 @@ a {
 .change a:visited {
   color: rgb(90, 202, 230) !important;
 }
+body[class="lightTheme"] {
+  background-color: white !important;
+}
 
 .flexCenterRow {
   display: flex;
