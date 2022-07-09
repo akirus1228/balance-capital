@@ -38,10 +38,12 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
           category = "";
         }
         console.log(entryResult.fields.getInTouch.fields.content);
+        console.log("entryResult", entryResult);
         posts.push({
           id: entryResult.fields.slug,
           date: entryResult.sys.createdAt,
           blogTitle: entryResult.fields.blogTitle,
+          isFeatured: entryResult.fields.isFeatured,
           blogAsset: entryResult.fields.blogAsset,
           content: entryResult.fields.content,
           blogCategory: category,

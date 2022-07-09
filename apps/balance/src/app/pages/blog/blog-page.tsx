@@ -26,6 +26,7 @@ import BlogPost from "../../components/blog-page/blog-post";
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 import { NftDark, NftLight } from "@fantohm/shared-ui-themes";
 import Head from "../../components/template/head";
+import BlogFeaturedPost from "../../components/blog-featured-page/blog-featured-post";
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const contentful = require("contentful");
 
@@ -213,7 +214,29 @@ export const BlogPage = (): JSX.Element => {
                 </Grid>
               </Paper>
             </Grid>
-
+            <Grid item md={12} order={{ lg: 1 }}>
+              <h2 className={style["daiAPR"]}>Featured Posts</h2>
+            </Grid>
+            <Grid
+              item
+              md={12}
+              order={{ lg: 1 }}
+              sx={{ width: { xs: "100%", md: "100%" }, marginBottom: "100px" }}
+              className="blogPostsDiv"
+            >
+              <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>
+                {blogPosts &&
+                  blogPosts
+                    .filter((post: BlogPostDTO) => post.isFeatured)
+                    .map((post: BlogPostDTO) => (
+                      <Grid item xs={12} sm={12} md={4} order={{ lg: 1 }}>
+                        <BlogFeaturedPost post={post} className={style["blogPost"]}>
+                          <h2 className={style["daiAPR"]}>{post.blogTitle}</h2>
+                        </BlogFeaturedPost>
+                      </Grid>
+                    ))}
+              </Grid>
+            </Grid>
             <Grid
               item
               md={3}
@@ -288,7 +311,7 @@ export const BlogPage = (): JSX.Element => {
               className="email-div"
               md={12}
               order={{ lg: 1 }}
-              style={{ width: "100%" }}
+              style={{ width: "100%", marginTop: "100px" }}
             >
               <Paper
                 style={{
