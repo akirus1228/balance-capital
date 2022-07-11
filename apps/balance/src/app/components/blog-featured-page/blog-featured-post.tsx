@@ -45,6 +45,7 @@ export const BlogFeaturedPost = (props: BlogFeaturedPostProps): JSX.Element => {
           marginTop: "47px",
           padding: "0px",
           borderRadius: "25px",
+          boxShadow: "0.5em 0.5em 1em #f4f4f4",
           ...props.sx,
         }}
         className={`daiCard ${style["cardWrapper"]} ${props.className} flexCenterCol`}
