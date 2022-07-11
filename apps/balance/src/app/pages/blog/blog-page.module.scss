@@ -234,7 +234,9 @@ background-color:#f2f2f3 !important;
       }
   }
 
-
+  .blogPostsDiv {
+    background: linear-gradient(45deg, #FFFFFF 0%, #FDFDFD 0%) !important;
+  }
 body[class=darkTheme] {
   .blogPost {
     background:#06080D;
@@ -256,11 +258,10 @@ body[class=darkTheme] {
       }
       
     }
-    .blogPostsDiv {
-      background: rgba(255,255,255,0.1);
-    }
   }
- 
+  .blogPostsDiv {
+    background: black !important;
+  }
 
   .emailBox {
       background-blend-mode: luminosity;
