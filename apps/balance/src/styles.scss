@@ -1,11 +1,19 @@
 /* You can add global styles to this file, and also import other style files */
-html, body {
+html,
+body {
   margin: 0;
   font-family: "Sora", sans-serif;
 }
 
 a {
   text-decoration: none;
+}
+
+.change a:visited {
+  color: rgb(90, 202, 230) !important;
+}
+body[class="lightTheme"] {
+  background-color: white !important;
 }
 
 .flexCenterRow {
@@ -63,16 +71,18 @@ input::-webkit-inner-spin-button {
 }
 
 /* Firefox */
-input[type=number] {
+input[type="number"] {
   -moz-appearance: textfield;
 }
 
-.embed-container { 
+.embed-container {
   width: 80vw;
   height: calc(80vw * 0.5625);
   margin: 5em auto 5em auto;
-} 
-.embed-container iframe, .embed-container object, .embed-container embed { 
+}
+.embed-container iframe,
+.embed-container object,
+.embed-container embed {
   width: 100%;
   height: 100%;
 }

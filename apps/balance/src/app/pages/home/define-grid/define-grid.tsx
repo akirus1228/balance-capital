@@ -72,34 +72,87 @@ export const DefineGrid = (): JSX.Element => {
       .catch(async (err) => await updateContact());
   }
 
-  const onSubmitEmail = async () => {
+  const onSubmitEmail = () => {
     if (
       email === "" ||
       name === "" ||
       organizationName === "" ||
       sector === "" ||
       product === "" ||
-      websiteUrl === ""
+      websiteUrl === "" ||
+      (!email.includes("@") && !email.includes("."))
     ) {
       // eslint-disable-next-line no-alert
       return dispatch(error("Please enter a valid value for each field!"));
     }
-    await createContact();
-    const options = {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        "api-key":
-          "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",
-      },
-      body: JSON.stringify({ emails: [email] }),
+    // await createContact();
+    // const options = {
+    //   method: "POST",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     "api-key":
+    //       "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",
+    //   },
+    //   body: JSON.stringify({ emails: [email] }),
+    // };
+
+    // await fetch("https://api.sendinblue.com/v3/contacts/lists/3/contacts/add", options)
+    //   .then((response) => response.json())
+    //   .then((response) => console.log(response))
+    //   .catch((err) => console.error(err));
+    const xhr = new XMLHttpRequest();
+    const url =
+      "https://api.hsforms.com/submissions/v3/integration/submit/26031699/60a9609f-5b72-4386-b1f1-0fb175fdbfdc";
+    const data = {
+      fields: [
+        {
+          name: "email",
+          value: email,
+        },
+        {
+          name: "firstname",
+          value: name,
+        },
+        {
+          name: "company",
+          value: organizationName,
+        },
+        {
+          name: "website",
+          value: websiteUrl,
+        },
+        {
+          name: "product_of_intererst",
+          value: product,
+        },
+        {
+          name: "message",
+          value: sector,
+        }
+      ],
     };
 
-    await fetch("https://api.sendinblue.com/v3/contacts/lists/3/contacts/add", options)
-      .then((response) => response.json())
-      .then((response) => console.log(response))
-      .catch((err) => console.error(err));
+    let final_data = JSON.stringify(data);
+    xhr.open("POST", url);
+    // Sets the value of the 'Content-Type' HTTP request headers to 'application/json'
+    xhr.setRequestHeader("Content-Type", "application/json");
+
+    // xhr.onreadystatechange = function () {
+    //   if (xhr.readyState == 4 && xhr.status == 200) {
+    //     alert(xhr.responseText); // Returns a 200 response if the submission is successful.
+    //   } else if (xhr.readyState == 4 && xhr.status == 400) {
+    //     alert(xhr.responseText); // Returns a 400 error the submission is rejected.
+    //   } else if (xhr.readyState == 4 && xhr.status == 403) {
+    //     alert(xhr.responseText); // Returns a 403 error if the portal isn't allowed to post submissions.
+    //   } else if (xhr.readyState == 4 && xhr.status == 404) {
+    //     alert(xhr.responseText); //Returns a 404 error if the formGuid isn't found
+    //   }
+    // };
+
+    // Sends the request
+    xhr.send(final_data);
+
     setEmail("");
     setSector("");
     setOrganizationName("");
@@ -166,7 +219,7 @@ export const DefineGrid = (): JSX.Element => {
         }}
         className={style["defineImg"]}
       >
-        <img src={BalanceDefine2} style={{ width: "100%" }} />
+        <img src={BalanceDefine2} alt="BalanceDefine2 logo" style={{ width: "100%" }} />
       </Grid>
 
       <Grid
@@ -181,7 +234,7 @@ export const DefineGrid = (): JSX.Element => {
         }}
         className={style["defineImg"]}
       >
-        <img src={BalanceDefine1} style={{ width: "100%" }} />
+        <img src={BalanceDefine1} alt="Balance Define1 logo" style={{ width: "100%" }} />
       </Grid>
       <Grid
         item
@@ -293,7 +346,7 @@ export const DefineGrid = (): JSX.Element => {
             setWebsiteUrl(e.target.value);
           }}
         />
-      
+
         <OutlinedInput
           className={`${style["styledInput"]}`}
           placeholder="What’s your email address? *"

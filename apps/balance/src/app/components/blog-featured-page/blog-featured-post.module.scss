@@ -43,7 +43,7 @@
   }
 }
 .blogTitle {
-  font-size: 16px;
+  font-size: 19px;
   height: 32px;
   max-lines: 2;
   width: 70%;
@@ -52,13 +52,30 @@
     width: 210px !important;
   }
 }
-.email-div {
+.emaildiv {
+  @media(min-width: 900px) {
+    height: 20% !important;
+  }
   @media (max-width: 600px) {
     margin-left: 10px !important;
   }
 }
 .cardWrapper {
-  box-shadow: 0.5em 0.5em 1em #e9f1e9  !important;
+  box-shadow: 0.5em 0.5em 1em #e9f1e9 !important;
+  @media (min-width: 900px) {
+    height: 370px !important;
+  }
+}
+.TwitterLogo {
+  @media (min-width: 900px) {
+    width: 50px !important;
+  }
+}
+.twitterLogoDiv {
+  @media (min-width: 900px) {
+    height: 24% !important;
+    padding-top: 16px !important;
+  }
 }
 body[class=darkTheme] {
   .cardWrapper {

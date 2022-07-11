@@ -9,7 +9,7 @@ import { RootState } from "../../store";
 /* eslint-disable-next-line */
 export interface IconLinkProps {
   icon: string | typeof import("*.png");
-  itemid?: string | undefined;
+  itemid?: string | undefined;
   title: string;
   text: string;
   link?: string | undefined;
@@ -70,7 +70,12 @@ export function BalanceAboutTile({
           width: { sm: "100%", md: "100%" },
         }}
       >
-        <img src={icon as string} style={{ width: "100%" }} className={style["image"]} />
+        <img
+          src={icon as string}
+          alt={title}
+          style={{ width: "100%" }}
+          className={style["image"]}
+        />
       </Grid>
       <Grid
         item
@@ -82,6 +87,7 @@ export function BalanceAboutTile({
           justifyContent: "start",
           alignItems: "start",
           paddingTop: "30px",
+          paddingRight: "30px",
         }}
       >
         <Box
@@ -92,11 +98,11 @@ export function BalanceAboutTile({
           className={style["iconLinkContainer"]}
         >
           <Grid item xs={12} md={12}>
-            <h1 className={style["title"]}>{title}</h1>
+            <h2 className={style["title"]}>{title}</h2>
           </Grid>
 
           <Grid item xs={12} md={12}>
-            <h1 className={style["text"]}>{text}</h1>
+            <h3 className={style["text"]}>{text}</h3>
           </Grid>
           <Grid
             item
@@ -144,12 +150,7 @@ export function BalanceAboutTile({
                 Enter App
               </Button>
             )}
-            {itemid === undefined ? (
-              <a id={itemid}></a>
-                
-            ) : (
-              <a id={itemid}></a>
-            )}
+            {itemid === undefined ? <a id={itemid}></a> : <a id={itemid}></a>}
             {docsLink !== undefined ? (
               <Button
                 variant="contained"
@@ -203,7 +204,7 @@ export function BalanceAboutTile({
           paddingTop: "30px",
         }}
       >
-        <img src={AboutDivider as string} style={{ width: "100%" }} />
+        <img src={AboutDivider as string} alt="divider" style={{ width: "100%" }} />
       </Grid>
     </Grid>
   );

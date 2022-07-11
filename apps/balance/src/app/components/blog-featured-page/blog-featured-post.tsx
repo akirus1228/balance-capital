@@ -3,7 +3,7 @@ import { useCallback } from "react";
 import { useSelector } from "react-redux";
 import { USDBLight, USDBDark } from "@fantohm/shared-ui-themes";
 import { RootState } from "../../store";
-import style from "./blog-post.module.scss";
+import style from "./blog-featured-post.module.scss";
 import {
   BalanceHeroImage,
   BalanceLogoDark,
@@ -13,7 +13,7 @@ import {
 import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
 
 /* eslint-disable-next-line */
-export interface BlogPostProps {
+export interface BlogFeaturedPostProps {
   children: JSX.Element | Array<JSX.Element>;
   className?: string;
   invertTheme?: boolean;
@@ -23,7 +23,7 @@ export interface BlogPostProps {
   post: BlogPostDTO;
 }
 
-export const BlogPost = (props: BlogPostProps): JSX.Element => {
+export const BlogFeaturedPost = (props: BlogFeaturedPostProps): JSX.Element => {
   const themeType = useSelector((state: RootState) => state.app.theme);
   const theme = useCallback(() => {
     if (props.invertTheme) {
@@ -62,7 +62,15 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
             className="email-div"
             md={12}
             order={{ lg: 1 }}
-            style={{ width: "100%", overflow: "hidden", backgroundColor: "#f4f4f4" }}
+            style={{
+              width: "100%",
+              overflow: "hidden",
+              backgroundColor: "#f4f4f4",
+              height: "50%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
           >
             <img
               src={props.post && props.post.image ? props.post.image : BalanceHeroImage}
@@ -86,7 +94,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
 
           <Grid
             item
-            className="email-div"
+            className={style["emaildiv"]}
             md={12}
             order={{ lg: 1 }}
             style={{
@@ -103,7 +111,7 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
           </Grid>
           <Grid
             item
-            className="email-div"
+            className={style["twitterLogoDiv"]}
             md={2}
             order={{ lg: 1 }}
             sx={{ justifyContent: "center", marginTop: { xs: "8px" } }}
@@ -112,11 +120,12 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
               src={BalanceTwitter}
               alt="Balance Twitter logo"
               style={{ width: "40px" }}
+              className={style["TwitterLogo"]}
             />
           </Grid>
           <Grid
             item
-            className="email-div"
+            className={style["twitterLogoDiv"]}
             md={8}
             order={{ lg: 1 }}
             sx={{
@@ -126,10 +135,10 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
               paddingLeft: "0px !important",
             }}
           >
-            <h2 style={{ fontSize: "12px", marginLeft: "10px", marginBottom: "0px" }}>
+            <h2 style={{ fontSize: "15px", marginLeft: "10px", marginBottom: "0px" }}>
               The Balance Blog
             </h2>
-            <h2 style={{ fontSize: "12px", marginLeft: "10px", marginTop: "0px" }}>
+            <h2 style={{ fontSize: "15px", marginLeft: "10px", marginTop: "0px" }}>
               {props.post && props.post.date
                 ? new Date(props.post.date.slice(0, 10)).toDateString().slice(4)
                 : ""}
@@ -141,4 +150,4 @@ export const BlogPost = (props: BlogPostProps): JSX.Element => {
   );
 };
 
-export default BlogPost;
+export default BlogFeaturedPost;

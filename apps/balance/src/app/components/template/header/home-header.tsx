@@ -164,6 +164,15 @@ export const HomeHeader = (): JSX.Element => {
                   </Typography>
                 </MenuLink>
               ))}
+              <MenuLink
+                // href={page.href ? page.href : '#'}
+                href="/blog"
+                onClick={handleCloseNavMenu}
+              >
+                <Typography textAlign="center">
+                  <Button style={{ width: "100%" }}>Blog</Button>
+                </Typography>
+              </MenuLink>
             </Menu>
           </Box>
           <Typography

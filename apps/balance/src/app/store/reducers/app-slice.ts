@@ -38,16 +38,19 @@ export const loadAppDetails = createAsyncThunk("app/loadAppDetails", async () =>
           category = "";
         }
         console.log(entryResult.fields.getInTouch.fields.content);
+        console.log("entryResult", entryResult);
         posts.push({
           id: entryResult.fields.slug,
           date: entryResult.sys.createdAt,
           blogTitle: entryResult.fields.blogTitle,
+          isFeatured: entryResult.fields.isFeatured,
           blogAsset: entryResult.fields.blogAsset,
           content: entryResult.fields.content,
           blogCategory: category,
           image: imageUrl,
-          seoTitle: entryResult.fields.seoMetadata.title,
-          seoDescription: entryResult.fields.seoMetadata.description,
+          seoTitle: entryResult.fields.seoMetadata.fields.seoTitle,
+          seoDescription: entryResult.fields.seoMetadata.fields.description,
+          seoKeywords: entryResult.fields.seoMetadata.fields.keywords,
           getInTouch: entryResult.fields.getInTouch.fields.content,
         });
       }
