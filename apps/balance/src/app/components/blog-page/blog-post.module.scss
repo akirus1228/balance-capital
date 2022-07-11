@@ -57,3 +57,11 @@
     margin-left: 10px !important;
   }
 }
+.cardWrapper {
+  box-shadow: 0.5em 0.5em 1em #f4f4f4 !important;
+}
+body[class=darkTheme] {
+  .cardWrapper {
+    box-shadow: 0.5em 0.5em 1em #131111bd !important;
+  }
+}

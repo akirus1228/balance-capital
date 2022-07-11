@@ -61,6 +61,7 @@
   }
 }
 .cardWrapper {
+  box-shadow: 0.5em 0.5em 1em #f4f4f4 !important;
   @media (min-width: 900px) {
     height: 370px !important;
   }
@@ -74,5 +75,10 @@
   @media (min-width: 900px) {
     height: 24% !important;
     padding-top: 16px !important;
+  }
+}
+body[class=darkTheme] {
+  .cardWrapper {
+    box-shadow: 0.5em 0.5em 1em #131111bd !important;
   }
 }
