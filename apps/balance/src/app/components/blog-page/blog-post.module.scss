@@ -7,12 +7,12 @@
   justify-content: center;
   align-items: center;
   text-align: center;
-  height: 100px !important;
-  width: 157px !important;
+  height: 135px !important;
+  width: 210px !important;
   top: -36px;
   @media (max-width: 600px) {
-    height: 65px !important;
-    width: 115px !important;
+    height: 100px !important;
+    width: 165px !important;
   }
 }
 
@@ -62,6 +62,6 @@
 }
 body[class=darkTheme] {
   .cardWrapper {
-    box-shadow: 0.5em 0.5em 1em #131111bd !important;
+    box-shadow: 0.5em 0.5em 1em #161916bd  !important;
   }
 }
