@@ -37,15 +37,14 @@ export const IconGrid = (): JSX.Element => {
           link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
         />
       </Grid>
-      
-     {/* <Grid item md={4} xs={6}>
+
+      {/* <Grid item md={4} xs={6}>
        <IconLink title="Backed NFT" icon={WalletIcon} link="/backed-nft" />
       </Grid> */}
 
       {/* <Grid item md={4} xs={6}>
         <IconLink title="AMPS Model" icon={WalletIcon} />
       </Grid> */}
-      
     </Grid>
   );
 };

@@ -40,7 +40,6 @@ import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
 
-
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
@@ -140,7 +139,11 @@ export const App = (): JSX.Element => {
                     />
                     <Typography>
                       I agree that I have read, understood and accepted all of the{" "}
-                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                      <a
+                        href={"./../assets/Terms_and_Conditions.pdf"}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Terms
                       </a>{" "}
                       and{" "}
