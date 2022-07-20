@@ -135,7 +135,7 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
       ],
     };
 
-    let final_data = JSON.stringify(data);
+    const final_data = JSON.stringify(data);
     xhr.open("POST", url);
     // Sets the value of the 'Content-Type' HTTP request headers to 'application/json'
     xhr.setRequestHeader("Content-Type", "application/json");

@@ -89,7 +89,7 @@ export const BlogPage = (): JSX.Element => {
       ],
     };
 
-    let final_data = JSON.stringify(data);
+    const final_data = JSON.stringify(data);
     xhr.open("POST", url);
     // Sets the value of the 'Content-Type' HTTP request headers to 'application/json'
     xhr.setRequestHeader("Content-Type", "application/json");
@@ -221,7 +221,7 @@ export const BlogPage = (): JSX.Element => {
               item
               md={12}
               order={{ lg: 1 }}
-              sx={{ width: { xs: "100%", md: "100%" }, marginBottom: "64px"}}
+              sx={{ width: { xs: "100%", md: "100%" }, marginBottom: "64px" }}
               className={style["blogPostsDivF"]}
             >
               <Grid container columnSpacing={2} rowSpacing={{ xs: 4, md: 0 }}>

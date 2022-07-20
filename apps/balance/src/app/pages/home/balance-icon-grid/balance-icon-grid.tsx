@@ -72,11 +72,7 @@ export const BalanceIconGrid = (): JSX.Element => {
         />
       </Grid>
       <Grid item md={3} sm={6} className={style["productCard"]}>
-        <BalanceIconLink
-          title="USDB Bank"
-          icon={BankIcon}
-          text="Coming soon"
-        />
+        <BalanceIconLink title="USDB Bank" icon={BankIcon} text="Coming soon" />
       </Grid>
       <Grid item md={3} sm={6} className={style["productCard"]}>
         <BalanceIconLink
