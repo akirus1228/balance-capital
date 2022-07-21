@@ -188,6 +188,17 @@ export const BlogPostPage = (props: BlogPostProps): JSX.Element => {
       {post ? Head(post.seoTitle, post.seoDescription) : Head("Blog Post", "")}
       <Helmet>
         <meta name="keywords" content={post?.seoKeywords} />
+        <meta property="og:type" content="blog" />
+        <meta property="og:locale" content="en-US" />
+        <meta property="og:title" content={post?.blogTitle} />
+        <meta property="og:description" content={post?.seoDescription} />
+        <meta property="og:url" content={window.location.href} />
+        <meta property="og:image" content={post?.image} />
+        <meta property="twitter:card" content="summary" />
+        <meta property="twitter:title" content={post?.blogTitle} />
+        <meta property="twitter:description" content={post?.seoDescription} />
+        <meta property="twitter:url" content={window.location.href} />
+        <meta property="twitter:image" content={post?.image} />
       </Helmet>
       <ThemeProvider theme={theme}>
         <div style={{ width: "100%" }} className="change">
