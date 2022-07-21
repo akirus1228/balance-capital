@@ -471,7 +471,16 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       ) : (
         <Box className={`flexSBRow w100`} sx={{ mb: "2em" }} />
       )}
-      {!connected ? (
+      <Button
+        variant="contained"
+        color="primary"
+        id="bond-btn"
+        disabled={true}
+        className="paperButton transaction-button"
+      >
+        Sold Out
+      </Button>
+      {/* {!connected ? (
         <Button
           variant="contained"
           color="primary"
@@ -585,7 +594,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
         >
           {txnButtonText(pendingTransactions, "approve_" + singleSided.name, "Approve")}
         </Button>
-      )}
+      )} */}
     </DaiCard>
   );
 };
