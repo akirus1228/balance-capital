@@ -55,22 +55,22 @@ export const StakingV1Page = (): JSX.Element => {
 
   return (
     <>
-      <Box className={style["__heading"]}>
+      {/* <Box className={style["__heading"]}>
         <Headline {...heroContent} />
         <Box className={`${style["depositBox"]} flexCenterCol`}>
           <DaiCard className={`${style["daiIcon"]} dai`} tokenImage={DaiToken}>
             <h2 className={style["daiAPR"]}>20.00% APR</h2>
           </DaiCard>
         </Box>
-      </Box>
+      </Box> */}
       <Box className={style["__section"]}>
         <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
           <StakingCard apy={20.0} />
         </Box>
-        <Faq faqItems={faqItems} sx={{ mb: "10em" }} />
+        {/* <Faq faqItems={faqItems} sx={{ mb: "10em" }} /> */}
       </Box>
       <Box className={style["__section"]}>
-        <Headline {...simpleSafe} sx={{ mb: "2em" }} />
+        {/* <Headline {...simpleSafe} sx={{ mb: "2em" }} /> */}
         <Logo />
       </Box>
     </>

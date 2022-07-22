@@ -66,12 +66,12 @@ export const StakingChoicePage = (): JSX.Element => {
 
   return (
     <>
-      <Box className={style["__heading"]}>
+      {/* <Box className={style["__heading"]}>
         <Headline {...heroContent} />
         <Box className={`${style["depositBox"]} flexCenterCol`}>
           <DaiCard className={`${style["daiIcon"]} dai`} tokenImage={DaiToken}>
             <h2 className={style["daiAPR"]}>20.00% APR</h2>
-            {/* <Grid container>
+            <Grid container>
               <Grid item xs={6} sx={{ justifyContent: "left" }}>
                 <span className={style["tvlInfo"]}>Staked TVL</span>
               </Grid>
@@ -84,7 +84,7 @@ export const StakingChoicePage = (): JSX.Element => {
                   </span>
                 )}
               </Grid>
-            </Grid> */}
+            </Grid>
           </DaiCard>
           <Grid container sx={{ my: "2em" }} columnSpacing={2}>
             <Grid
@@ -122,8 +122,8 @@ export const StakingChoicePage = (): JSX.Element => {
             </Grid>
           </Grid>
         </Box>
-      </Box>
-      <Box className={style["__section"]}>
+      </Box> */}
+      {/* <Box className={style["__section"]}>
         <Headline {...simpleSafe} id="learn-more" />
         <div className="embed-container">
           <iframe
@@ -134,16 +134,16 @@ export const StakingChoicePage = (): JSX.Element => {
           ></iframe>
         </div>
         <SsInfoBlock />
-      </Box>
+      </Box> */}
       <Box className={style["__section"]}>
-        <Headline {...getStarted} />
+        {/* <Headline {...getStarted} /> */}
         <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
           <StakingCard bondType="6month" term={6} roi={15} apy={20.0} />
         </Box>
-        <Faq faqItems={faqItems} sx={{ mb: "10em" }} />
+        {/* <Faq faqItems={faqItems} sx={{ mb: "10em" }} /> */}
       </Box>
       <Box className={style["__section"]}>
-        <Headline {...simpleSafe} sx={{ mb: "2em" }} />
+        {/* <Headline {...simpleSafe} sx={{ mb: "2em" }} /> */}
         <Logo />
       </Box>
     </>

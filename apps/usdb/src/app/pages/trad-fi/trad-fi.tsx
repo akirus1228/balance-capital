@@ -82,7 +82,7 @@ export const TradFi = (): JSX.Element => {
 
   return (
     <>
-      {showNetworkBanner && (
+      {/* {showNetworkBanner && (
         <Box className={style["network-banner"]}>
           <Typography variant="body2" color="primary">
             Please select the correct network, ethereum or fantom.
@@ -146,16 +146,16 @@ export const TradFi = (): JSX.Element => {
             </Paper>
           </Grid>
         </Box>
-      </Box>
+      </Box> */}
       <Box className={style["__section"]}>
-        <Headline {...getStarted} />
+        {/* <Headline {...getStarted} /> */}
         <DepositChoice id="get-started" />
-        <Outlet />
+        {/* <Outlet />
         <Faq faqItems={faqItems} />
         <Box className={`${style["tradFiBlock"]} flexCenterCol`}>
           <Box sx={{ height: "10em" }} />
           <Headline {...bSimpleSafe} />
-        </Box>
+        </Box> */}
         <Box
           className={`${style["tradFiBlock"]} flexCenterCol`}
           sx={{ paddingBottom: "4em" }}
