@@ -38,7 +38,7 @@ import BalanceDefine2 from "./Balance_define_2.webp";
 import BalanceEmailBanner from "./Balance_email_banner.png";
 import BalanceHeroImage from "./Balance_hero_banner.webp";
 import BalanceLogo from "./Balance_logo.png";
-import AboutBridge from "./about_page/About_Bridge.webp";
+import AboutBridge from "./about_page/About_Bridge.png";
 import AboutFHM from "./about_page/About_FHM.webp";
 import AboutDivider from "./about_page/About_Divider.png";
 import AboutLiquidity from "./about_page/About_Liquidity.webp";
