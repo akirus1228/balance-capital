@@ -150,7 +150,7 @@ export const TradFi = (): JSX.Element => {
       </Box> */}
       <Box className={style["bannerDiv"]}>
         <Box>
-          <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]}/>
+          <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]} />
         </Box>
         <Typography className={style["contentDiv"]}>
           The TradFi Bonds have been discontinued If you have an unclaimed USDB you can
