@@ -229,9 +229,9 @@ export const calculateAllUserBondDetails = createAsyncThunk(
     { dispatch }
   ) => {
     await Promise.allSettled(
-      allBonds.map((bond) =>
-        dispatch(calculateUserBondDetails({ address, bond, networkId }))
-      )
+      allBonds
+        .filter((bond) => bond.name !== "stakeNft" && bond.name !== "usdbNft")
+        .map((bond) => dispatch(calculateUserBondDetails({ address, bond, networkId })))
     );
   }
 );

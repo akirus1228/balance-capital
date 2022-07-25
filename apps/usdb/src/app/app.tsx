@@ -61,11 +61,13 @@ export const App = (): JSX.Element => {
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
     if (!connected || !chainId) return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
-    bonds.map((bond) => {
-      dispatch(
-        calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
-      );
-    });
+    bonds
+      .filter((bond) => bond.name !== "stakeNft" && bond.name !== "usdbNft")
+      .map((bond) => {
+        dispatch(
+          calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
+        );
+      });
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map((investment) => {
       dispatch(calcInvestmentDetails({ investment }));
