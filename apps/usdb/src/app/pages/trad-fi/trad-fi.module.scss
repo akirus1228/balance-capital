@@ -47,6 +47,7 @@ h1 {
 .__section {
   @extend %section;
   padding: calc(5vmin + 1rem) 5vw 0 5vw;
+  margin-bottom: 10%;
 }
 
 .__icons {
@@ -84,7 +85,6 @@ h1 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-bottom: 15%;
 
   @media (max-width: 600px) {
     width: 80%;

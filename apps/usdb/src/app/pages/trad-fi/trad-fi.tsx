@@ -157,12 +157,12 @@ export const TradFi = (): JSX.Element => {
           still redeem. For more info please check out our discord.
         </Typography>
       </Box>
-      {/* <Box className={style["__section"]}>
-        <Headline {...getStarted} />
+      <Box className={style["__section"]}>
+        {/* <Headline {...getStarted} /> */}
         <DepositChoice id="get-started" />
-        <Outlet />
-        <Faq faqItems={faqItems} />
-        <Box className={`${style["tradFiBlock"]} flexCenterCol`}>
+        {/* <Outlet /> */}
+        {/* <Faq faqItems={faqItems} /> */}
+        {/* <Box className={`${style["tradFiBlock"]} flexCenterCol`}>
           <Box sx={{ height: "10em" }} />
           <Headline {...bSimpleSafe} />
         </Box>
@@ -171,8 +171,8 @@ export const TradFi = (): JSX.Element => {
           sx={{ paddingBottom: "4em" }}
         >
           <Logo />
-        </Box>
-      </Box> */}
+        </Box> */}
+      </Box>
     </>
   );
 };

@@ -135,17 +135,6 @@ export const StakingChoicePage = (): JSX.Element => {
         </div>
         <SsInfoBlock />
       </Box> */}
-      {/* <Box className={style["__section"]}>
-        <Headline {...getStarted} />
-        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
-          <StakingCard bondType="6month" term={6} roi={15} apy={20.0} />
-        </Box>
-        <Faq faqItems={faqItems} sx={{ mb: "10em" }} />
-      </Box>
-      <Box className={style["__section"]}>
-        <Headline {...simpleSafe} sx={{ mb: "2em" }} />
-        <Logo />
-      </Box> */}
       <Box className={style["bannerDiv"]}>
         <Box>
           <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]} />
@@ -155,6 +144,17 @@ export const StakingChoicePage = (): JSX.Element => {
           paid out for more info please check out our discord.
         </Typography>
       </Box>
+      <Box className={style["__section"]}>
+        {/* <Headline {...getStarted} /> */}
+        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
+          <StakingCard apy={20.0} />
+        </Box>
+        {/* <Faq faqItems={faqItems} sx={{ mb: "10em" }} /> */}
+      </Box>
+      {/* <Box className={style["__section"]}>
+        <Headline {...simpleSafe} sx={{ mb: "2em" }} />
+        <Logo />
+      </Box> */}
     </>
   );
 };
