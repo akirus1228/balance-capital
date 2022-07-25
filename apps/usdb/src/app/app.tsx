@@ -78,7 +78,6 @@ export const App = (): JSX.Element => {
   // Load account details
   useEffect(() => {
     if (address) {
-      console.log("app-chainId, address: ", chainId, address);
       dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
       dispatch(
         calculateAllUserBondDetails({
