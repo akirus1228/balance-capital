@@ -59,11 +59,11 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
   const { bonds } = useBonds(chainId || defaultNetworkId);
   // IAllBondData
   const singleSidedBondData = bonds.filter(
-    (bond) => bond.type === BondType.SINGLE_SIDED_V1
+    (bond) => bond.type === BondType.SINGLE_SIDED
   )[0] as IAllBondData;
   // StableBond
   const singleSided = allBonds.filter(
-    (bond) => bond.type === BondType.SINGLE_SIDED_V1
+    (bond) => bond.type === BondType.SINGLE_SIDED
   )[0] as Bond;
 
   const accountBonds = useSelector((state: RootState) => {
@@ -251,7 +251,7 @@ export const StakingCard = (params: IStakingCardParams): JSX.Element => {
       sx={{ minWidth: { xs: "300px", sm: "587px" } }}
       className={style["cardElement"]}
     >
-      <h3 className={style["titleWrapper"]}>Single v1</h3>
+      <h3 className={style["titleWrapper"]}>Single</h3>
       <h1>DAI Liquidity Pool</h1>
       <Box className="w100">
         <hr
