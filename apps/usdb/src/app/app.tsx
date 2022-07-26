@@ -40,7 +40,6 @@ import FhmPage from "./pages/fhm/fhm-page";
 import Typography from "@mui/material/Typography";
 import style from "./pages/trad-fi/deposit/deposit.module.scss";
 
-
 export const App = (): JSX.Element => {
   const dispatch = useDispatch();
 
@@ -62,11 +61,13 @@ export const App = (): JSX.Element => {
     // if we aren't connected or don't yet have a chainId, we shouldn't try and load details
     if (!connected || !chainId) return;
     dispatch(loadAppDetails({ networkId: chainId || defaultNetworkId }));
-    bonds.map((bond) => {
-      dispatch(
-        calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
-      );
-    });
+    bonds
+      .filter((bond) => bond.name !== "stakeNft" && bond.name !== "usdbNft")
+      .map((bond) => {
+        dispatch(
+          calcBondDetails({ bond, value: "", networkId: chainId || defaultNetworkId })
+        );
+      });
     dispatch(calcGlobalBondDetails({ allBonds }));
     investments.map((investment) => {
       dispatch(calcInvestmentDetails({ investment }));
@@ -77,7 +78,6 @@ export const App = (): JSX.Element => {
   // Load account details
   useEffect(() => {
     if (address) {
-      console.log("app-chainId, address: ", chainId, address);
       dispatch(loadAccountDetails({ networkId: chainId || defaultNetworkId, address }));
       dispatch(
         calculateAllUserBondDetails({
@@ -98,6 +98,7 @@ export const App = (): JSX.Element => {
       case "/backed-nft":
       case "/about":
       case "/amps":
+      case "/staking-v1":
         document.body.classList.add("heroBackground");
         break;
       default:
@@ -140,7 +141,11 @@ export const App = (): JSX.Element => {
                     />
                     <Typography>
                       I agree that I have read, understood and accepted all of the{" "}
-                      <a href={"./../assets/Terms_and_Conditions.pdf"} target="_blank">
+                      <a
+                        href={"./../assets/Terms_and_Conditions.pdf"}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
                         Terms
                       </a>{" "}
                       and{" "}

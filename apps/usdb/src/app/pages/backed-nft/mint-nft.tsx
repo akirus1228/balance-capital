@@ -155,7 +155,7 @@ export const MintNftPage = (): JSX.Element => {
   const switchNetwork = () => {
     if (!switchEthereumChain) return;
     switchEthereumChain(NetworkIds.Rinkeby);
-  }
+  };
 
   const onInvest = async () => {
     if (!nftMetadata) return;

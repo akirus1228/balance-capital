@@ -78,6 +78,7 @@ import Lilbobross from "./multisig/Lilbobross.png";
 import AtomicSwap from "./multisig/AtomicSwap.png";
 import BalanceTwitter from "./Balance_Twitter.png";
 import BlogBanner from "./Blog_Banner.png";
+import WaringIcon from "./warning.png";
 
 export {
   NFTsIcon,
@@ -160,4 +161,5 @@ export {
   Lilbobross,
   BalanceTwitter,
   BlogBanner,
+  WaringIcon,
 };

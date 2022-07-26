@@ -10,6 +10,7 @@ import Logo from "../../components/logo/logo";
 import { ThemeImage } from "../../components/theme-image/theme-image";
 import { useWeb3Context } from "@fantohm/shared-web3";
 import { useEffect, useState } from "react";
+import { WaringIcon } from "@fantohm/shared/images";
 
 const faqItems: FaqItem[] = [
   {
@@ -82,7 +83,7 @@ export const TradFi = (): JSX.Element => {
 
   return (
     <>
-      {showNetworkBanner && (
+      {/* {showNetworkBanner && (
         <Box className={style["network-banner"]}>
           <Typography variant="body2" color="primary">
             Please select the correct network, ethereum or fantom.
@@ -146,13 +147,22 @@ export const TradFi = (): JSX.Element => {
             </Paper>
           </Grid>
         </Box>
+      </Box> */}
+      <Box className={style["bannerDiv"]}>
+        <Box>
+          <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]} />
+        </Box>
+        <Typography className={style["contentDiv"]}>
+          The TradFi Bonds have been discontinued If you have an unclaimed USDB you can
+          still redeem. For more info please check out our discord.
+        </Typography>
       </Box>
       <Box className={style["__section"]}>
-        <Headline {...getStarted} />
+        {/* <Headline {...getStarted} /> */}
         <DepositChoice id="get-started" />
-        <Outlet />
-        <Faq faqItems={faqItems} />
-        <Box className={`${style["tradFiBlock"]} flexCenterCol`}>
+        {/* <Outlet /> */}
+        {/* <Faq faqItems={faqItems} /> */}
+        {/* <Box className={`${style["tradFiBlock"]} flexCenterCol`}>
           <Box sx={{ height: "10em" }} />
           <Headline {...bSimpleSafe} />
         </Box>
@@ -161,7 +171,7 @@ export const TradFi = (): JSX.Element => {
           sx={{ paddingBottom: "4em" }}
         >
           <Logo />
-        </Box>
+        </Box> */}
       </Box>
     </>
   );
