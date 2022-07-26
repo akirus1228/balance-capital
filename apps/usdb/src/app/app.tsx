@@ -98,6 +98,7 @@ export const App = (): JSX.Element => {
       case "/backed-nft":
       case "/about":
       case "/amps":
+      case "/staking-v1":
         document.body.classList.add("heroBackground");
         break;
       default:

@@ -66,3 +66,34 @@
     .learnMore {width:100% !important;}
     .buttonArea {flex-basis: 50% !important}
 }
+.bannerDiv {
+    width: 60%;
+    height: 30%;
+    margin-left: 20%;
+    border: 1px solid grey;
+    border-radius: 25px;
+    margin-top: 15%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  
+    @media (max-width: 600px) {
+      width: 80%;
+      margin-left: 10%;
+    }
+  }
+  .contentDiv {
+    padding: 30px 10%;
+  
+    @media (max-width: 600px) {
+      padding: 10px 10%;
+    }
+  }
+  .warningDiv {
+    @media (max-width: 600px) {
+      width: 30px;
+      height: 30px;
+    }
+  }
+  
