@@ -67,13 +67,23 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                   </Box>
                 </Grid>
                 <Grid item xs={12}>
-                  {!connected ? (
+                  <Button
+                    variant="contained"
+                    disabled={true}
+                    color="primary"
+                    id="bond-btn"
+                    className="paperButton transaction-button"
+                    onClick={() => connect(true)}
+                  >
+                    Sold Out
+                  </Button>
+                  {/* {!connected ? (
                     <Button
                       variant="contained"
                       color="primary"
                       id="bond-btn"
                       className="paperButton transaction-button"
-                      onClick={connect}
+                      onClick={() => connect(true)}
                     >
                       Connect Wallet
                     </Button>
@@ -91,7 +101,7 @@ export const DepositCard = (params: IDepositCardParams): JSX.Element => {
                         Deposit
                       </Button>
                     </Link>
-                  )}
+                  )} */}
                 </Grid>
               </Grid>
             </Grid>

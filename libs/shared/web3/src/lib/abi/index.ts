@@ -11,6 +11,7 @@ import full_FHUDContract from "./FHUDContract.json";
 import full_Factory from "./Factory.json";
 import full_FuseProxy from "./FuseProxy.json";
 import full_IERC20 from "./IERC20.json";
+import full_IERC721 from "./IERC721.json";
 import full_LPStaking from "./LPStaking.json";
 import full_LpBondCalcContract from "./LpBondCalcContract.json";
 import full_Lqdr from "./Lqdr.json";
@@ -34,6 +35,7 @@ import full_TShareRewardPool from "./TShareRewardPool.json";
 import full_TombMasonry from "./TombMasonry.json";
 import full_USDBContract from "./USDBContract.json";
 import full_USDBMinter from "./USDBMinter.json";
+import full_USDBNft from "./USDBNft.json";
 import full_UniswapIERC20 from "./UniswapIERC20.json";
 import full_UniswapV2Pair from "./UniswapV2Pair.json";
 import full_gohm from "./gohm.json";
@@ -68,6 +70,12 @@ import full_SingleSidedLPBondDepository from "./bonds/SingleSidedLPBondDepositor
 import full_TradFiBondDepository from "./bonds/TradFiBondDepository.json";
 import full_UsdbFhmBurnBondDepository from "./bonds/UsdbFhmBurnBondDepository.json";
 import full_UsdbABondDepository from "./bonds/UsdbABondDepository.json";
+import full_UsdbNftBondDepository from "./bonds/UsdbNftBondDepository.json";
+
+//nft-lending
+import full_UsdbLending from "./UsdbLending.json";
+import full_StakingBackedNFTPool from "./StakingBackedNFTPool.json";
+import full_AmpsToken from "./AmpsToken.json";
 
 export const balancerVaultAbi = full_BalancerVault.abi;
 export const balancerWeightedPoolAbi = full_BalancerWeightedPool.abi;
@@ -82,6 +90,7 @@ export const fhudContractAbi = full_FHUDContract.abi;
 export const factoryAbi = full_Factory.abi;
 export const fuseProxyAbi = full_FuseProxy.abi;
 export const ierc20Abi = full_IERC20.abi;
+export const ierc721Abi = full_IERC721.abi;
 export const lpStakingAbi = full_LPStaking.abi;
 export const lpBondCalcContractAbi = full_LpBondCalcContract.abi;
 export const lqdrAbi = full_Lqdr.abi;
@@ -105,6 +114,7 @@ export const tShareRewardPoolAbi = full_TShareRewardPool.abi;
 export const tombMasonryAbi = full_TombMasonry.abi;
 export const usdbContractAbi = full_USDBContract.abi;
 export const usdbMinterAbi = full_USDBMinter.abi;
+export const usdbNftAbi = full_USDBNft.abi;
 export const uniswapIERC20Abi = full_UniswapIERC20.abi;
 export const uniswapV2PairAbi = full_UniswapV2Pair.abi;
 export const gohmAbi = full_gohm.abi;
@@ -133,3 +143,9 @@ export const singleSidedLPBondDepositoryAbi = full_SingleSidedLPBondDepository.a
 export const tradFiBondDepositoryAbi = full_TradFiBondDepository.abi;
 export const usdbFhmBurnBondDepositoryAbi = full_UsdbFhmBurnBondDepository.abi;
 export const usdbABondDepositoryAbi = full_UsdbABondDepository.abi;
+export const usdbNftBondDepositoryAbi = full_UsdbNftBondDepository.abi;
+
+//nft-lending
+export const usdbLending = full_UsdbLending.abi;
+export const stakingBackedNFTPool = full_StakingBackedNFTPool.abi;
+export const ampsToken = full_AmpsToken.abi;

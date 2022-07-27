@@ -1,11 +1,11 @@
-import { Box, Button, Grid } from "@mui/material";
+import { Box, Button, Grid, Typography } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq, { FaqItem } from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
 import SsInfoBlock from "./staking-choice/ss-info-block/ss-info-block";
-import { DaiToken } from "@fantohm/shared/images";
+import { DaiToken, WaringIcon } from "@fantohm/shared/images";
 import Logo from "../../components/logo/logo";
 
 export const faqItems: FaqItem[] = [
@@ -66,12 +66,12 @@ export const StakingChoicePage = (): JSX.Element => {
 
   return (
     <>
-      <Box className={style["__heading"]}>
+      {/* <Box className={style["__heading"]}>
         <Headline {...heroContent} />
         <Box className={`${style["depositBox"]} flexCenterCol`}>
           <DaiCard className={`${style["daiIcon"]} dai`} tokenImage={DaiToken}>
             <h2 className={style["daiAPR"]}>20.00% APR</h2>
-            {/* <Grid container>
+            <Grid container>
               <Grid item xs={6} sx={{ justifyContent: "left" }}>
                 <span className={style["tvlInfo"]}>Staked TVL</span>
               </Grid>
@@ -84,7 +84,7 @@ export const StakingChoicePage = (): JSX.Element => {
                   </span>
                 )}
               </Grid>
-            </Grid> */}
+            </Grid>
           </DaiCard>
           <Grid container sx={{ my: "2em" }} columnSpacing={2}>
             <Grid
@@ -122,22 +122,39 @@ export const StakingChoicePage = (): JSX.Element => {
             </Grid>
           </Grid>
         </Box>
-      </Box>
-      <Box className={style["__section"]}>
-        <Headline {...simpleSafe} id="learn-more" sx={{ mb: "5em" }} />
+      </Box> */}
+      {/* <Box className={style["__section"]}>
+        <Headline {...simpleSafe} id="learn-more" />
+        <div className="embed-container">
+          <iframe
+            src="https://www.youtube.com/embed/Zkdce6v94vg"
+            frameBorder="0"
+            allowFullScreen
+            title="Single Sided Staking is Live & USDB Is Stronger For It!"
+          ></iframe>
+        </div>
         <SsInfoBlock />
-      </Box>
-      <Box className={style["__section"]}>
-        <Headline {...getStarted} />
-        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
-          <StakingCard bondType="6month" term={6} roi={15} apy={20.0} />
+      </Box> */}
+      <Box className={style["bannerDiv"]}>
+        <Box>
+          <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]} />
         </Box>
-        <Faq faqItems={faqItems} sx={{ mb: "10em" }} />
+        <Typography className={style["contentDiv"]}>
+          Single Sided staking has been discontinued and there will be no more rewards
+          paid out for more info please check out our discord.
+        </Typography>
       </Box>
       <Box className={style["__section"]}>
+        {/* <Headline {...getStarted} /> */}
+        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
+          <StakingCard apy={20.0} />
+        </Box>
+        {/* <Faq faqItems={faqItems} sx={{ mb: "10em" }} /> */}
+      </Box>
+      {/* <Box className={style["__section"]}>
         <Headline {...simpleSafe} sx={{ mb: "2em" }} />
         <Logo />
-      </Box>
+      </Box> */}
     </>
   );
 };

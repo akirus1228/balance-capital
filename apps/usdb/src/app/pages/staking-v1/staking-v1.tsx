@@ -1,10 +1,10 @@
-import { Box } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import DaiCard from "../../components/dai-card/dai-card";
 import Faq, { FaqItem } from "../../components/faq/faq";
 import Headline from "../../components/headline/headline";
 import { StakingCard } from "./staking-card/staking-card";
 import style from "./staking-choice.module.scss";
-import { DaiToken } from "@fantohm/shared/images";
+import { DaiToken, WaringIcon } from "@fantohm/shared/images";
 import Logo from "../../components/logo/logo";
 
 export const StakingV1Page = (): JSX.Element => {
@@ -55,15 +55,31 @@ export const StakingV1Page = (): JSX.Element => {
 
   return (
     <>
-      <Box className={style["__heading"]}>
+      {/* <Box className={style["__heading"]}>
         <Headline {...heroContent} />
         <Box className={`${style["depositBox"]} flexCenterCol`}>
           <DaiCard className={`${style["daiIcon"]} dai`} tokenImage={DaiToken}>
             <h2 className={style["daiAPR"]}>20.00% APR</h2>
           </DaiCard>
         </Box>
+      </Box> */}
+      <Box className={style["bannerDiv"]}>
+        <Box>
+          <img src={WaringIcon} alt="Warning Icon" className={style["warningDiv"]} />
+        </Box>
+        <Typography className={style["contentDiv"]}>
+          Single Sided staking V1 has been discontinued and there will be no more rewards
+          paid out for more info please check out our discord.
+        </Typography>
       </Box>
       <Box className={style["__section"]}>
+        {/* <Headline {...getStarted} /> */}
+        <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
+          <StakingCard apy={20.0} />
+        </Box>
+        {/* <Faq faqItems={faqItems} sx={{ mb: "10em" }} /> */}
+      </Box>
+      {/* <Box className={style["__section"]}>
         <Box className="flexCenterCol" sx={{ marginTop: "3em", mb: "10em" }} id="deposit">
           <StakingCard apy={20.0} />
         </Box>
@@ -72,7 +88,7 @@ export const StakingV1Page = (): JSX.Element => {
       <Box className={style["__section"]}>
         <Headline {...simpleSafe} sx={{ mb: "2em" }} />
         <Logo />
-      </Box>
+      </Box> */}
     </>
   );
 };

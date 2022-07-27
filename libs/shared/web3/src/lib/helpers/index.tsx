@@ -15,6 +15,8 @@ import { LocalStorage } from "./local-storage";
 import { chains } from "../providers";
 import { singleSided } from "./all-bonds";
 
+export { loadState, saveState } from "./localstorage";
+
 // NOTE (appleseed): this looks like an outdated method... we now have this data in the graph (used elsewhere in the app)
 export async function getMarketPrice(networkId: NetworkId) {
   // TODO For some reason this fails with multicall
@@ -92,15 +94,20 @@ export function roundToNearestHour(seconds: number) {
 }
 
 export async function getHistoricTokenPrice(chain: string, ca: string) {
-  const resp: any = await axios.get(
-    `https://api.coingecko.com/api/v3/coins/${chain}/contract/${ca}/market_chart?vs_currency=usd&days=90`
-  );
-  return resp.data.prices.reduce(
-    (prices: { [key: number]: number }, price: [number, number]) => (
-      (prices[roundToNearestHour(price[0] / 1000)] = price[1]), prices
-    ),
-    {}
-  );
+  try {
+    const resp: any = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/${chain}/contract/${ca}/market_chart?vs_currency=usd&days=90`
+    );
+    return resp.data.prices.reduce(
+      (prices: { [key: number]: number }, price: [number, number]) => (
+        (prices[roundToNearestHour(price[0] / 1000)] = price[1]), prices
+      ),
+      {}
+    );
+  } catch (err) {
+    console.warn(err);
+    return [];
+  }
 }
 
 export async function getBinanceTokenPrice(ticker = "MATICUSDT") {
@@ -410,3 +417,7 @@ export async function getIlRedeemBlockNumber(networkId: NetworkId, address: stri
   const currentBlockNumber = await provider.getBlockNumber();
   return [currentBlockNumber, Number(bondDetails.ilProtectionUnlockBlock.toString())];
 }
+
+export const isDev = (): boolean => {
+  return !process.env["NODE_ENV"] || process.env["NODE_ENV"] === "development";
+};

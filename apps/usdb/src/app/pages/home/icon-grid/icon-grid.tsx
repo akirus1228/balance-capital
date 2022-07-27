@@ -1,5 +1,4 @@
 import { Grid } from "@mui/material";
-import IconLink from "../../../components/icon-link/icon-link";
 import style from "./icon-grid.module.scss";
 import {
   WalletIcon,
@@ -9,27 +8,28 @@ import {
   xFhmIcon,
   MintIcon,
 } from "@fantohm/shared/images";
+import IconLink from "../../../components/icon-link/icon-link";
 
 export const IconGrid = (): JSX.Element => {
   return (
     <Grid container rowSpacing={6} className={style["productGrid"]}>
-      <Grid item md={4} xs={6}>
+      {/* <Grid item md={4} xs={6}>
         <IconLink title="Traditional Finance" icon={TradFiIcon} link="/trad-fi" />
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="Stablecoin Farming" icon={WalletIcon} link="/staking" />
-      </Grid>
+      </Grid> */}
       <Grid item md={4} xs={6}>
-        <IconLink title="Mint USDB" icon={MintIcon} link="/mint" />
+        <IconLink title="Minter" icon={MintIcon} link="/mint" />
         {/*<IconLink title="Mint USDB" icon={MintIcon} />*/}
       </Grid>
-      <Grid item md={4} xs={6}>
-        {/*<IconLink title="xFHM" icon={xFhmIcon} link="/xfhm"/>*/}
+      {/* <Grid item md={4} xs={6}>
+        //<IconLink title="xFHM" icon={xFhmIcon} link="/xfhm"/>
         <IconLink title="xFHM" icon={xFhmIcon} />
       </Grid>
       <Grid item md={4} xs={6}>
         <IconLink title="USDB Bank" icon={BankIcon} />
-      </Grid>
+      </Grid> */}
       <Grid item md={4} xs={6}>
         <IconLink
           title="Bridge"
@@ -37,6 +37,16 @@ export const IconGrid = (): JSX.Element => {
           link="https://synapseprotocol.com/?inputCurrency=USDB&outputCurrency=USDB&outputChain=1"
         />
       </Grid>
+      <Grid item md={4} xs={6}>
+        <IconLink title="Vault" icon={BankIcon} />
+      </Grid>
+      {/* <Grid item md={4} xs={6}>
+       <IconLink title="Backed NFT" icon={WalletIcon} link="/backed-nft" />
+      </Grid> */}
+
+      {/* <Grid item md={4} xs={6}>
+        <IconLink title="AMPS Model" icon={WalletIcon} />
+      </Grid> */}
     </Grid>
   );
 };

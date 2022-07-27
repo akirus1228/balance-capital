@@ -13,6 +13,10 @@ import {
 } from "@reduxjs/toolkit";
 import { loadState } from "../localstorage";
 import { RootState } from "..";
+// eslint-disable-next-line @nrwl/nx/enforce-module-boundaries
+import { BlogPostDTO } from "../../../../../nft-market/src/app/types/backend-types";
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const contentful = require("contentful");
 
 export const loadAppDetails = createAsyncThunk(
   "app/loadAppDetails",
@@ -140,6 +144,7 @@ const initialState: IAppData = {
   loading: true,
   loadingMarketPrice: false,
   theme: "dark",
+  // eslint-disable-next-line node/no-unsupported-features/es-syntax
   ...appState?.app,
 };
 
@@ -165,8 +170,6 @@ const appSlice = createSlice({
   },
 });
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 const baseInfo = (state: RootState) => state.app;
 
 export const appReducer = appSlice.reducer;

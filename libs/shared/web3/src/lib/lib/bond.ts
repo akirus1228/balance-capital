@@ -28,6 +28,8 @@ export enum BondType {
   SINGLE_SIDED = 4,
   SINGLE_SIDED_V1 = 5,
   LQDR_USDB_POL = 6,
+  USDB_NFT = 7,
+  STAKE_NFT = 8,
 }
 
 export enum BondAction {

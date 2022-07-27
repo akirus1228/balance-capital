@@ -1,10 +1,17 @@
 import { createTheme } from "@mui/material/styles";
 import { ThemeOptions } from "@mui/material";
 import { makeStyles } from "@mui/styles";
+
 import lightBG from "./images/USDB_gradient_light.png";
 import darkBG from "./images/USDB_gradient_dark.png";
+import {
+  DarkUSDBBanner1,
+  DarkUSDBBanner2,
+  LightUSDBBanner1,
+  LightUSDBBanner2,
+} from "@fantohm/shared/images";
 
-export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
+export const noBorderOutlinedInputStyles = makeStyles(() => ({
   root: {
     "& $notchedOutline": {
       border: "none",
@@ -19,6 +26,8 @@ export const noBorderOutlinedInputStyles = makeStyles((theme) => ({
   focused: {},
   notchedOutline: {},
 }));
+
+const theme = createTheme();
 
 // light color pallet for use in themes
 const usdbLightColors = {
@@ -93,6 +102,18 @@ const globalTheme: ThemeOptions = {
             padding: "1.75em 0 1em 0",
             borderRadius: "0",
           },
+          "&.usdbBanner": {
+            backgroundPosition: "center",
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+          },
+          "&.usdbBanner2": {
+            backgroundPosition: "85%",
+            backgroundSize: "fill",
+            backgroundRepeat: "no-repeat",
+            width: "100%",
+          },
         },
       },
       defaultProps: {
@@ -120,6 +141,16 @@ const globalTheme: ThemeOptions = {
             padding: "1em 1.25em",
           },
           "&.menuButton": {
+            height: "1em",
+            paddingTop: "1em",
+            paddingBottom: "1em",
+            paddingLeft: "1.25em",
+            paddingRight: "1.25em",
+            borderRadius: "1.5em",
+            margin: "auto 0 auto 1em",
+            fontSize: "1em",
+          },
+          "&.thinButton": {
             height: "1em",
             paddingTop: "1em",
             paddingBottom: "1em",
@@ -250,6 +281,38 @@ const globalTheme: ThemeOptions = {
         },
       },
     },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.contact": {
+            width: "100%",
+            paddingBottom: "1em",
+            fontSize: "24px",
+            marginBottom: "0.5em",
+          },
+          "&.outlined": {
+            borderRadius: "2em",
+            padding: "1em",
+            ":before,:after": {
+              border: "none",
+            },
+            ":hover:before,:hover:after": {
+              border: "none",
+            },
+          },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          fontSize: "32px",
+          borderRadius: "50%",
+          height: "2.5em",
+          width: "2.5em",
+        },
+      },
+    },
   },
 };
 
@@ -296,6 +359,11 @@ const USDBLightBase: ThemeOptions = {
           "&.menuButton": {
             border: "1px solid #000",
           },
+          "&.thinButton": {
+            background: "#000",
+            color: "#FFF",
+            border: "1px solid #000",
+          },
           "&.border": {
             border: "1px solid #000",
             color: "#000",
@@ -311,6 +379,10 @@ const USDBLightBase: ThemeOptions = {
             color: usdbLightColors.color,
             background: usdbLightColors.iconButtonBg,
           },
+          "&.inverted": {
+            color: usdbLightColors.color,
+            background: usdbDarkColors.color,
+          },
         },
       },
     },
@@ -325,6 +397,15 @@ const USDBLightBase: ThemeOptions = {
           "&.MuiAccordion-root": {
             borderBottom: "2px solid #00000040",
           },
+          "&.usdbBanner": {
+            backgroundImage: `url(${LightUSDBBanner1})`,
+          },
+          "&.usdbBanner2": {
+            backgroundImage: `url(${LightUSDBBanner2})`,
+            [theme.breakpoints.down("sm")]: {
+              background: "#f5f5f5",
+            },
+          },
         },
       },
     },
@@ -332,6 +413,24 @@ const USDBLightBase: ThemeOptions = {
       styleOverrides: {
         "&.heroBackground": {
           backgroundImage: `url(${lightBG})`,
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.outlined": {
+            border: "3px solid #000",
+          },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          border: "2px solid #000",
+          color: "#FFF",
+          backgroundColor: "#000",
         },
       },
     },
@@ -381,6 +480,11 @@ const USDBDarkBase: ThemeOptions = {
           "&.menuButton": {
             border: "1px solid #FFF",
           },
+          "&.thinButton": {
+            background: "transparent",
+            color: "#FFF",
+            border: "1px solid #FFF",
+          },
           "&.border": {
             border: "1px solid #FFF",
             color: "#FFF",
@@ -399,6 +503,10 @@ const USDBDarkBase: ThemeOptions = {
             color: usdbDarkColors.color,
             background: usdbDarkColors.iconButtonBg,
           },
+          "&.inverted": {
+            color: usdbDarkColors.color,
+            background: usdbLightColors.color,
+          },
         },
       },
     },
@@ -413,6 +521,17 @@ const USDBDarkBase: ThemeOptions = {
           "&.MuiAccordion-root": {
             borderBottom: "2px solid #FFFFFF40",
           },
+          "&.usdbBanner": {
+            backgroundImage: `url(${DarkUSDBBanner1})`,
+          },
+          "&.usdbBanner2": {
+            //backgroundImage: `url(${DarkUSDBBanner2})`,
+            background: `no-repeat right 85% url(${DarkUSDBBanner2}), padding-box linear-gradient(to right, black, black), border-box linear-gradient(165deg, rgba(50,121,112,1) 0%, rgba(0,0,0,1) 50%, rgba(60,34,134,1) 100%)`,
+            [theme.breakpoints.down("sm")]: {
+              background: "#000",
+            },
+            border: "4px solid transparent",
+          },
         },
       },
     },
@@ -420,6 +539,24 @@ const USDBDarkBase: ThemeOptions = {
       styleOverrides: {
         "&.heroBackground": {
           backgroundImage: `url(${darkBG})`,
+        },
+      },
+    },
+    MuiInput: {
+      styleOverrides: {
+        root: {
+          "&.outlined": {
+            border: "3px solid #FFF",
+          },
+        },
+      },
+    },
+    MuiAvatar: {
+      styleOverrides: {
+        root: {
+          border: "2px solid #FFF",
+          color: "#FFF",
+          backgroundColor: "transparent",
         },
       },
     },
