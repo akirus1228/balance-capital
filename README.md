@@ -1,5 +1,5 @@
-# Fantohm Product Ecosystem
-Fantohm product ecosystem monorepo.
+# Infrastructure for decentralized finance
+The Balance Ecosystem encompasses a wide range of innovative products and developments in various Defi and Web3 technology areas.
 
 ## Development server
 
